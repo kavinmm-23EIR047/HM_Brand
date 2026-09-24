@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary */
+  --saffron: #E85D04;
+  --temple-orange: #F48C06;
+  --marigold: #F9C74F;
+  --turmeric: #F4D35E;
+
+  /* Spiritual */
+  --kumkum: #B23A48;
+  --vermilion: #C73E1D;
+  --deep-red: #8F1D14;
+  --plum: #6D214F;
+  --purple: #7B2CBF;
+
+  /* Nature */
+  --tulsi: #588157;
+  --sacred-green: #386641;
+  --leaf: #6A994E;
+
+  /* Accent */
+  --peacock: #168AAD;
+  --temple-teal: #2A9D8F;
+  --deep-peacock: #155D6B;
+
+  /* Earth */
+  --sandalwood: #A67C52;
+  --earth-brown: #6B4226;
+  --antique-gold: #C89B3C;
+
+  /* Neutral */
+  --sacred-cream: #FFF8E7;
+  --charcoal: #292524;
+
+  /* Font variables */
+  --font-cormorant: 'Outfit', sans-serif;
+  --font-manrope: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--sacred-cream);
+  color: var(--charcoal);
+}
+
+body {
+  margin: 0;
+  background-color: var(--sacred-cream);
+  color: var(--charcoal);
+  font-family: var(--font-manrope);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, .font-display, .serif {
+  font-family: var(--font-cormorant);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  background-image: linear-gradient(135deg, var(--saffron) 0%, var(--kumkum) 100%);
+}
+
+/* Indian Handcrafted Outline and Border Motifs */
+.divine-border {
+  border: 1.5px solid var(--antique-gold);
+}
+
+.divine-border-earth {
+  border: 1.5px solid var(--earth-brown);
+}
+
+.divine-divider {
+  height: 2px;
+  background-color: var(--antique-gold);
+  opacity: 0.4;
+}
+
+/* Solid CTA Button Styles (STRICTLY NO GRADIENTS) */
+.btn-saffron {
+  background-color: var(--saffron);
+  color: var(--sacred-cream);
+  border: 1.5px solid var(--saffron);
+  font-family: var(--font-manrope);
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-saffron:hover {
+  background-color: var(--vermilion);
+  border-color: var(--vermilion);
+  transform: translateY(-2px);
+}
+
+.btn-outline-earth {
+  background-color: transparent;
+  color: var(--earth-brown);
+  border: 1.5px solid var(--earth-brown);
+  font-family: var(--font-manrope);
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline-earth:hover {
+  background-color: var(--earth-brown);
+  color: var(--sacred-cream);
+  transform: translateY(-2px);
+}
+
+.btn-gold {
+  background-color: var(--antique-gold);
+  color: var(--sacred-cream);
+  border: 1.5px solid var(--antique-gold);
+  font-family: var(--font-manrope);
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-gold:hover {
+  background-color: var(--earth-brown);
+  border-color: var(--earth-brown);
+  transform: translateY(-2px);
+}
+
+/* Handcrafted Indian Decorative Accent */
+.paper-pattern {
+  background-color: var(--sacred-cream);
+}
+
+.font-sans {
+  font-family: var(--font-manrope);
+}
+
+/* Floating & Ambient Micro-Animations */
+@keyframes flameFlicker {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
+  25% { transform: scale(1.06, 0.96) rotate(-2deg); opacity: 1; }
+  50% { transform: scale(0.96, 1.05) rotate(2deg); opacity: 0.9; }
+  75% { transform: scale(1.04, 0.98) rotate(-1deg); opacity: 0.98; }
+}
+
+@keyframes bellSway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(4deg); }
+  75% { transform: rotate(-4deg); }
+}
+
+@keyframes smokeRise {
+  0% { transform: translateY(0) scaleX(1); opacity: 0.7; }
+  50% { transform: translateY(-15px) scaleX(1.15) rotate(2deg); opacity: 0.4; }
+  100% { transform: translateY(-30px) scaleX(1.3) rotate(-2deg); opacity: 0; }
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-flame {
+  animation: flameFlicker 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.animate-bell {
+  animation: bellSway 3.5s ease-in-out infinite;
+  transform-origin: center top;
+}
+
+.animate-smoke {
+  animation: smokeRise 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sacred-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sandalwood);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--earth-brown);
+}
+
+/* 3D Perspective & Crayonism Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Floating Petals Micro-Animation */
+@keyframes floatPetalSlow {
+  0% {
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(80px, 450px, 0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes floatPetalFast {
+  0% {
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(-60px, 400px, 0) rotate(-280deg);
+    opacity: 0;
+  }
+}
+
+.animate-petal-1 {
+  animation: floatPetalSlow 10s ease-in-out infinite;
+}
+
+.animate-petal-2 {
+  animation: floatPetalFast 8s ease-in-out infinite 2s;
+}
+
+.animate-petal-3 {
+  animation: floatPetalSlow 12s ease-in-out infinite 4s;
+}
+
+.animate-petal-4 {
+  animation: floatPetalFast 9s ease-in-out infinite 6s;
+}
+
+/* Subtle Crayonism Textured Shadows */
+.shadow-crayon-card {
+  box-shadow: 0 20px 40px -15px rgba(107, 66, 38, 0.25), 0 0 0 1px rgba(200, 155, 60, 0.2);
+}
+
+.shadow-crayon-card-active {
+  box-shadow: 0 25px 50px -12px rgba(107, 66, 38, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.9), 0 4px 15px rgba(232, 93, 4, 0.15);
+}
+
+.shadow-pill-red {
+  box-shadow: 0 8px 20px -4px rgba(179, 30, 42, 0.45);
+}
+
