@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star, Sparkles, Flower2, Heart, Flame, Truck } from "lucide-react";
+import { ArrowRight, Star, Sparkles, Flower2, Heart, Flame, Truck, Wind } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
