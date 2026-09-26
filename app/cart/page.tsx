@@ -46,7 +46,7 @@ export default function CartPage() {
             </p>
             <Link
               href="/shop"
-              className="btn-saffron mt-8 px-8 py-4 rounded-md text-xs font-bold tracking-wider uppercase inline-flex items-center gap-2 shadow-solid-sm"
+              className="btn-saffron mt-8 inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md px-5 py-3 text-[10px] font-bold uppercase tracking-wide shadow-solid-sm sm:px-8 sm:py-4 sm:text-xs sm:tracking-wider"
             >
               <span>Discover Fragrances</span>
               <ArrowRight size={15} />
@@ -79,7 +79,7 @@ export default function CartPage() {
                 {lines.map((line) => (
                   <div
                     key={line.product.slug}
-                    className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-6"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-20 h-20 bg-[#F4D35E]/40 rounded-xl border border-[#6B4226]/20 flex items-center justify-center text-3xl shrink-0">
@@ -102,7 +102,7 @@ export default function CartPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0">
+                    <div className="flex items-center justify-between gap-2 pt-2 sm:justify-end sm:gap-6 sm:pt-0">
                       {/* Quantity Selector */}
                       <div className="flex items-center border border-[#6B4226]/30 rounded-lg bg-white overflow-hidden">
                         <button
@@ -123,7 +123,7 @@ export default function CartPage() {
                       </div>
 
                       {/* Line Item Total */}
-                      <div className="text-right min-w-[70px]">
+                      <div className="min-w-[55px] text-right sm:min-w-[70px]">
                         <span className="text-sm font-bold text-[#6B4226]">
                           ₹{line.product.price * line.qty}
                         </span>
@@ -143,16 +143,16 @@ export default function CartPage() {
               </div>
 
               {/* Actions below cart table */}
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between gap-2 pt-2">
                 <Link
                   href="/shop"
-                  className="text-xs font-bold text-[#6B4226] hover:text-[#E85D04] uppercase tracking-wider flex items-center gap-1.5"
+                  className="inline-flex min-w-0 items-center gap-1 whitespace-nowrap text-[10px] font-bold uppercase tracking-normal text-[#6B4226] hover:text-[#E85D04] sm:text-xs sm:tracking-wider"
                 >
                   ← Continue Shopping
                 </Link>
                 <button
                   onClick={clear}
-                  className="text-xs font-semibold text-[#B23A48] hover:underline"
+                  className="whitespace-nowrap text-[10px] font-semibold text-[#B23A48] hover:underline sm:text-xs"
                 >
                   Clear Entire Basket
                 </button>

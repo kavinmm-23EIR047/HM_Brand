@@ -56,10 +56,16 @@
   box-sizing: border-box;
 }
 
+img,
+svg {
+  max-width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
   background-color: var(--sacred-cream);
   color: var(--charcoal);
+  min-width: 240px;
 }
 
 body {
@@ -67,7 +73,7 @@ body {
   background-color: var(--sacred-cream);
   color: var(--charcoal);
   font-family: var(--font-manrope);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -296,5 +302,43 @@ h1, h2, h3, h4, h5, .font-display, .serif {
 
 .shadow-pill-red {
   box-shadow: 0 8px 20px -4px rgba(179, 30, 42, 0.45);
+}
+
+/* Slow, quiet movement for the footer mandalas and layered ridge line. */
+@keyframes mandala-turn {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.mandala-art .mandala-rotate-outer,
+.mandala-art .mandala-rotate-inner {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: mandala-turn var(--mandala-speed, 180s) linear infinite;
+}
+
+.mandala-art .mandala-rotate-inner {
+  animation-direction: reverse;
+}
+
+@keyframes footer-ridge-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-.7%, 5px, 0) scale(1.01); }
+}
+
+.footer-ridge {
+  transform-origin: center bottom;
+  animation: footer-ridge-drift 22s ease-in-out infinite;
+}
+
+.footer-ridge-mid { animation-duration: 28s; animation-direction: reverse; }
+.footer-ridge-front { animation-duration: 34s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mandala-art .mandala-rotate-outer,
+  .mandala-art .mandala-rotate-inner,
+  .footer-ridge {
+    animation: none;
+  }
 }
 

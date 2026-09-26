@@ -98,7 +98,7 @@ function SearchPageContent() {
               Found {results.length} Sacred Results
             </span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {results.map((p) => (
               <ProductCard key={p.slug} product={p} />
             ))}
@@ -122,3 +122,4 @@ export default function SearchPage() {
     </InnerPage>
   );
 }
+

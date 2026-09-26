@@ -46,12 +46,19 @@ export default async function ProductDetailsPage({
       eyebrow={product.category.toUpperCase()}
       title={product.name}
       subtitle={product.note}
+      showHero={false}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold text-[#748078]">
+          <Link href="/" className="hover:text-[#a90c35]">Home</Link><span>/</span>
+          <Link href="/shop" className="hover:text-[#a90c35]">Shop</Link><span>/</span>
+          <Link href={`/shop?category=${encodeURIComponent(product.category)}`} className="hover:text-[#a90c35]">{product.category}</Link><span>/</span>
+          <span className="text-[#a90c35]">{product.name}</span>
+        </nav>
         {/* Product Hero Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10">
           {/* Left Gallery Image Card */}
-          <div className="lg:col-span-5 bg-[#FFF8E7] rounded-2xl border-2 border-[#C89B3C] p-8 shadow-solid-md flex flex-col items-center justify-center min-h-[440px] relative">
+          <div className="relative flex min-h-[280px] flex-col items-center justify-center overflow-hidden rounded-[24px] bg-[#f8f0df] p-4 sm:min-h-[440px] sm:rounded-[28px] sm:p-8 lg:col-span-5">
             {product.badge && (
               <span className="absolute top-4 left-4 bg-[#E85D04] text-[#FFF8E7] text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded">
                 {product.badge}
@@ -62,7 +69,7 @@ export default async function ProductDetailsPage({
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-auto object-cover rounded-xl"
+                className="max-h-[400px] w-full object-contain mix-blend-multiply"
               />
             ) : (
               <div className="text-center text-[#6B4226] py-12">
@@ -76,7 +83,7 @@ export default async function ProductDetailsPage({
               </div>
             )}
 
-            <div className="w-full mt-6 pt-4 border-t border-[#C89B3C]/30 flex items-center justify-between text-xs font-semibold text-[#6B4226]">
+            <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-[#C89B3C]/30 pt-4 text-[9px] font-semibold text-[#6B4226] sm:text-xs">
               <span>✦ Charcoal-Free</span>
               <span>✦ Coimbatore Made</span>
               <span>✦ Pure Resins</span>
@@ -84,36 +91,36 @@ export default async function ProductDetailsPage({
           </div>
 
           {/* Right Product Overview & Add to Cart */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="space-y-5 lg:col-span-7">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="flex text-[#E85D04]">
+                <div className="flex text-[#f47a20]">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} size={15} fill="currentColor" />
                   ))}
                 </div>
-                <span className="font-bold text-xs text-[#6B4226]">{product.rating}</span>
-                <span className="text-xs text-[#292524]/50">({product.reviewCount} customer reviews)</span>
+                <span className="text-xs font-extrabold text-[#173b3a]">{product.rating}</span>
+                <span className="text-xs text-[#718078]">({product.reviewCount} customer reviews)</span>
               </div>
 
-              <h1 className="font-display text-4xl sm:text-5xl text-[#6B4226] font-bold leading-tight">
+              <h1 className="text-3xl font-extrabold leading-[1.08] tracking-[-.04em] text-[#173b3a] sm:text-4xl lg:text-[42px]">
                 {product.name}
               </h1>
 
               <div className="mt-4 flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-[#E85D04]">₹{product.price}</span>
+                <span className="text-3xl font-extrabold text-[#a90c35]">₹{product.price}</span>
                 {product.mrp && (
                   <span className="text-base text-[#292524]/50 line-through">{product.mrp}</span>
                 )}
                 {discountPercent > 0 && (
-                  <span className="bg-[#588157] text-[#FFF8E7] text-xs font-bold px-2 py-0.5 rounded">
+                  <span className="rounded-full bg-[#e1edcf] px-2.5 py-1 text-xs font-extrabold text-[#286b45]">
                     {discountPercent}% OFF
                   </span>
                 )}
               </div>
             </div>
 
-            <p className="text-sm sm:text-base text-[#292524]/80 leading-relaxed font-sans">
+            <p className="text-sm leading-relaxed text-[#52625a] sm:text-base">
               {product.description}
             </p>
 
@@ -236,7 +243,7 @@ export default async function ProductDetailsPage({
             <h3 className="font-display text-3xl text-[#6B4226] font-bold mb-8">
               Complete Your Sacred Altar
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.slug} product={p} />
               ))}
@@ -247,3 +254,4 @@ export default async function ProductDetailsPage({
     </InnerPage>
   );
 }
+

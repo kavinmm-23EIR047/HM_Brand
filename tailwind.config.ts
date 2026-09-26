@@ -9,50 +9,41 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Primary
-        saffron: "#E85D04",
-        templeOrange: "#F48C06",
-        marigold: "#F9C74F",
-        turmeric: "#F4D35E",
-        
-        // Spiritual
-        kumkum: "#B23A48",
-        vermilion: "#C73E1D",
-        deepRed: "#8F1D14",
-        plum: "#6D214F",
-        purple: "#7B2CBF",
-        
-        // Nature
-        tulsi: "#588157",
-        sacredGreen: "#386641",
-        leaf: "#6A994E",
-        
-        // Accent
-        peacock: "#168AAD",
-        templeTeal: "#2A9D8F",
-        deepPeacock: "#155D6B",
-        
-        // Earth
-        sandalwood: "#A67C52",
-        earthBrown: "#6B4226",
-        antiqueGold: "#C89B3C",
-        
-        // Neutral
-        sacredCream: "#FFF8E7",
-        charcoal: "#292524",
+        // Precise HM Brand Solid Palette
+        sandal: "#FFF4D6",
+        sandalLight: "#FFF8E7",
+        saffron: "#F47A20",
+        maroon: "#9E1830",
+        green: "#3F7D45",
+        lightGreen: "#DDECCB",
+        blue: "#4C7FA8",
+        violet: "#7653A6",
+        yellow: "#F6C84C",
+        darkText: "#173B3A",
+
+        // Legacy Aliases
+        sacredCream: "#FFF4D6",
+        charcoal: "#173B3A",
+        earthBrown: "#9E1830",
+        antiqueGold: "#F6C84C",
+        tulsi: "#3F7D45",
+        sacredGreen: "#3F7D45",
+        leaf: "#3F7D45",
       },
       fontFamily: {
-        display: ["'Playfair Display'", "var(--font-cormorant)", "Georgia", "serif"],
+        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+        heading: ["'Outfit'", "'DM Sans'", "sans-serif"],
+        display: ["'Outfit'", "'DM Sans'", "sans-serif"],
+        script: ["'Caveat'", "'Playfair Display'", "cursive"],
         playfair: ["'Playfair Display'", "Georgia", "serif"],
-        cinzel: ["'Cinzel'", "Georgia", "serif"],
-        cormorant: ["var(--font-cormorant)", "Georgia", "serif"],
-        sans: ["var(--font-manrope)", "Arial", "sans-serif"],
-        manrope: ["var(--font-manrope)", "Arial", "sans-serif"],
+        label: ["'Space Grotesk'", "sans-serif"],
+        space: ["'Space Grotesk'", "sans-serif"],
       },
       boxShadow: {
-        'solid-sm': '2px 2px 0px #6B4226',
-        'solid-md': '4px 4px 0px #6B4226',
-        'solid-gold': '3px 3px 0px #C89B3C',
+        'solid-sm': '2px 2px 0px #9E1830',
+        'solid-md': '4px 4px 0px #9E1830',
+        'solid-gold': '3px 3px 0px #F6C84C',
+        'card': '0 6px 24px -4px rgba(23, 59, 58, 0.07)',
       },
       keyframes: {
         sway: {

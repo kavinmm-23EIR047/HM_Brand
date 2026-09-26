@@ -2,240 +2,142 @@
 
 import React from "react";
 import Link from "next/link";
-
 import { 
-  Phone, Mail, MapPin, Sparkles, Heart, ChevronRight, ArrowRight,
-  Leaf, FlaskConical, Flower2, Wind, Box, Droplets, Grid, 
-  Diamond, Calendar, Users, BookOpen, Clock,
-  Headset, MessageCircle, Truck, RotateCcw, Package, Building, HelpCircle
+  Phone, Mail, MapPin, Heart, ArrowRight,
+  Leaf, FlaskConical, ShieldCheck, Award, MessageCircle, Truck
 } from "lucide-react";
-import { LotusMotif, MandalaMotif } from "@/components/divine-motifs";
+import { Lotus, MandalaMotif } from "./illustrations";
 
 export function Footer() {
   return (
-    <footer className="bg-deepRed text-sacredCream relative overflow-hidden font-sans border-t-[6px] border-marigold">
-      {/* Elegant Top Border Glow instead of the messy ToranBorder */}
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-marigold/60 to-transparent z-10 shadow-[0_0_15px_rgba(249,199,79,0.5)]"></div>
-      
-      {/* High-Resolution Background Mandalas with internal counter-rotation */}
-      <div className="absolute -top-[450px] -right-[450px] pointer-events-none z-0 opacity-15 text-marigold">
-        <MandalaMotif size={1200} speed={120} />
+    <footer className="bg-[#9E1830] text-white relative overflow-hidden font-sans border-t-4 border-[#F6C84C]">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-44 overflow-hidden" aria-hidden="true">
+        <svg className="h-full w-full" viewBox="0 0 1440 240" preserveAspectRatio="none" fill="none">
+          <path className="footer-ridge footer-ridge-back" d="M0 112C115 75 157 123 259 99c104-25 139-85 244-64 89 18 111 88 208 81 87-6 116-71 210-63 99 8 124 65 221 48 108-19 162-64 298-23v162H0V112Z" fill="#771027" fillOpacity=".68" />
+          <path className="footer-ridge footer-ridge-mid" d="M0 145c122-43 202-9 298-32 95-23 132-57 220-41 96 17 139 74 234 54 98-21 125-63 216-41 89 21 142 74 239 47 83-23 150-50 233-22v130H0V145Z" fill="#84102C" fillOpacity=".72" />
+          <path className="footer-ridge footer-ridge-front" d="M0 183c114-20 179-54 278-34 95 20 154 41 245 15 95-26 142-37 222-13 99 30 148 51 246 22 103-30 155-53 249-27 77 21 133 49 200 37v57H0v-57Z" fill="#921432" fillOpacity=".78" />
+        </svg>
       </div>
-      <div className="absolute -bottom-[350px] -left-[350px] pointer-events-none z-0 opacity-10 text-marigold">
-        <MandalaMotif size={900} speed={180} counterRotate={false} />
-      </div>
-
-      <div className="mx-auto max-w-[1500px] px-6 lg:px-10 pt-28 pb-12 relative z-10">
+      <MandalaMotif className="mandala-footer absolute -bottom-36 -right-24 z-[1] h-[440px] w-[440px] opacity-[.22]" speed={64} strokeColor="#FFD974" strokeWidth={2} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 relative z-10">
         
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-8 border-b border-white/20 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 border-b border-white/20 pb-12">
           
-          {/* COLUMN 1: Brand (lg: 4, xl: 3) */}
-          <div className="lg:col-span-4 xl:col-span-3 space-y-8">
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full border-2 border-marigold flex items-center justify-center text-marigold text-4xl shadow-[0_0_20px_rgba(249,199,79,0.4)] relative bg-deepRed group">
-                <div className="absolute inset-1 rounded-full border border-marigold/40"></div>
-                <div className="animate-[spin_30s_linear_infinite]">
-                  <LotusMotif size={44} />
-                </div>
+          {/* COLUMN 1: Brand & Tagline */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#F6C84C] bg-[#FFF4D6] sm:h-14 sm:w-14">
+                <Lotus className="h-9 w-9 sm:h-10 sm:w-10" />
               </div>
               <div>
-                <span className="font-cinzel text-3xl lg:text-4xl font-bold tracking-wider text-white block leading-none drop-shadow-md">
+                <span className="block whitespace-nowrap font-heading text-base font-extrabold leading-none tracking-wide text-white sm:text-2xl">
                   HM AGARBATTIS
                 </span>
-                <span className="text-[13px] uppercase tracking-[0.35em] text-marigold font-bold block mt-3 drop-shadow-sm">
+                <span className="mt-1 block font-script text-sm font-normal text-[#F6C84C] sm:text-base">
                   Find Your God Within
                 </span>
               </div>
             </div>
 
-            <p className="text-[17px] text-white leading-relaxed font-medium">
-              Handcrafted with pure botanical ingredients, sacred herbs, and natural extracts. HM Agarbattis brings you a divine fragrance experience for your peaceful moments.
+            <p className="font-sans text-sm text-white/90 leading-relaxed font-normal">
+              Handcrafted with pure botanical ingredients, sacred herbs, and natural resins. HM Agarbattis brings you an authentic Indian fragrance experience for daily prayers, meditation, and mindful living.
             </p>
 
-            {/* Badges - Larger & More Visible */}
-            <div className="grid grid-cols-4 gap-3 pt-6">
-              {[
-                { icon: <Leaf size={26}/>, text: "100% Natural" },
-                { icon: <Heart size={26}/>, text: "Charcoal Free" },
-                { icon: <Leaf size={26}/>, text: "Eco Friendly" },
-                { icon: <FlaskConical size={26}/>, text: "No Chemicals" }
-              ].map((badge, i) => (
-                <div key={i} className="flex flex-col items-center text-center gap-3">
-                  <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-marigold hover:scale-110 hover:bg-marigold hover:text-deepRed transition-all shadow-lg cursor-pointer">
-                    {badge.icon}
-                  </div>
-                  <span className="text-[12px] font-bold leading-tight text-white">{badge.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* COLUMNS 2, 3, 4: Links (lg: 8, xl: 6) */}
-          <div className="lg:col-span-8 xl:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-8 xl:gap-6 pl-0 xl:pl-8">
-            
-            {/* Sacred Categories */}
-            <div>
-              <h3 className="font-cinzel text-2xl text-white mb-8 font-bold flex items-center gap-3 drop-shadow-md">
-                <LotusMotif size={28} className="text-marigold animate-pulse"/>
-                Categories
-              </h3>
-              <ul className="space-y-6 text-[17px] font-semibold text-white">
-                {[
-                  { name: "Agarbatti & Flora", icon: <Flower2 size={20}/> },
-                  { name: "Dhoop & Cones", icon: <Wind size={20}/> },
-                  { name: "Bhimseni Camphor", icon: <Box size={20}/> },
-                  { name: "Cup Sambrani", icon: <Droplets size={20}/> },
-                  { name: "Resins & Samagri", icon: <Leaf size={20}/> },
-                  { name: "Chandan Dhoop Cones", icon: <Sparkles size={20}/> },
-                  { name: "Pooja Essentials", icon: <LotusMotif size={20}/> },
-                ].map((link, i) => (
-                  <li key={i}>
-                    <Link href="#" className="group flex items-center gap-4 hover:text-marigold transition-all duration-300 transform hover:translate-x-2">
-                      <span className="text-marigold/70 group-hover:text-marigold transition-colors">{link.icon}</span>
-                      <span>{link.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Experience */}
-            <div>
-              <h3 className="font-cinzel text-2xl text-white mb-8 font-bold flex items-center gap-3 drop-shadow-md">
-                <Diamond size={28} className="text-marigold"/>
-                Experience
-              </h3>
-              <ul className="space-y-6 text-[17px] font-semibold text-white">
-                {[
-                  { name: "All Products", icon: <Grid size={20}/> },
-                  { name: "Divine Collections", icon: <Diamond size={20}/> },
-                  { name: "Festival Calendar", icon: <Calendar size={20}/> },
-                  { name: "Our Craftsmanship", icon: <Heart size={20}/> },
-                  { name: "Sustainability", icon: <Leaf size={20}/> },
-                  { name: "Customer Stories", icon: <Users size={20}/> },
-                  { name: "Blog & Spiritual Living", icon: <BookOpen size={20}/> },
-                ].map((link, i) => (
-                  <li key={i}>
-                    <Link href="#" className="group flex items-center gap-4 hover:text-marigold transition-all duration-300 transform hover:translate-x-2">
-                      <span className="text-marigold/70 group-hover:text-marigold transition-colors">{link.icon}</span>
-                      <span>{link.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Help & Support */}
-            <div>
-              <h3 className="font-cinzel text-2xl text-white mb-8 font-bold flex items-center gap-3 drop-shadow-md">
-                <Headset size={28} className="text-marigold"/>
-                Support
-              </h3>
-              <ul className="space-y-6 text-[17px] font-semibold text-white">
-                {[
-                  { name: "Contact Us", icon: <Mail size={20}/> },
-                  { name: "Track Your Order", icon: <Truck size={20}/> },
-                  { name: "Returns & Refunds", icon: <RotateCcw size={20}/> },
-                  { name: "Shipping Information", icon: <Package size={20}/> },
-                  { name: "Bulk & Corporate", icon: <Building size={20}/> },
-                  { name: "FAQs", icon: <HelpCircle size={20}/> },
-                  { name: "Store Locator", icon: <MapPin size={20}/> },
-                ].map((link, i) => (
-                  <li key={i}>
-                    <Link href="#" className="group flex items-center gap-4 hover:text-marigold transition-all duration-300 transform hover:translate-x-2">
-                      <span className="text-marigold/70 group-hover:text-marigold transition-colors">{link.icon}</span>
-                      <span>{link.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* COLUMN 5: Newsletter & Contact (lg: 12, xl: 3) */}
-          <div className="lg:col-span-12 xl:col-span-3 space-y-8">
-            
-            {/* Stay Connected Box */}
-            <div className="bg-black/20 border border-white/20 rounded-2xl p-8 relative overflow-hidden backdrop-blur-md shadow-2xl">
-              {/* Rotating card background accent */}
-              <div className="absolute -top-4 -right-4 text-marigold opacity-15 animate-[spin_40s_linear_infinite] pointer-events-none">
-                <LotusMotif size={140} />
+            {/* 4 Feature Pills */}
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="bg-white/10 px-3 py-2 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-semibold">
+                <Leaf size={16} className="text-[#F6C84C]" />
+                <span>100% Natural</span>
               </div>
-
-              <h4 className="text-white font-cinzel text-2xl font-bold mb-3 flex items-center gap-3 relative z-10 drop-shadow-md">
-                Stay Connected
-              </h4>
-              <p className="text-sm text-sacredCream/90 mb-8 leading-relaxed relative z-10 font-medium">
-                Get updates on new products, festivals & special offers.
-              </p>
-              
-              <div className="flex items-center bg-black/60 border border-white/20 rounded-full p-1.5 pl-5 mb-8 focus-within:border-marigold transition-colors relative z-10 shadow-inner">
-                <Mail size={20} className="text-white/60 shrink-0" />
-                <input 
-                  type="email" 
-                  placeholder="Your email address" 
-                  className="bg-transparent border-none text-sm text-white px-4 py-3 w-full outline-none placeholder:text-white/50" 
-                />
-                <button className="bg-marigold text-deepRed p-3.5 rounded-full hover:bg-white hover:scale-105 transition-all shrink-0 font-bold shadow-md">
-                  <ArrowRight size={20} />
-                </button>
+              <div className="bg-white/10 px-3 py-2 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-semibold">
+                <ShieldCheck size={16} className="text-[#F6C84C]" />
+                <span>No Charcoal</span>
               </div>
-
-              {/* Socials */}
-              <div className="flex items-center justify-between gap-2 relative z-10">
-                {[
-                  <svg key="1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>,
-                  <svg key="2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>,
-                  <svg key="3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>,
-                  <MessageCircle key="4" size={20} />
-                ].map((icon, i) => (
-                  <a key={i} href="#" className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-marigold hover:border-marigold hover:text-deepRed hover:scale-110 transition-all text-white shrink-0 shadow-md">
-                    {icon}
-                  </a>
-                ))}
+              <div className="bg-white/10 px-3 py-2 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-semibold">
+                <FlaskConical size={16} className="text-[#F6C84C]" />
+                <span>No Chemicals</span>
               </div>
-            </div>
-
-            {/* Customer Care */}
-            <div className="flex items-start gap-5 p-6 rounded-2xl bg-black/20 border border-white/20 shadow-xl">
-              <Phone size={32} className="text-marigold mt-1 shrink-0" />
-              <div>
-                <p className="text-sm font-semibold text-sacredCream/80 mb-1.5">Need help with an order?</p>
-                <p className="text-2xl font-bold text-white tracking-wide mb-1">+91 98765 43210</p>
-                <p className="text-xs font-medium text-sacredCream/60">Mon - Sat, 9:00 AM - 7:30 PM</p>
+              <div className="bg-white/10 px-3 py-2 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-semibold">
+                <Award size={16} className="text-[#F6C84C]" />
+                <span>Made in India</span>
               </div>
             </div>
           </div>
-          
+
+          {/* COLUMN 2: Quick Links */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-heading font-bold text-lg text-[#F6C84C] uppercase tracking-wider text-xs">
+              Shop Categories
+            </h4>
+            <ul className="space-y-2.5 text-sm font-medium text-white/90">
+              <li><Link href="/category/Agarbatti" className="hover:text-[#F6C84C] transition">Agarbatti & Flora</Link></li>
+              <li><Link href="/category/Camphor" className="hover:text-[#F6C84C] transition">Bhimseni Camphor</Link></li>
+              <li><Link href="/category/Sambrani" className="hover:text-[#F6C84C] transition">Cup Sambrani</Link></li>
+              <li><Link href="/category/Loban" className="hover:text-[#F6C84C] transition">Loban & Dhoop</Link></li>
+              <li><Link href="/category/Dhoop" className="hover:text-[#F6C84C] transition">Sandalwood Cones</Link></li>
+              <li><Link href="/collections" className="hover:text-[#F6C84C] transition">Pooja Essentials</Link></li>
+              <li><Link href="/offers" className="hover:text-[#F6C84C] transition">Gift Sets & Bundles</Link></li>
+            </ul>
+          </div>
+
+          {/* COLUMN 3: Company Links */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-heading font-bold text-lg text-[#F6C84C] uppercase tracking-wider text-xs">
+              Quick Links
+            </h4>
+            <ul className="space-y-2.5 text-sm font-medium text-white/90">
+              <li><Link href="/about" className="hover:text-[#F6C84C] transition">About Us & Story</Link></li>
+              <li><Link href="/about#benefits" className="hover:text-[#F6C84C] transition">Natural Benefits</Link></li>
+              <li><Link href="/blog" className="hover:text-[#F6C84C] transition">Blog & Wellness</Link></li>
+              <li><Link href="/offers" className="hover:text-[#F6C84C] transition">Special Offers</Link></li>
+              <li><Link href="/contact" className="hover:text-[#F6C84C] transition">Contact Us</Link></li>
+            </ul>
+          </div>
+
+          {/* COLUMN 4: Customer Support */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-heading font-bold text-lg text-[#F6C84C] uppercase tracking-wider text-xs">
+              Help & Support
+            </h4>
+            <ul className="space-y-2.5 text-sm font-medium text-white/90">
+              <li><Link href="/orders" className="hover:text-[#F6C84C] transition">Track Your Order</Link></li>
+              <li><Link href="/contact" className="hover:text-[#F6C84C] transition">Shipping Questions</Link></li>
+              <li><Link href="/contact" className="hover:text-[#F6C84C] transition">Returns & Refunds</Link></li>
+              <li><Link href="/contact" className="hover:text-[#F6C84C] transition">FAQs & Support</Link></li>
+            </ul>
+          </div>
+
+          {/* COLUMN 5: Newsletter & Social */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-heading font-bold text-lg text-[#F6C84C] uppercase tracking-wider text-xs">
+              Join Our Community
+            </h4>
+            <p className="text-xs text-white/80 leading-relaxed">
+              Get updates on new launches, offers and wellness tips.
+            </p>
+            <div className="space-y-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full text-xs text-[#173B3A] bg-[#FFF4D6] px-3.5 py-2.5 rounded-xl focus:outline-none font-medium placeholder:text-[#173B3A]/60"
+              />
+              <button className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2.5 rounded-xl font-bold text-xs transition">
+                Subscribe
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        {/* Bottom Legal Bar */}
-        <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-xs font-semibold text-sacredCream/70 text-center md:text-left">
-            <p className="mb-2">© {new Date().getFullYear()} HM AGARBATTIS. All Rights Reserved.</p>
-            <p>Designed with <Heart size={14} className="inline text-marigold fill-marigold mx-1 animate-pulse"/> for peaceful living.</p>
+        {/* Bottom Bar */}
+        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/70">
+          <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved.</p>
+          <div className="flex items-center gap-1 font-script text-base text-[#F6C84C]">
+            <span>Find Your God Within</span>
+            <Heart size={14} className="text-[#F47A20] fill-[#F47A20] ml-1" />
           </div>
-          
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-xs font-bold text-sacredCream/80">
-            <Link href="#" className="hover:text-marigold hover:underline transition-all">Privacy Policy</Link>
-            <Link href="#" className="hover:text-marigold hover:underline transition-all">Terms & Conditions</Link>
-            <Link href="#" className="hover:text-marigold hover:underline transition-all">Refund Policy</Link>
-            <Link href="#" className="hover:text-marigold hover:underline transition-all">Shipping</Link>
-          </div>
-
-          <div className="flex items-center gap-8 text-xs font-bold text-sacredCream/90 tracking-widest uppercase">
-            <div className="flex items-center gap-3">
-               <svg width="28" height="18" viewBox="0 0 32 20" fill="currentColor" className="text-white">
-                 <path d="M16 2 L20 18 L16 14 L12 18 Z" />
-               </svg>
-               <span>Make in India</span>
-            </div>
-            <div className="flex items-center gap-3">
-               <Leaf size={18} className="text-leaf" fill="currentColor"/>
-               <span>Go Green</span>
-            </div>
-          </div>
+          <p>Handcrafted in India 🇮🇳</p>
         </div>
 
       </div>

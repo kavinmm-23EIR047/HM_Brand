@@ -43,10 +43,10 @@ export function SearchModal() {
         aria-hidden="true"
       />
 
-      <div className="relative min-h-screen px-4 pt-20 pb-12 flex justify-center items-start">
+      <div className="relative flex min-h-[100dvh] items-start justify-center px-2 pb-8 pt-12 sm:min-h-screen sm:px-4 sm:pt-20 sm:pb-12">
         <div className="relative w-full max-w-2xl bg-sacredCream border-2 border-antiqueGold rounded-2xl shadow-2xl overflow-hidden text-charcoal">
           {/* Search Header */}
-          <div className="p-5 border-b border-antiqueGold/40 bg-turmeric/20 flex items-center gap-3">
+          <div className="flex items-center gap-2 border-b border-antiqueGold/40 bg-turmeric/20 p-3 sm:gap-3 sm:p-5">
             <Search className="text-saffron" size={22} />
             <input
               ref={inputRef}
@@ -54,7 +54,7 @@ export function SearchModal() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search sacred agarbatti, camphor, sambrani..."
-              className="flex-1 bg-transparent border-none outline-none font-sans text-base text-charcoal placeholder-charcoal/40"
+              className="min-w-0 flex-1 border-none bg-transparent text-sm text-charcoal outline-none placeholder-charcoal/40 sm:text-base"
             />
             {query && (
               <button
@@ -73,7 +73,7 @@ export function SearchModal() {
           </div>
 
           {/* Search Content */}
-          <div className="p-6 max-h-[60vh] overflow-y-auto">
+          <div className="max-h-[65dvh] overflow-y-auto p-4 sm:max-h-[60vh] sm:p-6">
             {!query.trim() ? (
               <div>
                 <p className="text-xs font-bold tracking-widest text-kumkum uppercase mb-3">Popular Sacred Searches</p>
@@ -121,20 +121,20 @@ export function SearchModal() {
                     key={product.slug}
                     href={`/product/${product.slug}`}
                     onClick={() => setIsSearchOpen(false)}
-                    className="flex items-center justify-between p-3.5 bg-white border border-antiqueGold/30 rounded-xl hover:border-saffron transition group"
+                    className="flex min-w-0 items-center justify-between gap-2 rounded-xl border border-antiqueGold/30 bg-white p-2.5 transition group hover:border-saffron sm:p-3.5"
                   >
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex min-w-0 items-center gap-2 sm:gap-3.5">
                       <div className="w-12 h-12 rounded-lg bg-turmeric/40 border border-earthBrown/20 flex items-center justify-center text-xl shrink-0">
                         🪔
                       </div>
-                      <div>
-                        <h4 className="font-display text-lg text-earthBrown group-hover:text-saffron transition">
+                      <div className="min-w-0">
+                        <h4 className="truncate font-display text-sm text-earthBrown transition group-hover:text-saffron sm:text-lg">
                           {product.name}
                         </h4>
                         <p className="text-xs text-charcoal/60">{product.category} • {product.quantity}</p>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="shrink-0 text-right">
                       <span className="font-bold text-kumkum">₹{product.price}</span>
                       <span className="block text-[11px] text-charcoal/50 line-through">{product.mrp}</span>
                     </div>

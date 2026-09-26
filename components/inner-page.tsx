@@ -2,43 +2,58 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronRight, Home, Sparkles } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import { Leaf, Lotus } from "./illustrations";
 
 export function InnerPage({
   eyebrow,
   title,
   subtitle,
+  showHero = true,
   children,
 }: {
   eyebrow: string;
   title: string;
   subtitle?: string;
+  showHero?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#FFF8E7] text-[#292524]">
+    <div className="min-h-screen flex flex-col justify-between bg-[#fffaf0] text-[#173b3a]">
       <div>
         <Navigation />
 
         {/* Page Banner Header */}
-        <section className="bg-[#F4D35E]/20 border-b-2 border-[#C89B3C]/40 px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-[#B23A48] uppercase">
-              <Sparkles size={14} />
-              <span>{eyebrow}</span>
+        {showHero && <section className="relative overflow-hidden border-b border-[#eadfc9] bg-[#fffaf0] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+          <Leaf className="pointer-events-none absolute -right-5 -top-16 h-56 w-44 rotate-12 text-[#37824c]/10" />
+          <div className="relative mx-auto flex max-w-[1368px] items-center justify-between gap-8">
+            <div className="max-w-3xl">
+              <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold text-[#778078]">
+                <Link href="/" className="inline-flex items-center gap-1.5 transition hover:text-[#a90c35]"><Home size={12} />Home</Link>
+                <ChevronRight size={12} />
+                <span className="truncate text-[#a90c35]">{title}</span>
+              </nav>
+              <div className="flex items-center gap-2 text-[10px] font-extrabold tracking-[.18em] text-[#a90c35] uppercase">
+                <Sparkles size={13} className="text-[#e28b2d]" />
+                <span>{eyebrow}</span>
+              </div>
+              <h1 className="mt-2 max-w-3xl text-3xl font-extrabold leading-[1.08] tracking-[-.04em] text-[#173b3a] sm:text-4xl lg:text-[42px]">
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#52625a] sm:text-[15px]">
+                  {subtitle}
+                </p>
+              )}
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-[#6B4226] mt-3 max-w-3xl leading-tight">
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="mt-3 text-sm sm:text-base text-[#292524]/75 max-w-2xl leading-relaxed font-sans">
-                {subtitle}
-              </p>
-            )}
+            <div className="relative mr-4 hidden h-36 w-44 shrink-0 items-center justify-center rounded-full bg-[#e7efda] sm:flex lg:mr-14 lg:h-40 lg:w-48">
+              <div className="absolute inset-3 rounded-full border border-[#8baa73]/25" />
+              <Lotus className="relative z-10 h-32 w-40 lg:h-36 lg:w-44" />
+            </div>
           </div>
-        </section>
+        </section>}
 
         {/* Inner Content */}
         <main>{children}</main>

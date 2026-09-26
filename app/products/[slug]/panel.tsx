@@ -28,7 +28,7 @@ export function AddPanel({ product }: { product: Product }) {
   return (
     <div className="space-y-6 pt-4 border-t border-[#C89B3C]/40">
       {/* Quantity Selector */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <span className="text-xs font-bold text-[#6B4226] uppercase tracking-wider">
           Quantity:
         </span>
@@ -55,34 +55,34 @@ export function AddPanel({ product }: { product: Product }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
         <button
           onClick={handleAdd}
-          className="btn-saffron flex-1 py-4 px-6 rounded-md text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 shadow-solid-sm"
+          className="btn-saffron flex min-h-11 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-md px-1.5 py-3 text-[9px] font-bold uppercase tracking-normal shadow-solid-sm min-[360px]:gap-1.5 min-[360px]:px-2 min-[360px]:text-[10px] sm:px-4 sm:text-xs sm:tracking-wide"
         >
           {added ? (
             <>
-              <Check size={16} /> Added to Basket
+              <Check size={14} /> <span className="hidden min-[360px]:inline">Added to Basket</span><span className="min-[360px]:hidden">Added</span>
             </>
           ) : (
             <>
-              <ShoppingBag size={16} /> Add to Basket
+              <ShoppingBag size={14} /> <span className="hidden min-[360px]:inline">Add to Basket</span><span className="min-[360px]:hidden">Add</span>
             </>
           )}
         </button>
 
         <button
           onClick={handleBuyNow}
-          className="bg-[#C89B3C] text-[#FFF8E7] hover:bg-[#6B4226] border-2 border-[#C89B3C] py-4 px-6 rounded-md text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition shadow-solid-sm"
+          className="flex min-h-11 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-md border-2 border-[#C89B3C] bg-[#C89B3C] px-1.5 py-3 text-[9px] font-bold uppercase tracking-normal text-[#FFF8E7] shadow-solid-sm transition hover:bg-[#6B4226] min-[360px]:gap-1.5 min-[360px]:px-2 min-[360px]:text-[10px] sm:px-4 sm:text-xs sm:tracking-wide"
         >
-          <span>Buy Now</span>
-          <ArrowRight size={15} />
+          <span className="hidden min-[360px]:inline">Buy Now</span><span className="min-[360px]:hidden">Buy</span>
+          <ArrowRight size={14} />
         </button>
 
         <button
           onClick={() => toggleWishlist(product.slug)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`p-4 rounded-md border-2 transition flex items-center justify-center ${
+          className={`flex min-h-11 min-w-10 items-center justify-center rounded-md border-2 p-2 transition sm:p-4 ${
             wishlisted
               ? "bg-[#B23A48] border-[#B23A48] text-white"
               : "bg-[#FFF8E7] border-[#C89B3C] text-[#6B4226] hover:bg-[#B23A48] hover:text-white"

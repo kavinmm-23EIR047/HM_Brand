@@ -7,7 +7,27 @@ import { Filter, SlidersHorizontal, Search, Sparkles, X } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { MascotSearch } from "@/components/mascot-art";
+import { RitualArt } from "@/components/illustrations/RitualArt";
 import { products, categories } from "@/lib/products";
+
+const categoryIllustrations = {
+  Agarbatti: "incense",
+  Camphor: "camphor",
+  Sambrani: "sambrani",
+  Loban: "loban",
+  Dhoop: "sandalwood",
+  "Premium Fragrances": "diya",
+  "Special Collections": "gift",
+} as const;
+
+const matchesCategory = (product: (typeof products)[number], category: string) => {
+  if (category === "All") return true;
+  if (category === "Premium Fragrances") return product.category === "Agarbatti";
+  return product.category.toLowerCase() === category.toLowerCase();
+};
+
+const getCategoryCount = (category: string) =>
+  category === "All" ? products.length : products.filter((product) => matchesCategory(product, category)).length;
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -23,7 +43,7 @@ function ShopContent() {
     return products
       .filter((p) => {
         // Category filter
-        if (selectedCategory !== "All" && p.category.toLowerCase() !== selectedCategory.toLowerCase()) {
+        if (!matchesCategory(p, selectedCategory)) {
           return false;
         }
         // Price filter
@@ -36,7 +56,10 @@ function ShopContent() {
           const matchName = p.name.toLowerCase().includes(q);
           const matchNote = p.note.toLowerCase().includes(q);
           const matchCat = p.category.toLowerCase().includes(q);
-          if (!matchName && !matchNote && !matchCat) return false;
+          const matchSubCategory = p.subCategory?.toLowerCase().includes(q) || false;
+          const matchDescription = p.description.toLowerCase().includes(q);
+          const matchFragrance = p.fragranceNotes?.some((note) => note.toLowerCase().includes(q)) || false;
+          if (!matchName && !matchNote && !matchCat && !matchSubCategory && !matchDescription && !matchFragrance) return false;
         }
         return true;
       })
@@ -50,16 +73,42 @@ function ShopContent() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <section aria-labelledby="shop-categories-heading" className="mb-8 rounded-2xl bg-[#f8f0df] p-4 sm:p-5">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <p className="text-[10px] font-extrabold tracking-[.16em] text-[#a90c35]">FIND YOUR FRAGRANCE</p>
+            <h2 id="shop-categories-heading" className="mt-1 text-lg font-extrabold tracking-[-.025em] text-[#173b3a] sm:text-xl">Shop by category</h2>
+          </div>
+          <span className="text-xs text-[#65736b]">Choose a ritual to narrow your search</span>
+        </div>
+        <div className="grid grid-cols-2 gap-2 min-[360px]:grid-cols-4 lg:grid-cols-8 lg:gap-3">
+          {["All", ...categories].map((category) => {
+            const count = getCategoryCount(category);
+            const isSelected = selectedCategory === category;
+            const artKind = category === "All" ? "natural" : categoryIllustrations[category as keyof typeof categoryIllustrations];
+            return (
+              <button key={category} type="button" onClick={() => setSelectedCategory(category)} aria-pressed={isSelected} className={`group flex min-w-0 flex-col items-center rounded-xl px-1.5 py-2 text-center transition ${isSelected ? "bg-white shadow-sm ring-1 ring-[#3f7d45]/30" : "hover:bg-white/75"}`}>
+                <span className={`grid h-12 w-12 place-items-center overflow-hidden rounded-full transition group-hover:scale-105 sm:h-14 sm:w-14 ${isSelected ? "bg-[#dcebc9]" : "bg-white"}`}>
+                  <RitualArt kind={artKind} className="h-full w-full p-1" />
+                </span>
+                <span className={`mt-1.5 line-clamp-2 text-[10px] font-bold leading-tight sm:text-[11px] ${isSelected ? "text-[#a90c35]" : "text-[#244038]"}`}>{category === "All" ? "All products" : category}</span>
+                <span className="mt-0.5 text-[9px] text-[#758078]">{count} items</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Top Controls Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#C89B3C]/40">
+      <div className="flex flex-col gap-4 border-b border-[#e7dcc7] pb-5 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#B23A48] bg-[#F4D35E]/30 px-3 py-1.5 rounded-full border border-[#C89B3C]">
-            {filteredProducts.length} Sacred Items
+          <span className="rounded-full bg-[#e1edcf] px-3 py-1.5 text-xs font-bold text-[#28623f]">
+            {filteredProducts.length} products
           </span>
           {selectedCategory !== "All" && (
             <button
               onClick={() => setSelectedCategory("All")}
-              className="text-xs font-bold text-[#6B4226] hover:text-[#B23A48] flex items-center gap-1"
+              className="flex items-center gap-1 text-xs font-bold text-[#173b3a] hover:text-[#a90c35]"
             >
               <span>Category: {selectedCategory}</span>
               <X size={13} />
@@ -75,16 +124,18 @@ function ShopContent() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
-              className="text-xs bg-white border border-[#C89B3C] rounded-lg px-3.5 py-2 pr-8 text-[#292524] placeholder-[#292524]/50 outline-[#E85D04]"
+              aria-label="Search products"
+              className="rounded-full border border-[#e6d8c0] bg-white px-4 py-2.5 pr-9 text-[13px] text-[#173b3a] placeholder:text-[#829087] outline-none transition focus:border-[#a90c35] focus:ring-2 focus:ring-[#a90c35]/10"
             />
-            <Search size={14} className="absolute right-2.5 top-2.5 text-[#6B4226]/60 pointer-events-none" />
+            <Search size={15} className="pointer-events-none absolute right-3 top-3 text-[#a90c35]/75" />
           </div>
 
           {/* Sort Selector */}
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="text-xs font-bold bg-[#FFF8E7] border border-[#C89B3C] rounded-lg px-3 py-2 text-[#6B4226] outline-[#E85D04]"
+            aria-label="Sort products"
+            className="rounded-full border border-[#e6d8c0] bg-white px-4 py-2.5 text-[13px] font-semibold text-[#173b3a] outline-none focus:border-[#a90c35]"
           >
             <option value="featured">Sort: Featured</option>
             <option value="price-low">Price: Low to High</option>
@@ -108,13 +159,13 @@ function ShopContent() {
         <aside
           className={`lg:col-span-3 space-y-8 ${
             mobileFilterOpen ? "block" : "hidden lg:block"
-          } bg-[#FFF8E7] p-6 rounded-xl border-2 border-[#C89B3C]/40 h-fit`}
+          } h-fit rounded-2xl bg-white p-5 shadow-sm`}
         >
           {/* Categories */}
           <div>
-            <h3 className="font-display text-xl text-[#6B4226] font-bold mb-3 flex items-center gap-2">
-              <Sparkles size={16} className="text-[#E85D04]" />
-              Sacred Categories
+            <h3 className="mb-3 flex items-center gap-2 text-base font-extrabold text-[#173b3a]">
+              <Sparkles size={16} className="text-[#e28b2d]" />
+              Filter by category
             </h3>
             <div className="space-y-1.5">
               {["All", ...categories].map((cat) => (
@@ -123,15 +174,15 @@ function ShopContent() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`w-full text-left text-xs font-semibold py-2 px-3 rounded-md transition flex items-center justify-between ${
                     selectedCategory === cat
-                      ? "bg-[#E85D04] text-[#FFF8E7] font-bold"
-                      : "text-[#6B4226] hover:bg-[#F4D35E]/30"
+                    ? "bg-[#286b45] font-bold text-white"
+                      : "text-[#38534a] hover:bg-[#f5f0e5]"
                   }`}
                 >
                   <span>{cat}</span>
                   <span className="text-[10px] opacity-75">
                     {cat === "All"
                       ? products.length
-                      : products.filter((p) => p.category === cat).length}
+                      : getCategoryCount(cat)}
                   </span>
                 </button>
               ))}
@@ -139,9 +190,9 @@ function ShopContent() {
           </div>
 
           {/* Price Range Filter */}
-          <div className="pt-6 border-t border-[#C89B3C]/30">
-            <h3 className="font-display text-xl text-[#6B4226] font-bold mb-3">Price Range</h3>
-            <div className="space-y-2 text-xs font-semibold text-[#6B4226]">
+          <div className="border-t border-[#eee5d5] pt-5">
+            <h3 className="mb-3 text-base font-extrabold text-[#173b3a]">Price range</h3>
+            <div className="space-y-2.5 text-xs font-semibold text-[#38534a]">
               {[
                 { id: "all", label: "All Prices" },
                 { id: "under-150", label: "Under ₹150" },
@@ -169,7 +220,7 @@ function ShopContent() {
               setSelectedPriceRange("all");
               setSearchQuery("");
             }}
-            className="w-full btn-outline-earth py-2.5 text-center text-xs tracking-wider uppercase rounded-md font-bold"
+            className="w-full rounded-full border border-[#286b45]/30 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-[#286b45] transition hover:bg-[#286b45] hover:text-white"
           >
             Reset All Filters
           </button>
@@ -198,7 +249,7 @@ function ShopContent() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {filteredProducts.map((p) => (
                 <ProductCard key={p.slug} product={p} />
               ))}

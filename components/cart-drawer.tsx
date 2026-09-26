@@ -24,14 +24,14 @@ export function CartDrawer() {
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <aside className="w-screen max-w-md bg-sacredCream border-l-2 border-antiqueGold shadow-2xl flex flex-col justify-between text-charcoal">
+      <div className="fixed inset-y-0 right-0 flex w-full max-w-full justify-end">
+        <aside className="flex h-[100dvh] w-full max-w-md flex-col justify-between bg-sacredCream text-charcoal shadow-2xl sm:border-l-2 sm:border-antiqueGold">
           {/* Header */}
-          <div className="p-6 border-b border-antiqueGold/30 bg-turmeric/20">
+          <div className="border-b border-antiqueGold/30 bg-turmeric/20 p-4 sm:p-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-2">
                 <ShoppingBag className="text-saffron" size={22} />
-                <h2 className="font-display text-2xl text-earthBrown">Your Sacred Basket</h2>
+                <h2 className="truncate font-display text-lg text-earthBrown sm:text-2xl">Your Basket</h2>
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
@@ -43,8 +43,8 @@ export function CartDrawer() {
             </div>
 
             {/* Free Delivery Meter */}
-            <div className="mt-4 bg-sacredCream p-3 rounded-lg border border-antiqueGold/40">
-              <div className="flex items-center justify-between text-xs font-semibold text-earthBrown">
+            <div className="mt-4 rounded-lg border border-antiqueGold/40 bg-sacredCream p-3">
+              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs font-semibold text-earthBrown">
                 <span className="flex items-center gap-1.5">
                   <Sparkles size={14} className="text-saffron" />
                   {amountLeft > 0 ? `Add ₹${amountLeft} more for FREE Delivery` : "🎉 You unlocked FREE Delivery!"}
@@ -61,7 +61,7 @@ export function CartDrawer() {
           </div>
 
           {/* Cart Items or Empty State */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex-1 space-y-4 overflow-y-auto p-4 sm:p-6">
             {lines.length === 0 ? (
               <div className="text-center py-12 flex flex-col items-center">
                 <MascotBasket size={150} />
@@ -71,7 +71,7 @@ export function CartDrawer() {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-saffron mt-6 px-6 py-3 rounded-md text-xs font-bold tracking-wider uppercase"
+                  className="btn-saffron mt-6 min-h-11 whitespace-nowrap rounded-md px-4 py-3 text-[10px] font-bold uppercase tracking-wide sm:px-6 sm:text-xs sm:tracking-wider"
                 >
                   Explore Sacred Essentials
                 </button>
@@ -80,9 +80,9 @@ export function CartDrawer() {
               lines.map((line) => (
                 <div
                   key={line.product.slug}
-                  className="bg-sacredCream p-4 rounded-xl border border-antiqueGold/40 flex gap-4 items-center shadow-sm"
+                  className="flex items-center gap-2 rounded-xl border border-antiqueGold/40 bg-sacredCream p-3 shadow-sm sm:gap-4 sm:p-4"
                 >
-                  <div className="w-16 h-16 bg-turmeric rounded-lg border border-earthBrown/20 flex items-center justify-center shrink-0">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg border border-earthBrown/20 bg-turmeric sm:h-16 sm:w-16">
                     <span className="text-2xl">🪔</span>
                   </div>
 
@@ -92,7 +92,7 @@ export function CartDrawer() {
                     <p className="text-sm font-bold text-kumkum mt-1">₹{line.product.price}</p>
                   </div>
 
-                  <div className="flex flex-col items-end gap-2">
+                  <div className="flex shrink-0 flex-col items-end gap-2">
                     <button
                       onClick={() => remove(line.product.slug)}
                       className="text-earthBrown/60 hover:text-kumkum p-1 transition"
@@ -125,7 +125,7 @@ export function CartDrawer() {
 
           {/* Footer & Checkout */}
           {lines.length > 0 && (
-            <div className="p-6 border-t border-antiqueGold/30 bg-sacredCream space-y-3">
+            <div className="space-y-3 border-t border-antiqueGold/30 bg-sacredCream p-4 sm:p-6">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-charcoal/70">Total Items</span>
                 <span className="font-bold text-earthBrown">{totalItems} items</span>
@@ -140,14 +140,14 @@ export function CartDrawer() {
                 <Link
                   href="/cart"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-outline-earth py-3 text-center text-xs tracking-wider uppercase rounded-md flex items-center justify-center"
+                  className="btn-outline-earth flex min-h-11 items-center justify-center whitespace-nowrap rounded-md px-2 py-3 text-center text-[10px] uppercase tracking-wide sm:text-xs sm:tracking-wider"
                 >
                   View Basket
                 </Link>
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-saffron py-3 text-center text-xs tracking-wider uppercase rounded-md flex items-center justify-center gap-1"
+                  className="btn-saffron flex min-h-11 items-center justify-center gap-1 whitespace-nowrap rounded-md px-2 py-3 text-center text-[10px] uppercase tracking-wide sm:text-xs sm:tracking-wider"
                 >
                   Checkout <ArrowRight size={14} />
                 </Link>

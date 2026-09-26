@@ -20,7 +20,7 @@ export default function FestivalsPage() {
           {festivalsList.map((f) => (
             <article
               key={f.id}
-              className="bg-[#FFF8E7] p-8 rounded-2xl border-2 border-[#C89B3C]/40 hover:border-[#6B4226] transition-all duration-300 flex flex-col justify-between hover:shadow-solid-sm group"
+              className="bg-white p-8 rounded-2xl border border-[#eadfc9]/40 hover:border-[#6B4226] transition-all duration-300 flex flex-col justify-between hover:shadow-solid-sm group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -30,22 +30,22 @@ export default function FestivalsPage() {
                   <span className="text-xl">🪔</span>
                 </div>
 
-                <h2 className="font-display text-2xl sm:text-3xl text-[#6B4226] font-bold group-hover:text-[#E85D04] transition">
+                <h2 className="font-display text-2xl sm:text-3xl text-[#173b3a] font-bold group-hover:text-[#e7771b] transition">
                   {f.name}
                 </h2>
 
-                <p className="mt-3 text-xs sm:text-sm text-[#292524]/80 leading-relaxed font-sans">
+                <p className="mt-3 text-xs sm:text-sm text-[#52625a] leading-relaxed font-sans">
                   {f.description}
                 </p>
 
-                <div className="mt-5 p-3.5 bg-[#F4D35E]/20 rounded-lg border border-[#C89B3C]/40 text-xs text-[#6B4226]">
-                  <span className="font-bold text-[#B23A48]">Ritual Note: </span>
+                <div className="mt-5 p-3.5 bg-[#f8f2e5] rounded-lg border border-[#eadfc9]/40 text-xs text-[#173b3a]">
+                  <span className="font-bold text-[#a90c35]">Ritual Note: </span>
                   <span>{f.ritualNote}</span>
                 </div>
               </div>
 
               <div className="mt-8 pt-4 border-t border-[#C89B3C]/30 flex items-center justify-between">
-                <span className="text-xs font-bold text-[#588157]">
+                <span className="text-xs font-bold text-[#286b45]">
                   ✦ {f.recommendedCategory}
                 </span>
                 <Link
@@ -61,20 +61,20 @@ export default function FestivalsPage() {
         </div>
 
         {/* Highlight Festival Essentials Grid */}
-        <section className="bg-[#F4D35E]/15 rounded-3xl border-2 border-[#6B4226] p-8 sm:p-12 shadow-solid-sm">
+        <section className="bg-[#F4D35E]/15 rounded-3xl border border-[#eadfc9] p-8 sm:p-12 shadow-solid-sm">
           <div className="text-center max-w-xl mx-auto mb-10">
-            <span className="text-xs font-bold tracking-[0.2em] text-[#B23A48] uppercase block">
+            <span className="text-xs font-bold tracking-[0.2em] text-[#a90c35] uppercase block">
               FESTIVAL ESSENTIALS
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl text-[#6B4226] mt-2">
+            <h2 className="font-display text-3xl sm:text-4xl text-[#173b3a] mt-2">
               Most Loved Festive Formulations
             </h2>
-            <p className="text-xs sm:text-sm text-[#292524]/75 mt-2 font-sans">
+            <p className="text-xs sm:text-sm text-[#65716a] mt-2 font-sans">
               Hand-picked bestsellers ready for your family ceremonies and celebrations.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {products
               .filter((p) => p.featured)
               .slice(0, 3)
@@ -87,3 +87,4 @@ export default function FestivalsPage() {
     </InnerPage>
   );
 }
+
