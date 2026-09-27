@@ -4,85 +4,56 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
-  Phone, Mail, MapPin, Heart, ArrowRight,
-  Leaf, FlaskConical, ShieldCheck, Award, Sparkles
+  Heart, Leaf, FlaskConical, ShieldCheck, Award
 } from "lucide-react";
-import { MandalaMotif } from "./illustrations";
+import { MandalaMotif, MeditationYogaDrawing, ToranMaalai } from "./illustrations";
 
 export function Footer() {
   return (
-    <footer className="relative w-full max-w-full overflow-hidden bg-gradient-to-b from-[#8f122a] via-[#9E1830] to-[#680b1e] text-white font-sans rounded-t-[36px] sm:rounded-t-[56px] border-t-4 border-[#F6C84C] shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
+    <footer className="relative w-full max-w-full overflow-hidden bg-gradient-to-b from-[#800f24] via-[#9E1830] to-[#3f0510] text-white font-sans rounded-t-[32px] sm:rounded-t-[52px] border-t-2 border-[#F6C84C]/50 shadow-[0_-20px_60px_rgba(0,0,0,0.35)]">
       
-      {/* 1. Mountain Peak & Temple Arch Silhouette Top SVG */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-24 w-full overflow-hidden opacity-30" aria-hidden="true">
-        <svg className="h-full w-full" viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none">
-          {/* Mountain Ridge Layers */}
-          <path d="M0,80 C180,30 320,70 540,25 C760,-15 920,60 1140,20 C1280,-5 1380,40 1440,30 L1440,0 L0,0 Z" fill="#ffd54c" fillOpacity="0.3" />
-          <path d="M0,95 C220,50 440,90 720,40 C980,0 1200,75 1440,50 L1440,0 L0,0 Z" fill="#680b1e" fillOpacity="0.5" />
-        </svg>
+      {/* ========================================================================= */}
+      {/* 1. ANIMATED MARIGOLD FLOWER & MANGO LEAF MAALAI (TORAN GARLAND) AT TOP    */}
+      {/* ========================================================================= */}
+      <div className="relative w-full overflow-hidden pointer-events-none select-none z-20">
+        <ToranMaalai />
       </div>
 
-      {/* 2. Marigold Floral Garlands (Toran) SVG Banner along top */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6 w-full flex justify-between overflow-hidden opacity-80" aria-hidden="true">
-        <div className="w-full flex justify-around items-start">
-          {[...Array(12)].map((_, i) => (
-            <div key={i} className="flex flex-col items-center -mt-1">
-              <span className="h-3 w-3 rounded-full bg-[#f47a20] shadow-xs border border-[#ffd54c]" />
-              <span className="h-2 w-2 rounded-full bg-[#ffd54c] -mt-1 shadow-xs" />
-            </div>
-          ))}
-        </div>
+      {/* ========================================================================= */}
+      {/* 2. BACKGROUND SACRED ART: 1 RIGHT MANDALA & 1 LEFT MEDITATION/YOGA ART     */}
+      {/* ========================================================================= */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+        
+        {/* LEFT SIDE: Serene Meditation, Yoga & Divine Virtue Line Art Drawing */}
+        <MeditationYogaDrawing 
+          className="absolute -bottom-10 -left-10 h-[440px] w-[440px] sm:h-[520px] sm:w-[520px] opacity-25" 
+          strokeColor="#FFD974" 
+          strokeWidth={1.5} 
+          glow={true}
+        />
+
+        {/* RIGHT SIDE: Single Grand Rotating Sacred Golden Mandala */}
+        <MandalaMotif 
+          className="absolute -bottom-24 -right-24 h-[500px] w-[500px] sm:h-[600px] sm:w-[600px] opacity-25" 
+          speed={60} 
+          counterRotate={true}
+          strokeColor="#F6C84C" 
+          strokeWidth={1.6} 
+          withDrawingEffect={true}
+          withGlow={true}
+        />
+
       </div>
 
-      {/* 3. Left Temple Pillar (Thoon) Artwork */}
-      <div className="pointer-events-none absolute -left-6 sm:-left-2 bottom-0 top-12 z-0 w-44 sm:w-64 lg:w-72 opacity-25 lg:opacity-35 select-none">
-        <div className="relative h-full w-full">
-          <Image
-            src="/images/hm_temple_thoon_pillar.png"
-            alt="Sacred South Indian temple pillar with marigold garlands and brass bell"
-            fill
-            sizes="(max-width: 640px) 180px, 300px"
-            className="object-contain object-bottom drop-shadow-2xl"
-          />
-        </div>
-      </div>
-
-      {/* 4. Right Temple Pillar (Thoon) Artwork (Mirrored) */}
-      <div className="pointer-events-none absolute -right-6 sm:-right-2 bottom-0 top-12 z-0 w-44 sm:w-64 lg:w-72 opacity-25 lg:opacity-35 select-none -scale-x-100">
-        <div className="relative h-full w-full">
-          <Image
-            src="/images/hm_temple_thoon_pillar.png"
-            alt="Sacred South Indian temple pillar with marigold garlands and brass bell"
-            fill
-            sizes="(max-width: 640px) 180px, 300px"
-            className="object-contain object-bottom drop-shadow-2xl"
-          />
-        </div>
-      </div>
-
-      {/* 5. Central Background Mountain Temple Landscape */}
-      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-10 lg:opacity-15 select-none overflow-hidden">
-        <div className="relative h-[120%] w-[120%] max-w-7xl">
-          <Image
-            src="/images/hm_footer_mountain_temple.png"
-            alt="Western Ghats sacred mountain temple landscape with marigolds and pillars"
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-        </div>
-      </div>
-
-      {/* 6. Rotating Sacred Mandala Motif */}
-      <MandalaMotif className="mandala-footer absolute -bottom-36 -right-24 z-[1] h-[440px] w-[440px] opacity-15" speed={64} strokeColor="#FFD974" strokeWidth={2} />
-
-      {/* 7. Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12 relative z-10 w-full">
+      {/* ========================================================================= */}
+      {/* 3. MAIN FOOTER CONTENT                                                    */}
+      {/* ========================================================================= */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-12 relative z-10 w-full">
         
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 border-b border-white/20 pb-12">
           
-          {/* COLUMN 1: Official Brand Logo */}
+          {/* COLUMN 1: Official Brand Logo & Trust Badges */}
           <div className="lg:col-span-4 space-y-4">
             <Link href="/" className="inline-block group" aria-label="HM Brand home">
               <div className="relative h-16 sm:h-20 w-44 sm:w-56 transition-transform duration-300 group-hover:scale-105">
@@ -103,19 +74,19 @@ export function Footer() {
 
             {/* 4 Feature Pills with Cutout Radius */}
             <div className="grid grid-cols-2 gap-2.5 pt-1">
-              <div className="bg-black/20 hover:bg-black/30 transition px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
                 <Leaf size={15} className="text-[#F6C84C] shrink-0" />
                 <span className="text-white/95">100% Natural</span>
               </div>
-              <div className="bg-black/20 hover:bg-black/30 transition px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
                 <ShieldCheck size={15} className="text-[#F6C84C] shrink-0" />
                 <span className="text-white/95">No Charcoal</span>
               </div>
-              <div className="bg-black/20 hover:bg-black/30 transition px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
                 <FlaskConical size={15} className="text-[#F6C84C] shrink-0" />
                 <span className="text-white/95">No Chemicals</span>
               </div>
-              <div className="bg-black/20 hover:bg-black/30 transition px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
                 <Award size={15} className="text-[#F6C84C] shrink-0" />
                 <span className="text-white/95">Made in India</span>
               </div>
