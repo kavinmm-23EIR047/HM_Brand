@@ -6,152 +6,129 @@ interface MeditationYogaDrawingProps {
   className?: string;
   size?: number;
   strokeColor?: string;
+  fillColor?: string;
   strokeWidth?: number;
-  glow?: boolean;
+  withGlow?: boolean;
 }
 
 /**
- * Serene Meditation, Yoga & Divine Virtue Vector Drawing
- * Features a peaceful yogi in Padmasana (Lotus Pose), radiant Sahasrara halo,
- * 7 glowing spinal chakras, blooming sacred lotus foundation, and gentle incense spirals.
+ * Elegant Sacred Yoga & Meditation Lotus Silhouette Drawing
+ * Recreated to match the exact Padmasana silhouette with radiating lotus crown halo.
  */
 export function MeditationYogaDrawing({
   className = "",
   size,
   strokeColor = "#F6C84C",
+  fillColor = "#F6C84C",
   strokeWidth = 1.5,
-  glow = true,
+  withGlow = false,
 }: MeditationYogaDrawingProps) {
   const svgStyle: React.CSSProperties = {
     color: strokeColor,
-    strokeWidth,
     ...(size ? { width: size, height: size } : {}),
   };
 
   return (
     <svg
-      className={`select-none pointer-events-none ${glow ? "mandala-art-drawing" : ""} ${className}`}
-      viewBox="0 0 500 500"
-      fill="none"
-      stroke="currentColor"
+      className={`select-none pointer-events-none transition-all duration-700 ${withGlow ? "drop-shadow-[0_0_25px_rgba(246,200,76,0.4)]" : ""} ${className}`}
+      viewBox="0 0 600 600"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       style={svgStyle}
     >
       <defs>
-        <radialGradient id="haloGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#F6C84C" stopOpacity="0.35" />
-          <stop offset="60%" stopColor="#F47A20" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="#F6C84C" stopOpacity="0" />
-        </radialGradient>
+        {/* Subtle Shimmering Sacred Gold Gradient */}
+        <linearGradient id="sacredGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFF2B2" />
+          <stop offset="50%" stopColor="#F6C84C" />
+          <stop offset="100%" stopColor="#E5A817" />
+        </linearGradient>
       </defs>
 
-      {/* 1. Radiant Sahasrara Aura / Halo Behind Head */}
-      <circle cx="250" cy="150" r="90" fill="url(#haloGlow)" stroke="none" />
-      <circle cx="250" cy="150" r="80" strokeWidth="1" strokeDasharray="3 6" opacity="0.6" />
-      <circle cx="250" cy="150" r="65" strokeWidth="1.2" opacity="0.8" />
-      
-      {/* Halo Sunburst Rays (12 Rays of Light) */}
-      {Array.from({ length: 12 }, (_, i) => (
-        <line
-          key={`ray-${i}`}
-          x1="250"
-          y1="70"
-          x2="250"
-          y2="55"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          transform={`rotate(${i * 30} 250 150)`}
-          opacity="0.8"
-        />
-      ))}
-
-      {/* 2. Meditating Yogi Outline (Pure Sacred Line Art) */}
-      {/* Head & Usnisha/Topknot */}
-      <circle cx="250" cy="142" r="28" strokeWidth="1.8" />
-      <path d="M242 116C242 108 258 108 258 116Z" fill="currentColor" stroke="none" />
-      {/* Calm Face Profile / Third Eye Point */}
-      <circle cx="250" cy="136" r="2" fill="currentColor" stroke="none" />
-      <path d="M242 144C246 148 254 148 258 144" strokeWidth="1" strokeLinecap="round" />
-
-      {/* Neck & Shoulders */}
-      <path d="M243 170V182C243 186 230 192 210 198C185 205 160 220 155 250" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M257 170V182C257 186 270 192 290 198C315 205 340 220 345 250" strokeWidth="1.8" strokeLinecap="round" />
-
-      {/* Arms in Chin Mudra / Dhyana Mudra Resting on Knees */}
-      {/* Left Arm */}
-      <path d="M155 250C150 280 145 310 130 330C120 345 105 350 95 345C85 340 90 325 110 320" strokeWidth="1.8" strokeLinecap="round" />
-      {/* Left Hand Chin Mudra Circle */}
-      <circle cx="100" cy="335" r="5" strokeWidth="1.2" />
-      
-      {/* Right Arm */}
-      <path d="M345 250C350 280 355 310 370 330C380 345 395 350 405 345C415 340 410 325 390 320" strokeWidth="1.8" strokeLinecap="round" />
-      {/* Right Hand Chin Mudra Circle */}
-      <circle cx="400" cy="335" r="5" strokeWidth="1.2" />
-
-      {/* Torso & Spine Line */}
-      <path d="M210 198C215 240 218 290 225 330" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M290 198C285 240 282 290 275 330" strokeWidth="1.5" strokeLinecap="round" />
-      {/* Central Prana / Sushumna Channel */}
-      <path d="M250 170V355" strokeWidth="1" strokeDasharray="2 5" opacity="0.6" />
-
-      {/* Crossed Legs in Full Lotus Posture (Padmasana) */}
-      <path d="M110 330C130 365 190 380 250 380C310 380 370 365 390 330" strokeWidth="2" strokeLinecap="round" />
-      <path d="M130 330C170 340 220 355 250 355C280 355 330 340 370 330" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M170 345C190 365 220 370 250 370C280 370 310 365 330 345" strokeWidth="1.4" strokeLinecap="round" />
-
-      {/* 3. Seven Glowing Energy Chakras Along Central Spine */}
-      {/* Sahasrara (Crown) */}
-      <circle cx="250" cy="115" r="4" fill="#F6C84C" stroke="none" className="animate-pulse" />
-      {/* Ajna (Third Eye) */}
-      <circle cx="250" cy="136" r="3" fill="#FFE180" stroke="none" />
-      {/* Vishuddha (Throat) */}
-      <circle cx="250" cy="178" r="3" fill="#F6C84C" stroke="none" />
-      {/* Anahata (Heart - Glowing Divine Virtue) */}
-      <circle cx="250" cy="225" r="5" fill="#F47A20" stroke="#F6C84C" strokeWidth="1.5" className="animate-pulse" />
-      {/* Manipura (Solar Plexus) */}
-      <circle cx="250" cy="265" r="3.5" fill="#F6C84C" stroke="none" />
-      {/* Svadhisthana (Sacral) */}
-      <circle cx="250" cy="305" r="3" fill="#F47A20" stroke="none" />
-      {/* Muladhara (Root) */}
-      <circle cx="250" cy="350" r="4" fill="#E85D04" stroke="none" />
-
-      {/* 4. Sacred Blooming Lotus Seat (Foundation) */}
-      <g opacity="0.9">
-        {/* Center Petal */}
-        <path d="M250 380C235 410 240 435 250 445C260 435 265 410 250 380Z" strokeWidth="1.5" />
-        {/* Left Lotus Petals */}
-        <path d="M240 385C210 405 190 425 180 440C205 442 230 425 242 398" strokeWidth="1.5" />
-        <path d="M225 390C175 405 140 425 120 440C150 448 190 435 215 405" strokeWidth="1.5" />
-        <path d="M210 395C150 405 100 420 70 435C105 450 155 445 190 415" strokeWidth="1.2" />
+      <g fill={fillColor === "url(#sacredGoldGrad)" ? "url(#sacredGoldGrad)" : fillColor} stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
         
-        {/* Right Lotus Petals */}
-        <path d="M260 385C290 405 310 425 320 440C295 442 270 425 258 398" strokeWidth="1.5" />
-        <path d="M275 390C325 405 360 425 380 440C350 448 310 435 285 405" strokeWidth="1.5" />
-        <path d="M290 395C350 405 400 420 430 435C395 450 345 445 310 415" strokeWidth="1.2" />
+        {/* ========================================================================= */}
+        {/* 1. RADIANT LOTUS PETAL HALO CROWN (SACRED 7-PETAL BLADES & ACCENTS)       */}
+        {/* ========================================================================= */}
+        
+        {/* Top Central Majestic Lotus Petal (Vertical Flame) */}
+        <path d="M300,50 C265,115 270,175 292,215 C280,165 285,110 300,50 Z" />
+        <path d="M300,50 C335,115 330,175 308,215 C320,165 315,110 300,50 Z" />
 
-        {/* Lotus Base Ring & Droplets */}
-        <path d="M120 445C200 465 300 465 380 445" strokeWidth="1.6" strokeLinecap="round" />
-        <circle cx="250" cy="458" r="2.5" fill="currentColor" stroke="none" />
-        <circle cx="200" cy="455" r="2" fill="currentColor" stroke="none" />
-        <circle cx="300" cy="455" r="2" fill="currentColor" stroke="none" />
+        {/* Upper Left Petal Crescent */}
+        <path d="M220,175 C160,215 170,270 230,285 C185,255 190,215 220,175 Z" />
+
+        {/* Upper Right Petal Crescent */}
+        <path d="M380,175 C440,215 430,270 370,285 C415,255 410,215 380,175 Z" />
+
+        {/* Mid-Left Wide Horizontal Petal */}
+        <path d="M85,315 C135,280 215,295 255,335 C195,315 135,325 85,315 Z" />
+
+        {/* Mid-Right Wide Horizontal Petal */}
+        <path d="M515,315 C465,280 385,295 345,335 C405,315 465,325 515,315 Z" />
+
+        {/* Floating Accent Petals (Nestled between radiating blades) */}
+        {/* Top-Left Accent 1 */}
+        <path d="M215,145 C235,160 240,185 225,195 C210,185 205,165 215,145 Z" />
+        {/* Top-Right Accent 2 */}
+        <path d="M385,145 C395,165 390,185 375,195 C360,185 365,160 385,145 Z" />
+        
+        {/* Upper-Center-Left Accent 3 */}
+        <path d="M245,115 C260,130 260,150 248,160 C238,150 238,130 245,115 Z" />
+        {/* Upper-Center-Right Accent 4 */}
+        <path d="M355,115 C362,130 362,150 352,160 C340,150 340,130 355,115 Z" />
+
+        {/* Mid-Flank Left Accent 5 */}
+        <path d="M205,365 C220,380 220,398 208,408 C195,398 195,380 205,365 Z" />
+        {/* Mid-Flank Right Accent 6 */}
+        <path d="M395,365 C405,380 405,398 392,408 C380,398 380,380 395,365 Z" />
+
+        {/* ========================================================================= */}
+        {/* 2. MEDITATING YOGI IN PADMASANA (AUTHENTIC SILHOUETTE)                     */}
+        {/* ========================================================================= */}
+        
+        {/* Topknot Hair Bun */}
+        <circle cx="300" cy="245" r="14" />
+
+        {/* Head & Neck Profile */}
+        <path d="M300,248 C318,248 327,260 327,280 C327,302 318,318 300,318 C282,318 273,302 273,280 C273,260 282,248 300,248 Z" />
+
+        {/* Shoulders, Arms, Mudra Hands & Upper Body Contours */}
+        <path
+          d="M290,317 C280,323 260,332 245,340 C220,352 205,372 195,400 C185,428 170,455 152,472 
+             C145,478 138,475 136,465 C134,455 142,448 152,442 C165,432 178,415 186,390 
+             C196,360 215,342 245,330 C265,322 280,318 290,317 Z"
+        />
+        <path
+          d="M310,317 C320,323 340,332 355,340 C380,352 395,372 405,400 C415,428 430,455 448,472 
+             C455,478 462,475 464,465 C466,455 458,448 448,442 C435,432 422,415 414,390 
+             C404,360 385,342 355,330 C335,322 320,318 310,317 Z"
+        />
+
+        {/* Torso Spine & Folded Legs */}
+        <path
+          d="M285,318 C285,350 280,390 270,430 L260,435 C215,450 170,480 190,510 
+             C210,528 260,535 300,535 C340,535 390,528 410,510 C430,480 385,450 340,435 
+             L330,430 C320,390 315,350 315,318 Z"
+        />
+
+        {/* Sculpted Cross-Legged Lotus Base */}
+        <path
+          d="M165,480 C152,495 170,515 210,525 C255,535 345,535 390,525 
+             C430,515 448,495 435,480 C415,460 375,450 300,450 C225,450 185,460 165,480 Z"
+        />
+
+        {/* Left Gyan/Chin Mudra Ring */}
+        <circle cx="146" cy="468" r="6" />
+
+        {/* Right Gyan/Chin Mudra Ring */}
+        <circle cx="454" cy="468" r="6" />
+
+        {/* Crossed Feet Outlines */}
+        <path d="M228,520 C250,528 285,532 300,526 C288,518 250,514 228,520 Z" />
+        <path d="M372,520 C350,528 315,532 300,526 C312,518 350,514 372,520 Z" />
+
       </g>
-
-      {/* 5. Swirling Aromatic Incense Smoke Ribbons (Floating from Left/Right) */}
-      <path
-        d="M80 410C75 360 100 320 85 270C70 220 90 170 80 120"
-        strokeWidth="1.2"
-        strokeDasharray="4 6"
-        strokeLinecap="round"
-        opacity="0.5"
-      />
-      <path
-        d="M420 410C425 360 400 320 415 270C430 220 410 170 420 120"
-        strokeWidth="1.2"
-        strokeDasharray="4 6"
-        strokeLinecap="round"
-        opacity="0.5"
-      />
     </svg>
   );
 }

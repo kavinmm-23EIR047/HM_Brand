@@ -1,6 +1,5 @@
 "use client";
 
-import { MailQuestionMark } from "lucide-react";
 import React from "react";
 
 export function TempleGopuram({ className = "" }: { className?: string }) {

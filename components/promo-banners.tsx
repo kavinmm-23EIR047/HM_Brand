@@ -49,15 +49,15 @@ export function PromoBanners() {
               </div>
             </div>
 
-            {/* Right Animated GIF Graphic (Enlarged & Clean) */}
+            {/* Right Graphic (Clean & 100% Transparent Without Borders) */}
             <div className="relative h-28 w-28 min-[380px]:h-36 min-[380px]:w-36 sm:h-44 sm:w-44 md:h-40 md:w-40 lg:h-48 lg:w-48 shrink-0 transition-transform duration-500 group-hover:scale-105 flex items-center justify-center">
               <Image
-                src="/images/special_offer_gift.gif"
+                src="/images/special_offer_gift_transparent.png"
                 alt="HM Special Offers festive gift box with incense and dhoop"
                 fill
                 unoptimized
                 sizes="(max-width: 640px) 160px, (max-width: 1024px) 180px, 220px"
-                className="object-contain drop-shadow-md"
+                className="object-contain"
               />
             </div>
           </div>

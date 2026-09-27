@@ -126,17 +126,24 @@ export function Navigation() {
 
   return (
     <div className="relative z-50 font-sans">
-      <div className="bg-[#870b2b] px-2 py-1.5 text-[9px] font-semibold text-white sm:px-4 sm:text-[10px]">
+      <div className="bg-gradient-to-r from-[#800f24] via-[#9E1830] to-[#5a0919] px-2 py-1.5 text-[9px] font-semibold text-white sm:px-4 sm:text-[10px] border-b border-[#F6C84C]/25">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-            <span className="truncate font-bold"><span className="mr-1 text-[#ffd34e]">◆</span><span className="hidden min-[300px]:inline">Free Shipping on Orders Above </span><span className="min-[300px]:hidden">Free shipping </span>₹499</span>
-            <span className="hidden items-center gap-1.5 whitespace-nowrap text-white/90 sm:flex"><span className="text-[#ffd34e]">◆</span>100% Natural Ingredients</span>
-            <span className="hidden items-center gap-1.5 whitespace-nowrap text-white/90 md:flex"><RotateCcw size={12} />Easy Returns</span>
+            <span className="truncate font-bold">
+              <span className="mr-1 text-[#F6C84C]">🇮🇳</span>
+              <span className="text-[#F6C84C]">1st Time in India:</span> 10-in-1 Aroma Family Pack
+            </span>
+            <span className="hidden items-center gap-1.5 whitespace-nowrap text-white/95 sm:flex">
+              <span className="text-[#F6C84C]">✦</span> Smell of Purity (100% Natural)
+            </span>
+            <span className="hidden items-center gap-1.5 whitespace-nowrap text-white/90 md:flex">
+              <Truck size={12} className="text-[#F6C84C]" /> Free Shipping on ₹499+
+            </span>
           </div>
           <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-white/90 sm:gap-3">
-            <Link href="/orders" className="inline-flex items-center gap-1 hover:text-[#ffd34e]"><Truck size={12} />Track Order</Link>
+            <Link href="/orders" className="inline-flex items-center gap-1 hover:text-[#F6C84C]"><Truck size={12} />Track Order</Link>
             <span className="hidden text-white/40 sm:inline">|</span>
-            <Link href="/contact" className="hidden items-center gap-1 hover:text-[#ffd34e] sm:inline-flex"><HelpCircle size={12} />Help & Contact</Link>
+            <Link href="/contact" className="hidden items-center gap-1 hover:text-[#F6C84C] sm:inline-flex"><HelpCircle size={12} />+91 9345633399</Link>
           </div>
         </div>
       </div>
@@ -178,7 +185,7 @@ export function Navigation() {
               Collections <ChevronDown size={13} className={`transition-transform ${openMega === "collections" ? "rotate-180" : ""}`} />
             </button>
             <Link href="/about" className={navLinkClass("/about")}>Our Story</Link>
-            <Link href="/about#benefits" className={navLinkClass("/about#benefits")}>Benefits</Link>
+            <Link href="/benefits" className={navLinkClass("/benefits")}>Benefits</Link>
             <Link href="/blog" className={navLinkClass("/blog")}>Blog</Link>
             <Link href="/offers" className={navLinkClass("/offers")}>Offers</Link>
           </nav>
@@ -392,14 +399,14 @@ export function Navigation() {
 
               {/* Direct Navigation Links */}
               <Link
-                href="/our-story"
+                href="/about"
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
               >
                 <span>✦ Our Story &amp; Heritage</span>
               </Link>
               <Link
-                href="/about#benefits"
+                href="/benefits"
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
               >

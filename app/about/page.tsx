@@ -1,60 +1,247 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, Leaf, Sparkles } from "lucide-react";
+import { ArrowRight, Leaf, ShieldCheck, FlaskConical, Award, Sparkles, Heart, Sun, Flame } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
-import { MascotNamaste } from "@/components/mascot-art";
-import { Lotus } from "@/components/illustrations";
+import { MandalaMotif } from "@/components/illustrations";
 
-const values = [
-  { icon: Leaf, label: "Pure by nature", title: "Botanical ingredients", copy: "A thoughtful blend of herbs, resins and fragrant woods, made for a clean, comforting everyday ritual.", color: "#287541", surface: "#e8f1df" },
-  { icon: Sparkles, label: "Rooted in tradition", title: "Made for Indian rituals", copy: "Inspired by the familiar aromas and small moments that bring calm to prayer, meditation and home.", color: "#a90c35", surface: "#f8e7e2" },
-  { icon: Heart, label: "Packed with care", title: "A little goodness in every box", copy: "Prepared with care in Coimbatore and sent to make your daily rituals feel special.", color: "#e7771b", surface: "#fff0d7" },
+const storyPillars = [
+  {
+    num: "01",
+    title: "Yoga & Mindful Living",
+    subtitle: "Clarity & Inner Stillness",
+    copy: "Fragrance creates an immediate sensory anchor for deep meditation, conscious breathing, and mindful presence. Our pure botanical aromas calm the nervous system and awaken serene mental focus.",
+    badge: "INNER PEACE",
+    color: "#9E1830",
+    bg: "#FFF4D6",
+  },
+  {
+    num: "02",
+    title: "God & Sacred Devotion",
+    subtitle: "Temple Aura at Home",
+    copy: "Handcrafted according to sacred Agamic traditions, our agarbattis and Bhimseni camphor transform everyday morning and evening prayers into divine temple-like spiritual experiences.",
+    badge: "DIVINE GRACE",
+    color: "#F47A20",
+    bg: "#FFF8E7",
+  },
+  {
+    num: "03",
+    title: "Pure Botanical Virtue",
+    subtitle: "Clean & Charcoal-Free",
+    copy: "We reject all synthetic chemicals, artificial musk, and black charcoal. Every single stick is lovingly rolled using pure flower petals, sacred resins, and essential oils.",
+    badge: "100% PURITY",
+    color: "#287541",
+    bg: "#EBF3E4",
+  },
+];
+
+const naturalBenefits = [
+  {
+    icon: Leaf,
+    title: "100% Natural Botanicals",
+    desc: "Crafted with pure herbal powders, sacred wood barks, and naturally fragrant flower petals sourced ethically from South Indian soil.",
+    highlight: "Zero Artificial Musk",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Charcoal & Toxin Free",
+    desc: "Burns cleanly with light, gentle white aromatic smoke that purifies indoor air without causing throat irritation or black soot.",
+    highlight: "Clean Indoor Air",
+  },
+  {
+    icon: FlaskConical,
+    title: "Ayurvedic Aromatherapy",
+    desc: "Enriched with therapeutic essential oils and Bhimseni camphor crystals to dispel negative energy and elevate positive vibrational prana.",
+    highlight: "Prana Elevating",
+  },
+  {
+    icon: Award,
+    title: "Handcrafted in Coimbatore",
+    desc: "Carrying forward decades of artisanal craftsmanship from the sacred foothills of the Western Ghats with deep respect for tradition.",
+    highlight: "Artisanal Heritage",
+  },
 ];
 
 export default function AboutPage() {
   return (
-    <InnerPage eyebrow="OUR COIMBATORE STORY" title="Bringing Nature, Tradition & Wellbeing Together" subtitle="We believe the smallest rituals can make everyday life feel grounded, fragrant and meaningful.">
-      <div className="mx-auto max-w-[1368px] space-y-14 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-        <section className="relative isolate grid overflow-hidden rounded-[28px] bg-[#f6eedc] p-6 sm:p-10 lg:grid-cols-[1.15fr_.85fr] lg:items-center lg:gap-8 lg:p-14">
-          <div className="relative z-10 max-w-2xl">
-            <span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#a90c35]">HERITAGE & ROOTS</span>
-            <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-[-.035em] text-[#173b3a] sm:text-4xl lg:text-[46px]">A familiar fragrance, made for the way we live today.</h2>
-            <p className="mt-5 text-sm leading-7 text-[#52625a] sm:text-base">From our home in Peelamedu, Coimbatore, HM Agarbattis brings the warmth of traditional South Indian fragrance into modern homes. Our incense, camphor and sambrani are made to accompany everyday prayer, quiet reflection and time together.</p>
-            <p className="mt-3 text-sm leading-7 text-[#52625a] sm:text-base">Every fragrance is selected with care, drawing on botanicals, sacred woods and resins to make a simple ritual feel a little more special.</p>
-            <div className="mt-7 flex flex-wrap gap-2 text-xs font-bold text-[#28563c]">
-              {["Coimbatore crafted", "Botanical ingredients", "Made for daily rituals"].map((tag) => <span key={tag} className="rounded-full bg-white/75 px-4 py-2">{tag}</span>)}
+    <InnerPage
+      eyebrow="OUR SACRED STORY & HERITAGE"
+      title="Bringing Pure Nature, Devotion & Wellbeing Into Every Home"
+      subtitle="From our spiritual home in Coimbatore, HM Agarbattis preserves the timeless art of pure botanical fragrance for mindful living, daily prayer, and sacred peace."
+    >
+      <div className="mx-auto max-w-7xl space-y-16 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        
+        {/* HERO STORY SECTION WITH CRAYONISM ARTWORK */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF4D6] via-[#FFF8E7] to-[#FCEECC] p-6 sm:p-10 lg:p-12 border-2 border-[#F6C84C]/60 shadow-lg">
+          {/* Subtle Rotating Mandala */}
+          <div className="pointer-events-none absolute -right-24 -bottom-24 h-80 w-80 opacity-15">
+            <MandalaMotif speed={100} strokeColor="#9E1830" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            
+            {/* Left Column: Story Copy */}
+            <div className="lg:col-span-7 space-y-4">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#9E1830]/30 bg-[#9E1830]/10 px-3 py-1 text-[11px] font-extrabold tracking-widest text-[#9E1830] uppercase">
+                <Sparkles size={12} className="text-[#F47A20]" />
+                <span>ROOTED IN COIMBATORE TRADITION</span>
+              </span>
+
+              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#173B3A] leading-tight">
+                Crafted with pure devotion at the foothills of the Western Ghats.
+              </h2>
+
+              <p className="font-sans text-sm sm:text-base text-[#292524]/85 leading-relaxed">
+                HM Agarbattis was born out of a simple, heartfelt commitment: to restore the sacred purity of traditional Indian incense. In a world full of mass-produced synthetic chemicals and black charcoal, we handcraft every stick and dhoop cone using pure botanical ingredients, authentic herbs, and natural resins.
+              </p>
+
+              <p className="font-sans text-sm sm:text-base text-[#292524]/85 leading-relaxed">
+                Whether you are lighting an agarbatti for your morning puja, creating a serene environment for yoga and meditation, or filling your home with welcoming fragrance, HM Agarbattis brings you an uplifting, peaceful experience that connects you with the divine within.
+              </p>
+
+              {/* Badges */}
+              <div className="flex flex-wrap gap-2 pt-2">
+                <span className="rounded-full bg-white px-3.5 py-1.5 text-xs font-bold text-[#9E1830] border border-[#F6C84C]/50 shadow-2xs">
+                  ✦ Coimbatore Heritage
+                </span>
+                <span className="rounded-full bg-white px-3.5 py-1.5 text-xs font-bold text-[#287541] border border-[#287541]/40 shadow-2xs">
+                  ✦ 100% Charcoal-Free
+                </span>
+                <span className="rounded-full bg-white px-3.5 py-1.5 text-xs font-bold text-[#F47A20] border border-[#F47A20]/40 shadow-2xs">
+                  ✦ Pure Botanical Resins
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="relative mt-4 flex min-h-[250px] items-center justify-center lg:mt-0 lg:min-h-[340px]">
-            <div className="absolute h-64 w-64 rounded-full bg-[#e5edcf] sm:h-80 sm:w-80" />
-            <div className="absolute h-56 w-56 rounded-full border border-[#93ad72]/35 sm:h-72 sm:w-72" />
-            <Lotus className="absolute bottom-5 right-2 h-24 w-28 opacity-70 sm:right-8 sm:h-32 sm:w-36" />
-            <div className="relative z-10 flex h-[240px] w-full max-w-[230px] items-end justify-center sm:h-[310px] sm:max-w-[290px]"><MascotNamaste size={230} /></div>
-            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-[#28563c] shadow-sm">Find your calm, one ritual at a time</span>
+
+            {/* Right Column: Storybook Artwork */}
+            <div className="lg:col-span-5 flex items-center justify-center">
+              <div className="relative w-full max-w-[360px] aspect-square rounded-2xl overflow-hidden border-2 border-[#F6C84C]/60 bg-white/60 p-4 shadow-md flex items-center justify-center">
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/images/hm_story_yoga_god_virtue.png"
+                    alt="HM Brand: Yoga, God, and Pure Virtue Storybook Art"
+                    fill
+                    unoptimized
+                    className="object-contain drop-shadow-md"
+                  />
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
-        <section id="benefits" className="scroll-mt-28">
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-            <div><span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#a90c35]">WHY HM AGARBATTIS</span><h2 className="mt-2 text-2xl font-extrabold tracking-[-.03em] text-[#173b3a] sm:text-3xl">Good fragrance, thoughtfully made</h2></div>
-            <p className="max-w-md text-sm leading-6 text-[#65716a]">Simple choices that make your home feel welcoming and your rituals feel your own.</p>
+        {/* THREE SACRED PILLARS */}
+        <section className="space-y-6">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#9E1830]">
+              THE 3 SACRED PILLARS
+            </span>
+            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#173B3A]">
+              Mindfulness, Devotion &amp; Pure Virtue
+            </h2>
+            <p className="text-sm text-[#292524]/80">
+              Every creation from HM Agarbattis is designed to nourish your daily spiritual journey.
+            </p>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {values.map(({ icon: Icon, label, title, copy, color, surface }, index) => <article key={title} className="rounded-2xl bg-white p-6 shadow-[0_8px_28px_rgba(49,54,33,.07)] sm:p-7">
-              <div className="mb-6 flex items-center justify-between"><span className="grid h-12 w-12 place-items-center rounded-full" style={{ backgroundColor: surface, color }}><Icon size={23} /></span><span className="text-xs font-extrabold tracking-widest text-[#b3b8ae]">0{index + 1}</span></div>
-              <span className="text-[10px] font-extrabold uppercase tracking-[.16em]" style={{ color }}>{label}</span>
-              <h3 className="mt-2 text-xl font-extrabold leading-tight text-[#173b3a]">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-[#65716a]">{copy}</p>
-            </article>)}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {storyPillars.map((pillar) => (
+              <div
+                key={pillar.num}
+                className="rounded-2xl p-6 border-2 border-[#F6C84C]/50 shadow-sm transition hover:shadow-md hover:-translate-y-1 relative overflow-hidden"
+                style={{ backgroundColor: pillar.bg }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-2xl font-black text-[#9E1830]/30 font-heading">
+                    {pillar.num}
+                  </span>
+                  <span
+                    className="rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider"
+                    style={{ backgroundColor: pillar.color, color: "#fff" }}
+                  >
+                    {pillar.badge}
+                  </span>
+                </div>
+                <h3 className="font-heading text-xl font-extrabold text-[#173B3A]">
+                  {pillar.title}
+                </h3>
+                <p className="text-xs font-bold text-[#9E1830] mt-0.5">
+                  {pillar.subtitle}
+                </p>
+                <p className="text-xs sm:text-sm text-[#292524]/80 leading-relaxed mt-3">
+                  {pillar.copy}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 
-        <section className="flex flex-col items-start justify-between gap-5 rounded-[24px] bg-[#a90c35] px-6 py-8 text-white sm:flex-row sm:items-center sm:px-10">
-          <div><span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#ffd34e]">MAKE IT A RITUAL</span><h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">Bring a little calm into your day.</h2><p className="mt-2 max-w-xl text-sm leading-6 text-white/80">Explore incense, camphor and pooja essentials selected for everyday moments.</p></div>
-          <Link href="/shop" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#ffd34e] px-6 py-3 text-sm font-extrabold text-[#173b3a] transition hover:bg-white">Explore the shop <ArrowRight size={16} /></Link>
+        {/* NATURAL BENEFITS SECTION */}
+        <section id="benefits" className="scroll-mt-28 space-y-6">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#287541]">
+              HOLISTIC WELLBEING
+            </span>
+            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#173B3A]">
+              Why Choose HM Agarbattis?
+            </h2>
+            <p className="text-sm text-[#292524]/80">
+              Experience the clean, uplifting difference of pure botanical fragrance in your daily rituals.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {naturalBenefits.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-2xl bg-white p-6 border border-[#F6C84C]/50 shadow-sm hover:border-[#9E1830] transition hover:shadow-md space-y-3"
+                >
+                  <div className="h-12 w-12 rounded-xl bg-[#FFF4D6] border border-[#F6C84C]/50 flex items-center justify-center text-[#9E1830]">
+                    <Icon size={24} />
+                  </div>
+                  <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider text-[#287541] bg-[#EBF3E4] px-2 py-0.5 rounded-full">
+                    {item.highlight}
+                  </span>
+                  <h3 className="font-heading text-base font-extrabold text-[#173B3A]">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-[#292524]/80 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </section>
+
+        {/* CTA BANNER */}
+        <section className="rounded-3xl bg-gradient-to-r from-[#9E1830] via-[#851227] to-[#5A0919] p-8 sm:p-12 text-white border-2 border-[#F6C84C]/60 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 max-w-xl">
+            <span className="font-script text-2xl sm:text-3xl text-[#F6C84C]">
+              Find Your God Within
+            </span>
+            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold leading-snug">
+              Elevate Your Daily Rituals With Sacred Fragrance
+            </h2>
+            <p className="text-xs sm:text-sm text-white/85 leading-relaxed">
+              Explore our complete handcrafted collection of agarbattis, camphor, and sambrani.
+            </p>
+          </div>
+
+          <Link
+            href="/shop"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#F6C84C] hover:bg-[#F47A20] hover:text-white text-[#173B3A] px-7 py-3.5 font-bold text-xs sm:text-sm transition shadow-lg hover:scale-105 active:scale-95"
+          >
+            <span>Explore The Shop</span>
+            <ArrowRight size={16} />
+          </Link>
+        </section>
+
       </div>
     </InnerPage>
   );

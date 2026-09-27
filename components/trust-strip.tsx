@@ -103,17 +103,22 @@ export function TrustStrip() {
           ))}
         </div>
 
-        {/* Sacred Tagline Strip */}
-        <div className="mt-5 sm:mt-8 bg-[#9E1830] text-white rounded-2xl p-3.5 sm:p-4 text-center shadow-md flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4 px-4 sm:px-6 border border-[#F6C84C]/30">
-          <div className="flex items-center gap-2">
-            <span className="text-base sm:text-lg">🪔</span>
-            <span className="font-script text-base min-[360px]:text-lg sm:text-xl text-[#F6C84C]">
-              "Fragrance that brings calm, clarity and positive energy to every home."
-            </span>
+        {/* Sacred Tagline Strip with Tamil & English Philosophy */}
+        <div className="mt-5 sm:mt-8 bg-gradient-to-r from-[#9E1830] via-[#851227] to-[#5A0919] text-white rounded-2xl p-4 sm:p-5 shadow-md flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 border-2 border-[#F6C84C]/50">
+          <div className="space-y-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <span className="text-base sm:text-lg">🪔</span>
+              <span className="font-script text-lg sm:text-2xl text-[#F6C84C]">
+                &ldquo;Beyond Form, Fragrance Speaks — Listen With Your Heart.&rdquo;
+              </span>
+            </div>
+            <p className="text-[11px] sm:text-xs text-white/80 font-sans pl-0 md:pl-7">
+              &ldquo;உருவத்திற்கு அப்பால், வாசனை பேசுகிறது; உங்கள் இதயத்தால் கேளுங்கள்.&rdquo;
+            </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1 bg-[#F6C84C] text-[#173B3A] text-[9px] min-[360px]:text-[10px] sm:text-xs font-extrabold uppercase px-3 py-1 rounded-full shadow-xs tracking-wider">
-              ✦ 100% PURE DEVOTION
+            <span className="inline-flex items-center gap-1 bg-[#F6C84C] text-[#173B3A] text-[10px] sm:text-xs font-black uppercase px-3.5 py-1.5 rounded-full shadow-md tracking-wider">
+              <span>🇮🇳 1ST TIME IN INDIA</span>
             </span>
           </div>
         </div>

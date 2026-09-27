@@ -4,153 +4,192 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
-  Heart, Leaf, FlaskConical, ShieldCheck, Award
+  Heart, Leaf, FlaskConical, ShieldCheck, Award, MapPin, Phone, Mail
 } from "lucide-react";
 import { MandalaMotif, MeditationYogaDrawing, ToranMaalai } from "./illustrations";
 
+function InstagramIcon({ size = 14, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
 export function Footer() {
   return (
-    <footer className="relative w-full max-w-full overflow-hidden bg-gradient-to-b from-[#800f24] via-[#9E1830] to-[#3f0510] text-white font-sans rounded-t-[32px] sm:rounded-t-[52px] border-t-2 border-[#F6C84C]/50 shadow-[0_-20px_60px_rgba(0,0,0,0.35)]">
+    <footer className="relative w-full max-w-full overflow-hidden bg-gradient-to-b from-[#800f24] via-[#9E1830] to-[#3f0510] text-white font-sans rounded-t-[32px] sm:rounded-t-[48px] border-t-2 border-[#F6C84C]/50 shadow-[0_-20px_60px_rgba(0,0,0,0.35)]">
       
-      {/* ========================================================================= */}
-      {/* 1. ANIMATED MARIGOLD FLOWER & MANGO LEAF MAALAI (TORAN GARLAND) AT TOP    */}
-      {/* ========================================================================= */}
+      {/* 1. ANIMATED FESTIVE MARIGOLD TORAN GARLAND AT TOP */}
       <div className="relative w-full overflow-hidden pointer-events-none select-none z-20">
         <ToranMaalai />
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. BACKGROUND SACRED ART: 1 RIGHT MANDALA & 1 LEFT MEDITATION/YOGA ART     */}
-      {/* ========================================================================= */}
+      {/* 2. AMBIENT SACRED BACKGROUND ARTWORKS: MANDALA ON RIGHT + SACRED YOGA DESIGN ON LEFT */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
-        
-        {/* LEFT SIDE: Serene Meditation, Yoga & Divine Virtue Line Art Drawing */}
-        <MeditationYogaDrawing 
-          className="absolute -bottom-10 -left-10 h-[440px] w-[440px] sm:h-[520px] sm:w-[520px] opacity-25" 
-          strokeColor="#FFD974" 
-          strokeWidth={1.5} 
-          glow={true}
-        />
-
-        {/* RIGHT SIDE: Single Grand Rotating Sacred Golden Mandala */}
+        {/* RIGHT SIDE: Sacred Rotating Golden Mandala Watermark */}
         <MandalaMotif 
-          className="absolute -bottom-24 -right-24 h-[500px] w-[500px] sm:h-[600px] sm:w-[600px] opacity-25" 
-          speed={60} 
+          className="absolute -bottom-24 -right-24 h-[440px] w-[440px] sm:h-[560px] sm:w-[560px] opacity-20" 
+          speed={70} 
           counterRotate={true}
           strokeColor="#F6C84C" 
-          strokeWidth={1.6} 
+          strokeWidth={1.5} 
           withDrawingEffect={true}
           withGlow={true}
         />
 
+        {/* LEFT / TOP-LEFT: Sacred Golden Meditating Yogi with Radiating Lotus Crown Halo (Fully Visible) */}
+        <div className="absolute top-8 sm:top-12 -left-6 sm:left-4 md:left-8 opacity-20 sm:opacity-25 pointer-events-none">
+          <MeditationYogaDrawing 
+            strokeColor="#F6C84C" 
+            fillColor="#F6C84C" 
+            withGlow={true}
+            className="w-[260px] h-[260px] sm:w-[320px] sm:h-[320px] md:w-[380px] md:h-[380px] text-[#F6C84C]"
+          />
+        </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 3. MAIN FOOTER CONTENT                                                    */}
-      {/* ========================================================================= */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-12 relative z-10 w-full">
+      {/* 3. MAIN FOOTER CONTENT */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-10 relative z-10 w-full space-y-8">
         
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 border-b border-white/20 pb-12">
+        {/* TOP BRAND STRIP: Brand Logo, Quote & 4 Trust Pills */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center border-b border-white/15 pb-8">
           
-          {/* COLUMN 1: Official Brand Logo & Trust Badges */}
-          <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="inline-block group" aria-label="HM Brand home">
-              <div className="relative h-16 sm:h-20 w-44 sm:w-56 transition-transform duration-300 group-hover:scale-105">
-                <Image
-                  src="/images/brand_logo_gold_transparent.png"
-                  alt="HM Brand - Discover the Divine Within"
-                  fill
-                  unoptimized
-                  sizes="(max-width: 640px) 176px, 224px"
-                  className="object-contain object-left drop-shadow-2xl"
-                />
-              </div>
-            </Link>
+          {/* Logo & Philosophy */}
+          <div className="lg:col-span-6 space-y-3">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="inline-block group" aria-label="HM Brand home">
+                <div className="relative h-14 w-14 sm:h-16 sm:w-16 transition-transform duration-300 group-hover:scale-105">
+                  <Image
+                    src="/images/brand_logo_gold_transparent.png"
+                    alt="HM Brand - Smell of Purity"
+                    fill
+                    unoptimized
+                    sizes="(max-width: 640px) 56px, 64px"
+                    className="object-contain drop-shadow-xl"
+                  />
+                </div>
+              </Link>
+              <span className="rounded-full bg-[#F6C84C] px-3 py-1 text-[10px] sm:text-xs font-black text-[#173B3A] shadow-xs whitespace-nowrap">
+                🇮🇳 1ST TIME IN INDIA: 10-IN-1 PACK
+              </span>
+            </div>
 
-            <p className="font-sans text-xs sm:text-sm text-white/90 leading-relaxed font-normal">
-              Handcrafted with pure botanical ingredients, sacred herbs, and natural resins. HM Agarbattis brings you an authentic Indian fragrance experience for daily prayers, meditation, and mindful living.
+            <p className="font-sans text-xs sm:text-sm text-white/90 leading-relaxed font-normal max-w-xl">
+              <span className="text-[#F6C84C] font-semibold italic block mb-0.5">
+                &ldquo;Beyond Form, Fragrance Speaks — Listen With Your Heart.&rdquo;
+              </span>
+              Handcrafted in Peelamedu, Coimbatore with pure botanical resins, herbs, and flower extracts.
             </p>
+          </div>
 
-            {/* 4 Feature Pills with Cutout Radius */}
-            <div className="grid grid-cols-2 gap-2.5 pt-1">
-              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-                <Leaf size={15} className="text-[#F6C84C] shrink-0" />
-                <span className="text-white/95">100% Natural</span>
-              </div>
-              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-                <ShieldCheck size={15} className="text-[#F6C84C] shrink-0" />
-                <span className="text-white/95">No Charcoal</span>
-              </div>
-              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-                <FlaskConical size={15} className="text-[#F6C84C] shrink-0" />
-                <span className="text-white/95">No Chemicals</span>
-              </div>
-              <div className="bg-black/25 hover:bg-black/35 transition px-3 py-2 rounded-xl border border-[#F6C84C]/45 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-                <Award size={15} className="text-[#F6C84C] shrink-0" />
-                <span className="text-white/95">Made in India</span>
-              </div>
+          {/* 4 Feature Pills (Compact 2x2 Grid on Mobile & Desktop) */}
+          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <Leaf size={15} className="text-[#F6C84C] shrink-0" />
+              <span className="text-white/95">100% Natural</span>
+            </div>
+            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <ShieldCheck size={15} className="text-[#F6C84C] shrink-0" />
+              <span className="text-white/95">No Charcoal</span>
+            </div>
+            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <FlaskConical size={15} className="text-[#F6C84C] shrink-0" />
+              <span className="text-white/95">No Chemicals</span>
+            </div>
+            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
+              <Award size={15} className="text-[#F6C84C] shrink-0" />
+              <span className="text-white/95">Made in India</span>
             </div>
           </div>
 
-          {/* COLUMN 2: Shop Categories */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <h4 className="font-heading font-bold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1.5">
-              <span>✦</span> Shop Categories
+        </div>
+
+        {/* MIDDLE GRID: 2-Column on Mobile, 4-Column on Desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+          
+          {/* COLUMN 1: Categories */}
+          <div className="space-y-3">
+            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
+              <span>✦</span> Categories
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm font-medium text-white/90">
-              <li><Link href="/category/Agarbatti" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Agarbatti &amp; Flora</Link></li>
-              <li><Link href="/category/Camphor" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Bhimseni Camphor</Link></li>
-              <li><Link href="/category/Sambrani" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Cup Sambrani</Link></li>
-              <li><Link href="/category/Loban" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Loban &amp; Dhoop</Link></li>
-              <li><Link href="/category/Dhoop" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Sandalwood Cones</Link></li>
-              <li><Link href="/collections" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Pooja Essentials</Link></li>
-              <li><Link href="/offers" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Gift Sets &amp; Bundles</Link></li>
+              <li><Link href="/category/Agarbatti" className="hover:text-[#F6C84C] transition inline-block">Agarbatti &amp; Flora</Link></li>
+              <li><Link href="/category/Camphor" className="hover:text-[#F6C84C] transition inline-block">Bhimseni Camphor</Link></li>
+              <li><Link href="/category/Sambrani" className="hover:text-[#F6C84C] transition inline-block">Cup Sambrani</Link></li>
+              <li><Link href="/category/Loban" className="hover:text-[#F6C84C] transition inline-block">Loban &amp; Dhoop</Link></li>
+              <li><Link href="/category/Dhoop" className="hover:text-[#F6C84C] transition inline-block">Sandalwood Cones</Link></li>
+              <li><Link href="/offers" className="hover:text-[#F6C84C] transition inline-block">10-in-1 Family Pack</Link></li>
             </ul>
           </div>
 
-          {/* COLUMN 3: Quick Links */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <h4 className="font-heading font-bold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1.5">
+          {/* COLUMN 2: Quick Links */}
+          <div className="space-y-3">
+            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
               <span>✦</span> Quick Links
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm font-medium text-white/90">
-              <li><Link href="/about" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">About Us &amp; Story</Link></li>
-              <li><Link href="/about#benefits" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Natural Benefits</Link></li>
-              <li><Link href="/blog" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Blog &amp; Wellness</Link></li>
-              <li><Link href="/offers" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Special Offers</Link></li>
-              <li><Link href="/contact" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Contact Us</Link></li>
+              <li><Link href="/about" className="hover:text-[#F6C84C] transition inline-block">Our Story</Link></li>
+              <li><Link href="/benefits" className="hover:text-[#F6C84C] transition inline-block">Natural Benefits</Link></li>
+              <li><Link href="/blog" className="hover:text-[#F6C84C] transition inline-block">Blog &amp; Wellness</Link></li>
+              <li><Link href="/collections" className="hover:text-[#F6C84C] transition inline-block">Collections</Link></li>
+              <li><Link href="/offers" className="hover:text-[#F6C84C] transition inline-block">Special Offers</Link></li>
+              <li><Link href="/contact" className="hover:text-[#F6C84C] transition inline-block">Contact Us</Link></li>
             </ul>
           </div>
 
-          {/* COLUMN 4: Help & Support */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <h4 className="font-heading font-bold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1.5">
-              <span>✦</span> Help &amp; Support
+          {/* COLUMN 3: Workshop & Direct Contact */}
+          <div className="col-span-2 md:col-span-1 space-y-3">
+            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
+              <span>✦</span> Contact &amp; Workshop
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm font-medium text-white/90">
-              <li><Link href="/orders" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Track Your Order</Link></li>
-              <li><Link href="/contact" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Shipping Questions</Link></li>
-              <li><Link href="/contact" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">Returns &amp; Refunds</Link></li>
-              <li><Link href="/contact" className="hover:text-[#F6C84C] transition hover:translate-x-1 inline-block">FAQs &amp; Support</Link></li>
-            </ul>
+            <div className="space-y-2 text-xs text-white/90">
+              <p className="flex items-start gap-1.5 leading-snug">
+                <MapPin size={14} className="text-[#F6C84C] shrink-0 mt-0.5" />
+                <span>143A, Peelamedu Main Rd, Sowripalayam, Coimbatore - 641028</span>
+              </p>
+              <p className="flex items-center gap-1.5">
+                <Phone size={13} className="text-[#F6C84C] shrink-0" />
+                <a href="tel:+919345633399" className="hover:text-[#F6C84C] transition">+91 9345633399, 6382177441</a>
+              </p>
+              <p className="flex items-center gap-1.5">
+                <Mail size={13} className="text-[#F6C84C] shrink-0" />
+                <a href="mailto:jayamassociatescoimbatore@gmail.com" className="truncate hover:text-[#F6C84C] transition">jayamassociatescoimbatore@gmail.com</a>
+              </p>
+              <p className="flex items-center gap-1.5 pt-0.5">
+                <InstagramIcon size={13} className="text-[#F6C84C] shrink-0" />
+                <a href="https://instagram.com/hmagarbatti5" target="_blank" rel="noopener noreferrer" className="font-bold text-[#F6C84C] hover:underline">@hmagarbatti5</a>
+              </p>
+            </div>
           </div>
 
-          {/* COLUMN 5: Newsletter & Community */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <h4 className="font-heading font-bold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1.5">
+          {/* COLUMN 4: Newsletter */}
+          <div className="col-span-2 md:col-span-1 space-y-3">
+            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
               <span>✦</span> Join Our Circle
             </h4>
             <p className="text-xs text-white/85 leading-relaxed">
-              Get updates on new launches, offers and wellness tips.
+              Receive auspicious offers, new launches &amp; wellness tips.
             </p>
             <div className="space-y-2">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full text-xs text-[#173B3A] bg-[#FFF4D6] px-3.5 py-2.5 rounded-xl focus:outline-none font-medium placeholder:text-[#173B3A]/60 shadow-inner"
+                className="w-full text-xs text-[#173B3A] bg-[#FFF4D6] px-3 py-2 rounded-xl focus:outline-none font-medium placeholder:text-[#173B3A]/60 shadow-inner"
               />
-              <button className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2.5 rounded-xl font-bold text-xs transition shadow-md active:scale-95">
+              <button className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2 rounded-xl font-bold text-xs transition shadow-md active:scale-95">
                 Subscribe
               </button>
             </div>
@@ -158,8 +197,8 @@ export function Footer() {
 
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/75">
+        {/* BOTTOM BAR */}
+        <div className="pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/75 text-center sm:text-left">
           <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved.</p>
           <div className="flex items-center gap-1 font-script text-base text-[#F6C84C]">
             <span>Find Your God Within</span>

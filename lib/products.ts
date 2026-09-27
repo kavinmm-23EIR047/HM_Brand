@@ -22,33 +22,33 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    slug: "hm-super-series",
-    name: "HM Super Series Agarbatti",
+    slug: "10-in-1-aroma-family-pack",
+    name: "10 in 1 Aroma Family Pack (India's 1st)",
     category: "Agarbatti",
-    subCategory: "Signature Flora",
-    note: "Signature long-lasting temple fragrance crafted from natural resins and floral extracts.",
-    description: "The crown jewel of HM Agarbattis Coimbatore. Handcrafted using traditional masala rolling techniques, infused with sacred wood resins and rare flower oils to fill your home with deep spiritual serenity.",
-    mrp: "₹180",
-    price: 150,
-    quantity: "150g (Approx. 85 Sticks)",
+    subCategory: "Festival Special",
+    note: "1st Time in India: 10 divine fragrances in one family pack. Smell of purity.",
+    description: "For the first time in India — Introducing HM Brand's flagship 10 in 1 Aroma Family Pack. 'Beyond Form, Fragrance Speaks — Listen With Your Heart.' (உருவத்திற்கு அப்பால், வாசனை பேசுகிறது; உங்கள் இதயத்தால் கேளுங்கள்.) Includes Kewda, Loban, Rose, Pineapple, Lavender, Ecstacy, Fantasy, Jasmine, Glory, and Sandalwood.",
+    mrp: "₹120",
+    price: 100,
+    quantity: "10-in-1 Box (10 Distinct Fragrance Packs)",
     burnTime: "45-50 mins per stick",
-    fragranceNotes: ["Sandalwood", "Natural Halmaddi", "Rose Petals", "Amber"],
+    fragranceNotes: ["Kewda", "Loban", "Rose", "Pineapple", "Lavender", "Ecstacy", "Fantasy", "Jasmine", "Glory", "Sandalwood"],
     benefits: [
-      "100% natural organic resins",
-      "Zero harmful charcoal or black soot",
-      "Creates an uplifting temple atmosphere",
-      "Long-lasting aroma that lingers for hours"
+      "1st Time in India innovation: 10 fragrances in 1 box",
+      "100% natural organic botanical resins and herbs",
+      "Zero harmful charcoal or toxic soot",
+      "Special Festival Value Pack (MRP ₹120 at ₹100)"
     ],
     howToUse: [
-      "Place the stick securely in an agarbatti stand away from flammable materials.",
-      "Light the coated end until a gentle flame appears.",
-      "Gently blow out the flame, leaving a glowing red ember.",
-      "Allow the sacred smoke to diffuse and elevate your meditation or prayer space."
+      "Choose any of the 10 divine fragrance sticks according to your mood or ritual.",
+      "Place the stick securely in an agarbatti holder.",
+      "Light the tip and gently fan out the flame.",
+      "Allow the sacred aroma to fill your home with divine peace and positivity."
     ],
-    image: "/images/media_1790142713668.jpg",
-    badge: "Bestseller",
+    image: "/images/agarbatti_cutout.jpg",
+    badge: "1st Time in India",
     rating: 4.9,
-    reviewCount: 142,
+    reviewCount: 168,
     inStock: true,
     featured: true,
   },
