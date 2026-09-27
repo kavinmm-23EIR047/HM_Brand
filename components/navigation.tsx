@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -35,6 +36,17 @@ export function Navigation() {
     setMobileOpen(false);
     setMobileSection(null);
   }, [pathname]);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
   const navLinkClass = (href: string) =>
@@ -135,14 +147,26 @@ export function Navigation() {
         onMouseLeave={() => setOpenMega(null)}
       >
         <div className="mx-auto flex h-[56px] max-w-[1600px] items-center justify-between gap-1 px-2 sm:h-[64px] sm:gap-3 sm:px-6">
-          <Link href="/" className="flex min-w-0 shrink items-center gap-1.5 sm:gap-2.5" aria-label="HM Agarbattis home">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[#f5c84c] bg-[#fff4d6] sm:h-12 sm:w-12">
-              <Lotus className="h-6 w-7 sm:h-9 sm:w-10" />
-            </span>
-            <span className="block min-w-0 leading-none">
-              <span className="block whitespace-nowrap text-[11px] font-extrabold tracking-[-.045em] text-[#183c31] min-[300px]:text-[12px] min-[360px]:text-[14px] sm:text-[19px]">HM <span className="text-[#a90c35]">AGARBATTIS</span></span>
-              <span className="mt-1 hidden font-script text-[11px] leading-none text-[#a90c35] min-[360px]:block">Find Your God Within</span>
-            </span>
+          <Link href="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-3" aria-label="HM Brand home">
+            <div className="relative h-9 w-9 sm:h-11 sm:w-11 shrink-0">
+              <Image
+                src="/images/brand_logo_icon_transparent.png"
+                alt="HM Brand mascot logo"
+                fill
+                unoptimized
+                sizes="(max-width: 640px) 36px, 44px"
+                className="object-contain drop-shadow-xs"
+                priority
+              />
+            </div>
+            <div className="flex flex-col justify-center leading-none">
+              <span className="block whitespace-nowrap text-[13px] font-extrabold tracking-[-.02em] text-[#183c31] sm:text-[18px]">
+                HM <span className="text-[#a90c35]">BRAND</span>
+              </span>
+              <span className="mt-0.5 hidden font-script text-[11px] leading-none text-[#a90c35] min-[360px]:block sm:text-[12px]">
+                Discover the Divine Within
+              </span>
+            </div>
           </Link>
 
           <nav className="hidden h-full items-center gap-3 min-[1440px]:flex 2xl:gap-5" aria-label="Main navigation">
@@ -168,7 +192,18 @@ export function Navigation() {
             <Link href="/account" aria-label="Account" className="hidden h-9 w-9 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[1440px]:grid"><User size={19} strokeWidth={1.8} /></Link>
             <Link href="/wishlist" aria-label="Wishlist" className="relative hidden h-9 w-9 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[1440px]:grid"><Heart size={20} strokeWidth={1.8} />{wishlist.length > 0 && <span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#a90c35] px-1 text-[9px] font-bold text-white">{wishlist.length}</span>}</Link>
             <button type="button" onClick={() => setIsCartOpen(true)} aria-label="Shopping bag" className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] sm:h-9 sm:w-9"><ShoppingBag size={19} strokeWidth={1.8} /><span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#f47a20] px-1 text-[9px] font-bold text-white">{totalItems}</span></button>
-            <button type="button" aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => { setMobileOpen(!mobileOpen); setOpenMega(null); }} aria-label={mobileOpen ? "Close menu" : "Open menu"} className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] transition hover:bg-[#f7edda] sm:h-9 sm:w-9 min-[1440px]:hidden">{mobileOpen ? <X size={20} /> : <Menu size={20} />}</button>
+            
+            {/* Hamburger Button with animated icon state */}
+            <button
+              type="button"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => { setMobileOpen(!mobileOpen); setOpenMega(null); }}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#eadfc9] bg-[#f8f1e3] text-[#173b3a] shadow-xs transition hover:bg-[#a90c35] hover:text-white min-[1440px]:hidden active:scale-95"
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
 
@@ -177,33 +212,252 @@ export function Navigation() {
             <div className="mx-auto max-w-[1368px]">{openMega === "shop" ? shopMenu : collectionsMenu}</div>
           </div>
         )}
-
-        {mobileOpen && (
-          <>
-          <button type="button" aria-label="Close navigation menu" onClick={() => { setMobileOpen(false); setMobileSection(null); }} className="fixed inset-x-0 bottom-0 top-[56px] z-30 bg-[#173b3a]/20 min-[1440px]:hidden" />
-          <div id="mobile-navigation" className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-[#eadfc9] bg-[#fffaf1] px-3 py-3 shadow-xl min-[1440px]:hidden sm:px-5 sm:py-4">
-            <nav className="mx-auto flex max-w-2xl flex-col text-[13px] font-bold text-[#183c31] sm:text-sm" aria-label="Mobile navigation">
-              <div className="grid grid-cols-2 gap-2 border-b border-[#eadfc9] pb-3">
-                <Link href="/account" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold"><User size={15} />Account</Link>
-                <Link href="/wishlist" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold"><Heart size={15} />Wishlist{wishlist.length > 0 ? ` (${wishlist.length})` : ""}</Link>
-                <button type="button" onClick={() => { setIsSearchOpen(true); setMobileOpen(false); }} className="col-span-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#a90c35] px-3 text-xs font-bold text-white min-[300px]:hidden"><Search size={15} />Search products</button>
-              </div>
-              <Link href="/" className="border-b border-[#eadfc9] py-3">Home</Link>
-              <button type="button" aria-expanded={mobileSection === "shop"} onClick={() => setMobileSection(mobileSection === "shop" ? null : "shop")} className="flex min-h-11 items-center justify-between border-b border-[#eadfc9] py-2">Shop <ChevronDown size={16} className={`transition-transform ${mobileSection === "shop" ? "rotate-180" : ""}`} /></button>
-              {mobileSection === "shop" && <div className="grid grid-cols-2 gap-1 bg-white/70 p-2">{categories.map((category) => <Link key={category} href={`/shop?category=${encodeURIComponent(category)}`} className="rounded px-2 py-2 text-xs font-semibold">{category}</Link>)}<Link href="/products" className="col-span-2 rounded px-2 py-2 text-xs font-extrabold text-[#a90c35]">All products →</Link></div>}
-              <button type="button" aria-expanded={mobileSection === "collections"} onClick={() => setMobileSection(mobileSection === "collections" ? null : "collections")} className="flex min-h-11 items-center justify-between border-b border-[#eadfc9] py-2">Collections <ChevronDown size={16} className={`transition-transform ${mobileSection === "collections" ? "rotate-180" : ""}`} /></button>
-              {mobileSection === "collections" && <div className="grid gap-1 bg-white/70 p-2">{collectionsList.map((collection) => <Link key={collection.id} href={`/collections#${collection.id}`} className="rounded px-2 py-2 text-xs font-semibold">{collection.title}</Link>)}</div>}
-              <Link href="/about" className="border-b border-[#eadfc9] py-3">Our Story</Link>
-              <Link href="/about#benefits" className="border-b border-[#eadfc9] py-3">Benefits</Link>
-              <Link href="/blog" className="border-b border-[#eadfc9] py-3">Blog</Link>
-              <Link href="/offers" className="border-b border-[#eadfc9] py-3">Offers</Link>
-              <Link href="/contact" className="border-b border-[#eadfc9] py-3">Contact & Enquiries</Link>
-              <Link href="/orders" className="py-3">Track Order</Link>
-            </nav>
-          </div>
-          </>
-        )}
       </header>
+
+      {/* ========================================================================= */}
+      {/* PROFESSIONAL OFF-CANVAS SLIDE-IN MOBILE NAVIGATION DRAWER */}
+      {/* ========================================================================= */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[100] min-[1440px]:hidden">
+          {/* 1. Backdrop Overlay with Blur */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 animate-in fade-in"
+            onClick={() => { setMobileOpen(false); setMobileSection(null); }}
+            aria-hidden="true"
+          />
+
+          {/* 2. Off-Canvas Slide Drawer */}
+          <aside
+            id="mobile-navigation"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation"
+            className="fixed inset-y-0 right-0 z-10 flex h-full w-full max-w-[340px] min-[400px]:max-w-[380px] flex-col border-l-2 border-[#F6C84C]/50 bg-gradient-to-b from-[#FFFDF8] via-[#FFF8E7] to-[#FFF4D6] shadow-2xl transition-transform duration-300 ease-in-out animate-in slide-in-from-right"
+          >
+            {/* Drawer Top Header */}
+            <div className="flex h-16 shrink-0 items-center justify-between border-b border-[#eadfc9] bg-[#FFF8E7] px-5 shadow-xs">
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2.5"
+              >
+                <div className="relative h-10 w-10 shrink-0">
+                  <Image
+                    src="/images/brand_logo_icon_transparent.png"
+                    alt="HM Brand mascot logo"
+                    fill
+                    unoptimized
+                    sizes="40px"
+                    className="object-contain drop-shadow-xs"
+                  />
+                </div>
+                <div className="flex flex-col justify-center leading-none">
+                  <span className="font-heading text-sm font-extrabold tracking-tight text-[#183c31]">
+                    HM <span className="text-[#9E1830]">BRAND</span>
+                  </span>
+                  <span className="font-script text-[11px] text-[#9E1830] font-normal leading-none mt-0.5">
+                    Discover the Divine Within
+                  </span>
+                </div>
+              </Link>
+
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => { setMobileOpen(false); setMobileSection(null); }}
+                aria-label="Close menu"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfc9] bg-white text-[#173B3A] shadow-xs transition hover:bg-[#9E1830] hover:text-white active:scale-95"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Quick Actions Strip (Account • Wishlist • Search) */}
+            <div className="grid grid-cols-2 gap-2 border-b border-[#eadfc9] bg-white/60 p-3 backdrop-blur-xs">
+              <Link
+                href="/account"
+                onClick={() => setMobileOpen(false)}
+                className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#eadfc9] bg-white px-3 text-xs font-bold text-[#183c31] shadow-xs transition hover:border-[#9E1830] hover:text-[#9E1830]"
+              >
+                <User size={15} className="text-[#9E1830]" />
+                <span>My Account</span>
+              </Link>
+              <Link
+                href="/wishlist"
+                onClick={() => setMobileOpen(false)}
+                className="relative flex h-10 items-center justify-center gap-2 rounded-xl border border-[#eadfc9] bg-white px-3 text-xs font-bold text-[#183c31] shadow-xs transition hover:border-[#9E1830] hover:text-[#9E1830]"
+              >
+                <Heart size={15} className="text-[#9E1830]" />
+                <span>Wishlist</span>
+                {wishlist.length > 0 && (
+                  <span className="grid h-4 min-w-4 place-items-center rounded-full bg-[#9E1830] px-1 text-[9px] font-bold text-white">
+                    {wishlist.length}
+                  </span>
+                )}
+              </Link>
+              <button
+                type="button"
+                onClick={() => { setIsSearchOpen(true); setMobileOpen(false); }}
+                className="col-span-2 flex h-10 items-center justify-center gap-2 rounded-xl border border-[#F6C84C]/80 bg-[#FFF8E7] px-3 text-xs font-extrabold text-[#9E1830] shadow-xs transition hover:bg-[#9E1830] hover:text-white"
+              >
+                <Search size={15} />
+                <span>Search Products &amp; Fragrances</span>
+              </button>
+            </div>
+
+            {/* Scrollable Navigation Body */}
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5 hide-scrollbar">
+              
+              {/* Home */}
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-xs sm:text-sm font-bold transition ${pathname === "/" ? "bg-[#9E1830] text-white shadow-xs" : "text-[#183c31] hover:bg-white/80"}`}
+              >
+                <span>Home</span>
+                <span className="text-[10px] opacity-70">➔</span>
+              </Link>
+
+              {/* Shop Accordion */}
+              <div className="rounded-xl border border-[#eadfc9] bg-white/70 overflow-hidden shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => setMobileSection(mobileSection === "shop" ? null : "shop")}
+                  aria-expanded={mobileSection === "shop"}
+                  className="flex w-full items-center justify-between px-4 py-3 text-xs sm:text-sm font-extrabold text-[#183c31] hover:text-[#9E1830]"
+                >
+                  <span className="flex items-center gap-2">
+                    <Sparkles size={14} className="text-[#F47A20]" />
+                    <span>Shop by Category</span>
+                  </span>
+                  <ChevronDown size={16} className={`transition-transform duration-200 text-[#9E1830] ${mobileSection === "shop" ? "rotate-180" : ""}`} />
+                </button>
+
+                {mobileSection === "shop" && (
+                  <div className="border-t border-[#eadfc9] bg-[#FFF8E7]/90 p-2 space-y-1 animate-in fade-in">
+                    {categories.map((category) => (
+                      <Link
+                        key={category}
+                        href={`/shop?category=${encodeURIComponent(category)}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold text-[#183c31] hover:bg-[#9E1830] hover:text-white transition"
+                      >
+                        <span>{category}</span>
+                        <span className="text-[10px] text-[#9E1830] group-hover:text-white">✦</span>
+                      </Link>
+                    ))}
+                    <Link
+                      href="/products"
+                      onClick={() => setMobileOpen(false)}
+                      className="mt-1 flex items-center justify-center gap-1.5 rounded-lg bg-[#9E1830] p-2 text-xs font-extrabold text-white transition hover:bg-[#F47A20]"
+                    >
+                      <span>Explore All Products</span>
+                      <ArrowRight size={13} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Collections Accordion */}
+              <div className="rounded-xl border border-[#eadfc9] bg-white/70 overflow-hidden shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => setMobileSection(mobileSection === "collections" ? null : "collections")}
+                  aria-expanded={mobileSection === "collections"}
+                  className="flex w-full items-center justify-between px-4 py-3 text-xs sm:text-sm font-extrabold text-[#183c31] hover:text-[#9E1830]"
+                >
+                  <span className="flex items-center gap-2">
+                    <Lotus className="h-4 w-4 text-[#9E1830]" />
+                    <span>Curated Collections</span>
+                  </span>
+                  <ChevronDown size={16} className={`transition-transform duration-200 text-[#9E1830] ${mobileSection === "collections" ? "rotate-180" : ""}`} />
+                </button>
+
+                {mobileSection === "collections" && (
+                  <div className="border-t border-[#eadfc9] bg-[#FFF8E7]/90 p-2 space-y-1 animate-in fade-in">
+                    {collectionsList.map((col) => (
+                      <Link
+                        key={col.id}
+                        href={`/collections#${col.id}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex flex-col rounded-lg px-3 py-2 text-xs font-semibold text-[#183c31] hover:bg-white transition"
+                      >
+                        <span className="text-[10px] font-bold text-[#3F7D45] uppercase">{col.subtitle}</span>
+                        <span className="font-extrabold text-[#183c31]">{col.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Direct Navigation Links */}
+              <Link
+                href="/our-story"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
+              >
+                <span>✦ Our Story &amp; Heritage</span>
+              </Link>
+              <Link
+                href="/about#benefits"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
+              >
+                <span>🌿 Natural Benefits</span>
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
+              >
+                <span>📜 Blog &amp; Rituals</span>
+              </Link>
+              <Link
+                href="/offers"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#9E1830] bg-[#9E1830]/10 border border-[#9E1830]/20 hover:bg-[#9E1830] hover:text-white transition"
+              >
+                <span>🎁 Special Offers</span>
+                <span className="rounded-full bg-[#9E1830] px-2 py-0.5 text-[9px] font-extrabold text-white">HOT</span>
+              </Link>
+              <Link
+                href="/orders"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
+              >
+                <span className="flex items-center gap-2">
+                  <Truck size={14} className="text-[#3F7D45]" />
+                  <span>Track Order</span>
+                </span>
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-[#183c31] hover:bg-white/80 transition"
+              >
+                <span className="flex items-center gap-2">
+                  <HelpCircle size={14} className="text-[#F47A20]" />
+                  <span>Help &amp; Contact</span>
+                </span>
+              </Link>
+            </div>
+
+            {/* Drawer Bottom Footer (Trust & Purity) */}
+            <div className="border-t border-[#eadfc9] bg-[#FFF4D6] p-4 text-center space-y-2">
+              <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-[#183c31]/80">
+                <span>100% Charcoal-Free</span>
+                <span>•</span>
+                <span>Pure Botanical</span>
+                <span>•</span>
+                <span>Coimbatore</span>
+              </div>
+              <p className="font-script text-xs text-[#9E1830]">
+                Find Your God Within
+              </p>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }

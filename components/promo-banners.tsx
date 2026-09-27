@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Mail, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/components/store";
-import { Lotus, Leaf } from "./illustrations";
-import { RitualArt } from "./illustrations/RitualArt";
+import { Leaf } from "./illustrations";
 
 export function PromoBanners() {
   const [email, setEmail] = useState("");
@@ -22,28 +22,26 @@ export function PromoBanners() {
   };
 
   return (
-    <section className="py-10 bg-[#FFF4D6]">
+    <section className="py-10 bg-[#FFF4D6] w-full overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Left: Special Offers Just for You */}
-          <div className="group relative flex flex-col items-start gap-3 overflow-hidden rounded-3xl border border-[#F6C84C] bg-[#FFF8E7] p-4 shadow-sm min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between min-[400px]:gap-4 sm:p-8">
-            <Lotus className="absolute -right-8 -bottom-8 w-40 h-40 opacity-20" />
-
-            <div className="space-y-3 relative z-10 max-w-xs">
-              <span className="font-space text-xs font-bold uppercase tracking-widest text-[#9E1830] block">
+          <div className="group relative flex flex-row items-center justify-between gap-3 overflow-hidden rounded-3xl border border-[#F6C84C] bg-[#FFF8E7] p-5 shadow-sm sm:p-7">
+            <div className="space-y-2.5 relative z-10 max-w-[55%] sm:max-w-[58%]">
+              <span className="font-space text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#9E1830] block">
                 SPECIAL OFFERS
               </span>
-              <h3 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#173B3A] leading-tight">
+              <h3 className="font-heading text-xl sm:text-3xl font-extrabold text-[#173B3A] leading-tight">
                 Just for You
               </h3>
-              <p className="font-sans text-xs sm:text-sm text-[#173B3A]/80 leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-[#173B3A]/80 leading-relaxed line-clamp-2 sm:line-clamp-none">
                 Great deals on your favorite fragrances and pooja essentials.
               </p>
-              <div className="pt-2">
+              <div className="pt-1.5">
                 <Link
                   href="/offers"
-                  className="inline-flex max-w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#9E1830] px-4 py-2.5 text-[11px] font-bold tracking-wide text-white shadow-sm transition hover:bg-[#F47A20] sm:px-6 sm:text-xs"
+                  className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#9E1830] px-4 py-2 text-[11px] font-bold tracking-wide text-white shadow-sm transition hover:bg-[#F47A20] sm:px-6 sm:py-2.5 sm:text-xs active:scale-95"
                 >
                   <span>View Offers</span>
                   <ArrowRight size={14} />
@@ -51,15 +49,22 @@ export function PromoBanners() {
               </div>
             </div>
 
-            {/* Right Graphic */}
-            <div className="h-16 w-16 shrink-0 self-end rounded-2xl border border-[#F6C84C] bg-[#FFF4D6] shadow-sm min-[400px]:h-20 min-[400px]:w-20 min-[400px]:self-auto sm:h-28 sm:w-28">
-              <RitualArt kind="gift" className="h-full w-full p-2" />
+            {/* Right Animated GIF Graphic (Enlarged & Clean) */}
+            <div className="relative h-28 w-28 min-[380px]:h-36 min-[380px]:w-36 sm:h-44 sm:w-44 md:h-40 md:w-40 lg:h-48 lg:w-48 shrink-0 transition-transform duration-500 group-hover:scale-105 flex items-center justify-center">
+              <Image
+                src="/images/special_offer_gift.gif"
+                alt="HM Special Offers festive gift box with incense and dhoop"
+                fill
+                unoptimized
+                sizes="(max-width: 640px) 160px, (max-width: 1024px) 180px, 220px"
+                className="object-contain drop-shadow-md"
+              />
             </div>
           </div>
 
           {/* Right: Subscribe & Save Extra 10% */}
           <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#3F7D45]/30 bg-[#DDECCB] p-4 shadow-sm sm:p-8">
-            <Leaf className="absolute -right-8 -top-8 w-36 h-36 text-[#3F7D45]/15" />
+            <Leaf className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 text-[#3F7D45]/15" />
 
             <div className="space-y-3 relative z-10">
               <span className="font-space text-xs font-bold uppercase tracking-widest text-[#3F7D45] block">
