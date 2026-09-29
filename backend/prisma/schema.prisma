@@ -1,0 +1,322 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String
+  fullName     String
+  phone        String?
+  role         String     @default("CUSTOMER") // CUSTOMER | ADMIN
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  addresses    Address[]
+  orders       Order[]
+  wishlist     WishlistItem[]
+  auditLogs    AdminAuditLog[]
+
+  @@map("users")
+}
+
+model Address {
+  id            String   @id @default(uuid())
+  userId        String
+  recipientName String
+  phone         String
+  street        String
+  city          String
+  state         String
+  postalCode    String
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+}
+
+model Product {
+  id               String            @id @default(uuid())
+  sku              String            @unique
+  name             String
+  slug             String            @unique
+  description      String
+  shortDescription String?
+  price            Float
+  mrp              Float
+  stockQuantity    Int               @default(0)
+  couponCode       String?
+  isActive         Boolean           @default(true)
+  isFeatured       Boolean           @default(false)
+  displayOrder     Int               @default(0)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+
+  images           ProductImage[]
+  categories       ProductCategory[]
+  collections      CollectionProduct[]
+  festivals        FestivalProduct[]
+  orderItems       OrderItem[]
+  wishlistItems    WishlistItem[]
+
+  @@index([slug])
+  @@map("products")
+}
+
+model ProductImage {
+  id           String   @id @default(uuid())
+  productId    String
+  url          String
+  storageKey   String
+  altText      String?
+  displayOrder Int      @default(0)
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model Category {
+  id           String            @id @default(uuid())
+  name         String
+  slug         String            @unique
+  description  String?
+  imageUrl     String?
+  displayOrder Int               @default(0)
+  isActive     Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+
+  products     ProductCategory[]
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model ProductCategory {
+  productId  String
+  categoryId String
+  createdAt  DateTime @default(now())
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@map("product_categories")
+}
+
+model Collection {
+  id           String              @id @default(uuid())
+  title        String
+  slug         String              @unique
+  description  String?
+  bannerUrl    String?
+  displayOrder Int                 @default(0)
+  isActive     Boolean             @default(true)
+  startDate    DateTime?
+  endDate      DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  products     CollectionProduct[]
+
+  @@index([slug])
+  @@map("collections")
+}
+
+model CollectionProduct {
+  collectionId String
+  productId    String
+  displayOrder Int        @default(0)
+
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, productId])
+  @@map("collection_products")
+}
+
+model Festival {
+  id           String            @id @default(uuid())
+  title        String
+  slug         String            @unique
+  description  String?
+  bannerUrl    String?
+  displayOrder Int               @default(0)
+  isActive     Boolean           @default(true)
+  startDate    DateTime?
+  endDate      DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  products     FestivalProduct[]
+
+  @@index([slug])
+  @@map("festivals")
+}
+
+model FestivalProduct {
+  festivalId   String
+  productId    String
+  displayOrder Int      @default(0)
+
+  festival     Festival @relation(fields: [festivalId], references: [id], onDelete: Cascade)
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([festivalId, productId])
+  @@map("festival_products")
+}
+
+model Banner {
+  id           String    @id @default(uuid())
+  title        String
+  subtitle     String?
+  position     String    @default("HERO_MAIN")
+  desktopImage String
+  mobileImage  String?
+  ctaText      String?
+  ctaLink      String?
+  displayOrder Int       @default(0)
+  isActive     Boolean   @default(true)
+  startDate    DateTime?
+  endDate      DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("banners")
+}
+
+model HomepageSection {
+  id           String    @id @default(uuid())
+  sectionType  String
+  title        String?
+  subtitle     String?
+  referenceId  String?
+  displayOrder Int       @default(0)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("homepage_sections")
+}
+
+model Order {
+  id                String      @id @default(uuid())
+  orderNumber       String      @unique
+  userId            String?
+  customerEmail     String
+  customerPhone     String
+  shippingAddress   String      // JSON stringified address
+  subtotal          Float
+  discountAmount    Float       @default(0)
+  shippingCost      Float       @default(0)
+  totalAmount       Float
+  status            String      @default("PENDING") // PENDING | CONFIRMED | PROCESSING | SHIPPED | DELIVERED | CANCELLED
+  paymentStatus     String      @default("PENDING") // PENDING | COMPLETED | FAILED | REFUNDED
+  paymentMethod     String
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user              User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items             OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                  String   @id @default(uuid())
+  orderId             String
+  productId           String?
+  productNameSnapshot String
+  skuSnapshot         String
+  unitPriceSnapshot   Float
+  imageUrlSnapshot    String?
+  quantity            Int
+  totalPrice          Float
+
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product             Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@map("order_items")
+}
+
+model Coupon {
+  id              String    @id @default(uuid())
+  code            String    @unique
+  discountPercent Int?
+  discountAmount  Float?
+  minOrderAmount  Float     @default(0)
+  maxDiscount     Float?
+  expiryDate      DateTime
+  usageLimit      Int?
+  usageCount      Int       @default(0)
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+
+  @@map("coupons")
+}
+
+model WishlistItem {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlist_items")
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  isSubscribed Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  @@map("newsletter_subscribers")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
+
+model AdminAuditLog {
+  id         String   @id @default(uuid())
+  adminId    String
+  action     String
+  targetType String
+  targetId   String?
+  details    String?  // JSON stringified details
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  admin      User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@map("admin_audit_logs")
+}

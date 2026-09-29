@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Leaf } from "./illustrations";
 
+import { useStore } from "./store";
+
 const slides = [
   { eyebrow: "NATURAL FRAGRANCES FOR A CALMER, HAPPIER YOU", script: "Good Scents", heading: "Brighter Days", copy: "Handcrafted agarbattis, camphor and pooja essentials made with pure ingredients to bring peace, positivity and good energy to your home.", cta: "Explore Collection", href: "/shop", image: "/images/mascot_1.png", product: "/images/camphor_cutout.jpg", side: "A Piece of Peace, Everyday" },
   { eyebrow: "PURE, NATURAL & THOUGHTFULLY MADE", script: "A little calm", heading: "Everyday Rituals", copy: "Bring a softer, more mindful feeling to your home with fragrances inspired by the goodness of nature.", cta: "Shop Camphor", href: "/category/Camphor", image: "/images/mascot_3.png", product: "/images/camphor_cutout.jpg", side: "Made with care in India" },
@@ -13,15 +15,31 @@ const slides = [
 ];
 
 export function HeroBannerSlider() {
+  const { dbBanners } = useStore();
+
+  const activeSlides = dbBanners && dbBanners.length > 0
+    ? dbBanners.map((b) => ({
+        eyebrow: b.subtitle || "NATURAL FRAGRANCES FOR A CALMER, HAPPIER YOU",
+        script: "Good Scents",
+        heading: b.title,
+        copy: b.subtitle || "Handcrafted agarbattis & divine essentials made with pure ingredients.",
+        cta: b.ctaText || "Explore Collection",
+        href: b.ctaLink || "/shop",
+        image: b.desktopImage || "/images/mascot_1.png",
+        product: "/images/camphor_cutout.jpg",
+        side: "A Piece of Peace, Everyday",
+      }))
+    : slides;
+
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(() => setCurrent((n) => (n + 1) % slides.length), 6000);
+    const timer = setInterval(() => setCurrent((n) => (n + 1) % activeSlides.length), 6000);
     return () => clearInterval(timer);
-  }, [paused]);
-  const slide = slides[current];
-  const move = (by: number) => setCurrent((n) => (n + by + slides.length) % slides.length);
+  }, [paused, activeSlides.length]);
+  const slide = activeSlides[current] || activeSlides[0];
+  const move = (by: number) => setCurrent((n) => (n + by + activeSlides.length) % activeSlides.length);
 
   return (
     <section className="home-hero relative overflow-hidden" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -48,7 +66,7 @@ export function HeroBannerSlider() {
           <button onClick={() => move(1)} aria-label="Next slide" className="absolute right-0 top-1/2 z-20 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white text-[#173b3a] shadow-md transition hover:bg-[#bd0b43] hover:text-white min-[360px]:h-9 min-[360px]:w-9"><ChevronRight size={18} /></button>
         </div>
         <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:left-14 lg:translate-x-0">
-          {slides.map((item, i) => <button key={item.heading} onClick={() => setCurrent(i)} aria-label={`Go to slide ${i + 1}`} className={`h-2 rounded-full transition-all ${current === i ? "w-7 bg-[#bd0b43]" : "w-2 bg-[#173b3a]/25"}`} />)}
+          {activeSlides.map((item, i) => <button key={i} onClick={() => setCurrent(i)} aria-label={`Go to slide ${i + 1}`} className={`h-2 rounded-full transition-all ${current === i ? "w-7 bg-[#bd0b43]" : "w-2 bg-[#173b3a]/25"}`} />)}
         </div>
       </div>
     </section>

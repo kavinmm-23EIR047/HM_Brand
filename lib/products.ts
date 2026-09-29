@@ -18,7 +18,53 @@ export interface Product {
   reviewCount: number;
   inStock: boolean;
   featured?: boolean;
+  couponCode?: string;
 }
+
+export function mapDbProductToProduct(p: any): Product {
+  const primaryImg = p.images?.find((img: any) => img.isPrimary)?.url || p.images?.[0]?.url || "/images/media_1790142713668.jpg";
+  const categoryName = p.categories?.[0]?.category?.name || p.category || "Agarbatti & Flora";
+  
+  // shortDescription doubles as "unit" label (e.g. "50 GMS · Camphor")
+  const shortDesc = p.shortDescription || "";
+  // Extract quantity portion: everything before the first "·" or the whole thing
+  const quantityPart = shortDesc.split("·")[0]?.trim() || "150 GMS";
+  // Extract note from after "·" or fallback to description slice
+  const notePart = shortDesc.includes("·")
+    ? shortDesc.split("·").slice(1).join("·").trim()
+    : (p.description ? p.description.slice(0, 90) : "Handcrafted natural fragrance.");
+
+  return {
+    slug: p.slug,
+    name: p.name,
+    category: categoryName,
+    subCategory: notePart || "Natural Heritage Aroma",
+    note: p.description ? p.description.slice(0, 100) : notePart || "Handcrafted natural fragrance.",
+    description: p.description || p.name,
+    mrp: `₹${p.mrp || p.price}`,
+    price: typeof p.price === 'number' ? p.price : parseFloat(p.price || 0),
+    quantity: quantityPart,
+    burnTime: "45-50 mins per stick",
+    fragranceNotes: ["Natural Resins", "Essential Oils", "Botanicals"],
+    benefits: [
+      "100% natural organic ingredients",
+      "Zero harmful charcoal or synthetic toxins",
+      "Uplifts daily rituals and home ambiance"
+    ],
+    howToUse: [
+      "Place stick in agarbatti holder.",
+      "Light tip until flame appears, then gently blow out."
+    ],
+    image: primaryImg,
+    badge: p.couponCode ? `COUPON: ${p.couponCode}` : (p.isFeatured ? "Featured" : undefined),
+    rating: 4.9,
+    reviewCount: 48,
+    inStock: (p.stockQuantity ?? 1) > 0,
+    featured: Boolean(p.isFeatured),
+    couponCode: p.couponCode || undefined,
+  };
+}
+
 
 export const products: Product[] = [
   {

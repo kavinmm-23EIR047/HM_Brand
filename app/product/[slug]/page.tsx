@@ -6,7 +6,41 @@ import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { AddPanel } from "@/app/products/[slug]/panel";
 import { MascotAgarbatti, MascotDiya, MascotMeditate } from "@/components/mascot-art";
-import { products, type Product } from "@/lib/products";
+import { products, mapDbProductToProduct, type Product } from "@/lib/products";
+
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+
+async function getProduct(slug: string): Promise<Product | null> {
+  // 1. Try the backend API first
+  try {
+    const res = await fetch(`${API}/products/${slug}`, { next: { revalidate: 60 } });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && json.data) return mapDbProductToProduct(json.data);
+    }
+  } catch {}
+  // 2. Fallback to static array
+  return products.find((p) => p.slug === slug) || null;
+}
+
+async function getRelatedProducts(product: Product): Promise<Product[]> {
+  // Try to fetch DB products in the same category
+  try {
+    const catQuery = encodeURIComponent(product.category.toLowerCase().replace(/\s+&\s+/g, "-").replace(/\s+/g, "-"));
+    const res = await fetch(`${API}/products?category=${catQuery}&limit=4`, { next: { revalidate: 60 } });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        return json.data
+          .filter((p: any) => p.slug !== product.slug)
+          .slice(0, 3)
+          .map(mapDbProductToProduct);
+      }
+    }
+  } catch {}
+  // Fallback to static related
+  return products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 3);
+}
 
 export default async function ProductDetailsPage({
   params,
@@ -14,13 +48,12 @@ export default async function ProductDetailsPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+  const product = await getProduct(slug);
 
   if (!product) return notFound();
 
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.slug !== product.slug)
-    .slice(0, 3);
+  const relatedProducts = await getRelatedProducts(product);
+
 
   const discountPercent =
     product.mrp && product.price

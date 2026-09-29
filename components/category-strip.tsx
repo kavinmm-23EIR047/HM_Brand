@@ -5,72 +5,45 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { RitualArt } from "./illustrations/RitualArt";
 
+import { useStore } from "./store";
+
+const categoryPresets: Record<string, { circleBg: string; arrowBg: string; textColor: string; art: any }> = {
+  "agarbatti-flora": { circleBg: "bg-[#9E1830]", arrowBg: "bg-[#F47A20]", textColor: "text-[#9E1830]", art: "incense" },
+  "bhimseni-camphor": { circleBg: "bg-[#4C7FA8]", arrowBg: "bg-[#F47A20]", textColor: "text-[#4C7FA8]", art: "camphor" },
+  "sambrani": { circleBg: "bg-[#F47A20]", arrowBg: "bg-[#9E1830]", textColor: "text-[#F47A20]", art: "sambrani" },
+  "loban-dhoop": { circleBg: "bg-[#3F7D45]", arrowBg: "bg-[#F47A20]", textColor: "text-[#3F7D45]", art: "loban" },
+  "sandalwood": { circleBg: "bg-[#F6C84C]", arrowBg: "bg-[#9E1830]", textColor: "text-[#173B3A]", art: "sandalwood" },
+  "pooja-essentials": { circleBg: "bg-[#7653A6]", arrowBg: "bg-[#F47A20]", textColor: "text-[#7653A6]", art: "diya" },
+  "gift-sets": { circleBg: "bg-[#DDECCB]", arrowBg: "bg-[#3F7D45]", textColor: "text-[#3F7D45]", art: "gift" },
+};
+
+const fallbackCategories = [
+  { name: "Agarbatti & Flora", subtitle: "Divine Handcrafted", href: "/shop?category=agarbatti-flora", circleBg: "bg-[#9E1830]", arrowBg: "bg-[#F47A20]", textColor: "text-[#9E1830]", art: "incense" as const },
+  { name: "Bhimseni Camphor", subtitle: "99.9% Pure Pine", href: "/shop?category=bhimseni-camphor", circleBg: "bg-[#4C7FA8]", arrowBg: "bg-[#F47A20]", textColor: "text-[#4C7FA8]", art: "camphor" as const },
+  { name: "Sambrani", subtitle: "Pure Resin Cups", href: "/shop?category=sambrani", circleBg: "bg-[#F47A20]", arrowBg: "bg-[#9E1830]", textColor: "text-[#F47A20]", art: "sambrani" as const },
+  { name: "Loban & Dhoop", subtitle: "Sacred Air Cleanser", href: "/shop?category=loban-dhoop", circleBg: "bg-[#3F7D45]", arrowBg: "bg-[#F47A20]", textColor: "text-[#3F7D45]", art: "loban" as const },
+  { name: "Sandalwood", subtitle: "Calming Aroma", href: "/shop?category=sandalwood", circleBg: "bg-[#F6C84C]", arrowBg: "bg-[#9E1830]", textColor: "text-[#173B3A]", art: "sandalwood" as const },
+  { name: "Pooja Essentials", subtitle: "Daily Temple Needs", href: "/shop?category=pooja-essentials", circleBg: "bg-[#7653A6]", arrowBg: "bg-[#F47A20]", textColor: "text-[#7653A6]", art: "diya" as const },
+  { name: "Gift Sets", subtitle: "Festive Bundles", href: "/shop?category=gift-sets", circleBg: "bg-[#DDECCB]", arrowBg: "bg-[#3F7D45]", textColor: "text-[#3F7D45]", art: "gift" as const },
+];
+
 export function CategoryStrip() {
-  const categories = [
-    {
-      name: "Agarbatti & Flora",
-      subtitle: "Divine Handcrafted",
-      href: "/category/Agarbatti",
-      circleBg: "bg-[#9E1830]",
-      arrowBg: "bg-[#F47A20]",
-      textColor: "text-[#9E1830]",
-      art: "incense" as const,
-    },
-    {
-      name: "Bhimseni Camphor",
-      subtitle: "99.9% Pure Pine",
-      href: "/category/Camphor",
-      circleBg: "bg-[#4C7FA8]",
-      arrowBg: "bg-[#F47A20]",
-      textColor: "text-[#4C7FA8]",
-      art: "camphor" as const,
-    },
-    {
-      name: "Sambrani",
-      subtitle: "Pure Resin Cups",
-      href: "/category/Sambrani",
-      circleBg: "bg-[#F47A20]",
-      arrowBg: "bg-[#9E1830]",
-      textColor: "text-[#F47A20]",
-      art: "sambrani" as const,
-    },
-    {
-      name: "Loban & Dhoop",
-      subtitle: "Sacred Air Cleanser",
-      href: "/category/Loban",
-      circleBg: "bg-[#3F7D45]",
-      arrowBg: "bg-[#F47A20]",
-      textColor: "text-[#3F7D45]",
-      art: "loban" as const,
-    },
-    {
-      name: "Sandalwood",
-      subtitle: "Calming Aroma",
-      href: "/category/Dhoop",
-      circleBg: "bg-[#F6C84C]",
-      arrowBg: "bg-[#9E1830]",
-      textColor: "text-[#173B3A]",
-      art: "sandalwood" as const,
-    },
-    {
-      name: "Pooja Essentials",
-      subtitle: "Daily Temple Needs",
-      href: "/category/Special Collections",
-      circleBg: "bg-[#7653A6]",
-      arrowBg: "bg-[#F47A20]",
-      textColor: "text-[#7653A6]",
-      art: "diya" as const,
-    },
-    {
-      name: "Gift Sets",
-      subtitle: "Festive Bundles",
-      href: "/collections#sacred-gifts",
-      circleBg: "bg-[#DDECCB]",
-      arrowBg: "bg-[#3F7D45]",
-      textColor: "text-[#3F7D45]",
-      art: "gift" as const,
-    },
-  ];
+  const { dbCategories } = useStore();
+
+  const categories = dbCategories && dbCategories.length > 0
+    ? dbCategories.map((cat, idx) => {
+        const preset = categoryPresets[cat.slug] || Object.values(categoryPresets)[idx % 7];
+        return {
+          name: cat.name,
+          subtitle: cat.description || "Handcrafted product",
+          href: `/shop?category=${encodeURIComponent(cat.slug)}`,
+          circleBg: preset.circleBg,
+          arrowBg: preset.arrowBg,
+          textColor: preset.textColor,
+          art: preset.art,
+        };
+      })
+    : fallbackCategories;
 
   return (
     <section className="overflow-hidden bg-[#fffaf0] py-4 sm:py-5">

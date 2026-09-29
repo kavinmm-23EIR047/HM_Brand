@@ -16,58 +16,37 @@ import { products } from "@/lib/products";
 import { useStore } from "@/components/store";
 
 export default function HomePage() {
-  const { add, toggleWishlist, isInWishlist } = useStore();
+  const { add, toggleWishlist, isInWishlist, dbProducts } = useStore();
 
-  const popularPicks = [
-    {
-      slug: "bhimseni-camphor",
-      name: "Bhimseni Camphor",
-      badge: "Best Seller",
-      badgeBg: "bg-[#3F7D45]",
-      rating: 4.8,
-      reviews: 120,
-      note: "Distilled to 99.9% edible purity. Naturally sourced and hand-harvested.",
-      price: 199,
-      unit: "50 GMS",
-      image: "/images/camphor_cutout.jpg",
-    },
-    {
-      slug: "hm-super-series",
-      name: "HM Super Series Agarbattis",
-      badge: "Festival Special",
-      badgeBg: "bg-[#9E1830]",
-      rating: 4.7,
-      reviews: 98,
-      note: "10 premium fragrances in one pack. Naturally made. No chemicals.",
-      price: 150,
-      unit: "150 GMS",
-      image: "/images/agarbatti_cutout.jpg",
-    },
-    {
-      slug: "kesar-loban",
-      name: "Kesar Loban",
-      badge: "Popular",
-      badgeBg: "bg-[#7653A6]",
-      rating: 4.8,
-      reviews: 76,
-      note: "Rich saffron and purifying resin for a peaceful atmosphere.",
-      price: 175,
-      unit: "100 GMS",
-      image: "/images/media_1790142713668.jpg",
-    },
-    {
-      slug: "pancha-rudhra",
-      name: "Pancha Rudhra",
-      badge: "New Arrival",
-      badgeBg: "bg-[#4C7FA8]",
-      rating: 4.7,
-      reviews: 64,
-      note: "Sacred blend for focus and spiritual well-being.",
-      price: 110,
-      unit: "50 NOS",
-      image: "/images/sambrani.jpg",
-    },
-  ];
+  const displayPicks = dbProducts && dbProducts.length > 0
+    ? dbProducts.slice(0, 8).map((p, idx) => ({
+        slug: p.slug,
+        name: p.name,
+        badge: p.couponCode ? `COUPON: ${p.couponCode}` : (p.badge || "Best Seller"),
+        badgeBg: idx % 3 === 0 ? "bg-[#3F7D45]" : idx % 3 === 1 ? "bg-[#9E1830]" : "bg-[#7653A6]",
+        rating: p.rating || 4.9,
+        reviews: p.reviewCount || 48,
+        note: p.note || p.description?.slice(0, 80),
+        price: p.price,
+        unit: p.quantity || "150 GMS",
+        image: p.image || "/images/media_1790142713668.jpg",
+        rawProduct: p,
+      }))
+    : [
+        {
+          slug: "bhimseni-camphor",
+          name: "Bhimseni Camphor",
+          badge: "Best Seller",
+          badgeBg: "bg-[#3F7D45]",
+          rating: 4.8,
+          reviews: 120,
+          note: "Distilled to 99.9% edible purity. Naturally sourced and hand-harvested.",
+          price: 199,
+          unit: "50 GMS",
+          image: "/images/camphor_cutout.jpg",
+          rawProduct: products[0],
+        },
+      ];
 
   return (
     <div className="min-h-screen bg-[#FFF4D6] text-[#173B3A] flex flex-col justify-between overflow-x-hidden font-sans">
@@ -114,9 +93,9 @@ export default function HomePage() {
 
             {/* Product Cards Grid */}
             <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {popularPicks.map((item) => {
+              {displayPicks.map((item) => {
                 const wishlisted = isInWishlist(item.slug);
-                const originalProduct = products.find((p) => p.slug === item.slug) || products[0];
+                const originalProduct = item.rawProduct || products.find((p) => p.slug === item.slug) || products[0];
 
                 return (
                   <div

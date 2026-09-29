@@ -3,35 +3,55 @@
 import React, { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Filter, SlidersHorizontal, Search, Sparkles, X } from "lucide-react";
+import { SlidersHorizontal, Search, Sparkles, X } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { MascotSearch } from "@/components/mascot-art";
 import { RitualArt } from "@/components/illustrations/RitualArt";
+import { useStore } from "@/components/store";
 import { products, categories } from "@/lib/products";
 
-const categoryIllustrations = {
-  Agarbatti: "incense",
-  Camphor: "camphor",
-  Sambrani: "sambrani",
-  Loban: "loban",
-  Dhoop: "sandalwood",
+const categoryIllustrations: Record<string, string> = {
+  "Agarbatti": "incense",
+  "Agarbatti & Flora": "incense",
+  "Camphor": "camphor",
+  "Bhimseni Camphor": "camphor",
+  "Sambrani": "sambrani",
+  "Loban": "loban",
+  "Loban & Dhoop": "loban",
+  "Dhoop": "sandalwood",
+  "Sandalwood": "sandalwood",
+  "Pooja Essentials": "diya",
   "Premium Fragrances": "diya",
   "Special Collections": "gift",
-} as const;
-
-const matchesCategory = (product: (typeof products)[number], category: string) => {
-  if (category === "All") return true;
-  if (category === "Premium Fragrances") return product.category === "Agarbatti";
-  return product.category.toLowerCase() === category.toLowerCase();
+  "Gift Sets": "gift",
 };
-
-const getCategoryCount = (category: string) =>
-  category === "All" ? products.length : products.filter((product) => matchesCategory(product, category)).length;
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "All";
+
+  const { dbProducts, dbCategories } = useStore();
+
+  const allProducts = dbProducts && dbProducts.length > 0 ? dbProducts : products;
+  const categoryNames = dbCategories && dbCategories.length > 0
+    ? dbCategories.map((c) => c.name)
+    : categories;
+
+  const matchesCategory = (product: any, category: string) => {
+    if (category === "All") return true;
+    const catLower = category.toLowerCase().trim();
+    const prodCatLower = (product.category || "").toLowerCase().trim();
+    // Exact match or partial match in both directions
+    if (prodCatLower === catLower) return true;
+    if (prodCatLower.includes(catLower) || catLower.includes(prodCatLower)) return true;
+    // Keyword match: e.g. "Bhimseni Camphor" category matches product.category="Bhimseni Camphor"
+    const catWords = catLower.split(/\s+/);
+    return catWords.some((word) => word.length > 3 && prodCatLower.includes(word));
+  };
+
+  const getCategoryCount = (category: string) =>
+    category === "All" ? allProducts.length : allProducts.filter((product) => matchesCategory(product, category)).length;
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedPriceRange, setSelectedPriceRange] = useState("all");
@@ -40,7 +60,7 @@ function ShopContent() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
-    return products
+    return allProducts
       .filter((p) => {
         // Category filter
         if (!matchesCategory(p, selectedCategory)) {
@@ -69,7 +89,8 @@ function ShopContent() {
         if (sortBy === "rating") return b.rating - a.rating;
         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       });
-  }, [selectedCategory, selectedPriceRange, sortBy, searchQuery]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allProducts, selectedCategory, selectedPriceRange, sortBy, searchQuery]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -82,14 +103,15 @@ function ShopContent() {
           <span className="text-xs text-[#65736b]">Choose a ritual to narrow your search</span>
         </div>
         <div className="grid grid-cols-2 gap-2 min-[360px]:grid-cols-4 lg:grid-cols-8 lg:gap-3">
-          {["All", ...categories].map((category) => {
+          {["All", ...categoryNames].map((category) => {
             const count = getCategoryCount(category);
             const isSelected = selectedCategory === category;
             const artKind = category === "All" ? "natural" : categoryIllustrations[category as keyof typeof categoryIllustrations];
             return (
               <button key={category} type="button" onClick={() => setSelectedCategory(category)} aria-pressed={isSelected} className={`group flex min-w-0 flex-col items-center rounded-xl px-1.5 py-2 text-center transition ${isSelected ? "bg-white shadow-sm ring-1 ring-[#3f7d45]/30" : "hover:bg-white/75"}`}>
                 <span className={`grid h-12 w-12 place-items-center overflow-hidden rounded-full transition group-hover:scale-105 sm:h-14 sm:w-14 ${isSelected ? "bg-[#dcebc9]" : "bg-white"}`}>
-                  <RitualArt kind={artKind} className="h-full w-full p-1" />
+                  <RitualArt kind={(artKind || "natural") as any} className="h-full w-full p-1" />
+
                 </span>
                 <span className={`mt-1.5 line-clamp-2 text-[10px] font-bold leading-tight sm:text-[11px] ${isSelected ? "text-[#a90c35]" : "text-[#244038]"}`}>{category === "All" ? "All products" : category}</span>
                 <span className="mt-0.5 text-[9px] text-[#758078]">{count} items</span>
@@ -168,7 +190,7 @@ function ShopContent() {
               Filter by category
             </h3>
             <div className="space-y-1.5">
-              {["All", ...categories].map((cat) => (
+              {["All", ...categoryNames].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
@@ -180,9 +202,7 @@ function ShopContent() {
                 >
                   <span>{cat}</span>
                   <span className="text-[10px] opacity-75">
-                    {cat === "All"
-                      ? products.length
-                      : getCategoryCount(cat)}
+                    {getCategoryCount(cat)}
                   </span>
                 </button>
               ))}

@@ -132,7 +132,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/70">
-          <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved. • <Link href="/admin" className="hover:text-[#F6C84C] transition underline">Admin Console</Link></p>
           <div className="flex items-center gap-1 font-script text-base text-[#F6C84C]">
             <span>Find Your God Within</span>
             <Heart size={14} className="text-[#F47A20] fill-[#F47A20] ml-1" />

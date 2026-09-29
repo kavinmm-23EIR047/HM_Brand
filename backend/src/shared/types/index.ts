@@ -1,0 +1,5 @@
+export type UserRole = 'CUSTOMER' | 'ADMIN';
+export type BannerPosition = 'HERO_MAIN' | 'PROMO_STRIP' | 'CATEGORY_HEADER' | 'FESTIVAL_SPOTLIGHT' | 'FOOTER_PROMO';
+export type HomepageSectionType = 'HERO_SLIDER' | 'FEATURED_CATEGORIES' | 'FESTIVAL_HIGHLIGHT' | 'FEATURED_PRODUCTS' | 'COLLECTION_GRID' | 'PROMO_STRIP' | 'BEST_SELLERS';
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';

@@ -15,6 +15,7 @@ import {
   Sparkles,
   Truck,
   User,
+  ShieldCheck,
   X,
 } from "lucide-react";
 import { useStore } from "@/components/store";
@@ -28,7 +29,7 @@ export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<MegaMenu>(null);
   const pathname = usePathname();
-  const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen } = useStore();
+  const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen, user } = useStore();
 
   useEffect(() => {
     setOpenMega(null);
@@ -165,7 +166,16 @@ export function Navigation() {
               <span className="truncate">Search agarbattis, camphor, pooja essentials...</span>
             </button>
             <button type="button" onClick={() => setIsSearchOpen(true)} aria-label="Search" className="hidden h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[300px]:grid sm:h-9 sm:w-9 lg:hidden"><Search size={18} /></button>
-            <Link href="/account" aria-label="Account" className="hidden h-9 w-9 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[1440px]:grid"><User size={19} strokeWidth={1.8} /></Link>
+            {user?.role === "ADMIN" && (
+              <Link href="/admin" aria-label="Admin Control Panel" className="hidden h-9 shrink-0 px-3 place-items-center rounded-full bg-[#A90C35] text-white hover:bg-[#870B2B] min-[1440px]:inline-flex gap-1.5 text-xs font-extrabold shadow">
+                <ShieldCheck size={16} />
+                <span>Admin Panel</span>
+              </Link>
+            )}
+            <Link href={user ? "/account" : "/login"} aria-label="Account" className="hidden h-9 min-w-9 shrink-0 px-2.5 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[1440px]:inline-flex gap-1.5 text-xs font-bold">
+              <User size={19} strokeWidth={1.8} />
+              {user && <span className="max-w-[100px] truncate">{user.fullName.split(" ")[0]}</span>}
+            </Link>
             <Link href="/wishlist" aria-label="Wishlist" className="relative hidden h-9 w-9 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[1440px]:grid"><Heart size={20} strokeWidth={1.8} />{wishlist.length > 0 && <span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#a90c35] px-1 text-[9px] font-bold text-white">{wishlist.length}</span>}</Link>
             <button type="button" onClick={() => setIsCartOpen(true)} aria-label="Shopping bag" className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] sm:h-9 sm:w-9"><ShoppingBag size={19} strokeWidth={1.8} /><span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#f47a20] px-1 text-[9px] font-bold text-white">{totalItems}</span></button>
             <button type="button" aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => { setMobileOpen(!mobileOpen); setOpenMega(null); }} aria-label={mobileOpen ? "Close menu" : "Open menu"} className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] transition hover:bg-[#f7edda] sm:h-9 sm:w-9 min-[1440px]:hidden">{mobileOpen ? <X size={20} /> : <Menu size={20} />}</button>
@@ -184,7 +194,16 @@ export function Navigation() {
           <div id="mobile-navigation" className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-[#eadfc9] bg-[#fffaf1] px-3 py-3 shadow-xl min-[1440px]:hidden sm:px-5 sm:py-4">
             <nav className="mx-auto flex max-w-2xl flex-col text-[13px] font-bold text-[#183c31] sm:text-sm" aria-label="Mobile navigation">
               <div className="grid grid-cols-2 gap-2 border-b border-[#eadfc9] pb-3">
-                <Link href="/account" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold"><User size={15} />Account</Link>
+                {user?.role === "ADMIN" && (
+                  <Link href="/admin" onClick={() => setMobileOpen(false)} className="col-span-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#A90C35] text-white px-3 text-xs font-bold">
+                    <ShieldCheck size={16} />
+                    <span>Admin Control Panel</span>
+                  </Link>
+                )}
+                <Link href={user ? "/account" : "/login"} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold">
+                  <User size={15} />
+                  {user ? user.fullName.split(" ")[0] : "Sign In / Register"}
+                </Link>
                 <Link href="/wishlist" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold"><Heart size={15} />Wishlist{wishlist.length > 0 ? ` (${wishlist.length})` : ""}</Link>
                 <button type="button" onClick={() => { setIsSearchOpen(true); setMobileOpen(false); }} className="col-span-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#a90c35] px-3 text-xs font-bold text-white min-[300px]:hidden"><Search size={15} />Search products</button>
               </div>
