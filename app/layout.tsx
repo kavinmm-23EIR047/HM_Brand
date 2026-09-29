@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { StoreProvider } from "@/components/store";
 import { CartDrawer } from "@/components/cart-drawer";
 import { SearchModal } from "@/components/search-modal";
 import { NotificationToast } from "@/components/notification-toast";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "HM Agarbattis | Find Your God Within — Sacred Temple Fragrances Coimbatore",
@@ -18,7 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+<<<<<<< HEAD
     <html lang="en" suppressHydrationWarning>
+=======
+    <html lang="en" className="w-full overflow-x-hidden">
+>>>>>>> d4c37a685181678238b0d3fac10872588c366b67
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -27,7 +37,11 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
+<<<<<<< HEAD
       <body className="bg-sacredCream text-charcoal antialiased" suppressHydrationWarning>
+=======
+      <body className="bg-sacredCream text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden">
+>>>>>>> d4c37a685181678238b0d3fac10872588c366b67
         <StoreProvider>
           {children}
           <CartDrawer />

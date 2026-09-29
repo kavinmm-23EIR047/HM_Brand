@@ -6,3 +6,5 @@ export { Diya } from "./Diya";
 export { YogaFigure } from "./Yoga";
 export { Kolam } from "./Kolam";
 export { IncenseSmoke, Temple } from "./IncenseSmoke";
+export { ToranMaalai } from "./ToranMaalai";
+export { MeditationYogaDrawing } from "./MeditationYogaDrawing";

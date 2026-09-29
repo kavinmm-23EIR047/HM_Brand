@@ -45,13 +45,14 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
 
         {/* Category / Bestseller Badge */}
-        <div className="absolute left-3 top-3 flex flex-col gap-1 z-10 pointer-events-none">
-          {product.badge && (
-            <span className="bg-[#9E1830] text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full shadow-xs">
+        {product.badge && (
+          <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830] shadow-xs border border-[#F6C84C]/50 backdrop-blur-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
               {product.badge}
             </span>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Wishlist Button */}
         <button
@@ -60,50 +61,50 @@ export function ProductCard({ product }: { product: Product }) {
             toggleWishlist(product.slug);
           }}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute right-3 top-3 z-10 p-2 rounded-full shadow-sm transition ${
+          className={`absolute right-2.5 top-2.5 z-10 h-7 w-7 rounded-full flex items-center justify-center shadow-xs transition backdrop-blur-xs ${
             wishlisted
               ? "bg-[#9E1830] text-white"
-              : "bg-white text-[#9E1830] hover:bg-[#9E1830] hover:text-white"
+              : "bg-white/90 text-[#173B3A]/70 hover:bg-[#9E1830] hover:text-white border border-[#F6C84C]/30"
           }`}
         >
-          <Heart size={16} fill={wishlisted ? "currentColor" : "none"} />
+          <Heart size={13} fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
       {/* Product Information */}
-      <div className="flex min-w-0 flex-1 flex-col justify-between p-2.5 sm:p-4 lg:p-5">
+      <div className="flex min-w-0 flex-1 flex-col justify-between p-2.5 sm:p-4">
         <div>
           {/* Rating */}
-          <div className="flex items-center gap-1.5 text-xs mb-1.5">
+          <div className="flex items-center gap-1 text-xs mb-1">
             <div className="flex text-[#F47A20]">
-              <Star size={13} fill="currentColor" />
+              <Star size={11} fill="currentColor" />
             </div>
-            <span className="font-bold text-xs text-[#173B3A]">{product.rating}</span>
-            <span className="text-[#173B3A]/60 text-[11px]">({product.reviewCount})</span>
+            <span className="font-bold text-[11px] sm:text-xs text-[#173B3A]">{product.rating}</span>
+            <span className="text-[#173B3A]/50 text-[10px]">({product.reviewCount})</span>
           </div>
 
           {/* Title */}
           <Link href={`/product/${product.slug}`}>
-            <h3 className="line-clamp-2 break-words font-heading text-xs font-bold leading-snug text-[#173B3A] transition group-hover:text-[#9E1830] sm:text-base lg:text-lg">
+            <h3 className="line-clamp-2 break-words font-heading text-xs min-[360px]:text-sm sm:text-base font-extrabold leading-snug text-[#173B3A] transition group-hover:text-[#9E1830]">
               {product.name}
             </h3>
           </Link>
 
           {/* Note */}
-          <p className="mt-1.5 line-clamp-2 text-[10px] leading-relaxed text-[#173B3A]/75 font-sans sm:text-xs">
+          <p className="mt-1 line-clamp-2 text-[10px] sm:text-[11px] leading-relaxed text-[#173B3A]/70 font-sans">
             {product.note}
           </p>
         </div>
 
         {/* Price & Action */}
-        <div className="mt-3 flex min-w-0 items-center justify-between gap-1 border-t border-[#F47A20]/15 pt-3 sm:mt-4 sm:gap-2">
-          <div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-base font-bold text-[#9E1830] sm:text-lg">₹{product.price}</span>
-              {product.mrp && <span className="text-[10px] text-[#173B3A]/50 line-through sm:text-xs">{product.mrp}</span>}
+        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 border-t border-[#F47A20]/15 pt-2.5">
+          <div className="min-w-0">
+            <div className="flex items-baseline gap-1">
+              <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830]">₹{product.price}</span>
+              {product.mrp && <span className="text-[10px] text-[#173B3A]/50 line-through">{product.mrp}</span>}
             </div>
             {discountPercent > 0 && (
-              <span className="text-[10px] font-bold text-[#3F7D45] tracking-wider uppercase block">
+              <span className="text-[9px] font-bold text-[#3F7D45] tracking-wider uppercase block">
                 Save {discountPercent}%
               </span>
             )}
@@ -111,9 +112,9 @@ export function ProductCard({ product }: { product: Product }) {
 
           <button
             onClick={() => add(product)}
-            className="inline-flex min-h-8 shrink-0 items-center justify-center gap-1 rounded-lg bg-[#F47A20] px-2 py-2 text-[9px] font-bold text-white shadow-sm transition-all hover:bg-[#9E1830] sm:min-h-9 sm:gap-1.5 sm:rounded-xl sm:px-3 sm:text-xs"
+            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl bg-[#F47A20] px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-white shadow-xs transition-all hover:bg-[#9E1830] active:scale-95 whitespace-nowrap"
           >
-            <ShoppingBag size={14} /> Add to Cart
+            <ShoppingBag size={13} /> Add
           </button>
         </div>
       </div>
