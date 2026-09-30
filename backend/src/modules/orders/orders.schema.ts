@@ -3,20 +3,24 @@ import { z } from 'zod';
 export const createOrderSchema = z.object({
   body: z.object({
     customerEmail: z.string().email('Invalid email address'),
-    customerPhone: z.string().min(10, 'Valid 10-digit phone number required'),
-    shippingAddress: z.object({
-      recipientName: z.string().min(2),
-      phone: z.string().min(10),
-      street: z.string().min(5),
-      city: z.string().min(2),
-      state: z.string().min(2),
-      postalCode: z.string().min(6),
-    }),
+    customerPhone: z.string().min(5, 'Valid phone number required'),
+    shippingAddress: z.union([
+      z.object({
+        recipientName: z.string().optional(),
+        phone: z.string().optional(),
+        street: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        postalCode: z.string().optional(),
+      }),
+      z.string(),
+      z.record(z.any()),
+    ]),
     items: z.array(z.object({
-      productId: z.string().min(1, 'Invalid product ID'),
+      productId: z.string().min(1, 'Invalid product ID or slug'),
       quantity: z.number().int().positive('Quantity must be at least 1'),
     })).min(1, 'Cart cannot be empty'),
-    paymentMethod: z.enum(['COD', 'ONLINE']).default('COD'),
+    paymentMethod: z.string().default('COD'),
     couponCode: z.string().optional(),
   }),
 });

@@ -32,6 +32,23 @@ export class AuthRepository {
       },
     });
   }
+
+  async updateUser(id: string, data: Partial<{
+    fullName: string;
+    email: string;
+    phone: string | null;
+    passwordHash: string;
+  }>): Promise<User> {
+    return prisma.user.update({
+      where: { id },
+      data: {
+        ...(data.fullName !== undefined ? { fullName: data.fullName.trim() } : {}),
+        ...(data.email !== undefined ? { email: data.email.toLowerCase().trim() } : {}),
+        ...(data.phone !== undefined ? { phone: data.phone ? data.phone.trim() : null } : {}),
+        ...(data.passwordHash !== undefined ? { passwordHash: data.passwordHash } : {}),
+      },
+    });
+  }
 }
 
 export const authRepository = new AuthRepository();

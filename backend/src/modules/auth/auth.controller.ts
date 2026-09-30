@@ -31,6 +31,15 @@ export class AuthController {
       return next(error);
     }
   };
+
+  updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.service.updateProfile(req.user!.userId, req.body);
+      return sendSuccess(res, result, 'Profile updated successfully');
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 export const authController = new AuthController();

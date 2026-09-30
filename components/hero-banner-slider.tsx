@@ -55,9 +55,11 @@ export function HeroBannerSlider() {
 
   const activeSlides = dbBanners && dbBanners.length > 0
     ? dbBanners.map((b) => ({
+        badge: "HM SPECIAL",
         eyebrow: b.subtitle || "NATURAL FRAGRANCES FOR A CALMER, HAPPIER YOU",
         script: "Good Scents",
         heading: b.title,
+        quote: "",
         copy: b.subtitle || "Handcrafted agarbattis & divine essentials made with pure ingredients.",
         cta: b.ctaText || "Explore Collection",
         href: b.ctaLink || "/shop",
@@ -72,20 +74,12 @@ export function HeroBannerSlider() {
 
   useEffect(() => {
     if (paused) return;
-<<<<<<< HEAD
-    const timer = setInterval(() => setCurrent((n) => (n + 1) % activeSlides.length), 6000);
+    const timer = setInterval(() => setCurrent((n) => (n + 1) % activeSlides.length), 6500);
     return () => clearInterval(timer);
   }, [paused, activeSlides.length]);
+
   const slide = activeSlides[current] || activeSlides[0];
   const move = (by: number) => setCurrent((n) => (n + by + activeSlides.length) % activeSlides.length);
-=======
-    const timer = setInterval(() => setCurrent((n) => (n + 1) % slides.length), 6500);
-    return () => clearInterval(timer);
-  }, [paused]);
-
-  const slide = slides[current];
-  const move = (by: number) => setCurrent((n) => (n + by + slides.length) % slides.length);
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
 
   return (
     <section
@@ -102,7 +96,7 @@ export function HeroBannerSlider() {
           
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
             <span className="rounded-full bg-[#F6C84C] px-3 py-1 text-[10px] font-black tracking-wider text-[#173B3A] shadow-xs uppercase">
-              {slide.badge}
+              {slide.badge || "HM SPECIAL"}
             </span>
             <span className="text-[9px] sm:text-[10px] font-extrabold tracking-widest text-[#9E1830] uppercase">
               {slide.eyebrow}
@@ -138,10 +132,6 @@ export function HeroBannerSlider() {
             </Link>
           </div>
         </div>
-<<<<<<< HEAD
-        <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:left-14 lg:translate-x-0">
-          {activeSlides.map((item, i) => <button key={i} onClick={() => setCurrent(i)} aria-label={`Go to slide ${i + 1}`} className={`h-2 rounded-full transition-all ${current === i ? "w-7 bg-[#bd0b43]" : "w-2 bg-[#173b3a]/25"}`} />)}
-=======
 
         {/* Right Column Mascot & Product Preview */}
         <div className="relative flex min-h-[180px] w-full items-center justify-center sm:min-h-[240px] lg:min-h-[320px]">
@@ -195,14 +185,13 @@ export function HeroBannerSlider() {
           >
             <ChevronRight size={18} />
           </button>
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
         </div>
 
         {/* Carousel Indicators */}
         <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:left-14 lg:translate-x-0">
-          {slides.map((item, i) => (
+          {activeSlides.map((item, i) => (
             <button
-              key={item.heading}
+              key={i}
               onClick={() => setCurrent(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`h-2 rounded-full transition-all ${

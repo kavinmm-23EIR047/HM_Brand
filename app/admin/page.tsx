@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import {
   Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket,
   Plus, Trash2, Edit2, TrendingUp, Lock, ArrowRight, CheckCircle,
-  AlertCircle, RefreshCw, X, Save,
+  AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
+  Filter, ArrowUpDown, RotateCcw,
 } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore } from "@/components/store";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const PAGE_SIZE = 10;
 
 /* ──────────────────────────────────────────── helpers */
 function authH(token: string) {
@@ -110,6 +112,143 @@ function EmptyRow({ cols, text }: { cols: number; text: string }) {
   );
 }
 
+function SearchFilterBar({
+  value,
+  onChange,
+  placeholder,
+  totalCount,
+  filteredCount,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  placeholder: string;
+  totalCount: number;
+  filteredCount: number;
+}) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-[#C89B3C]/30 shadow-xs">
+      <div className="relative flex-1 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B4226]/50" size={16} />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="w-full pl-9 pr-8 py-2 bg-[#FFF8E7]/50 rounded-xl border border-[#C89B3C]/40 text-xs font-semibold text-[#292524] placeholder:text-[#292524]/50 focus:outline-none focus:ring-1 focus:ring-[#A90C35]"
+        />
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6B4226]/50 hover:text-[#991B1B] p-0.5 rounded-full"
+            title="Clear search"
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
+      <div className="flex items-center gap-2 text-xs font-bold text-[#6B4226]">
+        <span className="px-3 py-1 rounded-full bg-[#F4D35E]/30 border border-[#C89B3C]/30 text-[11px]">
+          Total: <strong className="text-[#A90C35]">{totalCount}</strong>
+        </span>
+        {value && (
+          <span className="px-3 py-1 rounded-full bg-[#E6F4EA] border border-[#10B981]/40 text-[#137333] text-[11px]">
+            Found: <strong>{filteredCount}</strong>
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Pagination({
+  currentPage,
+  totalItems,
+  pageSize = PAGE_SIZE,
+  onPageChange,
+}: {
+  currentPage: number;
+  totalItems: number;
+  pageSize?: number;
+  onPageChange: (page: number) => void;
+}) {
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  if (totalItems === 0) return null;
+
+  const getPages = () => {
+    const pages: (number | string)[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+      }
+    }
+    return pages;
+  };
+
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#C89B3C]/30 text-xs font-bold text-[#6B4226]">
+      <div className="text-[11px] sm:text-xs">
+        Showing <span className="text-[#A90C35] font-extrabold">{startItem}</span> to{" "}
+        <span className="text-[#A90C35] font-extrabold">{endItem}</span> of{" "}
+        <span className="text-[#A90C35] font-extrabold">{totalItems}</span> entries
+      </div>
+      {totalPages > 1 && (
+        <div className="flex items-center gap-1.5 flex-wrap justify-center">
+          <button
+            type="button"
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 bg-white text-xs disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#F4D35E]/30 transition"
+          >
+            <ChevronLeft size={14} />
+            <span>Prev</span>
+          </button>
+
+          {getPages().map((page, idx) =>
+            typeof page === "string" ? (
+              <span key={`ellipsis-${idx}`} className="px-1.5 py-1 text-[#6B4226]/50">
+                ...
+              </span>
+            ) : (
+              <button
+                key={page}
+                type="button"
+                onClick={() => onPageChange(page)}
+                className={`min-w-8 h-8 px-2 rounded-xl text-xs font-extrabold transition ${
+                  currentPage === page
+                    ? "bg-[#A90C35] text-white shadow-xs border border-[#870B2B]"
+                    : "bg-white border border-[#C89B3C]/40 text-[#6B4226] hover:bg-[#F4D35E]/30"
+                }`}
+              >
+                {page}
+              </button>
+            )
+          )}
+
+          <button
+            type="button"
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 bg-white text-xs disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#F4D35E]/30 transition"
+          >
+            <span>Next</span>
+            <ChevronRight size={14} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════
    MAIN PAGE
 ═══════════════════════════════════════════════════════════ */
@@ -131,6 +270,323 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [coupons, setCoupons] = useState<any[]>([]);
   const [metrics, setMetrics] = useState<any>(null);
+
+  // Search, Filter, Sort and Pagination States
+  const [searchProduct, setSearchProduct] = useState("");
+  const [productPage, setProductPage] = useState(1);
+  const [productCategoryFilter, setProductCategoryFilter] = useState("all");
+  const [productSort, setProductSort] = useState("newest");
+  const [productStatusFilter, setProductStatusFilter] = useState("all");
+
+  const [searchCategory, setSearchCategory] = useState("");
+  const [categoryPage, setCategoryPage] = useState(1);
+  const [categorySort, setCategorySort] = useState("name-asc");
+
+  const [searchBanner, setSearchBanner] = useState("");
+  const [bannerPage, setBannerPage] = useState(1);
+
+  const [searchCoupon, setSearchCoupon] = useState("");
+  const [couponPage, setCouponPage] = useState(1);
+  const [couponSort, setCouponSort] = useState("discount-high");
+
+  const [searchOrder, setSearchOrder] = useState("");
+  const [orderPage, setOrderPage] = useState(1);
+  const [orderStatusFilter, setOrderStatusFilter] = useState("all");
+  const [orderSort, setOrderSort] = useState("newest");
+
+  // Meilisearch integration for Admin Products Search (typo-tolerant)
+  const [meiliProductIds, setMeiliProductIds] = useState<Set<string> | null>(null);
+
+  useEffect(() => {
+    const q = searchProduct.trim();
+    if (!q) {
+      setMeiliProductIds(null);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}&type=full&limit=100`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.hits)) {
+            const idSet = new Set<string>();
+            data.hits.forEach((h: any) => {
+              if (h.id) idSet.add(String(h.id));
+              if (h.slug) idSet.add(String(h.slug).toLowerCase());
+              if (h.name) idSet.add(String(h.name).toLowerCase());
+            });
+            setMeiliProductIds(idSet);
+          } else {
+            setMeiliProductIds(new Set());
+          }
+        })
+        .catch(() => {
+          setMeiliProductIds(null);
+        });
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [searchProduct]);
+
+  // Meilisearch integration for Admin Categories Search
+  const [meiliCategoryNames, setMeiliCategoryNames] = useState<Set<string> | null>(null);
+
+  useEffect(() => {
+    const q = searchCategory.trim();
+    if (!q) {
+      setMeiliCategoryNames(null);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}&type=autocomplete&limit=20`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.hits)) {
+            const nameSet = new Set<string>();
+            data.hits.forEach((h: any) => {
+              if (h.category) nameSet.add(h.category.toLowerCase().trim());
+              if (Array.isArray(h.categories)) {
+                h.categories.forEach((c: string) => nameSet.add(c.toLowerCase().trim()));
+              }
+            });
+            if (Array.isArray(data.suggestions)) {
+              data.suggestions.forEach((s: string) => nameSet.add(s.toLowerCase().trim()));
+            }
+            setMeiliCategoryNames(nameSet);
+          } else {
+            setMeiliCategoryNames(new Set());
+          }
+        })
+        .catch(() => {
+          setMeiliCategoryNames(null);
+        });
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [searchCategory]);
+
+  // Dynamic list of unique categories available for filtering
+  const productCategoryOptions = useMemo(() => {
+    const set = new Set<string>();
+    categories.forEach((c) => {
+      if (c?.name) set.add(c.name);
+    });
+    products.forEach((p) => {
+      const catName = p?.categories?.[0]?.category?.name;
+      if (catName) set.add(catName);
+    });
+    return Array.from(set).sort();
+  }, [categories, products]);
+
+  // Filtered & Paginated Products (with Meilisearch typo-tolerance + local fallback)
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    // Search filter (Meilisearch typo-tolerant + local SKU/coupon/price fallback)
+    if (searchProduct.trim()) {
+      const q = searchProduct.toLowerCase().trim();
+      result = result.filter((p) => {
+        // Meilisearch match
+        const idMatch = meiliProductIds
+          ? meiliProductIds.has(String(p.id)) ||
+            meiliProductIds.has(String(p.slug || "").toLowerCase()) ||
+            meiliProductIds.has(String(p.name || "").toLowerCase())
+          : false;
+        if (idMatch) return true;
+
+        // Local fallback
+        const name = (p.name || "").toLowerCase();
+        const sku = (p.sku || "").toLowerCase();
+        const cat = (p.categories?.[0]?.category?.name || "").toLowerCase();
+        const coupon = (p.couponCode || "").toLowerCase();
+        const price = String(p.price || "");
+        return name.includes(q) || sku.includes(q) || cat.includes(q) || coupon.includes(q) || price.includes(q);
+      });
+    }
+
+    // Category filter
+    if (productCategoryFilter !== "all") {
+      result = result.filter((p) => {
+        const catName = p.categories?.[0]?.category?.name;
+        return catName === productCategoryFilter;
+      });
+    }
+
+    // Status filter
+    if (productStatusFilter !== "all") {
+      const isActive = productStatusFilter === "active";
+      result = result.filter((p) => (p.isActive !== false) === isActive);
+    }
+
+    // Sort: New to Old, Old to New, High to Low, Low to High, etc.
+    result.sort((a, b) => {
+      if (productSort === "price-high") {
+        return (Number(b.price) || 0) - (Number(a.price) || 0);
+      }
+      if (productSort === "price-low") {
+        return (Number(a.price) || 0) - (Number(b.price) || 0);
+      }
+      if (productSort === "name-asc") {
+        return (a.name || "").localeCompare(b.name || "");
+      }
+      if (productSort === "name-desc") {
+        return (b.name || "").localeCompare(a.name || "");
+      }
+      if (productSort === "stock-low") {
+        return (Number(a.stockQuantity) || 0) - (Number(b.stockQuantity) || 0);
+      }
+      if (productSort === "stock-high") {
+        return (Number(b.stockQuantity) || 0) - (Number(a.stockQuantity) || 0);
+      }
+      if (productSort === "oldest") {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (timeA && timeB) return timeA - timeB;
+        return String(a.id).localeCompare(String(b.id));
+      }
+      // default: "newest" (New to Old)
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      if (timeA && timeB) return timeB - timeA;
+      return String(b.id).localeCompare(String(a.id));
+    });
+
+    return result;
+  }, [products, searchProduct, meiliProductIds, productCategoryFilter, productStatusFilter, productSort]);
+
+  const paginatedProducts = useMemo(() => {
+    const start = (productPage - 1) * PAGE_SIZE;
+    return filteredProducts.slice(start, start + PAGE_SIZE);
+  }, [filteredProducts, productPage]);
+
+  // Filtered & Paginated Categories (with Meilisearch typo-tolerance + local fallback)
+  const filteredCategories = useMemo(() => {
+    let result = [...categories];
+    if (searchCategory.trim()) {
+      const q = searchCategory.toLowerCase().trim();
+      result = result.filter((c) => {
+        const name = (c.name || "").toLowerCase();
+        const slug = (c.slug || "").toLowerCase();
+        const desc = (c.description || "").toLowerCase();
+        const meiliMatch = meiliCategoryNames
+          ? meiliCategoryNames.has(name) || meiliCategoryNames.has(slug)
+          : false;
+        return meiliMatch || name.includes(q) || slug.includes(q) || desc.includes(q);
+      });
+    }
+    result.sort((a, b) => {
+      if (categorySort === "name-desc") return (b.name || "").localeCompare(a.name || "");
+      if (categorySort === "newest") {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return timeB - timeA;
+      }
+      return (a.name || "").localeCompare(b.name || "");
+    });
+    return result;
+  }, [categories, searchCategory, meiliCategoryNames, categorySort]);
+
+  const paginatedCategories = useMemo(() => {
+    const start = (categoryPage - 1) * PAGE_SIZE;
+    return filteredCategories.slice(start, start + PAGE_SIZE);
+  }, [filteredCategories, categoryPage]);
+
+  // Filtered & Paginated Coupons
+  const filteredCoupons = useMemo(() => {
+    let result = [...coupons];
+    if (searchCoupon.trim()) {
+      const q = searchCoupon.toLowerCase().trim();
+      result = result.filter((cp) => {
+        const code = (cp.code || "").toLowerCase();
+        const pct = String(cp.discountPercent || "");
+        const min = String(cp.minOrderAmount || "");
+        return code.includes(q) || pct.includes(q) || min.includes(q);
+      });
+    }
+    result.sort((a, b) => {
+      if (couponSort === "discount-high") return (Number(b.discountPercent) || 0) - (Number(a.discountPercent) || 0);
+      if (couponSort === "discount-low") return (Number(a.discountPercent) || 0) - (Number(b.discountPercent) || 0);
+      return (a.code || "").localeCompare(b.code || "");
+    });
+    return result;
+  }, [coupons, searchCoupon, couponSort]);
+
+  const paginatedCoupons = useMemo(() => {
+    const start = (couponPage - 1) * PAGE_SIZE;
+    return filteredCoupons.slice(start, start + PAGE_SIZE);
+  }, [filteredCoupons, couponPage]);
+
+  // Filtered & Paginated Banners
+  const filteredBanners = useMemo(() => {
+    if (!searchBanner.trim()) return banners;
+    const q = searchBanner.toLowerCase().trim();
+    return banners.filter((b) => {
+      const title = (b.title || "").toLowerCase();
+      const sub = (b.subtitle || "").toLowerCase();
+      const pos = (b.position || "").toLowerCase();
+      return title.includes(q) || sub.includes(q) || pos.includes(q);
+    });
+  }, [banners, searchBanner]);
+
+  const paginatedBanners = useMemo(() => {
+    const start = (bannerPage - 1) * PAGE_SIZE;
+    return filteredBanners.slice(start, start + PAGE_SIZE);
+  }, [filteredBanners, bannerPage]);
+
+  // Filtered & Paginated Orders (with Meilisearch product lookup + customer/payment fallback)
+  const filteredOrders = useMemo(() => {
+    let result = [...orders];
+    if (searchOrder.trim()) {
+      const q = searchOrder.toLowerCase().trim();
+      result = result.filter((o) => {
+        const num = (o.orderNumber || "").toLowerCase();
+        const email = (o.customerEmail || "").toLowerCase();
+        const phone = (o.customerPhone || "").toLowerCase();
+        const st = (o.status || "").toLowerCase();
+        const pay = (o.paymentMethod || "").toLowerCase();
+        const total = String(o.totalAmount || "");
+
+        // Check if any order item matches search term or Meilisearch product
+        const itemsMatch = Array.isArray(o.items) && o.items.some((it: any) => {
+          const itName = (it.productName || it.product?.name || "").toLowerCase();
+          const itSlug = (it.product?.slug || "").toLowerCase();
+          const itId = String(it.productId || it.product?.id || "");
+          const meiliMatch = meiliProductIds ? (meiliProductIds.has(itId) || meiliProductIds.has(itSlug) || meiliProductIds.has(itName)) : false;
+          return meiliMatch || itName.includes(q);
+        });
+
+        return num.includes(q) || email.includes(q) || phone.includes(q) || st.includes(q) || pay.includes(q) || total.includes(q) || itemsMatch;
+      });
+    }
+    if (orderStatusFilter !== "all") {
+      result = result.filter((o) => (o.status || "").toUpperCase() === orderStatusFilter.toUpperCase());
+    }
+    result.sort((a, b) => {
+      if (orderSort === "amount-high") {
+        return (Number(b.totalAmount) || 0) - (Number(a.totalAmount) || 0);
+      }
+      if (orderSort === "amount-low") {
+        return (Number(a.totalAmount) || 0) - (Number(b.totalAmount) || 0);
+      }
+      if (orderSort === "oldest") {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (timeA && timeB) return timeA - timeB;
+        return String(a.id).localeCompare(String(b.id));
+      }
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      if (timeA && timeB) return timeB - timeA;
+      return String(b.id).localeCompare(String(a.id));
+    });
+    return result;
+  }, [orders, searchOrder, meiliProductIds, orderStatusFilter, orderSort]);
+
+  const paginatedOrders = useMemo(() => {
+    const start = (orderPage - 1) * PAGE_SIZE;
+    return filteredOrders.slice(start, start + PAGE_SIZE);
+  }, [filteredOrders, orderPage]);
 
   const [productModal, setProductModal] = useState<null | "add" | any>(null);
   const [categoryModal, setCategoryModal] = useState<null | "add" | any>(null);
@@ -167,9 +623,14 @@ export default function AdminPage() {
         const j = await r.json();
         if (!checkUnauthorized(r, j) && j.success) setMetrics(j.data);
       } else if (activeTab === "products") {
-        const r = await fetch(`${API}/products?limit=100&includeInactive=true`, { headers: h });
-        const j = await r.json();
-        if (!checkUnauthorized(r, j) && j.success) setProducts(j.data);
+        const [rProd, rCat] = await Promise.all([
+          fetch(`${API}/products?limit=500&includeInactive=true`, { headers: h }),
+          fetch(`${API}/categories?includeInactive=true`, { headers: h }),
+        ]);
+        const jProd = await rProd.json();
+        const jCat = await rCat.json();
+        if (!checkUnauthorized(rProd, jProd) && jProd.success) setProducts(jProd.data);
+        if (jCat?.success) setCategories(jCat.data);
       } else if (activeTab === "categories") {
         const r = await fetch(`${API}/categories?includeInactive=true`, { headers: h });
         const j = await r.json();
@@ -179,7 +640,7 @@ export default function AdminPage() {
         const j = await r.json();
         if (!checkUnauthorized(r, j) && j.success) setBanners(j.data);
       } else if (activeTab === "orders") {
-        const r = await fetch(`${API}/orders?limit=20`, { headers: h });
+        const r = await fetch(`${API}/orders?limit=200`, { headers: h });
         const j = await r.json();
         if (!checkUnauthorized(r, j) && j.success) setOrders(j.data);
       } else if (activeTab === "coupons") {
@@ -440,7 +901,137 @@ export default function AdminPage() {
           {/* PRODUCTS */}
           {activeTab === "products" && (
             <div className="space-y-5">
-              <SectionHeader title="Manage Products" subtitle="Add, edit or archive agarbatti products." action={<AddBtn onClick={() => openProductModal()} label="Add Product" />} />
+              <SectionHeader
+                title="Manage Products"
+                subtitle="Add, edit or archive agarbatti products."
+                action={<AddBtn onClick={() => openProductModal()} label="Add Product" />}
+              />
+
+              {/* Product Search & Filter Toolbar */}
+              <div className="bg-white p-4 rounded-2xl border border-[#C89B3C]/30 shadow-xs space-y-3">
+                {/* Search Input + Counts */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B4226]/50" size={16} />
+                    <input
+                      type="text"
+                      value={searchProduct}
+                      onChange={(e) => {
+                        setSearchProduct(e.target.value);
+                        setProductPage(1);
+                      }}
+                      placeholder="Search products by name, SKU, category, or coupon..."
+                      className="w-full pl-9 pr-8 py-2 bg-[#FFF8E7]/50 rounded-xl border border-[#C89B3C]/40 text-xs font-semibold text-[#292524] placeholder:text-[#292524]/50 focus:outline-none focus:ring-1 focus:ring-[#A90C35]"
+                    />
+                    {searchProduct && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchProduct("");
+                          setProductPage(1);
+                        }}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6B4226]/50 hover:text-[#991B1B] p-0.5 rounded-full"
+                        title="Clear search"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#6B4226] shrink-0">
+                    <span className="px-3 py-1 rounded-full bg-[#F4D35E]/30 border border-[#C89B3C]/30 text-[11px]">
+                      Total: <strong className="text-[#A90C35]">{products.length}</strong>
+                    </span>
+                    {(searchProduct || productCategoryFilter !== "all" || productStatusFilter !== "all" || productSort !== "newest") && (
+                      <span className="px-3 py-1 rounded-full bg-[#E6F4EA] border border-[#10B981]/40 text-[#137333] text-[11px]">
+                        Filtered: <strong>{filteredProducts.length}</strong>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filters: Category Filter, Sort Filter (New to Old, High to Low, etc.), Status Filter */}
+                <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-[#C89B3C]/20 text-xs">
+                  {/* Category Filter */}
+                  <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
+                    <Filter size={13} className="text-[#A90C35] shrink-0" />
+                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Category:</span>
+                    <select
+                      value={productCategoryFilter}
+                      onChange={(e) => {
+                        setProductCategoryFilter(e.target.value);
+                        setProductPage(1);
+                      }}
+                      className="bg-transparent font-extrabold text-[#6B4226] focus:outline-none cursor-pointer text-xs"
+                    >
+                      <option value="all">All Categories ({products.length})</option>
+                      {productCategoryOptions.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sort Filter */}
+                  <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
+                    <ArrowUpDown size={13} className="text-[#A90C35] shrink-0" />
+                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Sort:</span>
+                    <select
+                      value={productSort}
+                      onChange={(e) => {
+                        setProductSort(e.target.value);
+                        setProductPage(1);
+                      }}
+                      className="bg-transparent font-extrabold text-[#6B4226] focus:outline-none cursor-pointer text-xs"
+                    >
+                      <option value="newest">New to Old (Newest First)</option>
+                      <option value="oldest">Old to New (Oldest First)</option>
+                      <option value="price-high">Price: High to Low (₹ High → Low)</option>
+                      <option value="price-low">Price: Low to High (₹ Low → High)</option>
+                      <option value="name-asc">Name: A to Z</option>
+                      <option value="name-desc">Name: Z to A</option>
+                      <option value="stock-low">Stock: Low to High (Low Stock Alert)</option>
+                      <option value="stock-high">Stock: High to Low</option>
+                    </select>
+                  </div>
+
+                  {/* Status Filter */}
+                  <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
+                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Status:</span>
+                    <select
+                      value={productStatusFilter}
+                      onChange={(e) => {
+                        setProductStatusFilter(e.target.value);
+                        setProductPage(1);
+                      }}
+                      className="bg-transparent font-extrabold text-[#6B4226] focus:outline-none cursor-pointer text-xs"
+                    >
+                      <option value="all">All Status</option>
+                      <option value="active">Active Only</option>
+                      <option value="inactive">Inactive Only</option>
+                    </select>
+                  </div>
+
+                  {/* Reset Filters */}
+                  {(searchProduct || productCategoryFilter !== "all" || productStatusFilter !== "all" || productSort !== "newest") && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchProduct("");
+                        setProductCategoryFilter("all");
+                        setProductStatusFilter("all");
+                        setProductSort("newest");
+                        setProductPage(1);
+                      }}
+                      className="ml-auto px-3 py-1.5 text-[11px] font-extrabold text-[#A90C35] hover:bg-[#A90C35]/10 rounded-xl transition border border-[#A90C35]/40 flex items-center gap-1.5 bg-white shadow-xs"
+                    >
+                      <RotateCcw size={12} />
+                      <span>Reset Filters</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <div className="overflow-x-auto rounded-xl border border-[#C89B3C]/30 bg-white shadow-sm">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
@@ -455,8 +1046,13 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#C89B3C]/20">
-                    {products.length === 0 && <EmptyRow cols={7} text="No products found." />}
-                    {products.map(p => (
+                    {filteredProducts.length === 0 && (
+                      <EmptyRow
+                        cols={7}
+                        text={searchProduct ? `No products matching "${searchProduct}".` : "No products found."}
+                      />
+                    )}
+                    {paginatedProducts.map(p => (
                       <tr key={p.id} className="hover:bg-[#FFF8E7]/50 transition">
                         <td className="p-3 font-bold text-[#6B4226]">
                           <div className="flex items-center gap-2">
@@ -479,16 +1075,45 @@ export default function AdminPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Numbered Pagination (1, 2, 3... 10) */}
+              <Pagination
+                currentPage={productPage}
+                totalItems={filteredProducts.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setProductPage}
+              />
             </div>
           )}
 
           {/* CATEGORIES */}
           {activeTab === "categories" && (
             <div className="space-y-5">
-              <SectionHeader title="Manage Categories" subtitle="Add, edit or archive product categories." action={<AddBtn onClick={() => openCategoryModal()} label="Add Category" />} />
+              <SectionHeader
+                title="Manage Categories"
+                subtitle="Add, edit or archive product categories."
+                action={<AddBtn onClick={() => openCategoryModal()} label="Add Category" />}
+              />
+
+              {/* Search & Count Bar */}
+              <SearchFilterBar
+                value={searchCategory}
+                onChange={(val) => {
+                  setSearchCategory(val);
+                  setCategoryPage(1);
+                }}
+                placeholder="Search categories by name, slug, or description..."
+                totalCount={categories.length}
+                filteredCount={filteredCategories.length}
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categories.length === 0 && <p className="text-xs text-[#292524]/60 col-span-3">No categories found.</p>}
-                {categories.map(cat => (
+                {filteredCategories.length === 0 && (
+                  <p className="text-xs text-[#292524]/60 col-span-3">
+                    {searchCategory ? `No categories matching "${searchCategory}".` : "No categories found."}
+                  </p>
+                )}
+                {paginatedCategories.map(cat => (
                   <div key={cat.id} className="p-4 bg-white rounded-2xl border border-[#C89B3C]/30 shadow-sm space-y-2 flex flex-col">
                     <div className="flex items-start justify-between gap-2">
                       <div>
@@ -505,16 +1130,45 @@ export default function AdminPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Numbered Pagination (1, 2, 3... 10) */}
+              <Pagination
+                currentPage={categoryPage}
+                totalItems={filteredCategories.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCategoryPage}
+              />
             </div>
           )}
 
           {/* BANNERS */}
           {activeTab === "banners" && (
             <div className="space-y-5">
-              <SectionHeader title="Manage Banners" subtitle="Configure hero sliders and promotional strips." action={<AddBtn onClick={() => openBannerModal()} label="Add Banner" />} />
+              <SectionHeader
+                title="Manage Banners"
+                subtitle="Configure hero sliders and promotional strips."
+                action={<AddBtn onClick={() => openBannerModal()} label="Add Banner" />}
+              />
+
+              {/* Search & Count Bar */}
+              <SearchFilterBar
+                value={searchBanner}
+                onChange={(val) => {
+                  setSearchBanner(val);
+                  setBannerPage(1);
+                }}
+                placeholder="Search banners by title, subtitle, or position..."
+                totalCount={banners.length}
+                filteredCount={filteredBanners.length}
+              />
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {banners.length === 0 && <p className="text-xs text-[#292524]/60 col-span-2">No banners found.</p>}
-                {banners.map(ban => (
+                {filteredBanners.length === 0 && (
+                  <p className="text-xs text-[#292524]/60 col-span-2">
+                    {searchBanner ? `No banners matching "${searchBanner}".` : "No banners found."}
+                  </p>
+                )}
+                {paginatedBanners.map(ban => (
                   <div key={ban.id} className="p-4 bg-white rounded-2xl border border-[#C89B3C]/30 shadow-sm space-y-3">
                     {ban.desktopImage && <img src={ban.desktopImage} alt="" className="w-full h-32 object-cover rounded-xl border" />}
                     <div className="flex items-start justify-between gap-2">
@@ -532,6 +1186,14 @@ export default function AdminPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Numbered Pagination (1, 2, 3... 10) */}
+              <Pagination
+                currentPage={bannerPage}
+                totalItems={filteredBanners.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setBannerPage}
+              />
             </div>
           )}
 
@@ -539,6 +1201,107 @@ export default function AdminPage() {
           {activeTab === "orders" && (
             <div className="space-y-5">
               <SectionHeader title="Customer Orders" subtitle="Track and update shipping statuses." />
+
+              {/* Orders Search & Filter Toolbar */}
+              <div className="bg-white p-4 rounded-2xl border border-[#C89B3C]/30 shadow-xs space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B4226]/50" size={16} />
+                    <input
+                      type="text"
+                      value={searchOrder}
+                      onChange={(e) => {
+                        setSearchOrder(e.target.value);
+                        setOrderPage(1);
+                      }}
+                      placeholder="Search orders by order #, email, phone, or status..."
+                      className="w-full pl-9 pr-8 py-2 bg-[#FFF8E7]/50 rounded-xl border border-[#C89B3C]/40 text-xs font-semibold text-[#292524] placeholder:text-[#292524]/50 focus:outline-none focus:ring-1 focus:ring-[#A90C35]"
+                    />
+                    {searchOrder && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchOrder("");
+                          setOrderPage(1);
+                        }}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6B4226]/50 hover:text-[#991B1B] p-0.5 rounded-full"
+                        title="Clear search"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#6B4226] shrink-0">
+                    <span className="px-3 py-1 rounded-full bg-[#F4D35E]/30 border border-[#C89B3C]/30 text-[11px]">
+                      Total: <strong className="text-[#A90C35]">{orders.length}</strong>
+                    </span>
+                    {(searchOrder || orderStatusFilter !== "all" || orderSort !== "newest") && (
+                      <span className="px-3 py-1 rounded-full bg-[#E6F4EA] border border-[#10B981]/40 text-[#137333] text-[11px]">
+                        Filtered: <strong>{filteredOrders.length}</strong>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-[#C89B3C]/20 text-xs">
+                  {/* Status Filter */}
+                  <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
+                    <Filter size={13} className="text-[#A90C35] shrink-0" />
+                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Status:</span>
+                    <select
+                      value={orderStatusFilter}
+                      onChange={(e) => {
+                        setOrderStatusFilter(e.target.value);
+                        setOrderPage(1);
+                      }}
+                      className="bg-transparent font-extrabold text-[#6B4226] focus:outline-none cursor-pointer text-xs"
+                    >
+                      <option value="all">All Statuses ({orders.length})</option>
+                      {["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"].map((st) => (
+                        <option key={st} value={st}>
+                          {st}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sort Filter */}
+                  <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
+                    <ArrowUpDown size={13} className="text-[#A90C35] shrink-0" />
+                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Sort:</span>
+                    <select
+                      value={orderSort}
+                      onChange={(e) => {
+                        setOrderSort(e.target.value);
+                        setOrderPage(1);
+                      }}
+                      className="bg-transparent font-extrabold text-[#6B4226] focus:outline-none cursor-pointer text-xs"
+                    >
+                      <option value="newest">New to Old (Newest First)</option>
+                      <option value="oldest">Old to New (Oldest First)</option>
+                      <option value="amount-high">Amount: High to Low (₹ High → Low)</option>
+                      <option value="amount-low">Amount: Low to High (₹ Low → High)</option>
+                    </select>
+                  </div>
+
+                  {(searchOrder || orderStatusFilter !== "all" || orderSort !== "newest") && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchOrder("");
+                        setOrderStatusFilter("all");
+                        setOrderSort("newest");
+                        setOrderPage(1);
+                      }}
+                      className="ml-auto px-3 py-1.5 text-[11px] font-extrabold text-[#A90C35] hover:bg-[#A90C35]/10 rounded-xl transition border border-[#A90C35]/40 flex items-center gap-1.5 bg-white shadow-xs"
+                    >
+                      <RotateCcw size={12} />
+                      <span>Reset Filters</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <div className="overflow-x-auto rounded-xl border border-[#C89B3C]/30 bg-white shadow-sm">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
@@ -552,8 +1315,13 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#C89B3C]/20">
-                    {orders.length === 0 && <EmptyRow cols={6} text="No orders yet." />}
-                    {orders.map(ord => (
+                    {filteredOrders.length === 0 && (
+                      <EmptyRow
+                        cols={6}
+                        text={searchOrder ? `No orders matching "${searchOrder}".` : "No orders yet."}
+                      />
+                    )}
+                    {paginatedOrders.map(ord => (
                       <tr key={ord.id} className="hover:bg-[#FFF8E7]/50 transition">
                         <td className="p-3 font-bold font-mono text-[#6B4226]">{ord.orderNumber}</td>
                         <td className="p-3"><span className="font-bold block">{ord.customerEmail}</span><span className="text-[10px] text-[#292524]/60">{ord.customerPhone}</span></td>
@@ -570,16 +1338,45 @@ export default function AdminPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Numbered Pagination (1, 2, 3... 10) */}
+              <Pagination
+                currentPage={orderPage}
+                totalItems={filteredOrders.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setOrderPage}
+              />
             </div>
           )}
 
           {/* COUPONS */}
           {activeTab === "coupons" && (
             <div className="space-y-5">
-              <SectionHeader title="Discount Coupons" subtitle="Create and manage promotional discount codes." action={<AddBtn onClick={() => openCouponModal()} label="Create Coupon" />} />
+              <SectionHeader
+                title="Discount Coupons"
+                subtitle="Create and manage promotional discount codes."
+                action={<AddBtn onClick={() => openCouponModal()} label="Create Coupon" />}
+              />
+
+              {/* Search & Count Bar */}
+              <SearchFilterBar
+                value={searchCoupon}
+                onChange={(val) => {
+                  setSearchCoupon(val);
+                  setCouponPage(1);
+                }}
+                placeholder="Search coupons by code, discount %, or minimum order..."
+                totalCount={coupons.length}
+                filteredCount={filteredCoupons.length}
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {coupons.length === 0 && <p className="text-xs text-[#292524]/60">No coupons yet.</p>}
-                {coupons.map(cp => (
+                {filteredCoupons.length === 0 && (
+                  <p className="text-xs text-[#292524]/60 col-span-3">
+                    {searchCoupon ? `No coupons matching "${searchCoupon}".` : "No coupons yet."}
+                  </p>
+                )}
+                {paginatedCoupons.map(cp => (
                   <div key={cp.id} className="p-4 bg-white rounded-2xl border border-[#C89B3C]/30 shadow-sm space-y-2">
                     <span className="font-mono text-base font-extrabold text-[#A90C35] bg-[#F4D35E]/20 px-3 py-1 rounded-lg border border-[#C89B3C]/40 inline-block">{cp.code}</span>
                     <p className="text-xs font-bold text-[#6B4226]">{cp.discountPercent}% Discount</p>
@@ -592,6 +1389,14 @@ export default function AdminPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Numbered Pagination (1, 2, 3... 10) */}
+              <Pagination
+                currentPage={couponPage}
+                totalItems={filteredCoupons.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCouponPage}
+              />
             </div>
           )}
 

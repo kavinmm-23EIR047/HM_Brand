@@ -12,10 +12,12 @@ import newsletterRoutes from '../modules/newsletter/newsletter.routes';
 import wishlistRoutes from '../modules/wishlist/wishlist.routes';
 import couponsRoutes from '../modules/coupons/coupons.routes';
 import adminRoutes from '../modules/admin/admin.routes';
+import addressesRoutes from '../modules/addresses/addresses.routes';
 
 const router = Router();
 
 router.use('/auth', authRoutes);
+router.use('/addresses', addressesRoutes);
 router.use('/products', productsRoutes);
 router.use('/categories', categoriesRoutes);
 router.use('/collections', collectionsRoutes);

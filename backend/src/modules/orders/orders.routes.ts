@@ -2,16 +2,16 @@ import { Router } from 'express';
 import { ordersController } from './orders.controller';
 import { validateRequest } from '../../shared/middlewares/validation.middleware';
 import { createOrderSchema, updateOrderStatusSchema } from './orders.schema';
-import { authenticateJWT, requireRole } from '../../shared/middlewares/auth.middleware';
+import { authenticateJWT, optionalAuthenticateJWT, requireRole } from '../../shared/middlewares/auth.middleware';
 
 const router = Router();
 
 // Public / Customer Route (Supports Guest or Auth user checkout)
-router.post('/', validateRequest(createOrderSchema), ordersController.create);
+router.post('/', optionalAuthenticateJWT, validateRequest(createOrderSchema), ordersController.create);
 
-// Authenticated Customer Routes
-router.get('/', authenticateJWT, ordersController.getAll);
-router.get('/:id', authenticateJWT, ordersController.getOne);
+// Authenticated / Guest Customer Routes
+router.get('/', optionalAuthenticateJWT, ordersController.getAll);
+router.get('/:id', optionalAuthenticateJWT, ordersController.getOne);
 
 // Admin Routes
 router.patch(

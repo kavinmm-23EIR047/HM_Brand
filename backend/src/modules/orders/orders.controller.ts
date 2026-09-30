@@ -9,7 +9,7 @@ export class OrdersController {
     try {
       const order = await this.service.createOrder({
         ...req.body,
-        userId: req.user?.userId,
+        userId: req.user?.userId || req.body.userId,
       });
       return sendSuccess(res, order, 'Order placed successfully', 201);
     } catch (error) {
@@ -20,8 +20,9 @@ export class OrdersController {
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string || '1', 10);
-      const limit = parseInt(req.query.limit as string || '10', 10);
-      const userId = req.user?.role === 'ADMIN' ? undefined : req.user?.userId;
+      const limit = parseInt(req.query.limit as string || '20', 10);
+      const isMyOrders = req.query.myOrders === 'true' || req.query.userId === 'me';
+      const userId = (isMyOrders || req.user?.role !== 'ADMIN') ? req.user?.userId : undefined;
 
       const result = await this.service.getOrders(page, limit, userId);
       return sendPaginated(res, result.items, result.meta, 'Orders retrieved successfully');

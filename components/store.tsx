@@ -17,6 +17,19 @@ export interface UserProfile {
   role: "CUSTOMER" | "ADMIN";
 }
 
+export interface UserAddress {
+  id: string;
+  userId: string;
+  recipientName: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  isDefault: boolean;
+  createdAt?: string;
+}
+
 interface StoreContextType {
   lines: CartLine[];
   add: (product: Product, qty?: number) => void;
@@ -30,6 +43,7 @@ interface StoreContextType {
   wishlist: string[];
   toggleWishlist: (slug: string) => void;
   isInWishlist: (slug: string) => boolean;
+  refreshWishlist: () => Promise<void>;
 
   // Dynamic Database States
   dbProducts: Product[];
@@ -43,12 +57,22 @@ interface StoreContextType {
   isSearchOpen: boolean;
   setIsSearchOpen: (open: boolean) => void;
 
-  // Authentication State
+  // Authentication State & Profile Management
   user: UserProfile | null;
   token: string | null;
   loginUser: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
   registerUser: (fullName: string, email: string, password: string, phone?: string) => Promise<{ success: boolean; message?: string }>;
+  updateUserProfile: (data: { fullName: string; email: string; phone?: string; currentPassword?: string; newPassword?: string }) => Promise<{ success: boolean; message?: string }>;
   logoutUser: () => void;
+
+  // Address Management
+  savedAddresses: UserAddress[];
+  defaultAddress: UserAddress | null;
+  refreshAddresses: () => Promise<void>;
+  createAddress: (data: Omit<UserAddress, "id" | "userId" | "createdAt">) => Promise<{ success: boolean; message?: string }>;
+  updateAddress: (id: string, data: Partial<Omit<UserAddress, "id" | "userId" | "createdAt">>) => Promise<{ success: boolean; message?: string }>;
+  setDefaultAddress: (id: string) => Promise<{ success: boolean; message?: string }>;
+  deleteAddress: (id: string) => Promise<{ success: boolean; message?: string }>;
 
   // Quick notification
   notification: string | null;
@@ -210,9 +234,161 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateUserProfile = async (data: {
+    fullName: string;
+    email: string;
+    phone?: string;
+    currentPassword?: string;
+    newPassword?: string;
+  }) => {
+    if (!token) return { success: false, message: "You are not logged in." };
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const resData = await response.json();
+      if (!response.ok || !resData.success) {
+        return { success: false, message: resData.message || "Failed to update profile." };
+      }
+      if (resData.data?.user) {
+        setUser(resData.data.user);
+        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(resData.data.user));
+      }
+      if (resData.data?.token) {
+        setToken(resData.data.token);
+        localStorage.setItem(AUTH_TOKEN_KEY, resData.data.token);
+      }
+      showNotification("Devotee profile updated successfully!");
+      return { success: true };
+    } catch {
+      return { success: false, message: "Network error while updating profile." };
+    }
+  };
+
+  // Saved Addresses State
+  const [savedAddresses, setSavedAddresses] = useState<UserAddress[]>([]);
+
+  const refreshAddresses = async () => {
+    if (!token) {
+      setSavedAddresses([]);
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/addresses`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok && data.success && Array.isArray(data.data)) {
+        setSavedAddresses(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to load addresses", err);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      refreshAddresses();
+    } else {
+      setSavedAddresses([]);
+    }
+  }, [token]);
+
+  const defaultAddress = savedAddresses.find((a) => a.isDefault) || savedAddresses[0] || null;
+
+  const createAddress = async (data: Omit<UserAddress, "id" | "userId" | "createdAt">) => {
+    if (!token) return { success: false, message: "Authentication required." };
+    try {
+      const res = await fetch(`${API_BASE_URL}/addresses`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, message: json.message || "Failed to save address." };
+      }
+      await refreshAddresses();
+      showNotification("Mandir delivery address saved!");
+      return { success: true };
+    } catch {
+      return { success: false, message: "Network error while saving address." };
+    }
+  };
+
+  const updateAddress = async (id: string, data: Partial<Omit<UserAddress, "id" | "userId" | "createdAt">>) => {
+    if (!token) return { success: false, message: "Authentication required." };
+    try {
+      const res = await fetch(`${API_BASE_URL}/addresses/${id}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, message: json.message || "Failed to update address." };
+      }
+      await refreshAddresses();
+      showNotification("Address updated successfully!");
+      return { success: true };
+    } catch {
+      return { success: false, message: "Network error while updating address." };
+    }
+  };
+
+  const setDefaultAddress = async (id: string) => {
+    if (!token) return { success: false, message: "Authentication required." };
+    try {
+      const res = await fetch(`${API_BASE_URL}/addresses/${id}/default`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, message: json.message || "Failed to set default address." };
+      }
+      await refreshAddresses();
+      showNotification("Set as default delivery address!");
+      return { success: true };
+    } catch {
+      return { success: false, message: "Network error setting default address." };
+    }
+  };
+
+  const deleteAddress = async (id: string) => {
+    if (!token) return { success: false, message: "Authentication required." };
+    try {
+      const res = await fetch(`${API_BASE_URL}/addresses/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, message: json.message || "Failed to delete address." };
+      }
+      await refreshAddresses();
+      showNotification("Address deleted.");
+      return { success: true };
+    } catch {
+      return { success: false, message: "Network error deleting address." };
+    }
+  };
+
   const logoutUser = () => {
     setToken(null);
     setUser(null);
+    setSavedAddresses([]);
     localStorage.removeItem(AUTH_TOKEN_KEY);
     localStorage.removeItem(AUTH_USER_KEY);
     showNotification("You have logged out.");
@@ -253,7 +429,58 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setLines([]);
   };
 
-  const toggleWishlist = (slug: string) => {
+  const refreshWishlist = async () => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/wishlist`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok && data.success && Array.isArray(data.data)) {
+        const slugs = data.data.map((item: any) => item.product?.slug).filter(Boolean);
+        setWishlist(slugs);
+      }
+    } catch (err) {
+      console.error("Failed to load wishlist from server", err);
+    }
+  };
+
+  // Sync wishlist when authenticated
+  useEffect(() => {
+    if (token) {
+      const savedLocal = localStorage.getItem(WISHLIST_STORAGE_KEY);
+      let localSlugs: string[] = [];
+      try {
+        if (savedLocal) localSlugs = JSON.parse(savedLocal);
+      } catch {}
+
+      if (localSlugs.length > 0) {
+        fetch(`${API_BASE_URL}/wishlist/sync`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ items: localSlugs }),
+        })
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.success && Array.isArray(d.data)) {
+              const slugs = d.data.map((item: any) => item.product?.slug).filter(Boolean);
+              setWishlist(slugs);
+            } else {
+              refreshWishlist();
+            }
+          })
+          .catch(() => refreshWishlist());
+      } else {
+        refreshWishlist();
+      }
+    }
+  }, [token]);
+
+  const toggleWishlist = async (slug: string) => {
+    const isCurrentlyWishlisted = wishlist.includes(slug);
     setWishlist((prev) => {
       if (prev.includes(slug)) {
         showNotification("Item removed from your wishlist");
@@ -262,6 +489,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       showNotification("Saved to your sacred wishlist");
       return [...prev, slug];
     });
+
+    if (token) {
+      try {
+        if (isCurrentlyWishlisted) {
+          await fetch(`${API_BASE_URL}/wishlist/${encodeURIComponent(slug)}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        } else {
+          await fetch(`${API_BASE_URL}/wishlist`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ slug }),
+          });
+        }
+      } catch (err) {
+        console.error("Failed to sync wishlist with server", err);
+      }
+    }
   };
 
   const isInWishlist = (slug: string) => wishlist.includes(slug);
@@ -286,6 +535,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         wishlist,
         toggleWishlist,
         isInWishlist,
+        refreshWishlist,
         dbProducts,
         dbCategories,
         dbBanners,
@@ -298,7 +548,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         token,
         loginUser,
         registerUser,
+        updateUserProfile,
         logoutUser,
+        savedAddresses,
+        defaultAddress,
+        refreshAddresses,
+        createAddress,
+        updateAddress,
+        setDefaultAddress,
+        deleteAddress,
         notification,
         showNotification,
       }}

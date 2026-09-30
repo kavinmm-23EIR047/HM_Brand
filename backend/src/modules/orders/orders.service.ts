@@ -21,13 +21,16 @@ export class OrdersService {
       const orderItemsToCreate: any[] = [];
 
       for (const item of data.items) {
-        const product = await tx.product.findUnique({
-          where: { id: item.productId },
+        const product = await tx.product.findFirst({
+          where: {
+            OR: [{ id: item.productId }, { slug: item.productId }, { sku: item.productId }],
+            deletedAt: null,
+          },
           include: { images: { orderBy: { displayOrder: 'asc' }, take: 1 } },
         });
 
-        if (!product || !product.isActive || product.deletedAt) {
-          throw new BadRequestError(`Product with ID ${item.productId} is not available.`);
+        if (!product || !product.isActive) {
+          throw new BadRequestError(`Product with ID or Slug '${item.productId}' is not available.`);
         }
 
         if (product.stockQuantity < item.quantity) {
@@ -129,7 +132,10 @@ export class OrdersService {
   }
 
   async getOrderById(id: string) {
-    const order = await this.repo.findById(id);
+    let order = await this.repo.findById(id);
+    if (!order) {
+      order = await this.repo.findByOrderNumber(id);
+    }
     if (!order) {
       throw new NotFoundError('Order not found');
     }

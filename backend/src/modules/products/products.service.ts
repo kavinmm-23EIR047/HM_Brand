@@ -1,6 +1,7 @@
 import { productsRepository, ProductsRepository, ProductFilters } from './products.repository';
 import { generateSlug } from '../../shared/utils/slug.util';
 import { NotFoundError, ConflictError } from '../../shared/errors/custom.error';
+import { syncProductToMeilisearch, removeProductFromMeilisearch } from '../../shared/meilisearch';
 
 export class ProductsService {
   constructor(private repo: ProductsRepository = productsRepository) {}
@@ -91,12 +92,15 @@ export class ProductsService {
       throw new ConflictError(`Product with SKU '${sku}' already exists.`);
     }
 
-    return this.repo.create({
+    const created = await this.repo.create({
       ...data,
       description,
       sku,
       slug,
     });
+    // Sync to Meilisearch index in background without blocking DB response
+    syncProductToMeilisearch(created);
+    return created;
   }
 
   async updateProduct(id: string, data: any) {
@@ -110,10 +114,12 @@ export class ProductsService {
       slug = generateSlug(data.name);
     }
 
-    return this.repo.update(id, {
+    const updated = await this.repo.update(id, {
       ...data,
       slug,
     });
+    syncProductToMeilisearch(updated);
+    return updated;
   }
 
   async addProductImage(productId: string, imageData: { url: string; storageKey: string; altText?: string; isPrimary?: boolean; displayOrder?: number }) {
@@ -121,7 +127,10 @@ export class ProductsService {
     if (!product || product.deletedAt) {
       throw new NotFoundError('Product not found');
     }
-    return this.repo.addImage(productId, imageData);
+    const res = await this.repo.addImage(productId, imageData);
+    const refreshed = await this.repo.findById(productId);
+    if (refreshed) syncProductToMeilisearch(refreshed);
+    return res;
   }
 
   async removeProductImage(imageId: string) {
@@ -133,7 +142,9 @@ export class ProductsService {
     if (!product || product.deletedAt) {
       throw new NotFoundError('Product not found');
     }
-    return this.repo.softDelete(id);
+    const res = await this.repo.softDelete(id);
+    removeProductFromMeilisearch(id);
+    return res;
   }
 }
 

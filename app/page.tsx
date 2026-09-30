@@ -19,7 +19,6 @@ import { useStore } from "@/components/store";
 export default function HomePage() {
   const { add, toggleWishlist, isInWishlist, dbProducts } = useStore();
 
-<<<<<<< HEAD
   const displayPicks = dbProducts && dbProducts.length > 0
     ? dbProducts.slice(0, 8).map((p, idx) => ({
         slug: p.slug,
@@ -49,58 +48,7 @@ export default function HomePage() {
           rawProduct: products[0],
         },
       ];
-=======
-  const popularPicks = [
-    {
-      slug: "bhimseni-camphor",
-      name: "Bhimseni Camphor",
-      badge: "Best Seller",
-      badgeBg: "bg-[#3F7D45]",
-      rating: 4.8,
-      reviews: 120,
-      note: "Distilled to 99.9% edible purity. Naturally sourced and hand-harvested.",
-      price: 199,
-      unit: "50 GMS",
-      image: "/images/camphor_cutout.jpg",
-    },
-    {
-      slug: "10-in-1-aroma-family-pack",
-      name: "10 in 1 Aroma Family Pack",
-      badge: "1st Time in India",
-      badgeBg: "bg-[#9E1830]",
-      rating: 4.9,
-      reviews: 168,
-      note: "10 divine fragrances in 1 box. Kewda, Loban, Rose, Sandalwood & more.",
-      price: 100,
-      unit: "10-IN-1 PACK",
-      image: "/images/agarbatti_cutout.jpg",
-    },
-    {
-      slug: "kesar-loban",
-      name: "Kesar Loban",
-      badge: "Popular",
-      badgeBg: "bg-[#7653A6]",
-      rating: 4.8,
-      reviews: 76,
-      note: "Rich saffron and purifying resin for a peaceful atmosphere.",
-      price: 175,
-      unit: "100 GMS",
-      image: "/images/sambrani.jpg",
-    },
-    {
-      slug: "pancha-rudhra",
-      name: "Pancha Rudhra",
-      badge: "New Arrival",
-      badgeBg: "bg-[#4C7FA8]",
-      rating: 4.7,
-      reviews: 64,
-      note: "Sacred blend for focus and spiritual well-being.",
-      price: 110,
-      unit: "50 NOS",
-      image: "/images/camphor.jpg",
-    },
-  ];
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
+
 
   return (
     <div className="min-h-screen bg-[#FFF4D6] text-[#173B3A] flex flex-col justify-between w-full max-w-full overflow-x-hidden font-sans">

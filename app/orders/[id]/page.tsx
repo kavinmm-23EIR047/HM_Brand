@@ -32,6 +32,7 @@ export default function OrderTrackingPage() {
   const [order, setOrder] = useState<OrderRecord | null>(null);
 
   useEffect(() => {
+    // 1. First check localStorage for instant response
     try {
       const saved = localStorage.getItem(`hm_order_${id}`);
       if (saved) {
@@ -40,14 +41,65 @@ export default function OrderTrackingPage() {
     } catch (e) {
       console.error(e);
     }
+
+    // 2. Fetch latest status from backend API
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+    fetch(`${API_URL}/orders/${id}`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          const ord = json.data;
+          let parsedAddress: any = {};
+          try {
+            parsedAddress = typeof ord.shippingAddress === "string" ? JSON.parse(ord.shippingAddress) : ord.shippingAddress;
+          } catch {}
+
+          setOrder({
+            id: ord.orderNumber || ord.id,
+            date: new Date(ord.createdAt).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            }),
+            items: (ord.items || []).map((it: any) => ({
+              product: {
+                name: it.productNameSnapshot,
+                price: it.unitPriceSnapshot,
+                quantity: "Sacred Pack",
+                category: "Spiritual Fragrance",
+              },
+              qty: it.quantity,
+            })),
+            total: ord.totalAmount,
+            customer: {
+              fullName: parsedAddress.recipientName || parsedAddress.name || "",
+              phone: ord.customerPhone,
+              email: ord.customerEmail,
+              address: parsedAddress.street || "",
+              city: parsedAddress.city || "",
+              state: parsedAddress.state || "",
+              pincode: parsedAddress.postalCode || parsedAddress.pincode || "",
+              paymentMethod: ord.paymentMethod,
+            },
+            status: ord.status,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch order from backend", err);
+      });
   }, [id]);
 
+  const isDelivered = order?.status === "DELIVERED";
+  const isShipped = order?.status === "SHIPPED" || isDelivered;
+  const isProcessing = order?.status === "PROCESSING" || order?.status === "CONFIRMED" || isShipped;
+
   const timeline = [
-    { step: "01", name: "Order Placed", date: "Today", completed: true, current: false },
-    { step: "02", name: "Blessed & Packed", date: "Coimbatore Hub", completed: true, current: true },
-    { step: "03", name: "Dispatched", date: "In Transit", completed: false, current: false },
-    { step: "04", name: "Out for Delivery", date: "Local Delivery", completed: false, current: false },
-    { step: "05", name: "Delivered to Sanctum", date: "Expected in 3-4 Days", completed: false, current: false },
+    { step: "01", name: "Order Placed", date: "Placed", completed: true, current: !isProcessing },
+    { step: "02", name: "Blessed & Packed", date: "Coimbatore Hub", completed: isProcessing, current: isProcessing && !isShipped },
+    { step: "03", name: "Dispatched", date: "In Transit", completed: isShipped, current: isShipped && !isDelivered },
+    { step: "04", name: "Out for Delivery", date: "Local Delivery", completed: isDelivered, current: false },
+    { step: "05", name: "Delivered to Sanctum", date: "Doorstep", completed: isDelivered, current: false },
   ];
 
   return (

@@ -10,9 +10,15 @@ import { useStore } from "@/components/store";
 import { products } from "@/lib/products";
 
 export default function WishlistPage() {
-  const { wishlist } = useStore();
+  const { wishlist, dbProducts } = useStore();
 
-  const wishlistedProducts = products.filter((p) => wishlist.includes(p.slug));
+  const productsBySlug = new Map(
+    [...products, ...dbProducts].map((product) => [product.slug, product])
+  );
+  const wishlistedProducts = wishlist.flatMap((slug) => {
+    const product = productsBySlug.get(slug);
+    return product ? [product] : [];
+  });
 
   return (
     <InnerPage

@@ -192,11 +192,11 @@ export function Navigation() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-0.5 min-[360px]:gap-1 sm:gap-2 lg:gap-3">
-            <button type="button" onClick={() => setIsSearchOpen(true)} aria-label="Search products" className="hidden h-[38px] w-[220px] items-center gap-2 rounded-full border border-[#f1c6a7] bg-white px-4 text-left text-xs text-[#68726e] transition hover:border-[#a90c35] lg:flex 2xl:w-[280px]">
+            <button suppressHydrationWarning type="button" onClick={() => setIsSearchOpen(true)} aria-label="Search products" className="hidden h-[38px] w-[220px] items-center gap-2 rounded-full border border-[#f1c6a7] bg-white px-4 text-left text-xs text-[#68726e] transition hover:border-[#a90c35] lg:flex 2xl:w-[280px]">
               <Search size={15} className="shrink-0 text-[#a90c35]" />
               <span className="truncate">Search agarbattis, camphor, pooja essentials...</span>
             </button>
-            <button type="button" onClick={() => setIsSearchOpen(true)} aria-label="Search" className="hidden h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[300px]:grid sm:h-9 sm:w-9 lg:hidden"><Search size={18} /></button>
+            <button suppressHydrationWarning type="button" onClick={() => setIsSearchOpen(true)} aria-label="Search" className="hidden h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[300px]:grid sm:h-9 sm:w-9 lg:hidden"><Search size={18} /></button>
             {user?.role === "ADMIN" && (
               <Link href="/admin" aria-label="Admin Control Panel" className="hidden h-9 shrink-0 px-3 place-items-center rounded-full bg-[#A90C35] text-white hover:bg-[#870B2B] min-[1440px]:inline-flex gap-1.5 text-xs font-extrabold shadow">
                 <ShieldCheck size={16} />
@@ -208,10 +208,11 @@ export function Navigation() {
               {user && <span className="max-w-[100px] truncate">{user.fullName.split(" ")[0]}</span>}
             </Link>
             <Link href="/wishlist" aria-label="Wishlist" className="relative hidden h-9 w-9 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] min-[1440px]:grid"><Heart size={20} strokeWidth={1.8} />{wishlist.length > 0 && <span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#a90c35] px-1 text-[9px] font-bold text-white">{wishlist.length}</span>}</Link>
-            <button type="button" onClick={() => setIsCartOpen(true)} aria-label="Shopping bag" className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] sm:h-9 sm:w-9"><ShoppingBag size={19} strokeWidth={1.8} /><span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#f47a20] px-1 text-[9px] font-bold text-white">{totalItems}</span></button>
+            <button suppressHydrationWarning type="button" onClick={() => setIsCartOpen(true)} aria-label="Shopping bag" className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#173b3a] hover:bg-[#f7edda] sm:h-9 sm:w-9"><ShoppingBag size={19} strokeWidth={1.8} /><span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-[#f47a20] px-1 text-[9px] font-bold text-white">{totalItems}</span></button>
             
             {/* Hamburger Button with animated icon state */}
             <button
+              suppressHydrationWarning
               type="button"
               aria-expanded={mobileOpen}
               aria-controls="mobile-navigation"
@@ -229,44 +230,6 @@ export function Navigation() {
             <div className="mx-auto max-w-[1368px]">{openMega === "shop" ? shopMenu : collectionsMenu}</div>
           </div>
         )}
-<<<<<<< HEAD
-
-        {mobileOpen && (
-          <>
-          <button type="button" aria-label="Close navigation menu" onClick={() => { setMobileOpen(false); setMobileSection(null); }} className="fixed inset-x-0 bottom-0 top-[56px] z-30 bg-[#173b3a]/20 min-[1440px]:hidden" />
-          <div id="mobile-navigation" className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-[#eadfc9] bg-[#fffaf1] px-3 py-3 shadow-xl min-[1440px]:hidden sm:px-5 sm:py-4">
-            <nav className="mx-auto flex max-w-2xl flex-col text-[13px] font-bold text-[#183c31] sm:text-sm" aria-label="Mobile navigation">
-              <div className="grid grid-cols-2 gap-2 border-b border-[#eadfc9] pb-3">
-                {user?.role === "ADMIN" && (
-                  <Link href="/admin" onClick={() => setMobileOpen(false)} className="col-span-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#A90C35] text-white px-3 text-xs font-bold">
-                    <ShieldCheck size={16} />
-                    <span>Admin Control Panel</span>
-                  </Link>
-                )}
-                <Link href={user ? "/account" : "/login"} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold">
-                  <User size={15} />
-                  {user ? user.fullName.split(" ")[0] : "Sign In / Register"}
-                </Link>
-                <Link href="/wishlist" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#f4edda] px-3 text-xs font-bold"><Heart size={15} />Wishlist{wishlist.length > 0 ? ` (${wishlist.length})` : ""}</Link>
-                <button type="button" onClick={() => { setIsSearchOpen(true); setMobileOpen(false); }} className="col-span-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#a90c35] px-3 text-xs font-bold text-white min-[300px]:hidden"><Search size={15} />Search products</button>
-              </div>
-              <Link href="/" className="border-b border-[#eadfc9] py-3">Home</Link>
-              <button type="button" aria-expanded={mobileSection === "shop"} onClick={() => setMobileSection(mobileSection === "shop" ? null : "shop")} className="flex min-h-11 items-center justify-between border-b border-[#eadfc9] py-2">Shop <ChevronDown size={16} className={`transition-transform ${mobileSection === "shop" ? "rotate-180" : ""}`} /></button>
-              {mobileSection === "shop" && <div className="grid grid-cols-2 gap-1 bg-white/70 p-2">{categories.map((category) => <Link key={category} href={`/shop?category=${encodeURIComponent(category)}`} className="rounded px-2 py-2 text-xs font-semibold">{category}</Link>)}<Link href="/products" className="col-span-2 rounded px-2 py-2 text-xs font-extrabold text-[#a90c35]">All products →</Link></div>}
-              <button type="button" aria-expanded={mobileSection === "collections"} onClick={() => setMobileSection(mobileSection === "collections" ? null : "collections")} className="flex min-h-11 items-center justify-between border-b border-[#eadfc9] py-2">Collections <ChevronDown size={16} className={`transition-transform ${mobileSection === "collections" ? "rotate-180" : ""}`} /></button>
-              {mobileSection === "collections" && <div className="grid gap-1 bg-white/70 p-2">{collectionsList.map((collection) => <Link key={collection.id} href={`/collections#${collection.id}`} className="rounded px-2 py-2 text-xs font-semibold">{collection.title}</Link>)}</div>}
-              <Link href="/about" className="border-b border-[#eadfc9] py-3">Our Story</Link>
-              <Link href="/about#benefits" className="border-b border-[#eadfc9] py-3">Benefits</Link>
-              <Link href="/blog" className="border-b border-[#eadfc9] py-3">Blog</Link>
-              <Link href="/offers" className="border-b border-[#eadfc9] py-3">Offers</Link>
-              <Link href="/contact" className="border-b border-[#eadfc9] py-3">Contact & Enquiries</Link>
-              <Link href="/orders" className="py-3">Track Order</Link>
-            </nav>
-          </div>
-          </>
-        )}
-=======
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
       </header>
 
       {/* ========================================================================= */}
@@ -329,13 +292,23 @@ export function Navigation() {
 
             {/* Quick Actions Strip (Account • Wishlist • Search) */}
             <div className="grid grid-cols-2 gap-2 border-b border-[#eadfc9] bg-white/60 p-3 backdrop-blur-xs">
+              {user?.role === "ADMIN" && (
+                <Link
+                  href="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="col-span-2 flex h-10 items-center justify-center gap-2 rounded-xl bg-[#A90C35] px-3 text-xs font-bold text-white shadow-xs transition hover:bg-[#870B2B]"
+                >
+                  <ShieldCheck size={16} />
+                  <span>Admin Control Panel</span>
+                </Link>
+              )}
               <Link
-                href="/account"
+                href={user ? "/account" : "/login"}
                 onClick={() => setMobileOpen(false)}
                 className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#eadfc9] bg-white px-3 text-xs font-bold text-[#183c31] shadow-xs transition hover:border-[#9E1830] hover:text-[#9E1830]"
               >
                 <User size={15} className="text-[#9E1830]" />
-                <span>My Account</span>
+                <span>{user ? user.fullName.split(" ")[0] : "Sign In / Register"}</span>
               </Link>
               <Link
                 href="/wishlist"

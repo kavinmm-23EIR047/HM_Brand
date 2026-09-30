@@ -185,11 +185,12 @@ export function Footer() {
             </p>
             <div className="space-y-2">
               <input
+                suppressHydrationWarning
                 type="email"
                 placeholder="Enter your email"
                 className="w-full text-xs text-[#173B3A] bg-[#FFF4D6] px-3 py-2 rounded-xl focus:outline-none font-medium placeholder:text-[#173B3A]/60 shadow-inner"
               />
-              <button className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2 rounded-xl font-bold text-xs transition shadow-md active:scale-95">
+              <button suppressHydrationWarning className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2 rounded-xl font-bold text-xs transition shadow-md active:scale-95">
                 Subscribe
               </button>
             </div>
@@ -197,21 +198,16 @@ export function Footer() {
 
         </div>
 
-<<<<<<< HEAD
-        {/* Bottom Bar */}
-        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/70">
-          <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved. • <Link href="/admin" className="hover:text-[#F6C84C] transition underline">Admin Console</Link></p>
-=======
         {/* BOTTOM BAR */}
-        <div className="pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/75 text-center sm:text-left">
-          <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved.</p>
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
+        <div className="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/75 text-center sm:text-left">
+          <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved. • <Link href="/admin" className="hover:text-[#F6C84C] transition underline font-semibold">Admin Console</Link></p>
           <div className="flex items-center gap-1 font-script text-base text-[#F6C84C]">
             <span>Find Your God Within</span>
             <Heart size={14} className="text-[#F47A20] fill-[#F47A20] ml-1" />
           </div>
           <p>Handcrafted in Coimbatore, India 🇮🇳</p>
         </div>
+
 
       </div>
     </footer>

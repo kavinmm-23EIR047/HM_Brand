@@ -216,9 +216,16 @@ export class ProductsRepository {
   }
 
   async softDelete(id: string) {
-    return prisma.product.update({
-      where: { id },
-      data: { deletedAt: new Date(), isActive: false },
+    return prisma.$transaction(async (tx) => {
+      await tx.productCategory.deleteMany({ where: { productId: id } });
+      await tx.productImage.deleteMany({ where: { productId: id } });
+      await tx.wishlistItem.deleteMany({ where: { productId: id } });
+      try {
+        await (tx as any).orderItem.deleteMany({ where: { productId: id } });
+      } catch {}
+      return tx.product.delete({
+        where: { id },
+      });
     });
   }
 }

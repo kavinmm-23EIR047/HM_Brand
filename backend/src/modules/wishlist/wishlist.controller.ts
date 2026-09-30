@@ -16,7 +16,8 @@ export class WishlistController {
 
   add = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const item = await this.service.addToWishlist(req.user!.userId, req.body.productId);
+      const target = req.body.productId || req.body.slug;
+      const item = await this.service.addToWishlist(req.user!.userId, target);
       return sendSuccess(res, item, 'Product added to wishlist', 201);
     } catch (error) {
       return next(error);
@@ -27,6 +28,20 @@ export class WishlistController {
     try {
       await this.service.removeFromWishlist(req.user!.userId, req.params.productId);
       return sendSuccess(res, null, 'Product removed from wishlist');
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  sync = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const items = Array.isArray(req.body.items)
+        ? req.body.items
+        : Array.isArray(req.body.slugs)
+        ? req.body.slugs
+        : [];
+      const wishlist = await this.service.syncWishlist(req.user!.userId, items);
+      return sendSuccess(res, wishlist, 'Wishlist synced successfully');
     } catch (error) {
       return next(error);
     }

@@ -13,9 +13,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "HM Agarbattis | Find Your God Within — Sacred Temple Fragrances Coimbatore",
-  description: "Handcrafted Indian spiritual fragrances, Bhimseni camphor, cup sambrani, dhoop cones and sacred puja essentials by HM Agarbattis Coimbatore.",
+  description:
+    "Handcrafted Indian spiritual fragrances, Bhimseni camphor, cup sambrani, dhoop cones and sacred puja essentials by HM Agarbattis Coimbatore.",
   metadataBase: new URL("https://www.hmagarbattis.com"),
-  keywords: "HM Agarbattis, incense sticks Coimbatore, pure bhimseni camphor, sambrani cups, kesar loban, temple puja essentials, sacred fragrances",
+  keywords:
+    "HM Agarbattis, incense sticks Coimbatore, pure bhimseni camphor, sambrani cups, kesar loban, temple puja essentials, sacred fragrances",
 };
 
 export default function RootLayout({
@@ -24,24 +26,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-<<<<<<< HEAD
-    <html lang="en" suppressHydrationWarning>
-=======
-    <html lang="en" className="w-full overflow-x-hidden">
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
+    <html
+      lang="en"
+      className="w-full overflow-x-hidden"
+      suppressHydrationWarning
+    >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
-<<<<<<< HEAD
-      <body className="bg-sacredCream text-charcoal antialiased" suppressHydrationWarning>
-=======
-      <body className="bg-sacredCream text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden">
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
+      <body
+        className="bg-sacredCream text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden"
+        suppressHydrationWarning
+      >
         <StoreProvider>
           {children}
           <CartDrawer />

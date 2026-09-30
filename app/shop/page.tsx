@@ -3,11 +3,7 @@
 import React, { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-<<<<<<< HEAD
 import { SlidersHorizontal, Search, Sparkles, X } from "lucide-react";
-=======
-import { Filter, SlidersHorizontal, Search, Sparkles, X, ShieldCheck, Leaf, Heart } from "lucide-react";
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { MascotSearch } from "@/components/mascot-art";
@@ -63,6 +59,36 @@ function ShopContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  // Meilisearch integration for Shop catalog search (typo-tolerant)
+  const [meiliSlugs, setMeiliSlugs] = useState<Set<string> | null>(null);
+
+  React.useEffect(() => {
+    const q = searchQuery.trim();
+    if (!q) {
+      setMeiliSlugs(null);
+      return;
+    }
+    const timer = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}&type=full&limit=50`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.hits)) {
+            const slugs = new Set<string>();
+            data.hits.forEach((h: any) => {
+              if (h.slug) slugs.add(String(h.slug).toLowerCase());
+              if (h.name) slugs.add(String(h.name).toLowerCase());
+            });
+            setMeiliSlugs(slugs);
+          } else {
+            setMeiliSlugs(new Set());
+          }
+        })
+        .catch(() => setMeiliSlugs(null));
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const filteredProducts = useMemo(() => {
     return allProducts
       .filter((p) => {
@@ -74,15 +100,20 @@ function ShopContent() {
         if (selectedPriceRange === "under-150" && p.price >= 150) return false;
         if (selectedPriceRange === "150-200" && (p.price < 150 || p.price > 200)) return false;
         if (selectedPriceRange === "above-200" && p.price <= 200) return false;
-        // Search filter
+        // Search filter (Meilisearch typo-tolerant + local note/fragrance fallback)
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
-          const matchName = p.name.toLowerCase().includes(q);
-          const matchNote = p.note.toLowerCase().includes(q);
-          const matchCat = p.category.toLowerCase().includes(q);
-          const matchSubCategory = p.subCategory?.toLowerCase().includes(q) || false;
-          const matchDescription = p.description.toLowerCase().includes(q);
-          const matchFragrance = p.fragranceNotes?.some((note) => note.toLowerCase().includes(q)) || false;
+          const pSlug = (p.slug || "").toLowerCase();
+          const pName = (p.name || "").toLowerCase();
+          const meiliMatch = meiliSlugs ? (meiliSlugs.has(pSlug) || meiliSlugs.has(pName)) : false;
+          if (meiliMatch) return true;
+
+          const matchName = pName.includes(q);
+          const matchNote = (p.note || "").toLowerCase().includes(q);
+          const matchCat = (p.category || "").toLowerCase().includes(q);
+          const matchSubCategory = (p.subCategory || "").toLowerCase().includes(q);
+          const matchDescription = (p.description || "").toLowerCase().includes(q);
+          const matchFragrance = p.fragranceNotes?.some((note: string) => note.toLowerCase().includes(q)) || false;
           if (!matchName && !matchNote && !matchCat && !matchSubCategory && !matchDescription && !matchFragrance) return false;
         }
         return true;
@@ -94,7 +125,7 @@ function ShopContent() {
         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allProducts, selectedCategory, selectedPriceRange, sortBy, searchQuery]);
+  }, [allProducts, selectedCategory, selectedPriceRange, sortBy, searchQuery, meiliSlugs]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
@@ -117,12 +148,6 @@ function ShopContent() {
             const isSelected = selectedCategory === category;
             const artKind = category === "All" ? "natural" : categoryIllustrations[category as keyof typeof categoryIllustrations];
             return (
-<<<<<<< HEAD
-              <button key={category} type="button" onClick={() => setSelectedCategory(category)} aria-pressed={isSelected} className={`group flex min-w-0 flex-col items-center rounded-xl px-1.5 py-2 text-center transition ${isSelected ? "bg-white shadow-sm ring-1 ring-[#3f7d45]/30" : "hover:bg-white/75"}`}>
-                <span className={`grid h-12 w-12 place-items-center overflow-hidden rounded-full transition group-hover:scale-105 sm:h-14 sm:w-14 ${isSelected ? "bg-[#dcebc9]" : "bg-white"}`}>
-                  <RitualArt kind={(artKind || "natural") as any} className="h-full w-full p-1" />
-
-=======
               <button
                 key={category}
                 type="button"
@@ -137,8 +162,7 @@ function ShopContent() {
                 <span className={`grid h-12 w-12 place-items-center overflow-hidden rounded-full transition group-hover:scale-110 sm:h-14 sm:w-14 ${
                   isSelected ? "bg-[#FFF4D6]" : "bg-white"
                 }`}>
-                  <RitualArt kind={artKind} className="h-full w-full p-1" />
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
+                  <RitualArt kind={(artKind || "natural") as any} className="h-full w-full p-1" />
                 </span>
                 <span className={`mt-1.5 line-clamp-2 text-[10px] font-bold leading-tight sm:text-[11px] ${
                   isSelected ? "text-[#9E1830]" : "text-[#173B3A]"
@@ -233,13 +257,8 @@ function ShopContent() {
                   }`}
                 >
                   <span>{cat}</span>
-<<<<<<< HEAD
-                  <span className="text-[10px] opacity-75">
-                    {getCategoryCount(cat)}
-=======
                   <span className={`text-[10px] ${selectedCategory === cat ? "text-white/80" : "text-[#6B4226]"}`}>
-                    {cat === "All" ? products.length : getCategoryCount(cat)}
->>>>>>> d4c37a685181678238b0d3fac10872588c366b67
+                    {getCategoryCount(cat)}
                   </span>
                 </button>
               ))}
