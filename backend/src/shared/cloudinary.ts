@@ -40,7 +40,7 @@ function validateTarget({ folder, publicId }: CloudinaryImageTarget): void {
 export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget): Promise<CloudinaryUpload> {
   validateTarget(target);
   const client = getCloudinary();
-  const result = await new Promise<{ public_id: string; version: number | string }>((resolve, reject) => {
+  const result = await new Promise<{ public_id: string; version: number | string; format?: string }>((resolve, reject) => {
     const stream = client.uploader.upload_stream(
       {
         resource_type: 'image',
@@ -52,7 +52,7 @@ export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget)
         overwrite: true,
         invalidate: true,
       },
-      (error, uploadResult) => error || !uploadResult ? reject(error || new Error('Cloudinary did not return an upload result.')) : resolve(uploadResult)
+      (error, uploadResult) => error || !uploadResult ? reject(error || new Error('Cloudinary did not return an upload result.')) : resolve(uploadResult as any)
     );
     stream.end(buffer);
   });
@@ -61,8 +61,8 @@ export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget)
     publicId: result.public_id,
     secureUrl: client.url(result.public_id, {
       secure: true,
-      // Persist the upload version so a replacement cannot be served from a browser/CDN cache.
       version: result.version,
+      format: result.format,
       transformation: [{ fetch_format: 'auto', quality: 'auto' }],
     }),
   };

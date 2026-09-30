@@ -47,6 +47,12 @@ export function ProductCard({ product }: { product: Product }) {
               src={product.image}
               alt={product.name}
               className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]"
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                if (!target.src.includes("media_1790142713668")) {
+                  target.src = "/images/media_1790142713668.jpg";
+                }
+              }}
             />
           ) : (
             <div className="text-center text-[#173B3A] select-none p-4">
