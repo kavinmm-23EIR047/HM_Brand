@@ -8,7 +8,7 @@ const router = Router();
 
 // Public Routes
 router.get('/', optionalAuthenticateJWT, validateRequest(productQuerySchema), productsController.getAll);
-
+router.get('/search', productsController.search);
 router.get('/:slug', productsController.getBySlug);
 
 // Admin Routes

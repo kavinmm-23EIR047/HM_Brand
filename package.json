@@ -6,14 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "index:products": "node scripts/index-products.mjs"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
     "framer-motion": "latest",
     "lucide-react": "latest",
-    "meilisearch": "^0.62.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

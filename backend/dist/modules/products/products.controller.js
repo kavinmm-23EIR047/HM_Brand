@@ -2,12 +2,37 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productsController = exports.ProductsController = void 0;
 const products_service_1 = require("./products.service");
+const products_search_1 = require("./products.search");
 const response_util_1 = require("../../shared/utils/response.util");
 class ProductsController {
     service;
     constructor(service = products_service_1.productsService) {
         this.service = service;
     }
+    search = async (req, res, next) => {
+        try {
+            const q = typeof req.query.q === 'string' ? req.query.q : '';
+            const type = req.query.type === 'autocomplete' ? 'autocomplete' : 'full';
+            const limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
+            const offset = req.query.offset ? parseInt(req.query.offset, 10) : undefined;
+            const category = typeof req.query.category === 'string' ? req.query.category : undefined;
+            const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : undefined;
+            const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : undefined;
+            const result = await (0, products_search_1.searchProducts)({
+                q,
+                type,
+                limit,
+                offset,
+                category,
+                minPrice,
+                maxPrice,
+            });
+            return res.status(200).json(result);
+        }
+        catch (error) {
+            return next(error);
+        }
+    };
     getAll = async (req, res, next) => {
         try {
             const includeInactive = req.user?.role === 'ADMIN' && req.query.includeInactive === 'true';

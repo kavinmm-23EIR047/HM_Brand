@@ -4,7 +4,6 @@ exports.productsService = exports.ProductsService = void 0;
 const products_repository_1 = require("./products.repository");
 const slug_util_1 = require("../../shared/utils/slug.util");
 const custom_error_1 = require("../../shared/errors/custom.error");
-const meilisearch_1 = require("../../shared/meilisearch");
 class ProductsService {
     repo;
     constructor(repo = products_repository_1.productsRepository) {
@@ -69,8 +68,6 @@ class ProductsService {
             sku,
             slug,
         });
-        // Sync to Meilisearch index in background without blocking DB response
-        (0, meilisearch_1.syncProductToMeilisearch)(created);
         return created;
     }
     async updateProduct(id, data) {
@@ -86,7 +83,6 @@ class ProductsService {
             ...data,
             slug,
         });
-        (0, meilisearch_1.syncProductToMeilisearch)(updated);
         return updated;
     }
     async addProductImage(productId, imageData) {
@@ -95,9 +91,6 @@ class ProductsService {
             throw new custom_error_1.NotFoundError('Product not found');
         }
         const res = await this.repo.addImage(productId, imageData);
-        const refreshed = await this.repo.findById(productId);
-        if (refreshed)
-            (0, meilisearch_1.syncProductToMeilisearch)(refreshed);
         return res;
     }
     async removeProductImage(imageId) {
@@ -109,7 +102,6 @@ class ProductsService {
             throw new custom_error_1.NotFoundError('Product not found');
         }
         const res = await this.repo.softDelete(id);
-        (0, meilisearch_1.removeProductFromMeilisearch)(id);
         return res;
     }
 }

@@ -1,7 +1,6 @@
 import { productsRepository, ProductsRepository, ProductFilters } from './products.repository';
 import { generateSlug } from '../../shared/utils/slug.util';
 import { NotFoundError, ConflictError } from '../../shared/errors/custom.error';
-import { syncProductToMeilisearch, removeProductFromMeilisearch } from '../../shared/meilisearch';
 
 export class ProductsService {
   constructor(private repo: ProductsRepository = productsRepository) {}
@@ -98,8 +97,6 @@ export class ProductsService {
       sku,
       slug,
     });
-    // Sync to Meilisearch index in background without blocking DB response
-    syncProductToMeilisearch(created);
     return created;
   }
 
@@ -118,7 +115,6 @@ export class ProductsService {
       ...data,
       slug,
     });
-    syncProductToMeilisearch(updated);
     return updated;
   }
 
@@ -128,8 +124,6 @@ export class ProductsService {
       throw new NotFoundError('Product not found');
     }
     const res = await this.repo.addImage(productId, imageData);
-    const refreshed = await this.repo.findById(productId);
-    if (refreshed) syncProductToMeilisearch(refreshed);
     return res;
   }
 
@@ -143,7 +137,6 @@ export class ProductsService {
       throw new NotFoundError('Product not found');
     }
     const res = await this.repo.softDelete(id);
-    removeProductFromMeilisearch(id);
     return res;
   }
 }
