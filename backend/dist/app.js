@@ -13,11 +13,29 @@ const error_middleware_1 = require("./shared/middlewares/error.middleware");
 const app = (0, express_1.default)();
 // Security Middlewares
 app.use((0, helmet_1.default)({ crossOriginResourcePolicy: false }));
-const corsOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000', 'http://localhost:5173'];
-app.use((0, cors_1.default)({
-    origin: corsOrigins,
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean)
+    : [];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+        const isVercel = /^https:\/\/([a-zA-Z0-9_-]+\.)*vercel\.app$/.test(origin);
+        if (isLocalhost || isVercel) {
+            return callback(null, true);
+        }
+        return callback(null, true);
+    },
     credentials: true,
-}));
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+};
+app.use((0, cors_1.default)(corsOptions));
+app.options('*', (0, cors_1.default)(corsOptions));
 // Body Parsers
 app.use(express_1.default.json({ limit: '10mb' }));
 app.use(express_1.default.urlencoded({ extended: true, limit: '10mb' }));
