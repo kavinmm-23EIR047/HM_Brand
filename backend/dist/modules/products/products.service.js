@@ -4,6 +4,7 @@ exports.productsService = exports.ProductsService = void 0;
 const products_repository_1 = require("./products.repository");
 const slug_util_1 = require("../../shared/utils/slug.util");
 const custom_error_1 = require("../../shared/errors/custom.error");
+const media_service_1 = require("../media/media.service");
 class ProductsService {
     repo;
     constructor(repo = products_repository_1.productsRepository) {
@@ -78,9 +79,24 @@ class ProductsService {
         let slug = product.slug;
         if (data.name && data.name !== product.name) {
             slug = (0, slug_util_1.generateSlug)(data.name);
+            const existingSlug = await this.repo.findBySlug(slug);
+            if (existingSlug && existingSlug.id !== id && !existingSlug.deletedAt) {
+                slug = `${slug}-${Date.now().toString().slice(-4)}`;
+            }
+        }
+        if (data.sku && data.sku !== product.sku) {
+            const existingSku = await this.repo.findBySku(data.sku);
+            if (existingSku && existingSku.id !== id) {
+                throw new custom_error_1.ConflictError(`Product with SKU '${data.sku}' already exists.`);
+            }
+        }
+        let couponCode = data.couponCode;
+        if (couponCode !== undefined) {
+            couponCode = typeof couponCode === 'string' && couponCode.trim() !== '' ? couponCode.trim() : null;
         }
         const updated = await this.repo.update(id, {
             ...data,
+            ...(couponCode !== undefined ? { couponCode } : {}),
             slug,
         });
         return updated;
@@ -94,14 +110,14 @@ class ProductsService {
         return res;
     }
     async removeProductImage(imageId) {
-        return this.repo.removeImage(imageId);
+        return media_service_1.mediaService.deleteProductImage(imageId);
     }
     async deleteProduct(id) {
         const product = await this.repo.findById(id);
-        if (!product || product.deletedAt) {
+        if (!product) {
             throw new custom_error_1.NotFoundError('Product not found');
         }
-        const res = await this.repo.softDelete(id);
+        const res = await this.repo.delete(id);
         return res;
     }
 }

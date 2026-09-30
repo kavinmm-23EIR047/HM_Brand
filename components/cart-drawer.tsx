@@ -2,16 +2,30 @@
 
 import React from "react";
 import Link from "next/link";
-import { X, Plus, Minus, Trash2, ArrowRight, ShoppingBag, Sparkles } from "lucide-react";
+import { X, Plus, Minus, Trash2, ArrowRight, ShoppingBag, Sparkles, Tag } from "lucide-react";
 import { useStore } from "@/components/store";
 import { MascotBasket } from "@/components/mascot-art";
+import { SHIPPING_CONFIG } from "@/lib/shipping";
 
 export function CartDrawer() {
-  const { lines, isCartOpen, setIsCartOpen, setQty, remove, subtotal, totalItems } = useStore();
+  const {
+    lines,
+    isCartOpen,
+    setIsCartOpen,
+    setQty,
+    remove,
+    subtotal,
+    totalItems,
+    appliedCoupon,
+    couponDiscount,
+    cartCouponCodes,
+    applyCoupon,
+    removeCoupon,
+  } = useStore();
 
   if (!isCartOpen) return null;
 
-  const freeDeliveryThreshold = 499;
+  const freeDeliveryThreshold = SHIPPING_CONFIG.freeDeliveryThreshold;
   const progressPercent = Math.min(100, Math.round((subtotal / freeDeliveryThreshold) * 100));
   const amountLeft = freeDeliveryThreshold - subtotal;
 
@@ -126,13 +140,60 @@ export function CartDrawer() {
           {/* Footer & Checkout */}
           {lines.length > 0 && (
             <div className="space-y-3 border-t border-antiqueGold/30 bg-sacredCream p-4 sm:p-6">
+              {/* Available Item Coupons Prompt */}
+              {cartCouponCodes.length > 0 && !appliedCoupon && (
+                <div className="flex items-center justify-between gap-2 rounded-lg bg-[#FFF8E7] p-2.5 border border-dashed border-[#E85D04] text-xs">
+                  <div className="flex items-center gap-1.5 text-[#6B4226]">
+                    <Tag size={13} className="text-[#E85D04] shrink-0" />
+                    <span>Eligible coupon: <strong className="font-mono text-[#9E1830]">{cartCouponCodes[0]}</strong></span>
+                  </div>
+                  <button
+                    onClick={() => applyCoupon(cartCouponCodes[0])}
+                    className="rounded bg-[#E85D04] px-2 py-0.5 text-[10px] font-bold text-white uppercase hover:bg-[#9E1830] transition"
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
+
+              {/* Applied Coupon Tag */}
+              {appliedCoupon && (
+                <div className="flex items-center justify-between text-xs text-[#3F7D45] bg-[#E1EDCF]/70 px-2.5 py-1.5 rounded-lg border border-[#3F7D45]/30">
+                  <span className="flex items-center gap-1 font-bold">
+                    <Tag size={12} /> Coupon ({appliedCoupon.code})
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold">-₹{couponDiscount}</span>
+                    <button
+                      onClick={removeCoupon}
+                      className="text-[#9E1830] hover:underline text-[10px] font-semibold"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-center justify-between text-sm">
                 <span className="text-charcoal/70">Total Items</span>
                 <span className="font-bold text-earthBrown">{totalItems} items</span>
               </div>
-              <div className="flex items-center justify-between text-lg font-bold">
-                <span className="font-display text-xl text-earthBrown">Subtotal</span>
-                <span className="text-saffron">₹{subtotal}</span>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-charcoal/70">Subtotal</span>
+                <span className="font-semibold text-earthBrown">₹{subtotal}</span>
+              </div>
+
+              {appliedCoupon && couponDiscount > 0 && (
+                <div className="flex items-center justify-between text-sm text-[#3F7D45]">
+                  <span>Discount</span>
+                  <span className="font-bold">-₹{couponDiscount}</span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between text-lg font-bold pt-1 border-t border-antiqueGold/20">
+                <span className="font-display text-xl text-earthBrown">Estimated Total</span>
+                <span className="text-saffron">₹{Math.max(0, subtotal - couponDiscount)}</span>
               </div>
               <p className="text-[11px] text-charcoal/60">Taxes and shipping calculated at checkout.</p>
 

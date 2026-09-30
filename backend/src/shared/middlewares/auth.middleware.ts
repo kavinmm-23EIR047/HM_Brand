@@ -19,8 +19,8 @@ declare global {
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const devAdmin: AuthUser = {
-    userId: '9ddb1e29-ac6a-486c-857c-217183bf68fc',
-    email: 'admin@hmagarbattis.com',
+    userId: '2496b9b7-5fdd-46d9-8b7e-ac4ea9dcf8b1',
+    email: 'sarvathan9363@gmail.com',
     role: 'ADMIN',
   };
 
@@ -50,8 +50,8 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
 export const optionalAuthenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const devAdmin: AuthUser = {
-    userId: '9ddb1e29-ac6a-486c-857c-217183bf68fc',
-    email: 'admin@hmagarbattis.com',
+    userId: '2496b9b7-5fdd-46d9-8b7e-ac4ea9dcf8b1',
+    email: 'sarvathan9363@gmail.com',
     role: 'ADMIN',
   };
 

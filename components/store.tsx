@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import type { Product } from "@/lib/products";
 import { mapDbProductToProduct } from "@/lib/products";
 
@@ -77,6 +77,19 @@ interface StoreContextType {
   // Quick notification
   notification: string | null;
   showNotification: (msg: string) => void;
+
+  // Coupon Management
+  appliedCoupon: AppliedCoupon | null;
+  couponDiscount: number;
+  cartCouponCodes: string[];
+  applyCoupon: (code: string, estimatedAmount?: number) => Promise<{ success: boolean; message?: string }>;
+  removeCoupon: () => void;
+}
+
+export interface AppliedCoupon {
+  code: string;
+  discountPercent?: number;
+  discountAmount?: number;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -85,6 +98,7 @@ const CART_STORAGE_KEY = "hm_agarbattis_cart";
 const WISHLIST_STORAGE_KEY = "hm_agarbattis_wishlist";
 const AUTH_TOKEN_KEY = "hm_agarbattis_token";
 const AUTH_USER_KEY = "hm_agarbattis_user";
+const COUPON_STORAGE_KEY = "hm_agarbattis_coupon";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
@@ -93,6 +107,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
+
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
 
   const [dbProducts, setDbProducts] = useState<Product[]>([]);
   const [dbCategories, setDbCategories] = useState<any[]>([]);
@@ -148,6 +164,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
       }
+      const savedCoupon = localStorage.getItem(COUPON_STORAGE_KEY);
+      if (savedCoupon) {
+        setAppliedCoupon(JSON.parse(savedCoupon));
+      }
     } catch (e) {
       console.error("Failed to load store from localStorage", e);
     }
@@ -173,6 +193,19 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       console.error("Failed to save wishlist to localStorage", e);
     }
   }, [wishlist, mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      if (appliedCoupon) {
+        localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon));
+      } else {
+        localStorage.removeItem(COUPON_STORAGE_KEY);
+      }
+    } catch (e) {
+      console.error("Failed to save coupon to localStorage", e);
+    }
+  }, [appliedCoupon, mounted]);
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -522,6 +555,58 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const totalItems = lines.reduce((sum, item) => sum + item.qty, 0);
 
+  const cartCouponCodes = useMemo(() => {
+    const codes = new Set<string>();
+    lines.forEach((l) => {
+      if (l.product.couponCode) codes.add(l.product.couponCode);
+      if ((l.product as any).coupon) codes.add((l.product as any).coupon);
+    });
+    return Array.from(codes);
+  }, [lines]);
+
+  const couponDiscount = useMemo(() => {
+    if (!appliedCoupon || subtotal <= 0) return 0;
+    if (appliedCoupon.discountPercent) {
+      return Math.round((subtotal * appliedCoupon.discountPercent) / 100);
+    }
+    if (appliedCoupon.discountAmount) {
+      return Math.min(subtotal, appliedCoupon.discountAmount);
+    }
+    return 0;
+  }, [appliedCoupon, subtotal]);
+
+  const applyCoupon = async (code: string, estimatedAmount?: number) => {
+    const cleanCode = code.toUpperCase().trim();
+    if (!cleanCode) return { success: false, message: "Please enter a coupon code." };
+    const amountToCheck = estimatedAmount !== undefined && estimatedAmount > 0 ? estimatedAmount : subtotal;
+    try {
+      const res = await fetch(`${API_BASE_URL}/coupons/validate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: cleanCode, cartAmount: amountToCheck }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, message: data.message || "Invalid coupon code." };
+      }
+      const couponObj: AppliedCoupon = {
+        code: cleanCode,
+        discountPercent: data.data.discountPercent,
+        discountAmount: data.data.discountAmount,
+      };
+      setAppliedCoupon(couponObj);
+      showNotification(`🎉 Coupon "${cleanCode}" applied successfully!`);
+      return { success: true, message: `Coupon "${cleanCode}" applied!` };
+    } catch {
+      return { success: false, message: "Unable to validate coupon. Please check connection." };
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    showNotification("Coupon removed.");
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -559,6 +644,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         deleteAddress,
         notification,
         showNotification,
+        appliedCoupon,
+        couponDiscount,
+        cartCouponCodes,
+        applyCoupon,
+        removeCoupon,
       }}
     >
       {children}

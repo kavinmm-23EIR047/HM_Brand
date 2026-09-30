@@ -6,8 +6,10 @@ const validation_middleware_1 = require("../../shared/middlewares/validation.mid
 const orders_schema_1 = require("./orders.schema");
 const auth_middleware_1 = require("../../shared/middlewares/auth.middleware");
 const router = (0, express_1.Router)();
-// Public / Customer Route (Supports Guest or Auth user checkout)
+// Public / Customer Routes
 router.post('/', auth_middleware_1.optionalAuthenticateJWT, (0, validation_middleware_1.validateRequest)(orders_schema_1.createOrderSchema), orders_controller_1.ordersController.create);
+router.post('/verify-payment', auth_middleware_1.optionalAuthenticateJWT, (0, validation_middleware_1.validateRequest)(orders_schema_1.verifyPaymentSchema), orders_controller_1.ordersController.verifyPayment);
+router.get('/shipping-config', orders_controller_1.ordersController.getShippingConfig);
 // Authenticated / Guest Customer Routes
 router.get('/', auth_middleware_1.optionalAuthenticateJWT, orders_controller_1.ordersController.getAll);
 router.get('/:id', auth_middleware_1.optionalAuthenticateJWT, orders_controller_1.ordersController.getOne);

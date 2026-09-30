@@ -92,12 +92,26 @@ class ProductsRepository {
     }
     async create(data) {
         const { categoryIds = [], images = [], ...productData } = data;
-        const validCategoryIds = categoryIds.filter((cid) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
+        const cleanCategoryIds = categoryIds.filter((cid) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
+        let resolvedCategoryIds = [];
+        if (cleanCategoryIds.length > 0) {
+            const validCategories = await prisma_1.default.category.findMany({
+                where: {
+                    OR: [
+                        { id: { in: cleanCategoryIds } },
+                        { slug: { in: cleanCategoryIds } },
+                        { name: { in: cleanCategoryIds } },
+                    ],
+                },
+                select: { id: true },
+            });
+            resolvedCategoryIds = validCategories.map((c) => c.id);
+        }
         return prisma_1.default.product.create({
             data: {
                 ...productData,
                 categories: {
-                    create: validCategoryIds.map((categoryId) => ({ categoryId })),
+                    create: resolvedCategoryIds.map((categoryId) => ({ categoryId })),
                 },
                 images: {
                     create: images.map((img, index) => ({
@@ -119,12 +133,27 @@ class ProductsRepository {
         const { categoryIds, images, ...updateData } = data;
         return prisma_1.default.$transaction(async (tx) => {
             if (Array.isArray(categoryIds)) {
-                const validCategoryIds = categoryIds.filter((cid) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
+                const cleanCategoryIds = categoryIds.filter((cid) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
                 await tx.productCategory.deleteMany({ where: { productId: id } });
-                if (validCategoryIds.length > 0) {
-                    await tx.productCategory.createMany({
-                        data: validCategoryIds.map((categoryId) => ({ productId: id, categoryId })),
+                if (cleanCategoryIds.length > 0) {
+                    const validCategories = await tx.category.findMany({
+                        where: {
+                            OR: [
+                                { id: { in: cleanCategoryIds } },
+                                { slug: { in: cleanCategoryIds } },
+                                { name: { in: cleanCategoryIds } },
+                            ],
+                        },
+                        select: { id: true },
                     });
+                    if (validCategories.length > 0) {
+                        await tx.productCategory.createMany({
+                            data: validCategories.map((c) => ({
+                                productId: id,
+                                categoryId: c.id,
+                            })),
+                        });
+                    }
                 }
             }
             if (Array.isArray(images) && images.length > 0) {
@@ -148,6 +177,9 @@ class ProductsRepository {
                     categories: { include: { category: true } },
                 },
             });
+        }, {
+            maxWait: 15000,
+            timeout: 30000,
         });
     }
     async addImage(productId, imageData) {
@@ -173,18 +205,23 @@ class ProductsRepository {
             where: { id: imageId },
         });
     }
-    async softDelete(id) {
+    async delete(id) {
         return prisma_1.default.$transaction(async (tx) => {
             await tx.productCategory.deleteMany({ where: { productId: id } });
+            await tx.collectionProduct.deleteMany({ where: { productId: id } });
+            await tx.festivalProduct.deleteMany({ where: { productId: id } });
             await tx.productImage.deleteMany({ where: { productId: id } });
             await tx.wishlistItem.deleteMany({ where: { productId: id } });
             try {
-                await tx.orderItem.deleteMany({ where: { productId: id } });
+                await tx.orderItem.updateMany({ where: { productId: id }, data: { productId: null } });
             }
             catch { }
             return tx.product.delete({
                 where: { id },
             });
+        }, {
+            maxWait: 15000,
+            timeout: 30000,
         });
     }
 }

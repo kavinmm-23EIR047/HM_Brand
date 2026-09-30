@@ -2,13 +2,28 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star, Tag } from "lucide-react";
 import { useStore } from "@/components/store";
 import type { Product } from "@/lib/products";
 
 export function ProductCard({ product }: { product: Product }) {
-  const { add, toggleWishlist, isInWishlist } = useStore();
+  const { add, toggleWishlist, isInWishlist, appliedCoupon } = useStore();
   const wishlisted = isInWishlist(product.slug);
+
+  const isCouponAppliedForProduct = Boolean(
+    product.couponCode && appliedCoupon?.code.toUpperCase() === product.couponCode.toUpperCase()
+  );
+
+  let singleDiscount = 0;
+  if (isCouponAppliedForProduct && appliedCoupon) {
+    if (appliedCoupon.discountPercent) {
+      singleDiscount = Math.round((product.price * appliedCoupon.discountPercent) / 100);
+    } else if (appliedCoupon.discountAmount) {
+      singleDiscount = Math.min(product.price, appliedCoupon.discountAmount);
+    }
+  }
+
+  const effectivePrice = Math.max(0, product.price - singleDiscount);
 
   const discountPercent =
     product.mrp && product.price
@@ -44,15 +59,22 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </Link>
 
-        {/* Category / Bestseller Badge */}
-        {product.badge && (
+        {/* Category / Coupon / Bestseller Badge */}
+        {product.couponCode ? (
+          <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E7] px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830] shadow-sm border border-[#C89B3C]">
+              <Tag size={10} className="text-[#E85D04]" />
+              <span>Coupon: <span className="font-mono font-black">{product.couponCode}</span></span>
+            </span>
+          </div>
+        ) : product.badge ? (
           <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
             <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830] shadow-xs border border-[#F6C84C]/50 backdrop-blur-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
               {product.badge}
             </span>
           </div>
-        )}
+        ) : null}
 
         {/* Wishlist Button */}
         <button
@@ -94,20 +116,36 @@ export function ProductCard({ product }: { product: Product }) {
           <p className="mt-1 line-clamp-2 text-[10px] sm:text-[11px] leading-relaxed text-[#173B3A]/70 font-sans">
             {product.note}
           </p>
+
+          {/* Coupon Offer Badge if available */}
+          {product.couponCode && (
+            <div className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-[#FFF8E7] px-2 py-0.5 border border-[#C89B3C]/50 text-[10px] font-bold text-[#E85D04]">
+              <Tag size={10} className="shrink-0 text-[#E85D04]" />
+              <span>Coupon <span className="font-mono font-black text-[#9E1830]">{product.couponCode}</span> {isCouponAppliedForProduct ? "applied (₹" + effectivePrice + ")" : "eligible"}</span>
+            </div>
+          )}
         </div>
 
         {/* Price & Action */}
         <div className="mt-3 flex min-w-0 items-center justify-between gap-2 border-t border-[#F47A20]/15 pt-2.5">
           <div className="min-w-0">
             <div className="flex items-baseline gap-1">
-              <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830]">₹{product.price}</span>
-              {product.mrp && <span className="text-[10px] text-[#173B3A]/50 line-through">{product.mrp}</span>}
+              <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830]">₹{effectivePrice}</span>
+              {singleDiscount > 0 ? (
+                <span className="text-[10px] text-[#173B3A]/50 line-through">₹{product.price}</span>
+              ) : product.mrp ? (
+                <span className="text-[10px] text-[#173B3A]/50 line-through">{product.mrp}</span>
+              ) : null}
             </div>
-            {discountPercent > 0 && (
+            {singleDiscount > 0 ? (
+              <span className="text-[9px] font-extrabold text-[#3F7D45] tracking-wider uppercase block">
+                Save ₹{singleDiscount} (Coupon Active)
+              </span>
+            ) : discountPercent > 0 ? (
               <span className="text-[9px] font-bold text-[#3F7D45] tracking-wider uppercase block">
                 Save {discountPercent}%
               </span>
-            )}
+            ) : null}
           </div>
 
           <button

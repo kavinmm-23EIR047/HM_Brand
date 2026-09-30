@@ -3,13 +3,52 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, Lock, CreditCard, Truck, Check, ArrowLeft, ArrowRight, Sparkles, MapPin, CheckCircle2, Plus, Home } from "lucide-react";
+import { ShieldCheck, Lock, CreditCard, Truck, Check, ArrowLeft, ArrowRight, Sparkles, MapPin, CheckCircle2, Plus, Home, Tag } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore, UserAddress } from "@/components/store";
+import { SHIPPING_CONFIG } from "@/lib/shipping";
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") {
+      resolve(false);
+      return;
+    }
+    if ((window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { lines, subtotal, totalItems, clear, user, token, savedAddresses, defaultAddress, createAddress } = useStore();
+  const {
+    lines,
+    subtotal,
+    totalItems,
+    clear,
+    user,
+    token,
+    savedAddresses,
+    defaultAddress,
+    createAddress,
+    appliedCoupon,
+    couponDiscount,
+    cartCouponCodes,
+    applyCoupon,
+    removeCoupon,
+  } = useStore();
+
+  const [checkoutCouponInput, setCheckoutCouponInput] = useState("");
+  const [checkoutCouponLoading, setCheckoutCouponLoading] = useState(false);
+  const [checkoutCouponError, setCheckoutCouponError] = useState("");
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -71,8 +110,29 @@ export default function CheckoutPage() {
     setSelectedAddressId("custom");
   };
 
-  const shippingFee = subtotal >= 499 || subtotal === 0 ? 0 : 50;
-  const finalTotal = subtotal + shippingFee;
+  // Preload Razorpay checkout script
+  useEffect(() => {
+    loadRazorpayScript();
+  }, []);
+
+  // Dynamic calibrated totals with coupon discount
+  const effectiveDiscount = couponDiscount;
+  const shippingFee = SHIPPING_CONFIG.calculate(subtotal - effectiveDiscount);
+  const finalTotal = Math.max(0, subtotal - effectiveDiscount + shippingFee);
+
+  const handleApplyCoupon = async (explicitCode?: string) => {
+    const code = explicitCode || checkoutCouponInput;
+    if (!code.trim()) return;
+    setCheckoutCouponLoading(true);
+    setCheckoutCouponError("");
+    const res = await applyCoupon(code);
+    setCheckoutCouponLoading(false);
+    if (!res.success) {
+      setCheckoutCouponError(res.message || "Invalid coupon code");
+    } else {
+      setCheckoutCouponInput("");
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -117,7 +177,11 @@ export default function CheckoutPage() {
         headers["Authorization"] = `Bearer ${token}`;
       }
 
+      const isOnline = formData.paymentMethod !== "cod";
+      const couponCodeToSend = appliedCoupon?.code || (cartCouponCodes.length > 0 ? cartCouponCodes[0] : undefined);
+
       const payload = {
+        userId: user?.id || undefined,
         customerEmail: formData.email.trim(),
         customerPhone: formData.phone.trim(),
         shippingAddress: {
@@ -129,10 +193,11 @@ export default function CheckoutPage() {
           postalCode: formData.pincode.trim(),
         },
         items: lines.map((l) => ({
-          productId: l.product.slug,
+          productId: (l.product as any).id || l.product.slug,
           quantity: l.qty,
         })),
-        paymentMethod: formData.paymentMethod.toUpperCase(),
+        paymentMethod: isOnline ? "RAZORPAY" : "COD",
+        couponCode: couponCodeToSend,
       };
 
       const res = await fetch(`${API_URL}/orders`, {
@@ -142,10 +207,100 @@ export default function CheckoutPage() {
       });
 
       const resData = await res.json();
+      if (!res.ok || !resData.success) {
+        throw new Error(resData.message || "Failed to create order");
+      }
+
       const orderData = resData.data;
       const orderId = orderData?.orderNumber || orderData?.id || `HM-${Date.now()}`;
 
-      // Store in localStorage as instant client cache for tracking
+      // Razorpay Online Payment Flow
+      if (isOnline && orderData?.razorpay) {
+        const loaded = await loadRazorpayScript();
+        if (!loaded) {
+          throw new Error("Unable to connect to Razorpay payment gateway. Please verify your connection.");
+        }
+
+        const rzpOptions = {
+          key: orderData.razorpay.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: orderData.razorpay.amount,
+          currency: orderData.razorpay.currency || "INR",
+          name: "HM Agarbattis",
+          description: `Order #${orderId}`,
+          image: "/images/media_1790142713668.jpg",
+          order_id: orderData.razorpay.orderId,
+          prefill: {
+            name: formData.fullName,
+            email: formData.email,
+            contact: formData.phone,
+          },
+          theme: {
+            color: "#E85D04",
+          },
+          handler: async function (response: any) {
+            setLoading(true);
+            try {
+              const verifyRes = await fetch(`${API_URL}/orders/verify-payment`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify({
+                  orderId: orderData.id,
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                }),
+              });
+
+              const verifyJson = await verifyRes.json();
+              if (!verifyRes.ok || !verifyJson.success) {
+                throw new Error(verifyJson.message || "Payment verification failed");
+              }
+
+              const orderRecord = {
+                id: orderId,
+                date: new Date().toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }),
+                items: lines,
+                total: orderData?.totalAmount || finalTotal,
+                customer: formData,
+                status: "CONFIRMED",
+                paymentStatus: "COMPLETED",
+              };
+              localStorage.setItem(`hm_order_${orderId}`, JSON.stringify(orderRecord));
+              localStorage.setItem("hm_last_order_id", orderId);
+
+              clear();
+              router.push(`/orders/${orderId}`);
+            } catch (vErr: any) {
+              console.error("Payment verification failed:", vErr);
+              alert(`Payment verification notice: ${vErr.message}. If payment was deducted, quote reference: ${orderId}`);
+            } finally {
+              setLoading(false);
+            }
+          },
+          modal: {
+            ondismiss: function () {
+              setLoading(false);
+            },
+          },
+        };
+
+        const rzp = new (window as any).Razorpay(rzpOptions);
+        rzp.on("payment.failed", function (failRes: any) {
+          setLoading(false);
+          alert(`Payment unsuccessful: ${failRes.error?.description || "Transaction declined"}. You can retry or choose COD.`);
+        });
+        rzp.open();
+        return;
+      }
+
+      // Offline / COD Flow
       const orderRecord = {
         id: orderId,
         date: new Date().toLocaleDateString("en-IN", {
@@ -156,32 +311,17 @@ export default function CheckoutPage() {
         items: lines,
         total: orderData?.totalAmount || finalTotal,
         customer: formData,
-        status: orderData?.status || "Order Placed",
+        status: orderData?.status || "PENDING",
+        paymentStatus: orderData?.paymentStatus || "PENDING",
       };
       localStorage.setItem(`hm_order_${orderId}`, JSON.stringify(orderRecord));
       localStorage.setItem("hm_last_order_id", orderId);
 
       clear();
       router.push(`/orders/${orderId}`);
-    } catch (err) {
-      console.error("Order creation failed, falling back to local tracking", err);
-      const fallbackOrderId = `HM-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
-      const orderRecord = {
-        id: fallbackOrderId,
-        date: new Date().toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        }),
-        items: lines,
-        total: finalTotal,
-        customer: formData,
-        status: "Order Placed",
-      };
-      localStorage.setItem(`hm_order_${fallbackOrderId}`, JSON.stringify(orderRecord));
-      localStorage.setItem("hm_last_order_id", fallbackOrderId);
-      clear();
-      router.push(`/orders/${fallbackOrderId}`);
+    } catch (err: any) {
+      console.error("Order creation failed", err);
+      alert(err.message || "Failed to process order. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -517,12 +657,12 @@ export default function CheckoutPage() {
                             Standard Pan-India Sacred Dispatch
                           </p>
                           <p className="text-[11px] text-[#292524]/60">
-                            Delivered securely in 3–5 business days from Coimbatore.
+                            {SHIPPING_CONFIG.deliveryDescription}
                           </p>
                         </div>
                       </div>
                       <span className="text-xs font-bold text-[#588157]">
-                        {shippingFee === 0 ? "FREE" : "₹50"}
+                        {shippingFee === 0 ? "FREE" : `₹${shippingFee}`}
                       </span>
                     </label>
                   </div>
@@ -622,7 +762,7 @@ export default function CheckoutPage() {
                         <span>Processing Order...</span>
                       ) : (
                         <>
-                          <Lock size={14} /> Place Sacred Order (₹{finalTotal})
+                          <Lock size={14} /> {formData.paymentMethod === "cod" ? "Place COD Order" : "Pay via Razorpay"} (₹{finalTotal})
                         </>
                       )}
                     </button>
@@ -650,11 +790,81 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
+                {/* Coupon Code Section */}
+                <div className="pt-3 border-t border-[#C89B3C]/30 space-y-2">
+                  {cartCouponCodes.length > 0 && !appliedCoupon && (
+                    <div className="rounded-lg bg-[#F4D35E]/20 p-2.5 border border-dashed border-[#C89B3C] text-xs">
+                      <p className="text-[11px] font-bold text-[#6B4226] mb-1.5 flex items-center gap-1">
+                        <Tag size={12} className="text-[#E85D04]" /> Available item coupon:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {cartCouponCodes.map((code) => (
+                          <button
+                            key={code}
+                            type="button"
+                            onClick={() => handleApplyCoupon(code)}
+                            className="inline-flex items-center gap-1 rounded bg-[#FFF8E7] px-2 py-1 text-xs font-bold text-[#9E1830] border border-[#C89B3C] hover:bg-[#E85D04] hover:text-white transition shadow-xs"
+                          >
+                            <span>Use &apos;{code}&apos;</span>
+                            <span className="text-[10px] text-[#3F7D45] font-extrabold group-hover:text-white">Apply</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between rounded-lg bg-[#E1EDCF] px-3 py-2 border border-[#3F7D45]/40 text-xs">
+                      <div className="flex items-center gap-1.5 text-[#286B45]">
+                        <Tag size={14} className="text-[#286B45]" />
+                        <span>Coupon <strong>{appliedCoupon.code}</strong> applied (-₹{couponDiscount})</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeCoupon}
+                        className="text-[11px] font-bold text-[#9E1830] hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={checkoutCouponInput}
+                        onChange={(e) => setCheckoutCouponInput(e.target.value)}
+                        placeholder="Coupon code (e.g. 1)"
+                        className="flex-1 text-xs bg-white border border-[#C89B3C] rounded-lg px-2.5 py-1.5 text-[#292524] uppercase outline-[#E85D04]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleApplyCoupon()}
+                        disabled={checkoutCouponLoading}
+                        className="btn-outline-earth px-3 py-1.5 text-xs font-bold rounded-lg uppercase tracking-wider disabled:opacity-50"
+                      >
+                        {checkoutCouponLoading ? "..." : "Apply"}
+                      </button>
+                    </div>
+                  )}
+
+                  {checkoutCouponError && (
+                    <p className="text-[11px] font-bold text-[#9E1830]">{checkoutCouponError}</p>
+                  )}
+                </div>
+
                 <div className="pt-4 border-t border-[#C89B3C]/30 space-y-2 text-xs font-medium">
                   <div className="flex justify-between">
                     <span className="text-[#292524]/70">Subtotal</span>
                     <span className="font-bold text-[#6B4226]">₹{subtotal}</span>
                   </div>
+                  {appliedCoupon && couponDiscount > 0 && (
+                    <div className="flex justify-between text-[#3F7D45] font-bold">
+                      <span className="flex items-center gap-1">
+                        <Tag size={12} /> Coupon Discount ({appliedCoupon.code})
+                      </span>
+                      <span>-₹{couponDiscount}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-[#292524]/70">Delivery</span>
                     <span className="font-bold text-[#588157]">

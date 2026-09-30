@@ -20,13 +20,48 @@ class OrdersController {
             return next(error);
         }
     };
+    verifyPayment = async (req, res, next) => {
+        try {
+            const updatedOrder = await this.service.verifyPayment({
+                orderId: req.body.orderId,
+                razorpayOrderId: req.body.razorpayOrderId,
+                razorpayPaymentId: req.body.razorpayPaymentId,
+                razorpaySignature: req.body.razorpaySignature,
+            });
+            return (0, response_util_1.sendSuccess)(res, updatedOrder, 'Payment verified successfully');
+        }
+        catch (error) {
+            return next(error);
+        }
+    };
+    getShippingConfig = async (req, res, next) => {
+        try {
+            const config = this.service.getShippingConfig();
+            return (0, response_util_1.sendSuccess)(res, config, 'Shipping configuration retrieved');
+        }
+        catch (error) {
+            return next(error);
+        }
+    };
     getAll = async (req, res, next) => {
         try {
             const page = parseInt(req.query.page || '1', 10);
             const limit = parseInt(req.query.limit || '20', 10);
             const isMyOrders = req.query.myOrders === 'true' || req.query.userId === 'me';
-            const userId = (isMyOrders || req.user?.role !== 'ADMIN') ? req.user?.userId : undefined;
-            const result = await this.service.getOrders(page, limit, userId);
+            let filterUserId = undefined;
+            let filterEmail = undefined;
+            if (isMyOrders) {
+                filterUserId = req.user?.userId;
+                filterEmail = req.user?.email;
+            }
+            else if (req.user && req.user.role !== 'ADMIN') {
+                filterUserId = req.user.userId;
+                filterEmail = req.user.email;
+            }
+            if (req.query.email && typeof req.query.email === 'string') {
+                filterEmail = req.query.email.trim();
+            }
+            const result = await this.service.getOrders(page, limit, filterUserId, filterEmail);
             return (0, response_util_1.sendPaginated)(res, result.items, result.meta, 'Orders retrieved successfully');
         }
         catch (error) {

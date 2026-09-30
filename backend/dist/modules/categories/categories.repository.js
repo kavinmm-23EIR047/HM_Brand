@@ -45,13 +45,15 @@ class CategoriesRepository {
             data,
         });
     }
-    async softDelete(id) {
-        return prisma_1.default.category.update({
-            where: { id },
-            data: {
-                deletedAt: new Date(),
-                isActive: false,
-            },
+    async delete(id) {
+        return prisma_1.default.$transaction(async (tx) => {
+            await tx.productCategory.deleteMany({ where: { categoryId: id } });
+            return tx.category.delete({
+                where: { id },
+            });
+        }, {
+            maxWait: 15000,
+            timeout: 30000,
         });
     }
 }

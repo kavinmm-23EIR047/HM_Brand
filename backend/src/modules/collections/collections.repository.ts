@@ -69,25 +69,31 @@ export class CollectionsRepository {
     productIds?: string[];
   }) {
     const { productIds, ...updateData } = data;
-    return prisma.$transaction(async (tx: any) => {
-      if (productIds) {
-        await tx.collectionProduct.deleteMany({ where: { collectionId: id } });
-        await tx.collectionProduct.createMany({
-          data: productIds.map((productId, index) => ({
-            collectionId: id,
-            productId,
-            displayOrder: index,
-          })),
+    return prisma.$transaction(
+      async (tx: any) => {
+        if (productIds) {
+          await tx.collectionProduct.deleteMany({ where: { collectionId: id } });
+          await tx.collectionProduct.createMany({
+            data: productIds.map((productId, index) => ({
+              collectionId: id,
+              productId,
+              displayOrder: index,
+            })),
+          });
+        }
+        return tx.collection.update({
+          where: { id },
+          data: updateData,
+          include: {
+            products: { include: { product: true } },
+          },
         });
+      },
+      {
+        maxWait: 15000,
+        timeout: 30000,
       }
-      return tx.collection.update({
-        where: { id },
-        data: updateData,
-        include: {
-          products: { include: { product: true } },
-        },
-      });
-    });
+    );
   }
 
   async delete(id: string) {

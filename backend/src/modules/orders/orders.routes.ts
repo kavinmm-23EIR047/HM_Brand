@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import { ordersController } from './orders.controller';
 import { validateRequest } from '../../shared/middlewares/validation.middleware';
-import { createOrderSchema, updateOrderStatusSchema } from './orders.schema';
+import { createOrderSchema, updateOrderStatusSchema, verifyPaymentSchema } from './orders.schema';
 import { authenticateJWT, optionalAuthenticateJWT, requireRole } from '../../shared/middlewares/auth.middleware';
 
 const router = Router();
 
-// Public / Customer Route (Supports Guest or Auth user checkout)
+// Public / Customer Routes
 router.post('/', optionalAuthenticateJWT, validateRequest(createOrderSchema), ordersController.create);
+router.post('/verify-payment', optionalAuthenticateJWT, validateRequest(verifyPaymentSchema), ordersController.verifyPayment);
+router.get('/shipping-config', ordersController.getShippingConfig);
 
 // Authenticated / Guest Customer Routes
 router.get('/', optionalAuthenticateJWT, ordersController.getAll);

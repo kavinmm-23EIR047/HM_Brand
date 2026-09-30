@@ -71,6 +71,9 @@ class CollectionsRepository {
                     products: { include: { product: true } },
                 },
             });
+        }, {
+            maxWait: 15000,
+            timeout: 30000,
         });
     }
     async delete(id) {

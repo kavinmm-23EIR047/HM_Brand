@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star, ShieldCheck, Sparkles, Truck, Heart, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Star, ShieldCheck, Sparkles, Truck, Heart, ArrowRight, CheckCircle2, Tag } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { AddPanel } from "@/app/products/[slug]/panel";
@@ -151,6 +151,25 @@ export default async function ProductDetailsPage({
                   </span>
                 )}
               </div>
+
+              {/* Product-Specific Coupon Offer Banner */}
+              {product.couponCode && (
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-dashed border-[#E85D04] bg-[#FFF8E7] p-3 sm:p-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#E85D04]/10 text-[#E85D04]">
+                      <Tag size={18} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#173B3A]">
+                        Special Sacred Discount Available!
+                      </p>
+                      <p className="text-[11px] text-[#52625A]">
+                        Use coupon code <span className="font-mono font-black text-[#9E1830] bg-[#FFF0D0] px-1.5 py-0.5 rounded border border-[#C89B3C]/50">{product.couponCode}</span> for extra discount on this item at checkout.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <p className="text-sm leading-relaxed text-[#52625a] sm:text-base">

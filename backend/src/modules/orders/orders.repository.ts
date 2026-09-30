@@ -3,9 +3,21 @@ import { Order } from '@prisma/client';
 import { OrderStatus, PaymentStatus } from '../../shared/types';
 
 export class OrdersRepository {
-  async findPaginated(page: number = 1, limit: number = 10, userId?: string) {
+  async findPaginated(page: number = 1, limit: number = 10, userId?: string, email?: string) {
     const skip = (page - 1) * limit;
-    const where = userId ? { userId } : {};
+    let where: any = {};
+    if (userId && email) {
+      where = {
+        OR: [
+          { userId },
+          { customerEmail: { equals: email, mode: 'insensitive' } },
+        ],
+      };
+    } else if (userId) {
+      where = { userId };
+    } else if (email) {
+      where = { customerEmail: { equals: email, mode: 'insensitive' } };
+    }
 
     const [items, totalItems] = await Promise.all([
       prisma.order.findMany({

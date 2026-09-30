@@ -103,6 +103,9 @@ class HomepageService {
                 },
             })));
             return created;
+        }, {
+            maxWait: 15000,
+            timeout: 30000,
         });
     }
 }

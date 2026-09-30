@@ -3,10 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandler = errorHandler;
 const custom_error_1 = require("../errors/custom.error");
 const response_util_1 = require("../utils/response.util");
+const multer_1 = require("multer");
 function errorHandler(err, req, res, next) {
     console.error(`[ERROR] ${req.method} ${req.url}:`, err);
     if (err instanceof custom_error_1.AppError) {
         return (0, response_util_1.sendError)(res, err.message, err.statusCode, err.errors);
+    }
+    if (err instanceof multer_1.MulterError) {
+        const message = err.code === 'LIMIT_FILE_SIZE'
+            ? 'Image files must be 10 MB or smaller.'
+            : 'Invalid image upload.';
+        return (0, response_util_1.sendError)(res, message, 400);
     }
     // Handle Prisma Database Errors
     if (err.name === 'PrismaClientKnownRequestError') {

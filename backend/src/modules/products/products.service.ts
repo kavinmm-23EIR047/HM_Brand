@@ -1,6 +1,7 @@
 import { productsRepository, ProductsRepository, ProductFilters } from './products.repository';
 import { generateSlug } from '../../shared/utils/slug.util';
 import { NotFoundError, ConflictError } from '../../shared/errors/custom.error';
+import { mediaService } from '../media/media.service';
 
 export class ProductsService {
   constructor(private repo: ProductsRepository = productsRepository) {}
@@ -109,10 +110,27 @@ export class ProductsService {
     let slug = product.slug;
     if (data.name && data.name !== product.name) {
       slug = generateSlug(data.name);
+      const existingSlug = await this.repo.findBySlug(slug);
+      if (existingSlug && existingSlug.id !== id && !existingSlug.deletedAt) {
+        slug = `${slug}-${Date.now().toString().slice(-4)}`;
+      }
+    }
+
+    if (data.sku && data.sku !== product.sku) {
+      const existingSku = await this.repo.findBySku(data.sku);
+      if (existingSku && existingSku.id !== id) {
+        throw new ConflictError(`Product with SKU '${data.sku}' already exists.`);
+      }
+    }
+
+    let couponCode = data.couponCode;
+    if (couponCode !== undefined) {
+      couponCode = typeof couponCode === 'string' && couponCode.trim() !== '' ? couponCode.trim() : null;
     }
 
     const updated = await this.repo.update(id, {
       ...data,
+      ...(couponCode !== undefined ? { couponCode } : {}),
       slug,
     });
     return updated;
@@ -128,15 +146,15 @@ export class ProductsService {
   }
 
   async removeProductImage(imageId: string) {
-    return this.repo.removeImage(imageId);
+    return mediaService.deleteProductImage(imageId);
   }
 
   async deleteProduct(id: string) {
     const product = await this.repo.findById(id);
-    if (!product || product.deletedAt) {
+    if (!product) {
       throw new NotFoundError('Product not found');
     }
-    const res = await this.repo.softDelete(id);
+    const res = await this.repo.delete(id);
     return res;
   }
 }

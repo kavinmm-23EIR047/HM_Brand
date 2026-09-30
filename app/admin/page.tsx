@@ -6,7 +6,7 @@ import {
   Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket,
   Plus, Trash2, Edit2, TrendingUp, Lock, ArrowRight, CheckCircle,
   AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
-  Filter, ArrowUpDown, RotateCcw,
+  Filter, ArrowUpDown, RotateCcw, Upload,
 } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore } from "@/components/store";
@@ -65,6 +65,127 @@ function FormButtons({ onCancel, saving }: { onCancel: () => void; saving?: bool
       <button type="submit" disabled={saving} className="px-5 py-2.5 bg-[#A90C35] disabled:opacity-60 text-white font-extrabold rounded-xl shadow text-xs flex items-center gap-1.5">
         <Save size={14} />{saving ? "Saving…" : "Save"}
       </button>
+    </div>
+  );
+}
+
+function ImageUploadControl({
+  currentUrl,
+  required = false,
+  disabled = false,
+  onFileChange,
+  onDelete,
+}: {
+  currentUrl?: string;
+  required?: boolean;
+  disabled?: boolean;
+  onFileChange: (file: File | null) => void;
+  onDelete?: () => void;
+}) {
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [selectedPreview, setSelectedPreview] = useState("");
+
+  useEffect(() => () => {
+    if (selectedPreview) URL.revokeObjectURL(selectedPreview);
+  }, [selectedPreview]);
+
+  const selectFile = (file: File | null) => {
+    if (selectedPreview) URL.revokeObjectURL(selectedPreview);
+    setSelectedFileName(file?.name || "");
+    setSelectedPreview(file ? URL.createObjectURL(file) : "");
+    onFileChange(file);
+  };
+
+  const handleCancelSelected = () => {
+    if (selectedPreview) URL.revokeObjectURL(selectedPreview);
+    setSelectedFileName("");
+    setSelectedPreview("");
+    onFileChange(null);
+  };
+
+  return (
+    <div className="space-y-3 rounded-2xl border-2 border-[#C89B3C]/40 bg-[#FFF8E7]/60 p-3.5 shadow-xs">
+      {/* Uploading Status Bar */}
+      {disabled && (
+        <div className="flex items-center gap-2 rounded-xl bg-[#E85D04]/10 p-2.5 text-xs font-bold text-[#E85D04] border border-[#E85D04]/30 animate-pulse">
+          <RefreshCw size={14} className="animate-spin shrink-0" />
+          <span>Syncing & Uploading image to Cloudinary CDN... Please wait.</span>
+        </div>
+      )}
+
+      {/* Image Preview Box */}
+      {(currentUrl || selectedPreview) && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#C89B3C]/30 bg-white p-3 shadow-xs">
+          {currentUrl && (
+            <div className="flex items-center gap-2.5">
+              <img src={currentUrl} alt="Current upload" className="h-16 w-16 rounded-xl border border-[#C89B3C]/30 object-cover shadow-xs" />
+              <div>
+                <span className="inline-flex items-center gap-1 rounded bg-[#F4D35E]/30 px-2 py-0.5 text-[10px] font-extrabold text-[#6B4226] border border-[#C89B3C]/40">
+                  ☁️ Cloudinary Active
+                </span>
+                <p className="text-[10px] font-semibold text-[#292524]/60 mt-0.5">Current Saved Image</p>
+              </div>
+            </div>
+          )}
+
+          {currentUrl && selectedPreview && (
+            <div className="flex items-center text-[#A90C35] font-extrabold text-xs px-1">
+              <span>→ REPLACING WITH →</span>
+            </div>
+          )}
+
+          {selectedPreview && (
+            <div className="flex items-center gap-2.5">
+              <img src={selectedPreview} alt="New selected upload" className="h-16 w-16 rounded-xl border-2 border-[#10B981] object-cover shadow-sm" />
+              <div>
+                <span className="inline-flex items-center gap-1 rounded bg-[#E6F4EA] px-2 py-0.5 text-[10px] font-extrabold text-[#137333] border border-[#10B981]/40">
+                  ⚡ New Image Queued
+                </span>
+                <p className="text-[10px] font-bold text-[#065F46] mt-0.5 max-w-[150px] truncate">{selectedFileName}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Actions Bar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <label className={`cursor-pointer inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold text-white transition shadow-xs ${selectedPreview ? "bg-[#588157] hover:bg-[#3F7D45]" : "bg-[#6B4226] hover:bg-[#4D2E1B]"}`}>
+          <input required={required && !currentUrl} type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" className="sr-only" onChange={e => selectFile(e.target.files?.[0] || null)} disabled={disabled} />
+          <Upload size={14} />
+          <span>{currentUrl ? (selectedPreview ? "Choose Different Image" : "Replace Image") : "Upload New Image"}</span>
+        </label>
+
+        {selectedPreview && (
+          <button type="button" onClick={handleCancelSelected} disabled={disabled} className="rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs font-bold text-[#6B4226] hover:bg-gray-100 transition shadow-xs">
+            ✕ Cancel Selection
+          </button>
+        )}
+
+        {onDelete && currentUrl && !selectedPreview && (
+          <button type="button" onClick={onDelete} disabled={disabled} className="inline-flex items-center gap-1.5 rounded-xl border border-[#A90C35]/40 bg-[#FFF1F2] px-3.5 py-2 text-xs font-extrabold text-[#A90C35] transition hover:bg-[#FFE4E6] disabled:opacity-50 shadow-xs">
+            <Trash2 size={14} />
+            <span>Delete Image</span>
+          </button>
+        )}
+      </div>
+
+      {/* Guidance Message */}
+      <div className="text-[11px] font-semibold text-[#6B4226]/80">
+        {selectedPreview ? (
+          <p className="text-[#065F46] font-bold flex items-center gap-1">
+            ✓ New image ready! Click &quot;Save&quot; below to upload to Cloudinary.
+          </p>
+        ) : currentUrl ? (
+          <p className="text-[#6B4226]/70">
+            Click &quot;Replace Image&quot; to pick a new photo, then click &quot;Save&quot;.
+          </p>
+        ) : (
+          <p className="text-[#6B4226]/70">
+            JPEG, PNG, WebP, GIF, or AVIF (Max 10 MB). Uploads directly to Cloudinary CDN.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -593,14 +714,17 @@ export default function AdminPage() {
   const [bannerModal, setBannerModal] = useState<null | "add" | any>(null);
   const [couponModal, setCouponModal] = useState<null | "add" | any>(null);
 
-  const emptyProduct = { name: "", sku: "", price: "", mrp: "", stockQuantity: "100", description: "", imageUrl: "", categoryId: "", couponCode: "", isActive: true };
+  const emptyProduct = { name: "", sku: "", price: "", mrp: "", stockQuantity: "100", description: "", imageUrl: "", imageId: "", categoryId: "", couponCode: "", isActive: true };
   const [pForm, setPForm] = useState(emptyProduct);
+  const [pImageFile, setPImageFile] = useState<File | null>(null);
 
   const emptyCategory = { name: "", description: "", imageUrl: "" };
   const [cForm, setCForm] = useState(emptyCategory);
+  const [cImageFile, setCImageFile] = useState<File | null>(null);
 
   const emptyBanner = { title: "", subtitle: "", desktopImage: "", ctaText: "Explore Collection", ctaLink: "/shop", position: "HERO_MAIN", isActive: true };
   const [bForm, setBForm] = useState(emptyBanner);
+  const [bImageFile, setBImageFile] = useState<File | null>(null);
 
   const emptyCoupon = { code: "", discountPercent: "10", minOrderAmount: "499", expiryDate: "2027-12-31" };
   const [qForm, setQForm] = useState(emptyCoupon);
@@ -611,6 +735,34 @@ export default function AdminPage() {
       return true;
     }
     return false;
+  };
+
+  const uploadImage = async (file: File, type: "PRODUCT" | "CATEGORY" | "BANNER", entityId: string, imageId?: string) => {
+    if (!token) throw new Error("Administrator session expired.");
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", type);
+    formData.append("entityId", entityId);
+    if (imageId) formData.append("imageId", imageId);
+    const response = await fetch(`${API}/media/admin/upload`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const json = await response.json();
+    if (!response.ok || !json.success) throw new Error(json.message || "Image upload failed");
+    return json.data;
+  };
+
+  const deleteImage = async (type: "PRODUCT" | "CATEGORY" | "BANNER", entityId: string, imageId?: string) => {
+    if (!token) throw new Error("Administrator session expired.");
+    const query = imageId ? `?imageId=${encodeURIComponent(imageId)}` : "";
+    const response = await fetch(`${API}/media/admin/${type}/${entityId}${query}`, {
+      method: "DELETE",
+      headers: authH(token),
+    });
+    const json = await response.json();
+    if (!response.ok || !json.success) throw new Error(json.message || "Image deletion failed");
   };
 
   const fetchTab = useCallback(async () => {
@@ -654,6 +806,7 @@ export default function AdminPage() {
   useEffect(() => { if (user?.role === "ADMIN" && token) fetchTab(); }, [user, token, activeTab, fetchTab]);
 
   const openProductModal = async (item?: any) => {
+    setPImageFile(null);
     if (categories.length === 0) {
       const r = await fetch(`${API}/categories`); const j = await r.json();
       if (j.success) setCategories(j.data);
@@ -667,8 +820,8 @@ export default function AdminPage() {
       setPForm({
         name: item.name || "", sku: item.sku || "", price: String(item.price || ""),
         mrp: String(item.mrp || ""), stockQuantity: String(item.stockQuantity ?? 100),
-        description: item.description || "", imageUrl: item.images?.[0]?.url || "",
-        categoryId: item.categories?.[0]?.category?.id || "",
+        description: item.description || "", imageUrl: item.images?.[0]?.url || "", imageId: item.images?.[0]?.id || "",
+        categoryId: item.categories?.[0]?.category?.id || item.categories?.[0]?.categoryId || "",
         couponCode: item.couponCode || "", isActive: item.isActive !== false,
       });
     } else { setProductModal("add"); setPForm(emptyProduct); }
@@ -690,34 +843,33 @@ export default function AdminPage() {
       couponCode: pForm.couponCode || null,
       isActive: pForm.isActive,
     };
-    if (pForm.imageUrl) {
-      payload.images = [{ url: pForm.imageUrl, storageKey: "admin/product.jpg", isPrimary: true }];
-    }
     try {
       const url = isEdit ? `${API}/products/admin/${productModal.id}` : `${API}/products/admin`;
       const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(payload) });
       const j = await r.json();
       if (!checkUnauthorized(r, j) && (r.ok || j.success)) {
+        if (pImageFile) await uploadImage(pImageFile, "PRODUCT", j.data.id, pForm.imageId || undefined);
         showStatus("success", `Product "${pForm.name}" ${isEdit ? "updated" : "created"}!`);
         setProductModal(null); fetchTab(); refreshDbData();
       } else {
         const errMsg = j.message || (j.errors && j.errors.map((e: any) => `${e.field}: ${e.message}`).join(', ')) || "Failed";
         showStatus("error", errMsg);
       }
-    } catch { showStatus("error", "Network error"); } finally { setSaving(false); }
+    } catch (error: any) { showStatus("error", error?.message || "Product saved, but the image upload failed."); } finally { setSaving(false); }
   };
 
   const deleteProduct = async (id: string, name: string) => {
-    if (!confirm(`Archive product "${name}"?`)) return;
+    if (!confirm(`Permanently delete product "${name}" from database?`)) return;
     if (!token) { showStatus("error", "No admin token."); return; }
     const r = await fetch(`${API}/products/admin/${id}`, { method: "DELETE", headers: authH(token) });
     const j = await r.json();
-    if (!checkUnauthorized(r, j) && (r.ok || j.success)) { showStatus("success", `"${name}" archived.`); fetchTab(); refreshDbData(); }
+    if (!checkUnauthorized(r, j) && (r.ok || j.success)) { showStatus("success", `"${name}" permanently deleted from database.`); fetchTab(); refreshDbData(); }
     else showStatus("error", j.message || "Delete failed");
   };
 
   /* CATEGORY CRUD */
   const openCategoryModal = (item?: any) => {
+    setCImageFile(null);
     if (item) { setCategoryModal(item); setCForm({ name: item.name, description: item.description || "", imageUrl: item.imageUrl || "" }); }
     else { setCategoryModal("add"); setCForm(emptyCategory); }
   };
@@ -730,27 +882,29 @@ export default function AdminPage() {
       const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(cForm) });
       const j = await r.json();
       if (!checkUnauthorized(r, j) && (r.ok || j.success)) {
+        if (cImageFile) await uploadImage(cImageFile, "CATEGORY", j.data.id);
         showStatus("success", `Category "${cForm.name}" ${isEdit ? "updated" : "created"}!`);
         setCategoryModal(null); fetchTab(); refreshDbData();
       } else {
         const errMsg = j.message || (j.errors && j.errors.map((e: any) => `${e.field}: ${e.message}`).join(', ')) || "Failed";
         showStatus("error", errMsg);
       }
-    } catch { showStatus("error", "Network error"); } finally { setSaving(false); }
+    } catch (error: any) { showStatus("error", error?.message || "Category saved, but the image upload failed."); } finally { setSaving(false); }
   };
 
 
   const deleteCategory = async (id: string, name: string) => {
-    if (!confirm(`Archive category "${name}"?`)) return;
+    if (!confirm(`Permanently delete category "${name}" from database?`)) return;
     if (!token) { showStatus("error", "No admin token."); return; }
     const r = await fetch(`${API}/categories/admin/${id}`, { method: "DELETE", headers: authH(token) });
     const j = await r.json();
-    if (!checkUnauthorized(r, j) && j.success) { showStatus("success", `"${name}" archived.`); fetchTab(); refreshDbData(); }
+    if (!checkUnauthorized(r, j) && j.success) { showStatus("success", `"${name}" permanently deleted from database.`); fetchTab(); refreshDbData(); }
     else if (!j.success) showStatus("error", j.message || "Delete failed");
   };
 
   /* BANNER CRUD */
   const openBannerModal = (item?: any) => {
+    setBImageFile(null);
     if (item) {
       setBannerModal(item);
       setBForm({ title: item.title, subtitle: item.subtitle || "", desktopImage: item.desktopImage || "", ctaText: item.ctaText || "Explore Collection", ctaLink: item.ctaLink || "/shop", position: item.position || "HERO_MAIN", isActive: item.isActive !== false });
@@ -765,10 +919,11 @@ export default function AdminPage() {
       const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(bForm) });
       const j = await r.json();
       if (!checkUnauthorized(r, j) && j.success) {
+        if (bImageFile) await uploadImage(bImageFile, "BANNER", j.data.id);
         showStatus("success", `Banner "${bForm.title}" ${isEdit ? "updated" : "added"}!`);
         setBannerModal(null); fetchTab(); refreshDbData();
       } else if (!j.success) showStatus("error", j.message || "Failed");
-    } catch { showStatus("error", "Network error"); } finally { setSaving(false); }
+    } catch (error: any) { showStatus("error", error?.message || "Banner saved, but the image upload failed."); } finally { setSaving(false); }
   };
 
   const deleteBanner = async (id: string, title: string) => {
@@ -791,7 +946,14 @@ export default function AdminPage() {
   const handleSaveCoupon = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return; setSaving(true);
     const isEdit = couponModal !== "add";
-    const payload = { code: qForm.code.toUpperCase(), discountPercent: parseInt(qForm.discountPercent, 10), minOrderAmount: parseFloat(qForm.minOrderAmount), expiryDate: qForm.expiryDate };
+    const parsedPercent = parseInt(qForm.discountPercent, 10);
+    const parsedMinOrder = parseFloat(qForm.minOrderAmount);
+    const payload = {
+      code: qForm.code.toUpperCase().trim(),
+      discountPercent: isNaN(parsedPercent) ? undefined : parsedPercent,
+      minOrderAmount: isNaN(parsedMinOrder) || parsedMinOrder < 0 ? 0 : parsedMinOrder,
+      expiryDate: qForm.expiryDate || undefined,
+    };
     try {
       const url = isEdit ? `${API}/coupons/admin/${couponModal.id}` : `${API}/coupons/admin`;
       const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(payload) });
@@ -1426,8 +1588,8 @@ export default function AdminPage() {
                 <input type="text" value={pForm.sku} onChange={e => setPForm({ ...pForm, sku: e.target.value })} className={inp} placeholder="HM-001" />
               </FieldRow>
             </div>
-            <FieldRow label="Product Image URL">
-              <input type="url" value={pForm.imageUrl} onChange={e => setPForm({ ...pForm, imageUrl: e.target.value })} className={inp} placeholder="https://..." />
+            <FieldRow label="Product Image">
+              <ImageUploadControl currentUrl={pForm.imageUrl} disabled={saving} onFileChange={setPImageFile} onDelete={() => { void (async () => { if (!productModal?.id || !pForm.imageId || !confirm("Delete this product image?")) return; setSaving(true); try { await deleteImage("PRODUCT", productModal.id, pForm.imageId); setPForm({ ...pForm, imageUrl: "", imageId: "" }); showStatus("success", "Product image deleted."); fetchTab(); refreshDbData(); } catch (error: any) { showStatus("error", error.message || "Image deletion failed"); } finally { setSaving(false); } })(); }} />
             </FieldRow>
             <FieldRow label="Category">
               <select value={pForm.categoryId} onChange={e => setPForm({ ...pForm, categoryId: e.target.value })} className={inp}>
@@ -1468,8 +1630,8 @@ export default function AdminPage() {
             <FieldRow label="Description">
               <textarea rows={3} value={cForm.description} onChange={e => setCForm({ ...cForm, description: e.target.value })} className={inp} placeholder="Short description..." />
             </FieldRow>
-            <FieldRow label="Image URL (optional)">
-              <input type="url" value={cForm.imageUrl} onChange={e => setCForm({ ...cForm, imageUrl: e.target.value })} className={inp} placeholder="https://..." />
+            <FieldRow label="Category Image (optional)">
+              <ImageUploadControl currentUrl={cForm.imageUrl} disabled={saving} onFileChange={setCImageFile} onDelete={() => { void (async () => { if (!categoryModal?.id || !confirm("Delete this category image?")) return; setSaving(true); try { await deleteImage("CATEGORY", categoryModal.id); setCForm({ ...cForm, imageUrl: "" }); showStatus("success", "Category image deleted."); fetchTab(); refreshDbData(); } catch (error: any) { showStatus("error", error.message || "Image deletion failed"); } finally { setSaving(false); } })(); }} />
             </FieldRow>
             <FormButtons onCancel={() => setCategoryModal(null)} saving={saving} />
           </form>
@@ -1486,8 +1648,8 @@ export default function AdminPage() {
             <FieldRow label="Subtitle">
               <input type="text" value={bForm.subtitle} onChange={e => setBForm({ ...bForm, subtitle: e.target.value })} className={inp} placeholder="Tagline or offer text" />
             </FieldRow>
-            <FieldRow label="Desktop Image URL *">
-              <input required type="url" value={bForm.desktopImage} onChange={e => setBForm({ ...bForm, desktopImage: e.target.value })} className={inp} placeholder="https://..." />
+            <FieldRow label="Desktop Image">
+              <ImageUploadControl currentUrl={bForm.desktopImage} required={bannerModal === "add"} disabled={saving} onFileChange={setBImageFile} onDelete={() => { void (async () => { if (!bannerModal?.id || !confirm("Delete this banner image?")) return; setSaving(true); try { await deleteImage("BANNER", bannerModal.id); setBForm({ ...bForm, desktopImage: "" }); showStatus("success", "Banner image deleted."); fetchTab(); refreshDbData(); } catch (error: any) { showStatus("error", error.message || "Image deletion failed"); } finally { setSaving(false); } })(); }} />
             </FieldRow>
             <div className="grid grid-cols-2 gap-3">
               <FieldRow label="CTA Button Text">

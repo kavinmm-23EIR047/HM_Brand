@@ -6,9 +6,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ordersRepository = exports.OrdersRepository = void 0;
 const prisma_1 = __importDefault(require("../../shared/database/prisma"));
 class OrdersRepository {
-    async findPaginated(page = 1, limit = 10, userId) {
+    async findPaginated(page = 1, limit = 10, userId, email) {
         const skip = (page - 1) * limit;
-        const where = userId ? { userId } : {};
+        let where = {};
+        if (userId && email) {
+            where = {
+                OR: [
+                    { userId },
+                    { customerEmail: { equals: email, mode: 'insensitive' } },
+                ],
+            };
+        }
+        else if (userId) {
+            where = { userId };
+        }
+        else if (email) {
+            where = { customerEmail: { equals: email, mode: 'insensitive' } };
+        }
         const [items, totalItems] = await Promise.all([
             prisma_1.default.order.findMany({
                 where,

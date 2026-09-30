@@ -53,14 +53,19 @@ export class CategoriesRepository {
     });
   }
 
-  async softDelete(id: string): Promise<Category> {
-    return prisma.category.update({
-      where: { id },
-      data: {
-        deletedAt: new Date(),
-        isActive: false,
+  async delete(id: string): Promise<Category> {
+    return prisma.$transaction(
+      async (tx: any) => {
+        await tx.productCategory.deleteMany({ where: { categoryId: id } });
+        return tx.category.delete({
+          where: { id },
+        });
       },
-    });
+      {
+        maxWait: 15000,
+        timeout: 30000,
+      }
+    );
   }
 }
 

@@ -25,18 +25,18 @@ export class CouponsService {
       throw new BadRequestError('Coupon usage limit reached');
     }
 
-    if (cartAmount < coupon.minOrderAmount) {
+    if (cartAmount > 0 && coupon.minOrderAmount > 0 && cartAmount < coupon.minOrderAmount) {
       throw new BadRequestError(`Minimum order amount for this coupon is ₹${coupon.minOrderAmount}`);
     }
 
     let discount = 0;
     if (coupon.discountPercent) {
-      discount = (cartAmount * coupon.discountPercent) / 100;
+      discount = cartAmount > 0 ? Math.round((cartAmount * coupon.discountPercent) / 100) : 0;
       if (coupon.maxDiscount && discount > coupon.maxDiscount) {
         discount = coupon.maxDiscount;
       }
     } else if (coupon.discountAmount) {
-      discount = coupon.discountAmount;
+      discount = cartAmount > 0 ? Math.min(cartAmount, coupon.discountAmount) : coupon.discountAmount;
     }
 
     return {
@@ -63,15 +63,26 @@ export class CouponsService {
       throw new ConflictError(`Coupon code '${formattedCode}' already exists`);
     }
 
+    const minOrder = Number(data.minOrderAmount);
+    const discPct = data.discountPercent !== undefined && data.discountPercent !== null && !isNaN(Number(data.discountPercent))
+      ? Number(data.discountPercent)
+      : null;
+    const discAmt = data.discountAmount !== undefined && data.discountAmount !== null && !isNaN(Number(data.discountAmount))
+      ? Number(data.discountAmount)
+      : null;
+    const maxDisc = data.maxDiscount !== undefined && data.maxDiscount !== null && !isNaN(Number(data.maxDiscount))
+      ? Number(data.maxDiscount)
+      : null;
+
     return prisma.coupon.create({
       data: {
         code: formattedCode,
-        discountPercent: data.discountPercent,
-        discountAmount: data.discountAmount,
-        minOrderAmount: data.minOrderAmount || 0,
-        maxDiscount: data.maxDiscount,
+        discountPercent: discPct,
+        discountAmount: discAmt,
+        minOrderAmount: isNaN(minOrder) || minOrder < 0 ? 0 : minOrder,
+        maxDiscount: maxDisc,
         expiryDate: new Date(data.expiryDate),
-        usageLimit: data.usageLimit,
+        usageLimit: data.usageLimit ? Number(data.usageLimit) : null,
         isActive: data.isActive ?? true,
       },
     });
@@ -83,13 +94,41 @@ export class CouponsService {
       throw new NotFoundError('Coupon not found');
     }
 
+    const updateData: any = {};
+    if (data.code !== undefined && data.code !== null && String(data.code).trim() !== '') {
+      updateData.code = String(data.code).toUpperCase().trim();
+    }
+    if (data.discountPercent !== undefined && data.discountPercent !== null && !isNaN(Number(data.discountPercent))) {
+      updateData.discountPercent = Number(data.discountPercent);
+    }
+    if (data.discountAmount !== undefined && data.discountAmount !== null && !isNaN(Number(data.discountAmount))) {
+      updateData.discountAmount = Number(data.discountAmount);
+    }
+    if (data.minOrderAmount !== undefined && data.minOrderAmount !== null) {
+      const parsedMin = Number(data.minOrderAmount);
+      updateData.minOrderAmount = isNaN(parsedMin) || parsedMin < 0 ? 0 : parsedMin;
+    }
+    if (data.maxDiscount !== undefined && data.maxDiscount !== null) {
+      const parsedMax = Number(data.maxDiscount);
+      updateData.maxDiscount = isNaN(parsedMax) ? null : parsedMax;
+    }
+    if (data.expiryDate) {
+      const parsedDate = new Date(data.expiryDate);
+      if (!isNaN(parsedDate.getTime())) {
+        updateData.expiryDate = parsedDate;
+      }
+    }
+    if (data.isActive !== undefined) {
+      updateData.isActive = Boolean(data.isActive);
+    }
+    if (data.usageLimit !== undefined) {
+      const parsedLimit = Number(data.usageLimit);
+      updateData.usageLimit = isNaN(parsedLimit) ? null : parsedLimit;
+    }
+
     return prisma.coupon.update({
       where: { id },
-      data: {
-        ...data,
-        ...(data.code ? { code: data.code.toUpperCase().trim() } : {}),
-        ...(data.expiryDate ? { expiryDate: new Date(data.expiryDate) } : {}),
-      },
+      data: updateData,
     });
   }
 

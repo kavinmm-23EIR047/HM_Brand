@@ -13,6 +13,7 @@ import wishlistRoutes from '../modules/wishlist/wishlist.routes';
 import couponsRoutes from '../modules/coupons/coupons.routes';
 import adminRoutes from '../modules/admin/admin.routes';
 import addressesRoutes from '../modules/addresses/addresses.routes';
+import mediaRoutes from '../modules/media/media.routes';
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.use('/newsletter', newsletterRoutes);
 router.use('/wishlist', wishlistRoutes);
 router.use('/coupons', couponsRoutes);
 router.use('/admin', adminRoutes);
+router.use('/media', mediaRoutes);
 
 export default router;

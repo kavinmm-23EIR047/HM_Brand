@@ -6,25 +6,45 @@ import { Plus, Minus, Trash2, ArrowRight, ShoppingBag, Sparkles, ShieldCheck, Ta
 import { InnerPage } from "@/components/inner-page";
 import { MascotBasket } from "@/components/mascot-art";
 import { useStore } from "@/components/store";
+import { SHIPPING_CONFIG } from "@/lib/shipping";
 
 export default function CartPage() {
-  const { lines, setQty, remove, clear, subtotal, totalItems } = useStore();
-  const [couponCode, setCouponCode] = useState("");
-  const [couponApplied, setCouponApplied] = useState(false);
+  const {
+    lines,
+    setQty,
+    remove,
+    clear,
+    subtotal,
+    totalItems,
+    appliedCoupon,
+    couponDiscount,
+    cartCouponCodes,
+    applyCoupon,
+    removeCoupon,
+  } = useStore();
 
-  const freeDeliveryThreshold = 499;
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+
+  const freeDeliveryThreshold = SHIPPING_CONFIG.freeDeliveryThreshold;
   const progressPercent = Math.min(100, Math.round((subtotal / freeDeliveryThreshold) * 100));
   const amountLeft = freeDeliveryThreshold - subtotal;
-  const discountAmount = couponApplied ? Math.round(subtotal * 0.1) : 0;
-  const shippingFee = subtotal >= freeDeliveryThreshold || subtotal === 0 ? 0 : 50;
-  const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
+  const shippingFee = SHIPPING_CONFIG.calculate(subtotal - couponDiscount);
+  const finalTotal = Math.max(0, subtotal - couponDiscount + shippingFee);
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (couponCode.trim().toUpperCase() === "HMDEVOTION" || couponCode.trim().toUpperCase() === "DIVINE10") {
-      setCouponApplied(true);
+  const handleApplyCoupon = async (e?: React.FormEvent, explicitCode?: string) => {
+    if (e) e.preventDefault();
+    const code = explicitCode || couponInput;
+    if (!code.trim()) return;
+    setCouponLoading(true);
+    setCouponError("");
+    const res = await applyCoupon(code);
+    setCouponLoading(false);
+    if (!res.success) {
+      setCouponError(res.message || "Invalid coupon");
     } else {
-      alert("Please enter a valid coupon code (Try: HMDEVOTION or DIVINE10)");
+      setCouponInput("");
     }
   };
 
@@ -166,32 +186,72 @@ export default function CartPage() {
                   Order Summary
                 </h3>
 
-                {/* Coupon Code Input */}
-                <form onSubmit={handleApplyCoupon} className="space-y-2">
+                {/* Coupon Code Section */}
+                <div className="space-y-2">
                   <label className="text-xs font-bold text-[#6B4226] uppercase tracking-wider block">
-                    Have an Auspicious Coupon?
+                    Have a Coupon Code?
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="e.g. HMDEVOTION"
-                      className="flex-1 text-xs bg-white border border-[#C89B3C] rounded-lg px-3 py-2 text-[#292524] uppercase outline-[#E85D04]"
-                    />
-                    <button
-                      type="submit"
-                      className="btn-outline-earth px-3 py-2 text-xs font-bold rounded-lg uppercase tracking-wider"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                  {couponApplied && (
-                    <p className="text-[11px] font-bold text-[#588157]">
-                      ✓ 10% Devotion discount applied!
-                    </p>
+
+                  {/* Available Item Coupons */}
+                  {cartCouponCodes.length > 0 && !appliedCoupon && (
+                    <div className="rounded-lg bg-[#F4D35E]/20 p-2.5 border border-dashed border-[#C89B3C] text-xs">
+                      <p className="text-[11px] font-bold text-[#6B4226] mb-1.5 flex items-center gap-1">
+                        <Tag size={12} className="text-[#E85D04]" /> Available for items in basket:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {cartCouponCodes.map((code) => (
+                          <button
+                            key={code}
+                            type="button"
+                            onClick={() => handleApplyCoupon(undefined, code)}
+                            className="inline-flex items-center gap-1 rounded bg-[#FFF8E7] px-2 py-1 text-xs font-bold text-[#9E1830] border border-[#C89B3C] hover:bg-[#E85D04] hover:text-white transition"
+                          >
+                            <span>Use &apos;{code}&apos;</span>
+                            <span className="text-[10px] text-[#3F7D45] font-extrabold group-hover:text-white">Apply</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </form>
+
+                  {/* Applied Coupon Info Box */}
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between rounded-lg bg-[#E1EDCF] px-3 py-2 border border-[#3F7D45]/40 text-xs">
+                      <div className="flex items-center gap-1.5 text-[#286B45]">
+                        <Tag size={14} className="text-[#286B45]" />
+                        <span>Coupon <strong>{appliedCoupon.code}</strong> applied (-₹{couponDiscount})</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeCoupon}
+                        className="text-[11px] font-bold text-[#9E1830] hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={(e) => handleApplyCoupon(e)} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value)}
+                        placeholder="Enter coupon (e.g. 1)"
+                        className="flex-1 text-xs bg-white border border-[#C89B3C] rounded-lg px-3 py-2 text-[#292524] uppercase outline-[#E85D04]"
+                      />
+                      <button
+                        type="submit"
+                        disabled={couponLoading}
+                        className="btn-outline-earth px-3 py-2 text-xs font-bold rounded-lg uppercase tracking-wider disabled:opacity-50"
+                      >
+                        {couponLoading ? "..." : "Apply"}
+                      </button>
+                    </form>
+                  )}
+
+                  {couponError && (
+                    <p className="text-[11px] font-bold text-[#9E1830]">{couponError}</p>
+                  )}
+                </div>
 
                 {/* Calculation Rows */}
                 <div className="space-y-3 pt-4 border-t border-[#C89B3C]/30 text-xs font-medium">
@@ -200,10 +260,12 @@ export default function CartPage() {
                     <span className="font-bold text-[#6B4226]">₹{subtotal}</span>
                   </div>
 
-                  {couponApplied && (
-                    <div className="flex justify-between text-[#588157]">
-                      <span>Special Discount (10%)</span>
-                      <span className="font-bold">-₹{discountAmount}</span>
+                  {appliedCoupon && couponDiscount > 0 && (
+                    <div className="flex justify-between text-[#3F7D45] font-bold">
+                      <span className="flex items-center gap-1">
+                        <Tag size={12} /> Coupon Discount ({appliedCoupon.code})
+                      </span>
+                      <span>-₹{couponDiscount}</span>
                     </div>
                   )}
 

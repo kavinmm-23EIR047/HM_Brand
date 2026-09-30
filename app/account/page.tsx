@@ -24,12 +24,16 @@ export default function AccountPage() {
   const [loadingOrders, setLoadingOrders] = useState(false);
 
   const fetchUserOrders = useCallback(async () => {
-    if (!token) return;
     setLoadingOrders(true);
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
-      const res = await fetch(`${API_URL}/orders?myOrders=true&limit=50`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      const emailParam = user?.email ? `&email=${encodeURIComponent(user.email)}` : "";
+      const res = await fetch(`${API_URL}/orders?myOrders=true&limit=50${emailParam}`, {
+        headers,
       });
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.data)) {
@@ -40,13 +44,13 @@ export default function AccountPage() {
     } finally {
       setLoadingOrders(false);
     }
-  }, [token]);
+  }, [token, user?.email]);
 
   useEffect(() => {
-    if (token) {
+    if (token || user) {
       fetchUserOrders();
     }
-  }, [token, fetchUserOrders]);
+  }, [token, user, fetchUserOrders]);
 
   // Profile Edit State & Modal
   const [isEditingProfile, setIsEditingProfile] = useState(false);

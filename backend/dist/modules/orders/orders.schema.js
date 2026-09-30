@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOrderStatusSchema = exports.createOrderSchema = void 0;
+exports.verifyPaymentSchema = exports.updateOrderStatusSchema = exports.createOrderSchema = void 0;
 const zod_1 = require("zod");
 exports.createOrderSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -33,5 +33,13 @@ exports.updateOrderStatusSchema = zod_1.z.object({
     body: zod_1.z.object({
         status: zod_1.z.enum(['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
         paymentStatus: zod_1.z.enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED']).optional(),
+    }),
+});
+exports.verifyPaymentSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        orderId: zod_1.z.string().min(1, 'Order ID is required'),
+        razorpayOrderId: zod_1.z.string().min(1, 'Razorpay Order ID is required'),
+        razorpayPaymentId: zod_1.z.string().min(1, 'Razorpay Payment ID is required'),
+        razorpaySignature: zod_1.z.string().min(1, 'Razorpay Signature is required'),
     }),
 });

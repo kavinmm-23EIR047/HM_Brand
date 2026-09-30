@@ -102,24 +102,30 @@ export class HomepageService {
     displayOrder: number;
     isActive: boolean;
   }>) {
-    return prisma.$transaction(async (tx: any) => {
-      await tx.homepageSection.deleteMany({});
-      const created = await Promise.all(
-        sectionsData.map((sec) =>
-          tx.homepageSection.create({
-            data: {
-              sectionType: sec.sectionType,
-              title: sec.title,
-              subtitle: sec.subtitle,
-              referenceId: sec.referenceId,
-              displayOrder: sec.displayOrder,
-              isActive: sec.isActive,
-            },
-          })
-        )
-      );
-      return created;
-    });
+    return prisma.$transaction(
+      async (tx: any) => {
+        await tx.homepageSection.deleteMany({});
+        const created = await Promise.all(
+          sectionsData.map((sec) =>
+            tx.homepageSection.create({
+              data: {
+                sectionType: sec.sectionType,
+                title: sec.title,
+                subtitle: sec.subtitle,
+                referenceId: sec.referenceId,
+                displayOrder: sec.displayOrder,
+                isActive: sec.isActive,
+              },
+            })
+          )
+        );
+        return created;
+      },
+      {
+        maxWait: 15000,
+        timeout: 30000,
+      }
+    );
   }
 }
 

@@ -1,4 +1,5 @@
 export interface Product {
+  id?: string;
   slug: string;
   name: string;
   category: string;
@@ -35,6 +36,7 @@ export function mapDbProductToProduct(p: any): Product {
     : (p.description ? p.description.slice(0, 90) : "Handcrafted natural fragrance.");
 
   return {
+    id: p.id,
     slug: p.slug,
     name: p.name,
     category: categoryName,

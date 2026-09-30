@@ -73,25 +73,31 @@ export class FestivalsRepository {
     productIds?: string[];
   }) {
     const { productIds, ...updateData } = data;
-    return prisma.$transaction(async (tx: any) => {
-      if (productIds) {
-        await tx.festivalProduct.deleteMany({ where: { festivalId: id } });
-        await tx.festivalProduct.createMany({
-          data: productIds.map((productId, index) => ({
-            festivalId: id,
-            productId,
-            displayOrder: index,
-          })),
+    return prisma.$transaction(
+      async (tx: any) => {
+        if (productIds) {
+          await tx.festivalProduct.deleteMany({ where: { festivalId: id } });
+          await tx.festivalProduct.createMany({
+            data: productIds.map((productId, index) => ({
+              festivalId: id,
+              productId,
+              displayOrder: index,
+            })),
+          });
+        }
+        return tx.festival.update({
+          where: { id },
+          data: updateData,
+          include: {
+            products: { include: { product: true } },
+          },
         });
+      },
+      {
+        maxWait: 15000,
+        timeout: 30000,
       }
-      return tx.festival.update({
-        where: { id },
-        data: updateData,
-        include: {
-          products: { include: { product: true } },
-        },
-      });
-    });
+    );
   }
 
   async delete(id: string) {

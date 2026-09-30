@@ -64,10 +64,10 @@ export class CategoriesService {
 
   async deleteCategory(id: string) {
     const category = await this.repo.findById(id);
-    if (!category || category.deletedAt) {
+    if (!category) {
       throw new NotFoundError('Category not found');
     }
-    return this.repo.softDelete(id);
+    return this.repo.delete(id);
   }
 }
 

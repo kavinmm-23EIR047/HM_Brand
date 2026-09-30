@@ -3,16 +3,47 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, Heart, ShoppingBag, ArrowRight, Check, Sparkles } from "lucide-react";
+import { Plus, Minus, Heart, ShoppingBag, ArrowRight, Check, Sparkles, Tag } from "lucide-react";
 import { useStore } from "@/components/store";
 import type { Product } from "@/lib/products";
 
 export function AddPanel({ product }: { product: Product }) {
   const router = useRouter();
-  const { add, toggleWishlist, isInWishlist } = useStore();
+  const { lines, add, toggleWishlist, isInWishlist, appliedCoupon, applyCoupon, removeCoupon, subtotal } = useStore();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const wishlisted = isInWishlist(product.slug);
+
+  const isThisCouponApplied = Boolean(
+    product.couponCode && appliedCoupon?.code.toUpperCase() === product.couponCode.toUpperCase()
+  );
+
+  let singleItemDiscount = 0;
+  if (isThisCouponApplied && appliedCoupon) {
+    if (appliedCoupon.discountPercent) {
+      singleItemDiscount = Math.round((product.price * appliedCoupon.discountPercent) / 100);
+    } else if (appliedCoupon.discountAmount) {
+      singleItemDiscount = Math.min(product.price, appliedCoupon.discountAmount);
+    }
+  }
+
+  const effectiveUnitPrice = Math.max(0, product.price - singleItemDiscount);
+  const totalEffective = effectiveUnitPrice * qty;
+  const totalOriginal = product.price * qty;
+  const totalSavings = singleItemDiscount * qty;
+
+  const handleToggleCoupon = async () => {
+    if (!product.couponCode) return;
+    if (isThisCouponApplied) {
+      removeCoupon();
+    } else {
+      const inCart = lines.some((l) => l.product.slug === product.slug);
+      if (!inCart) {
+        add(product, qty);
+      }
+      await applyCoupon(product.couponCode, Math.max(subtotal, product.price * qty));
+    }
+  };
 
   const handleAdd = () => {
     add(product, qty);
@@ -20,13 +51,57 @@ export function AddPanel({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
+    if (product.couponCode && !appliedCoupon) {
+      await applyCoupon(product.couponCode, Math.max(subtotal, product.price * qty));
+    }
     add(product, qty);
     router.push("/checkout");
   };
 
   return (
     <div className="space-y-6 pt-4 border-t border-[#C89B3C]/40">
+      {/* Live Calibrated Price & Coupon Savings */}
+      <div className="rounded-xl border border-[#C89B3C]/30 bg-[#FFF8E7] p-4 shadow-xs space-y-2">
+        <div className="flex items-baseline justify-between flex-wrap gap-2">
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl sm:text-4xl font-extrabold text-[#9E1830]">
+              ₹{effectiveUnitPrice}
+            </span>
+            {singleItemDiscount > 0 ? (
+              <span className="text-sm font-semibold text-[#292524]/50 line-through">
+                ₹{product.price}
+              </span>
+            ) : product.mrp ? (
+              <span className="text-sm font-semibold text-[#292524]/50 line-through">
+                {product.mrp}
+              </span>
+            ) : null}
+          </div>
+
+          {singleItemDiscount > 0 ? (
+            <span className="rounded-full bg-[#E1EDCF] px-3 py-1 text-xs font-extrabold text-[#286B45]">
+              SAVE ₹{totalSavings} WITH COUPON
+            </span>
+          ) : (
+            <span className="text-xs font-bold text-[#E85D04]">
+              Inclusive of all taxes
+            </span>
+          )}
+        </div>
+
+        {qty > 1 && (
+          <div className="flex items-center justify-between text-xs text-[#6B4226] border-t border-[#C89B3C]/20 pt-2 font-medium">
+            <span>Subtotal for {qty} items:</span>
+            <div className="flex items-baseline gap-1.5">
+              {singleItemDiscount > 0 && (
+                <span className="text-[11px] text-[#292524]/50 line-through">₹{totalOriginal}</span>
+              )}
+              <span className="font-extrabold text-[#9E1830]">₹{totalEffective}</span>
+            </div>
+          </div>
+        )}
+      </div>
       {/* Quantity Selector */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <span className="text-xs font-bold text-[#6B4226] uppercase tracking-wider">
@@ -53,6 +128,32 @@ export function AddPanel({ product }: { product: Product }) {
           ({product.quantity})
         </span>
       </div>
+
+      {/* Product-Specific Coupon Offer */}
+      {product.couponCode && (
+        <div className="rounded-xl border border-dashed border-[#E85D04] bg-[#FFF8E7] p-3 flex items-center justify-between gap-2 shadow-xs">
+          <div className="flex items-center gap-2">
+            <Tag size={16} className="text-[#E85D04] shrink-0" />
+            <div className="text-xs">
+              <span className="font-bold text-[#6B4226]">Special Coupon: </span>
+              <span className="font-mono font-black text-[#9E1830] bg-[#FFF0D0] px-1.5 py-0.5 rounded border border-[#C89B3C]/40">
+                {product.couponCode}
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleToggleCoupon}
+            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-xs ${
+              isThisCouponApplied
+                ? "bg-[#3F7D45] text-white"
+                : "bg-[#E85D04] text-white hover:bg-[#9E1830]"
+            }`}
+          >
+            {isThisCouponApplied ? "✓ Coupon Applied" : "Apply Coupon"}
+          </button>
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">

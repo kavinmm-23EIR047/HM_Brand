@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../errors/custom.error';
 import { sendError } from '../utils/response.util';
+import { MulterError } from 'multer';
 
 export function errorHandler(
   err: Error,
@@ -12,6 +13,13 @@ export function errorHandler(
 
   if (err instanceof AppError) {
     return sendError(res, err.message, err.statusCode, err.errors);
+  }
+
+  if (err instanceof MulterError) {
+    const message = err.code === 'LIMIT_FILE_SIZE'
+      ? 'Image files must be 10 MB or smaller.'
+      : 'Invalid image upload.';
+    return sendError(res, message, 400);
   }
 
   // Handle Prisma Database Errors

@@ -124,13 +124,30 @@ export class ProductsRepository {
     images?: Array<{ url: string; storageKey?: string; altText?: string; isPrimary?: boolean; displayOrder?: number }>;
   }) {
     const { categoryIds = [], images = [], ...productData } = data;
-    const validCategoryIds = categoryIds.filter((cid: string) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
+    const cleanCategoryIds = categoryIds.filter(
+      (cid: string) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== ''
+    );
+
+    let resolvedCategoryIds: string[] = [];
+    if (cleanCategoryIds.length > 0) {
+      const validCategories = await prisma.category.findMany({
+        where: {
+          OR: [
+            { id: { in: cleanCategoryIds } },
+            { slug: { in: cleanCategoryIds } },
+            { name: { in: cleanCategoryIds } },
+          ],
+        },
+        select: { id: true },
+      });
+      resolvedCategoryIds = validCategories.map((c) => c.id);
+    }
 
     return prisma.product.create({
       data: {
         ...productData,
         categories: {
-          create: validCategoryIds.map((categoryId) => ({ categoryId })),
+          create: resolvedCategoryIds.map((categoryId) => ({ categoryId })),
         },
         images: {
           create: images.map((img, index) => ({
@@ -152,40 +169,66 @@ export class ProductsRepository {
   async update(id: string, data: any) {
     const { categoryIds, images, ...updateData } = data;
 
-    return prisma.$transaction(async (tx: any) => {
-      if (Array.isArray(categoryIds)) {
-        const validCategoryIds = categoryIds.filter((cid: string) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
-        await tx.productCategory.deleteMany({ where: { productId: id } });
-        if (validCategoryIds.length > 0) {
-          await tx.productCategory.createMany({
-            data: validCategoryIds.map((categoryId: string) => ({ productId: id, categoryId })),
+    return prisma.$transaction(
+      async (tx: any) => {
+        if (Array.isArray(categoryIds)) {
+          const cleanCategoryIds = categoryIds.filter(
+            (cid: string) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== ''
+          );
+
+          await tx.productCategory.deleteMany({ where: { productId: id } });
+
+          if (cleanCategoryIds.length > 0) {
+            const validCategories = await tx.category.findMany({
+              where: {
+                OR: [
+                  { id: { in: cleanCategoryIds } },
+                  { slug: { in: cleanCategoryIds } },
+                  { name: { in: cleanCategoryIds } },
+                ],
+              },
+              select: { id: true },
+            });
+
+            if (validCategories.length > 0) {
+              await tx.productCategory.createMany({
+                data: validCategories.map((c: { id: string }) => ({
+                  productId: id,
+                  categoryId: c.id,
+                })),
+              });
+            }
+          }
+        }
+
+        if (Array.isArray(images) && images.length > 0) {
+          await tx.productImage.deleteMany({ where: { productId: id } });
+          await tx.productImage.createMany({
+            data: images.map((img: any, index: number) => ({
+              productId: id,
+              url: img.url,
+              storageKey: img.storageKey || 'admin/product.jpg',
+              altText: img.altText || updateData.name || '',
+              isPrimary: img.isPrimary || index === 0,
+              displayOrder: img.displayOrder || index,
+            })),
           });
         }
-      }
 
-      if (Array.isArray(images) && images.length > 0) {
-        await tx.productImage.deleteMany({ where: { productId: id } });
-        await tx.productImage.createMany({
-          data: images.map((img: any, index: number) => ({
-            productId: id,
-            url: img.url,
-            storageKey: img.storageKey || 'admin/product.jpg',
-            altText: img.altText || updateData.name || '',
-            isPrimary: img.isPrimary || index === 0,
-            displayOrder: img.displayOrder || index,
-          })),
+        return tx.product.update({
+          where: { id },
+          data: updateData,
+          include: {
+            images: true,
+            categories: { include: { category: true } },
+          },
         });
+      },
+      {
+        maxWait: 15000,
+        timeout: 30000,
       }
-
-      return tx.product.update({
-        where: { id },
-        data: updateData,
-        include: {
-          images: true,
-          categories: { include: { category: true } },
-        },
-      });
-    });
+    );
   }
 
 
@@ -215,18 +258,26 @@ export class ProductsRepository {
     });
   }
 
-  async softDelete(id: string) {
-    return prisma.$transaction(async (tx: any) => {
-      await tx.productCategory.deleteMany({ where: { productId: id } });
-      await tx.productImage.deleteMany({ where: { productId: id } });
-      await tx.wishlistItem.deleteMany({ where: { productId: id } });
-      try {
-        await (tx as any).orderItem.deleteMany({ where: { productId: id } });
-      } catch {}
-      return tx.product.delete({
-        where: { id },
-      });
-    });
+  async delete(id: string) {
+    return prisma.$transaction(
+      async (tx: any) => {
+        await tx.productCategory.deleteMany({ where: { productId: id } });
+        await tx.collectionProduct.deleteMany({ where: { productId: id } });
+        await tx.festivalProduct.deleteMany({ where: { productId: id } });
+        await tx.productImage.deleteMany({ where: { productId: id } });
+        await tx.wishlistItem.deleteMany({ where: { productId: id } });
+        try {
+          await tx.orderItem.updateMany({ where: { productId: id }, data: { productId: null } });
+        } catch {}
+        return tx.product.delete({
+          where: { id },
+        });
+      },
+      {
+        maxWait: 15000,
+        timeout: 30000,
+      }
+    );
   }
 }
 

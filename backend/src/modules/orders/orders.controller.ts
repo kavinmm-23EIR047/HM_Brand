@@ -17,14 +17,51 @@ export class OrdersController {
     }
   };
 
+  verifyPayment = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const updatedOrder = await this.service.verifyPayment({
+        orderId: req.body.orderId,
+        razorpayOrderId: req.body.razorpayOrderId,
+        razorpayPaymentId: req.body.razorpayPaymentId,
+        razorpaySignature: req.body.razorpaySignature,
+      });
+      return sendSuccess(res, updatedOrder, 'Payment verified successfully');
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  getShippingConfig = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const config = this.service.getShippingConfig();
+      return sendSuccess(res, config, 'Shipping configuration retrieved');
+    } catch (error) {
+      return next(error);
+    }
+  };
+
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string || '1', 10);
       const limit = parseInt(req.query.limit as string || '20', 10);
       const isMyOrders = req.query.myOrders === 'true' || req.query.userId === 'me';
-      const userId = (isMyOrders || req.user?.role !== 'ADMIN') ? req.user?.userId : undefined;
+      
+      let filterUserId: string | undefined = undefined;
+      let filterEmail: string | undefined = undefined;
 
-      const result = await this.service.getOrders(page, limit, userId);
+      if (isMyOrders) {
+        filterUserId = req.user?.userId;
+        filterEmail = req.user?.email;
+      } else if (req.user && req.user.role !== 'ADMIN') {
+        filterUserId = req.user.userId;
+        filterEmail = req.user.email;
+      }
+
+      if (req.query.email && typeof req.query.email === 'string') {
+        filterEmail = req.query.email.trim();
+      }
+
+      const result = await this.service.getOrders(page, limit, filterUserId, filterEmail);
       return sendPaginated(res, result.items, result.meta, 'Orders retrieved successfully');
     } catch (error) {
       return next(error);
