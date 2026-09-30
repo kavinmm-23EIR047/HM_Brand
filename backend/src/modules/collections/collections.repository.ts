@@ -69,7 +69,7 @@ export class CollectionsRepository {
     productIds?: string[];
   }) {
     const { productIds, ...updateData } = data;
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       if (productIds) {
         await tx.collectionProduct.deleteMany({ where: { collectionId: id } });
         await tx.collectionProduct.createMany({

@@ -30,7 +30,7 @@ export class HomepageService {
 
     // 2. Build structured response payload by resolving references dynamically
     const renderedSections = await Promise.all(
-      sections.map(async (section) => {
+      sections.map(async (section: any) => {
         let content: any = null;
 
         switch (section.sectionType) {
@@ -102,7 +102,7 @@ export class HomepageService {
     displayOrder: number;
     isActive: boolean;
   }>) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       await tx.homepageSection.deleteMany({});
       const created = await Promise.all(
         sectionsData.map((sec) =>

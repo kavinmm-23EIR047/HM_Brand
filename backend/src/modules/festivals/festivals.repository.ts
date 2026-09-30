@@ -73,7 +73,7 @@ export class FestivalsRepository {
     productIds?: string[];
   }) {
     const { productIds, ...updateData } = data;
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       if (productIds) {
         await tx.festivalProduct.deleteMany({ where: { festivalId: id } });
         await tx.festivalProduct.createMany({

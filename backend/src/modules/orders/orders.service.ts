@@ -16,7 +16,7 @@ export class OrdersService {
     couponCode?: string;
   }) {
     // Transaction execution for atomic order placement & stock deduction
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       let subtotal = 0;
       const orderItemsToCreate: any[] = [];
 

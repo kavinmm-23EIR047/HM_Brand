@@ -152,7 +152,7 @@ export class ProductsRepository {
   async update(id: string, data: any) {
     const { categoryIds, images, ...updateData } = data;
 
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       if (Array.isArray(categoryIds)) {
         const validCategoryIds = categoryIds.filter((cid: string) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
         await tx.productCategory.deleteMany({ where: { productId: id } });
@@ -216,7 +216,7 @@ export class ProductsRepository {
   }
 
   async softDelete(id: string) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: any) => {
       await tx.productCategory.deleteMany({ where: { productId: id } });
       await tx.productImage.deleteMany({ where: { productId: id } });
       await tx.wishlistItem.deleteMany({ where: { productId: id } });
