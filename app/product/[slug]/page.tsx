@@ -189,8 +189,8 @@ export default async function ProductDetailsPage({
                 </div>
               )}
               <div className="bg-[#F4D35E]/20 p-3 rounded-lg border border-[#C89B3C]/30">
-                <span className="text-[10px] font-bold text-[#6B4226]/70 uppercase block">Origin</span>
-                <span className="text-xs font-bold text-[#6B4226]">Coimbatore, TN</span>
+                <span className="text-[10px] font-bold text-[#6B4226]/70 uppercase block">Ritual Essence</span>
+                <span className="text-xs font-bold text-[#6B4226]">Calm • Pure • Uplifting</span>
               </div>
             </div>
 
