@@ -237,20 +237,18 @@ export default async function ProductDetailsPage({
               <h2 className="font-display text-3xl text-[#6B4226] font-bold">
                 How to Use {product.name}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                {product.howToUse.map((step, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-[#FFF8E7] p-4 rounded-xl border border-[#C89B3C]/50 flex gap-3"
-                  >
-                    <span className="font-display text-lg font-bold text-[#E85D04]">
-                      0{idx + 1}
-                    </span>
-                    <p className="text-xs text-[#292524]/80 leading-relaxed font-sans">
-                      {step}
-                    </p>
-                  </div>
-                ))}
+              <div className="pt-2">
+                <img
+                  src={
+                    product.category.toLowerCase().includes("camphor")
+                      ? "/images/camphor-lighting-steps-infographic.png"
+                      : product.category.toLowerCase().includes("sambrani")
+                      ? "/images/sambrani-burning-instruction-guide.png"
+                      : "/images/two-step-incense-lighting-guide.png"
+                  }
+                  alt={`Sacred usage guide for ${product.name}`}
+                  className="w-full max-w-2xl h-auto rounded-xl border border-[#C89B3C]/50 object-contain shadow-xs bg-[#FFF8E7]"
+                />
               </div>
             </div>
           </div>
