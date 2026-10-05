@@ -31,8 +31,11 @@ exports.updateOrderStatusSchema = zod_1.z.object({
         id: zod_1.z.string().min(1, 'Invalid order ID'),
     }),
     body: zod_1.z.object({
-        status: zod_1.z.enum(['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
+        status: zod_1.z.enum(['PENDING', 'CONFIRMED', 'PROCESSING', 'READY_TO_SHIP', 'SHIPPED', 'DISPATCHED', 'DELIVERED', 'RETURNED', 'CANCELLED']),
         paymentStatus: zod_1.z.enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED']).optional(),
+        courierName: zod_1.z.string().optional(),
+        trackingNumber: zod_1.z.string().optional(),
+        courierNote: zod_1.z.string().optional(),
     }),
 });
 exports.verifyPaymentSchema = zod_1.z.object({

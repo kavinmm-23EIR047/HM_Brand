@@ -4,10 +4,10 @@ import { authenticateJWT, requireRole } from '../../shared/middlewares/auth.midd
 import { mediaController } from './media.controller';
 
 const router = Router();
-const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']);
+const allowedMimeTypes = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif']);
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+  limits: { fileSize: 15 * 1024 * 1024, files: 1 },
   fileFilter: (_req, file, callback) => callback(null, allowedMimeTypes.has(file.mimetype)),
 });
 

@@ -40,10 +40,11 @@ function validateTarget({ folder, publicId }: CloudinaryImageTarget): void {
 export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget): Promise<CloudinaryUpload> {
   validateTarget(target);
   const client = getCloudinary();
-  const result = await new Promise<{ public_id: string; version: number | string; format?: string }>((resolve, reject) => {
+  const result = await new Promise<{ public_id: string; version: number | string; format?: string; secure_url?: string }>((resolve, reject) => {
     const stream = client.uploader.upload_stream(
       {
         resource_type: 'image',
+        format: 'webp',
         // `folder` is required: it controls the Media Library folder, not merely the URL.
         folder: target.folder,
         // Dynamic-folder Cloudinary accounts use this value for the Media Library location.
@@ -59,11 +60,10 @@ export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget)
 
   return {
     publicId: result.public_id,
-    secureUrl: client.url(result.public_id, {
+    secureUrl: result.secure_url || client.url(result.public_id, {
       secure: true,
       version: result.version,
-      format: result.format,
-      transformation: [{ fetch_format: 'auto', quality: 'auto' }],
+      format: result.format || 'webp',
     }),
   };
 }

@@ -6,7 +6,8 @@ import {
   Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket,
   Plus, Trash2, Edit2, TrendingUp, Lock, ArrowRight, CheckCircle,
   AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
-  Filter, ArrowUpDown, RotateCcw, Upload,
+  Filter, ArrowUpDown, RotateCcw, Upload, Truck, User, Copy, MapPin,
+  Phone, Mail, Calendar, FileText, ExternalLink, Clock, ArrowUpRight, Check,
 } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore } from "@/components/store";
@@ -17,6 +18,58 @@ const PAGE_SIZE = 10;
 /* ──────────────────────────────────────────── helpers */
 function authH(token: string) {
   return { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+}
+
+function parseShippingAddress(raw: any) {
+  if (!raw) {
+    return {
+      recipientName: "Customer",
+      phone: "",
+      street: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      addressText: "No address provided",
+      courierName: "",
+      trackingNumber: "",
+      courierNote: "",
+    };
+  }
+  let obj: any = {};
+  if (typeof raw === "object") {
+    obj = raw;
+  } else {
+    try {
+      obj = JSON.parse(raw);
+    } catch {
+      obj = { street: String(raw) };
+    }
+  }
+  const recipientName = obj.recipientName || obj.name || "";
+  const phone = obj.phone || "";
+  const street = obj.street || obj.address || obj.rawAddress || "";
+  const city = obj.city || "";
+  const state = obj.state || "";
+  const postalCode = obj.postalCode || obj.zip || obj.pincode || "";
+  const courierName = obj.courierName || "";
+  const trackingNumber = obj.trackingNumber || "";
+  const courierNote = obj.courierNote || obj.note || "";
+
+  const addressParts = [street, city, state, postalCode].filter(Boolean);
+  const addressText = addressParts.length > 0 ? addressParts.join(", ") : typeof raw === "string" ? raw : "N/A";
+
+  return {
+    recipientName: recipientName || "Customer",
+    phone,
+    street,
+    city,
+    state,
+    postalCode,
+    addressText,
+    courierName,
+    trackingNumber,
+    courierNote,
+  };
 }
 
 function StatusMsg({ msg, onDismiss }: { msg: { type: "success" | "error"; text: string } | null; onDismiss: () => void }) {
@@ -414,6 +467,17 @@ export default function AdminPage() {
   const [orderPage, setOrderPage] = useState(1);
   const [orderStatusFilter, setOrderStatusFilter] = useState("all");
   const [orderSort, setOrderSort] = useState("newest");
+  const [orderSubTab, setOrderSubTab] = useState<string>("confirmed");
+  const [orderMonthFilter, setOrderMonthFilter] = useState<string>("all");
+  const [customerProfileModal, setCustomerProfileModal] = useState<null | any>(null);
+  const [dispatchModal, setDispatchModal] = useState<null | {
+    orderId: string;
+    orderNumber: string;
+    courierName: string;
+    trackingNumber: string;
+    courierNote: string;
+    targetStatus: string;
+  }>(null);
 
   // Meilisearch integration for Admin Products Search (typo-tolerant)
   const [meiliProductIds, setMeiliProductIds] = useState<Set<string> | null>(null);
@@ -655,9 +719,90 @@ export default function AdminPage() {
     return filteredBanners.slice(start, start + PAGE_SIZE);
   }, [filteredBanners, bannerPage]);
 
-  // Filtered & Paginated Orders (with Meilisearch product lookup + customer/payment fallback)
+  // Order counts grouped by sub-tab stages
+  const orderCounts = useMemo(() => {
+    let confirmed = 0;
+    let readyToShip = 0;
+    let dispatched = 0;
+    let returned = 0;
+
+    orders.forEach((o) => {
+      const st = (o.status || "").toUpperCase();
+      if (st === "READY_TO_SHIP" || st === "PROCESSING") readyToShip++;
+      else if (st === "DISPATCHED" || st === "SHIPPED") dispatched++;
+      else if (st === "RETURNED" || st === "CANCELLED") returned++;
+      else confirmed++;
+    });
+
+    return {
+      confirmed,
+      readyToShip,
+      dispatched,
+      returned,
+      all: orders.length,
+    };
+  }, [orders]);
+
+  // Unique Month-Year options for month-wise order filtering
+  const orderMonthOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    orders.forEach((o) => {
+      if (o.createdAt) {
+        const d = new Date(o.createdAt);
+        if (!isNaN(d.getTime())) {
+          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+          const label = d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+          map.set(key, label);
+        }
+      }
+    });
+    return Array.from(map.entries()).sort((a, b) => b[0].localeCompare(a[0]));
+  }, [orders]);
+
+  // Filtered & Paginated Orders (Stage Sub-tab + Month Filter + Search + Status + Sort)
   const filteredOrders = useMemo(() => {
     let result = [...orders];
+
+    // 1. Stage Sub-Tab Filter
+    if (orderSubTab === "confirmed" || orderSubTab === "pending") {
+      result = result.filter((o) => {
+        const st = (o.status || "").toUpperCase();
+        return st === "PENDING" || st === "CONFIRMED";
+      });
+    } else if (orderSubTab === "ready_to_ship") {
+      result = result.filter((o) => {
+        const st = (o.status || "").toUpperCase();
+        return st === "READY_TO_SHIP" || st === "PROCESSING";
+      });
+    } else if (orderSubTab === "dispatched") {
+      result = result.filter((o) => {
+        const st = (o.status || "").toUpperCase();
+        return st === "DISPATCHED" || st === "SHIPPED";
+      });
+    } else if (orderSubTab === "returned") {
+      result = result.filter((o) => {
+        const st = (o.status || "").toUpperCase();
+        return st === "RETURNED" || st === "CANCELLED";
+      });
+    }
+
+    // 2. Month-Wise Filter
+    if (orderMonthFilter !== "all") {
+      result = result.filter((o) => {
+        if (!o.createdAt) return false;
+        const d = new Date(o.createdAt);
+        if (isNaN(d.getTime())) return false;
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+        return key === orderMonthFilter;
+      });
+    }
+
+    // 3. Dropdown Status Filter (optional override)
+    if (orderStatusFilter !== "all") {
+      result = result.filter((o) => (o.status || "").toUpperCase() === orderStatusFilter.toUpperCase());
+    }
+
+    // 4. Search Filter
     if (searchOrder.trim()) {
       const q = searchOrder.toLowerCase().trim();
       result = result.filter((o) => {
@@ -668,21 +813,41 @@ export default function AdminPage() {
         const pay = (o.paymentMethod || "").toLowerCase();
         const total = String(o.totalAmount || "");
 
-        // Check if any order item matches search term or Meilisearch product
+        const addr = parseShippingAddress(o.shippingAddress);
+        const street = (addr.street || "").toLowerCase();
+        const city = (addr.city || "").toLowerCase();
+        const state = (addr.state || "").toLowerCase();
+        const courier = (addr.courierName || "").toLowerCase();
+        const track = (addr.trackingNumber || "").toLowerCase();
+        const note = (addr.courierNote || "").toLowerCase();
+
         const itemsMatch = Array.isArray(o.items) && o.items.some((it: any) => {
-          const itName = (it.productName || it.product?.name || "").toLowerCase();
+          const itName = (it.productName || it.productNameSnapshot || it.product?.name || "").toLowerCase();
           const itSlug = (it.product?.slug || "").toLowerCase();
           const itId = String(it.productId || it.product?.id || "");
           const meiliMatch = meiliProductIds ? (meiliProductIds.has(itId) || meiliProductIds.has(itSlug) || meiliProductIds.has(itName)) : false;
           return meiliMatch || itName.includes(q);
         });
 
-        return num.includes(q) || email.includes(q) || phone.includes(q) || st.includes(q) || pay.includes(q) || total.includes(q) || itemsMatch;
+        return (
+          num.includes(q) ||
+          email.includes(q) ||
+          phone.includes(q) ||
+          st.includes(q) ||
+          pay.includes(q) ||
+          total.includes(q) ||
+          street.includes(q) ||
+          city.includes(q) ||
+          state.includes(q) ||
+          courier.includes(q) ||
+          track.includes(q) ||
+          note.includes(q) ||
+          itemsMatch
+        );
       });
     }
-    if (orderStatusFilter !== "all") {
-      result = result.filter((o) => (o.status || "").toUpperCase() === orderStatusFilter.toUpperCase());
-    }
+
+    // 5. Sorting
     result.sort((a, b) => {
       if (orderSort === "amount-high") {
         return (Number(b.totalAmount) || 0) - (Number(a.totalAmount) || 0);
@@ -701,8 +866,9 @@ export default function AdminPage() {
       if (timeA && timeB) return timeB - timeA;
       return String(b.id).localeCompare(String(a.id));
     });
+
     return result;
-  }, [orders, searchOrder, meiliProductIds, orderStatusFilter, orderSort]);
+  }, [orders, searchOrder, meiliProductIds, orderSubTab, orderMonthFilter, orderStatusFilter, orderSort]);
 
   const paginatedOrders = useMemo(() => {
     const start = (orderPage - 1) * PAGE_SIZE;
@@ -974,12 +1140,66 @@ export default function AdminPage() {
     else if (!j.success) showStatus("error", j.message || "Delete failed");
   };
 
-  /* ORDER STATUS */
-  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+  /* ORDER STATUS & DISPATCH */
+  const updateOrderStatus = async (
+    orderId: string,
+    newStatus: string,
+    courierData?: { courierName?: string; trackingNumber?: string; courierNote?: string }
+  ) => {
     if (!token) return;
-    const r = await fetch(`${API}/orders/admin/${orderId}/status`, { method: "PATCH", headers: authH(token), body: JSON.stringify({ status: newStatus }) });
-    const j = await r.json();
-    if (!checkUnauthorized(r, j) && j.success) { showStatus("success", `Order status → ${newStatus}`); fetchTab(); }
+    setSaving(true);
+    try {
+      const payload: any = { status: newStatus };
+      if (courierData) {
+        if (courierData.courierName) payload.courierName = courierData.courierName;
+        if (courierData.trackingNumber) payload.trackingNumber = courierData.trackingNumber;
+        if (courierData.courierNote) payload.courierNote = courierData.courierNote;
+      }
+      const r = await fetch(`${API}/orders/admin/${orderId}/status`, {
+        method: "PATCH",
+        headers: authH(token),
+        body: JSON.stringify(payload),
+      });
+      const j = await r.json();
+      if (!checkUnauthorized(r, j) && (r.ok || j.success)) {
+        showStatus("success", `Order updated: ${newStatus.replace(/_/g, " ")}`);
+        fetchTab();
+        refreshDbData();
+      } else {
+        showStatus("error", j.message || "Failed to update order status");
+      }
+    } catch (error: any) {
+      showStatus("error", error?.message || "Failed to update order status");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const openDispatchModal = (ord: any, targetStatus: string = "DISPATCHED") => {
+    const addr = parseShippingAddress(ord.shippingAddress);
+    setDispatchModal({
+      orderId: ord.id,
+      orderNumber: ord.orderNumber,
+      courierName: addr.courierName || "Speed Post (India Post)",
+      trackingNumber: addr.trackingNumber || "",
+      courierNote: addr.courierNote || "",
+      targetStatus,
+    });
+  };
+
+  const handleSaveDispatch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!dispatchModal) return;
+    await updateOrderStatus(dispatchModal.orderId, dispatchModal.targetStatus, {
+      courierName: dispatchModal.courierName,
+      trackingNumber: dispatchModal.trackingNumber,
+      courierNote: dispatchModal.courierNote,
+    });
+    setDispatchModal(null);
+  };
+
+  const openCustomerProfile = (ord: any) => {
+    setCustomerProfileModal({ order: ord });
   };
 
   /* ACCESS GUARD */
@@ -1361,8 +1581,48 @@ export default function AdminPage() {
 
           {/* ORDERS */}
           {activeTab === "orders" && (
-            <div className="space-y-5">
-              <SectionHeader title="Customer Orders" subtitle="Track and update shipping statuses." />
+            <div className="space-y-6">
+              <SectionHeader
+                title="Customer Orders & Fulfillment"
+                subtitle="Manage order stages, customer profiles, shipping dispatch, and courier tracking numbers."
+              />
+
+              {/* STAGE SUB-TABS (MATCHING IMAGE 1) */}
+              <div className="border-b-2 border-[#C89B3C]/30 bg-white/80 rounded-2xl p-2 flex items-center overflow-x-auto gap-2 text-xs font-bold shadow-xs">
+                {[
+                  { key: "confirmed", label: "Confirmed", count: orderCounts.confirmed, color: "bg-emerald-100 text-emerald-800" },
+                  { key: "ready_to_ship", label: "Ready to Ship", count: orderCounts.readyToShip, color: "bg-blue-100 text-blue-800" },
+                  { key: "dispatched", label: "Dispatched", count: orderCounts.dispatched, color: "bg-purple-100 text-purple-800" },
+                  { key: "returned", label: "Returned", count: orderCounts.returned, color: "bg-rose-100 text-rose-800" },
+                  { key: "all", label: "All Orders", count: orderCounts.all, color: "bg-gray-100 text-gray-800" },
+                ].map((tab) => {
+                  const isActive = orderSubTab === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => {
+                        setOrderSubTab(tab.key);
+                        setOrderPage(1);
+                      }}
+                      className={`relative px-4 py-2.5 rounded-xl transition flex items-center gap-2 border whitespace-nowrap ${
+                        isActive
+                          ? "bg-[#6B4226] text-white border-[#4D2E1B] shadow-sm font-extrabold"
+                          : "bg-transparent text-[#6B4226] border-transparent hover:bg-[#FFF8E7] hover:border-[#C89B3C]/40"
+                      }`}
+                    >
+                      <span>{tab.label}</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                          isActive ? "bg-white/20 text-white" : tab.color
+                        }`}
+                      >
+                        ({tab.count})
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
 
               {/* Orders Search & Filter Toolbar */}
               <div className="bg-white p-4 rounded-2xl border border-[#C89B3C]/30 shadow-xs space-y-3">
@@ -1376,7 +1636,7 @@ export default function AdminPage() {
                         setSearchOrder(e.target.value);
                         setOrderPage(1);
                       }}
-                      placeholder="Search orders by order #, email, phone, or status..."
+                      placeholder="Search by order #, email, phone, courier tracking #, or address..."
                       className="w-full pl-9 pr-8 py-2 bg-[#FFF8E7]/50 rounded-xl border border-[#C89B3C]/40 text-xs font-semibold text-[#292524] placeholder:text-[#292524]/50 focus:outline-none focus:ring-1 focus:ring-[#A90C35]"
                     />
                     {searchOrder && (
@@ -1397,7 +1657,7 @@ export default function AdminPage() {
                     <span className="px-3 py-1 rounded-full bg-[#F4D35E]/30 border border-[#C89B3C]/30 text-[11px]">
                       Total: <strong className="text-[#A90C35]">{orders.length}</strong>
                     </span>
-                    {(searchOrder || orderStatusFilter !== "all" || orderSort !== "newest") && (
+                    {(searchOrder || orderMonthFilter !== "all" || orderStatusFilter !== "all" || orderSort !== "newest") && (
                       <span className="px-3 py-1 rounded-full bg-[#E6F4EA] border border-[#10B981]/40 text-[#137333] text-[11px]">
                         Filtered: <strong>{filteredOrders.length}</strong>
                       </span>
@@ -1406,26 +1666,28 @@ export default function AdminPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-[#C89B3C]/20 text-xs">
-                  {/* Status Filter */}
+                  {/* MONTH-WISE FILTER */}
                   <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
-                    <Filter size={13} className="text-[#A90C35] shrink-0" />
-                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Status:</span>
+                    <Calendar size={13} className="text-[#A90C35] shrink-0" />
+                    <span className="text-[11px] font-extrabold text-[#6B4226] whitespace-nowrap">Month:</span>
                     <select
-                      value={orderStatusFilter}
+                      value={orderMonthFilter}
                       onChange={(e) => {
-                        setOrderStatusFilter(e.target.value);
+                        setOrderMonthFilter(e.target.value);
                         setOrderPage(1);
                       }}
                       className="bg-transparent font-extrabold text-[#6B4226] focus:outline-none cursor-pointer text-xs"
                     >
-                      <option value="all">All Statuses ({orders.length})</option>
-                      {["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"].map((st) => (
-                        <option key={st} value={st}>
-                          {st}
+                      <option value="all">All Months</option>
+                      {orderMonthOptions.map(([val, label]) => (
+                        <option key={val} value={val}>
+                          {label}
                         </option>
                       ))}
                     </select>
                   </div>
+
+
 
                   {/* Sort Filter */}
                   <div className="flex items-center gap-1.5 bg-[#FFF8E7]/70 px-3 py-1.5 rounded-xl border border-[#C89B3C]/40 shadow-xs">
@@ -1446,12 +1708,12 @@ export default function AdminPage() {
                     </select>
                   </div>
 
-                  {(searchOrder || orderStatusFilter !== "all" || orderSort !== "newest") && (
+                  {(searchOrder || orderMonthFilter !== "all" || orderSort !== "newest") && (
                     <button
                       type="button"
                       onClick={() => {
                         setSearchOrder("");
-                        setOrderStatusFilter("all");
+                        setOrderMonthFilter("all");
                         setOrderSort("newest");
                         setOrderPage(1);
                       }}
@@ -1464,39 +1726,200 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="overflow-x-auto rounded-xl border border-[#C89B3C]/30 bg-white shadow-sm">
+              {/* ORDERS TABLE */}
+              <div className="overflow-x-auto rounded-2xl border border-[#C89B3C]/30 bg-white shadow-sm">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
                     <tr className="bg-[#F4D35E]/20 text-[#6B4226] font-extrabold uppercase border-b border-[#C89B3C]/30">
-                      <th className="p-3">Order #</th>
-                      <th className="p-3">Customer</th>
-                      <th className="p-3">Amount</th>
+                      <th className="p-3">Order Details</th>
+                      <th className="p-3">Customer Profile & Address</th>
+                      <th className="p-3">Amount & Items</th>
                       <th className="p-3">Payment</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3 text-right">Update</th>
+                      <th className="p-3">Courier / Dispatch Notes</th>
+                      <th className="p-3 text-right">Stage Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#C89B3C]/20">
                     {filteredOrders.length === 0 && (
                       <EmptyRow
                         cols={6}
-                        text={searchOrder ? `No orders matching "${searchOrder}".` : "No orders yet."}
+                        text={
+                          searchOrder
+                            ? `No orders matching "${searchOrder}".`
+                            : `No orders in "${orderSubTab.replace(/_/g, " ")}" stage.`
+                        }
                       />
                     )}
-                    {paginatedOrders.map(ord => (
-                      <tr key={ord.id} className="hover:bg-[#FFF8E7]/50 transition">
-                        <td className="p-3 font-bold font-mono text-[#6B4226]">{ord.orderNumber}</td>
-                        <td className="p-3"><span className="font-bold block">{ord.customerEmail}</span><span className="text-[10px] text-[#292524]/60">{ord.customerPhone}</span></td>
-                        <td className="p-3 font-bold text-[#A90C35]">₹{ord.totalAmount}</td>
-                        <td className="p-3 uppercase text-[10px] font-bold">{ord.paymentMethod}</td>
-                        <td className="p-3"><span className="px-2 py-0.5 rounded font-extrabold bg-[#E85D04] text-white text-[10px]">{ord.status}</span></td>
-                        <td className="p-3 text-right">
-                          <select value={ord.status} onChange={e => updateOrderStatus(ord.id, e.target.value)} className="bg-white border border-[#C89B3C]/40 rounded px-2 py-1 text-xs font-bold text-[#6B4226]">
-                            {["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"].map(s => <option key={s} value={s}>{s}</option>)}
-                          </select>
-                        </td>
-                      </tr>
-                    ))}
+                    {paginatedOrders.map((ord) => {
+                      const addr = parseShippingAddress(ord.shippingAddress);
+                      const isPendingStage = ord.status === "PENDING" || ord.status === "CONFIRMED";
+                      const isReadyToShipStage = ord.status === "READY_TO_SHIP" || ord.status === "PROCESSING";
+                      const isDispatchedStage = ord.status === "DISPATCHED" || ord.status === "SHIPPED";
+                      const isReturnedStage = ord.status === "RETURNED" || ord.status === "CANCELLED";
+
+                      return (
+                        <tr key={ord.id} className="hover:bg-[#FFF8E7]/50 transition">
+                          {/* Order Details */}
+                          <td className="p-3 align-top space-y-1">
+                            <span className="font-bold font-mono text-[#6B4226] block text-xs">{ord.orderNumber}</span>
+                            <span className="text-[10px] text-[#292524]/60 block flex items-center gap-1">
+                              <Clock size={11} className="shrink-0" />
+                              {ord.createdAt ? new Date(ord.createdAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }) : "N/A"}
+                            </span>
+                            <span
+                              className={`inline-block px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                                isDispatchedStage
+                                  ? "bg-purple-100 text-purple-800 border border-purple-300"
+                                  : isReadyToShipStage
+                                  ? "bg-blue-100 text-blue-800 border border-blue-300"
+                                  : isReturnedStage
+                                  ? "bg-rose-100 text-rose-800 border border-rose-300"
+                                  : "bg-amber-100 text-amber-800 border border-amber-300"
+                              }`}
+                            >
+                              {ord.status.replace(/_/g, " ")}
+                            </span>
+                          </td>
+
+                          {/* Customer Profile & Address */}
+                          <td className="p-3 align-top space-y-1.5 max-w-xs">
+                            <div>
+                              <span className="font-bold text-[#6B4226] block flex items-center gap-1">
+                                <Mail size={12} className="text-[#A90C35] shrink-0" />
+                                {ord.customerEmail}
+                              </span>
+                              <span className="text-[11px] text-[#292524]/70 font-semibold block flex items-center gap-1">
+                                <Phone size={11} className="text-[#6B4226]/60 shrink-0" />
+                                {ord.customerPhone || addr.phone || "No Phone"}
+                              </span>
+                            </div>
+
+                            {/* Delivery Address */}
+                            <div className="text-[11px] text-[#292524]/80 bg-[#FFF8E7]/80 p-2 rounded-xl border border-[#C89B3C]/30 space-y-0.5">
+                              <div className="font-bold text-[#6B4226] flex items-center gap-1 text-[10px] uppercase">
+                                <MapPin size={11} className="text-[#A90C35]" />
+                                <span>Delivery Address</span>
+                              </div>
+                              <p className="line-clamp-2 text-[10px] leading-relaxed">{addr.addressText}</p>
+                            </div>
+
+                            {/* Clickable Customer Profile Button */}
+                            <button
+                              type="button"
+                              onClick={() => openCustomerProfile(ord)}
+                              className="px-2.5 py-1 text-[10px] font-extrabold text-[#6B4226] bg-[#F4D35E]/30 hover:bg-[#F4D35E]/70 rounded-lg border border-[#C89B3C]/40 transition flex items-center gap-1"
+                            >
+                              <User size={11} />
+                              <span>View Customer Profile & History</span>
+                            </button>
+                          </td>
+
+                          {/* Amount & Items */}
+                          <td className="p-3 align-top space-y-1">
+                            <span className="font-extrabold text-sm text-[#A90C35] block">₹{ord.totalAmount}</span>
+                            <span className="text-[10px] text-[#292524]/70 block font-semibold">
+                              {Array.isArray(ord.items) ? `${ord.items.length} item(s)` : "1 item"}
+                            </span>
+                            {Array.isArray(ord.items) && ord.items[0] && (
+                              <div className="text-[10px] text-[#6B4226] font-medium truncate max-w-[140px]">
+                                • {ord.items[0].productNameSnapshot || ord.items[0].productName || ord.items[0].product?.name}
+                              </div>
+                            )}
+                          </td>
+
+                          {/* Payment */}
+                          <td className="p-3 align-top">
+                            <span className="uppercase text-[10px] font-extrabold px-2 py-0.5 bg-[#FFF8E7] text-[#6B4226] rounded border border-[#C89B3C]/40 inline-block mb-1">
+                              {ord.paymentMethod || "COD"}
+                            </span>
+                            <span
+                              className={`block text-[9px] font-bold ${
+                                ord.paymentStatus === "COMPLETED" ? "text-emerald-700" : "text-amber-700"
+                              }`}
+                            >
+                              Payment: {ord.paymentStatus || "PENDING"}
+                            </span>
+                          </td>
+
+                          {/* Courier / Dispatch Notes Section */}
+                          <td className="p-3 align-top max-w-xs">
+                            {addr.trackingNumber || addr.courierName || addr.courierNote ? (
+                              <div className="p-2 bg-[#F3E8FF] rounded-xl border border-purple-200 text-purple-900 space-y-1 text-[11px]">
+                                {addr.courierName && (
+                                  <div className="font-extrabold text-[10px] flex items-center gap-1 text-purple-900">
+                                    <Truck size={12} className="text-purple-700" />
+                                    <span>{addr.courierName}</span>
+                                  </div>
+                                )}
+                                {addr.trackingNumber && (
+                                  <div className="font-mono font-bold text-xs bg-white px-2 py-0.5 rounded border border-purple-200 inline-block text-purple-900">
+                                    No: {addr.trackingNumber}
+                                  </div>
+                                )}
+                                {addr.courierNote && (
+                                  <p className="text-[10px] italic text-purple-800 line-clamp-2">
+                                    &quot;{addr.courierNote}&quot;
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-[10px] text-gray-400 italic">No courier info added yet</span>
+                            )}
+                          </td>
+
+                          {/* Stage Actions */}
+                          <td className="p-3 align-top text-right space-y-2">
+                            {/* Fast Action Buttons Based on Current Stage */}
+                            {isPendingStage && (
+                              <button
+                                type="button"
+                                onClick={() => updateOrderStatus(ord.id, "READY_TO_SHIP")}
+                                className="w-full py-1.5 px-3 bg-[#A90C35] hover:bg-[#870B2B] text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
+                              >
+                                <span>Ready to Ship →</span>
+                              </button>
+                            )}
+
+                            {isReadyToShipStage && (
+                              <button
+                                type="button"
+                                onClick={() => openDispatchModal(ord, "DISPATCHED")}
+                                className="w-full py-1.5 px-3 bg-purple-700 hover:bg-purple-800 text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
+                              >
+                                <Truck size={13} />
+                                <span>Dispatch Order 📦</span>
+                              </button>
+                            )}
+
+                            {isDispatchedStage && (
+                              <div className="space-y-1">
+                                <button
+                                  type="button"
+                                  onClick={() => openDispatchModal(ord, "DISPATCHED")}
+                                  className="w-full py-1 px-2 bg-purple-100 hover:bg-purple-200 text-purple-900 text-[10px] font-bold rounded-lg border border-purple-300 transition flex items-center justify-center gap-1"
+                                >
+                                  <Edit2 size={11} />
+                                  <span>Edit Courier No</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updateOrderStatus(ord.id, "RETURNED")}
+                                  className="w-full py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[10px] font-bold rounded-lg border border-rose-200 transition flex items-center justify-center gap-1"
+                                >
+                                  <span>Mark Returned ↩️</span>
+                                </button>
+                              </div>
+                            )}
+
+                            {isReturnedStage && (
+                              <span className="inline-block px-3 py-1 bg-rose-100 text-rose-800 text-[10px] font-extrabold rounded-lg border border-rose-300">
+                                Returned ↩️
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -1697,6 +2120,191 @@ export default function AdminPage() {
             </FieldRow>
             <FormButtons onCancel={() => setCouponModal(null)} saving={saving} />
           </form>
+        </Modal>
+      )}
+
+      {/* DISPATCH ORDER MODAL */}
+      {dispatchModal && (
+        <Modal
+          title={`Dispatch Order: ${dispatchModal.orderNumber}`}
+          onClose={() => setDispatchModal(null)}
+        >
+          <form onSubmit={handleSaveDispatch} className="space-y-4 text-xs">
+            <div className="p-3 bg-purple-50 border border-purple-200 rounded-2xl space-y-1">
+              <span className="font-extrabold text-purple-900 text-xs flex items-center gap-1.5">
+                <Truck size={14} className="text-purple-700" />
+                <span>Courier & Dispatch Tracking Information</span>
+              </span>
+              <p className="text-[11px] text-purple-800">
+                Provide the courier consignment tracking number and pickup notes so the customer can collect their order easily.
+              </p>
+            </div>
+
+            <FieldRow label="Courier / Shipping Provider *">
+              <select
+                required
+                value={dispatchModal.courierName}
+                onChange={(e) =>
+                  setDispatchModal({ ...dispatchModal, courierName: e.target.value })
+                }
+                className={inp}
+              >
+                <option value="Speed Post (India Post)">Speed Post (India Post)</option>
+                <option value="BlueDart">BlueDart</option>
+                <option value="DTDC Courier">DTDC Courier</option>
+                <option value="Delhivery">Delhivery</option>
+                <option value="Professional Couriers">Professional Couriers</option>
+                <option value="Ecom Express">Ecom Express</option>
+                <option value="Shadowfax">Shadowfax</option>
+                <option value="Xpressbees">Xpressbees</option>
+                <option value="Other Courier">Other Courier / Transport</option>
+              </select>
+            </FieldRow>
+
+            <FieldRow label="Courier / Consignment Tracking Number *">
+              <input
+                required
+                type="text"
+                value={dispatchModal.trackingNumber}
+                onChange={(e) =>
+                  setDispatchModal({ ...dispatchModal, trackingNumber: e.target.value.toUpperCase() })
+                }
+                placeholder="e.g. SP987654321IN or BD123456789"
+                className={`${inp} font-mono font-bold uppercase`}
+              />
+            </FieldRow>
+
+            <FieldRow label="Dispatch Note / Note for Customer Collection">
+              <textarea
+                rows={3}
+                value={dispatchModal.courierNote}
+                onChange={(e) =>
+                  setDispatchModal({ ...dispatchModal, courierNote: e.target.value })
+                }
+                placeholder="e.g. Order dispatched via Speed Post. Customer can collect using Tracking # SP987654321IN at local post office/hub."
+                className={inp}
+              />
+            </FieldRow>
+
+            <FormButtons onCancel={() => setDispatchModal(null)} saving={saving} />
+          </form>
+        </Modal>
+      )}
+
+      {/* CUSTOMER PROFILE & ORDER DETAILS MODAL */}
+      {customerProfileModal && customerProfileModal.order && (
+        <Modal
+          title={`Customer Profile: ${customerProfileModal.order.customerEmail}`}
+          onClose={() => setCustomerProfileModal(null)}
+        >
+          {(() => {
+            const ord = customerProfileModal.order;
+            const addr = parseShippingAddress(ord.shippingAddress);
+            const customerEmailOrders = orders.filter(
+              (o) => o.customerEmail && o.customerEmail.toLowerCase() === ord.customerEmail.toLowerCase()
+            );
+
+            return (
+              <div className="space-y-4 text-xs">
+                {/* Customer Contact Card */}
+                <div className="p-4 bg-white rounded-2xl border border-[#C89B3C]/40 shadow-xs space-y-2">
+                  <div className="flex items-center gap-2 text-[#6B4226] border-b border-[#C89B3C]/20 pb-2">
+                    <User className="text-[#A90C35]" size={18} />
+                    <span className="font-extrabold text-sm">{addr.recipientName || "Customer Profile"}</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                    <div>
+                      <span className="text-[#292524]/60 block font-semibold">Email Address:</span>
+                      <span className="font-bold text-[#6B4226]">{ord.customerEmail}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#292524]/60 block font-semibold">Phone Number:</span>
+                      <span className="font-bold text-[#6B4226]">{ord.customerPhone || addr.phone || "N/A"}</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#C89B3C]/20 text-[11px]">
+                    <span className="text-[#292524]/60 block font-semibold flex items-center gap-1">
+                      <MapPin size={12} className="text-[#A90C35]" /> Full Delivery Address:
+                    </span>
+                    <p className="font-bold text-[#6B4226] mt-0.5 leading-relaxed bg-[#FFF8E7] p-2.5 rounded-xl border border-[#C89B3C]/30">
+                      {addr.addressText}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between text-[11px] font-bold text-[#6B4226]">
+                    <span>Total Lifetime Orders: <strong className="text-[#A90C35]">{customerEmailOrders.length}</strong></span>
+                    <span>Total Spent: <strong className="text-[#A90C35]">₹{customerEmailOrders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0)}</strong></span>
+                  </div>
+                </div>
+
+                {/* Order Breakdown */}
+                <div className="p-4 bg-white rounded-2xl border border-[#C89B3C]/40 shadow-xs space-y-3">
+                  <div className="flex items-center justify-between border-b border-[#C89B3C]/20 pb-2">
+                    <span className="font-mono font-bold text-sm text-[#6B4226]">{ord.orderNumber}</span>
+                    <span className="px-2.5 py-0.5 rounded font-extrabold bg-[#E85D04] text-white text-[10px]">
+                      {ord.status.replace(/_/g, " ")}
+                    </span>
+                  </div>
+
+                  {/* Order Items */}
+                  <div className="space-y-2">
+                    <span className="font-extrabold text-[#6B4226] text-[11px] block">Items Ordered:</span>
+                    {Array.isArray(ord.items) && ord.items.length > 0 ? (
+                      ord.items.map((it: any) => (
+                        <div
+                          key={it.id || it.productId}
+                          className="flex items-center gap-3 p-2 rounded-xl bg-[#FFF8E7]/60 border border-[#C89B3C]/30"
+                        >
+                          {it.imageUrlSnapshot && (
+                            <img
+                              src={it.imageUrlSnapshot}
+                              alt=""
+                              className="h-10 w-10 rounded-lg object-cover border border-[#C89B3C]/40"
+                            />
+                          )}
+                          <div className="flex-1">
+                            <span className="font-bold text-[#6B4226] block text-xs">
+                              {it.productNameSnapshot || it.productName || it.product?.name}
+                            </span>
+                            <span className="text-[10px] text-[#292524]/60 font-mono">
+                              SKU: {it.skuSnapshot || "N/A"} | Qty: {it.quantity}
+                            </span>
+                          </div>
+                          <span className="font-extrabold text-[#A90C35]">₹{it.totalPrice || it.unitPriceSnapshot * it.quantity}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-gray-500">Order items list unavailable.</p>
+                    )}
+                  </div>
+
+                  {/* Courier info inside profile modal */}
+                  {(addr.courierName || addr.trackingNumber || addr.courierNote) && (
+                    <div className="p-3 bg-purple-50 rounded-xl border border-purple-200 space-y-1 text-[11px]">
+                      <span className="font-extrabold text-purple-900 block flex items-center gap-1">
+                        <Truck size={12} className="text-purple-700" />
+                        <span>Courier Tracking Details:</span>
+                      </span>
+                      <p className="font-bold text-purple-900">{addr.courierName} - Consignment #{addr.trackingNumber}</p>
+                      {addr.courierNote && <p className="italic text-purple-800 text-[10px]">&quot;{addr.courierNote}&quot;</p>}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setCustomerProfileModal(null)}
+                    className="px-5 py-2 bg-[#6B4226] text-white font-extrabold rounded-xl text-xs hover:bg-[#4D2E1B] transition"
+                  >
+                    Close Profile
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
         </Modal>
       )}
 

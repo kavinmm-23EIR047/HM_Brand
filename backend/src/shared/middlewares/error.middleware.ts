@@ -17,7 +17,7 @@ export function errorHandler(
 
   if (err instanceof MulterError) {
     const message = err.code === 'LIMIT_FILE_SIZE'
-      ? 'Image files must be 10 MB or smaller.'
+      ? 'Image files must be 15 MB or smaller.'
       : 'Invalid image upload.';
     return sendError(res, message, 400);
   }

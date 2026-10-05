@@ -79,8 +79,8 @@ export class OrdersController {
 
   updateStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { status, paymentStatus } = req.body;
-      const order = await this.service.updateOrderStatus(req.params.id, status, paymentStatus);
+      const { status, paymentStatus, courierName, trackingNumber, courierNote } = req.body;
+      const order = await this.service.updateOrderStatus(req.params.id, status, paymentStatus, { courierName, trackingNumber, courierNote });
       return sendSuccess(res, order, 'Order status updated successfully');
     } catch (error) {
       return next(error);

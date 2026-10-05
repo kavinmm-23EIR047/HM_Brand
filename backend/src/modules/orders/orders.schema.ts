@@ -30,8 +30,11 @@ export const updateOrderStatusSchema = z.object({
     id: z.string().min(1, 'Invalid order ID'),
   }),
   body: z.object({
-    status: z.enum(['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
+    status: z.enum(['PENDING', 'CONFIRMED', 'PROCESSING', 'READY_TO_SHIP', 'SHIPPED', 'DISPATCHED', 'DELIVERED', 'RETURNED', 'CANCELLED']),
     paymentStatus: z.enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED']).optional(),
+    courierName: z.string().optional(),
+    trackingNumber: z.string().optional(),
+    courierNote: z.string().optional(),
   }),
 });
 

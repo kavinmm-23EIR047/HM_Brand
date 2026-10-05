@@ -312,12 +312,17 @@ export class OrdersService {
     return order;
   }
 
-  async updateOrderStatus(id: string, status: OrderStatus, paymentStatus?: PaymentStatus) {
+  async updateOrderStatus(
+    id: string,
+    status: OrderStatus,
+    paymentStatus?: PaymentStatus,
+    courierData?: { courierName?: string; trackingNumber?: string; courierNote?: string }
+  ) {
     const order = await this.repo.findById(id);
     if (!order) {
       throw new NotFoundError('Order not found');
     }
-    return this.repo.updateStatus(id, status, paymentStatus);
+    return this.repo.updateStatus(id, status, paymentStatus, courierData);
   }
 }
 

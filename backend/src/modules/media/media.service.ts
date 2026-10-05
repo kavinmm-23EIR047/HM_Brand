@@ -2,6 +2,7 @@ import prisma from '../../shared/database/prisma';
 import { deleteImage, uploadImage } from '../../shared/cloudinary';
 import { BadRequestError, NotFoundError } from '../../shared/errors/custom.error';
 import { generateSlug } from '../../shared/utils/slug.util';
+import { optimizeImageToWebp } from '../../shared/image-optimizer';
 
 export const mediaTypes = ['PRODUCT', 'CATEGORY', 'BANNER', 'HOMEPAGE', 'COLLECTION', 'FESTIVAL', 'OTHER'] as const;
 type MediaType = (typeof mediaTypes)[number];
@@ -117,10 +118,24 @@ export class MediaService {
       filename = safeSlug(String(data.imageSlug || ''), 'Image slug');
     }
 
-    const uploaded = await uploadImage(file.buffer, { folder, publicId: filename });
+    const optimized = await optimizeImageToWebp(file.buffer, {
+      maxDimension: 1600,
+      quality: 85,
+      effort: 5,
+    });
+
+    const uploaded = await uploadImage(optimized.buffer, { folder, publicId: filename });
     try {
       const record = await applyUpload(uploaded.secureUrl, uploaded.publicId);
-      return { ...uploaded, record };
+      return {
+        ...uploaded,
+        format: optimized.format,
+        width: optimized.width,
+        height: optimized.height,
+        size: optimized.size,
+        originalSize: optimized.originalSize,
+        record,
+      };
     } catch (error) {
       await deleteImage(uploaded.publicId).catch(() => undefined);
       throw error;

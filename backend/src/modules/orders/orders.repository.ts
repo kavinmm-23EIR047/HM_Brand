@@ -51,12 +51,36 @@ export class OrdersRepository {
     });
   }
 
-  async updateStatus(id: string, status: OrderStatus, paymentStatus?: PaymentStatus) {
+  async updateStatus(
+    id: string,
+    status: OrderStatus,
+    paymentStatus?: PaymentStatus,
+    courierData?: { courierName?: string; trackingNumber?: string; courierNote?: string }
+  ) {
+    const existingOrder = await prisma.order.findUnique({ where: { id } });
+    let shippingAddressStr = existingOrder?.shippingAddress || '';
+
+    if (courierData && (courierData.courierName || courierData.trackingNumber || courierData.courierNote)) {
+      let parsedAddress: any = {};
+      try {
+        parsedAddress = typeof shippingAddressStr === 'string' ? JSON.parse(shippingAddressStr) : (shippingAddressStr || {});
+      } catch {
+        parsedAddress = { rawAddress: shippingAddressStr };
+      }
+      if (courierData.courierName !== undefined) parsedAddress.courierName = courierData.courierName;
+      if (courierData.trackingNumber !== undefined) parsedAddress.trackingNumber = courierData.trackingNumber;
+      if (courierData.courierNote !== undefined) parsedAddress.courierNote = courierData.courierNote;
+      parsedAddress.dispatchedAt = new Date().toISOString();
+
+      shippingAddressStr = JSON.stringify(parsedAddress);
+    }
+
     return prisma.order.update({
       where: { id },
       data: {
         status,
         ...(paymentStatus ? { paymentStatus } : {}),
+        shippingAddress: shippingAddressStr,
       },
       include: { items: true },
     });

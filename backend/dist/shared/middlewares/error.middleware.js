@@ -11,7 +11,7 @@ function errorHandler(err, req, res, next) {
     }
     if (err instanceof multer_1.MulterError) {
         const message = err.code === 'LIMIT_FILE_SIZE'
-            ? 'Image files must be 10 MB or smaller.'
+            ? 'Image files must be 15 MB or smaller.'
             : 'Invalid image upload.';
         return (0, response_util_1.sendError)(res, message, 400);
     }
