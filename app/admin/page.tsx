@@ -644,7 +644,7 @@ export default function AdminPage() {
   const [orderPage, setOrderPage] = useState(1);
   const [orderStatusFilter, setOrderStatusFilter] = useState("all");
   const [orderSort, setOrderSort] = useState("newest");
-  const [orderSubTab, setOrderSubTab] = useState<string>("confirmed");
+  const [orderSubTab, setOrderSubTab] = useState<string>("pending");
   const [orderMonthFilter, setOrderMonthFilter] = useState<string>("all");
   const [customerProfileModal, setCustomerProfileModal] = useState<null | any>(null);
   const [dispatchModal, setDispatchModal] = useState<null | {
@@ -898,6 +898,7 @@ export default function AdminPage() {
 
   // Order counts grouped by sub-tab stages
   const orderCounts = useMemo(() => {
+    let pending = 0;
     let confirmed = 0;
     let readyToShip = 0;
     let dispatched = 0;
@@ -905,13 +906,33 @@ export default function AdminPage() {
 
     orders.forEach((o) => {
       const st = (o.status || "").toUpperCase();
-      if (st === "READY_TO_SHIP" || st === "PROCESSING") readyToShip++;
-      else if (st === "DISPATCHED" || st === "SHIPPED") dispatched++;
-      else if (st === "RETURNED" || st === "CANCELLED") returned++;
-      else confirmed++;
+      const pst = (o.paymentStatus || "").toUpperCase();
+      const isCod = (o.paymentMethod || "").toUpperCase() === "COD";
+
+      if (st === "CANCELLED" || st === "RETURNED") {
+        returned++;
+      } else if (st === "DISPATCHED" || st === "SHIPPED" || st === "DELIVERED") {
+        dispatched++;
+      } else if (st === "READY_TO_SHIP" || st === "PROCESSING") {
+        if (pst === "PENDING" && !isCod) {
+          pending++;
+        } else {
+          readyToShip++;
+        }
+      } else if (st === "CONFIRMED") {
+        if (pst === "PENDING" && !isCod) {
+          pending++;
+        } else {
+          confirmed++;
+        }
+      } else {
+        // st === "PENDING" or payment pending
+        pending++;
+      }
     });
 
     return {
+      pending,
       confirmed,
       readyToShip,
       dispatched,
@@ -941,20 +962,34 @@ export default function AdminPage() {
     let result = [...orders];
 
     // 1. Stage Sub-Tab Filter
-    if (orderSubTab === "confirmed" || orderSubTab === "pending") {
+    if (orderSubTab === "pending") {
       result = result.filter((o) => {
         const st = (o.status || "").toUpperCase();
-        return st === "PENDING" || st === "CONFIRMED";
+        const pst = (o.paymentStatus || "").toUpperCase();
+        const isCod = (o.paymentMethod || "").toUpperCase() === "COD";
+        if (st === "CANCELLED" || st === "RETURNED") return false;
+        return st === "PENDING" || (pst === "PENDING" && !isCod);
+      });
+    } else if (orderSubTab === "confirmed") {
+      result = result.filter((o) => {
+        const st = (o.status || "").toUpperCase();
+        const pst = (o.paymentStatus || "").toUpperCase();
+        const isCod = (o.paymentMethod || "").toUpperCase() === "COD";
+        if (st === "CANCELLED" || st === "RETURNED") return false;
+        return st === "CONFIRMED" && (pst !== "PENDING" || isCod);
       });
     } else if (orderSubTab === "ready_to_ship") {
       result = result.filter((o) => {
         const st = (o.status || "").toUpperCase();
-        return st === "READY_TO_SHIP" || st === "PROCESSING";
+        const pst = (o.paymentStatus || "").toUpperCase();
+        const isCod = (o.paymentMethod || "").toUpperCase() === "COD";
+        if (st === "CANCELLED" || st === "RETURNED") return false;
+        return (st === "READY_TO_SHIP" || st === "PROCESSING") && (pst !== "PENDING" || isCod);
       });
     } else if (orderSubTab === "dispatched") {
       result = result.filter((o) => {
         const st = (o.status || "").toUpperCase();
-        return st === "DISPATCHED" || st === "SHIPPED";
+        return st === "DISPATCHED" || st === "SHIPPED" || st === "DELIVERED";
       });
     } else if (orderSubTab === "returned") {
       result = result.filter((o) => {
@@ -1440,12 +1475,16 @@ export default function AdminPage() {
   const updateOrderStatus = async (
     orderId: string,
     newStatus: string,
-    courierData?: { courierName?: string; trackingNumber?: string; courierNote?: string }
+    courierData?: { courierName?: string; trackingNumber?: string; courierNote?: string },
+    paymentStatus?: string
   ) => {
     if (!token) return;
     setSaving(true);
     try {
       const payload: any = { status: newStatus };
+      if (paymentStatus) {
+        payload.paymentStatus = paymentStatus;
+      }
       if (courierData) {
         if (courierData.courierName) payload.courierName = courierData.courierName;
         if (courierData.trackingNumber) payload.trackingNumber = courierData.trackingNumber;
@@ -1946,6 +1985,7 @@ export default function AdminPage() {
               {/* STAGE SUB-TABS (MATCHING IMAGE 1) */}
               <div className="border-b-2 border-[#C89B3C]/30 bg-white/80 rounded-2xl p-2 flex items-center overflow-x-auto gap-2 text-xs font-bold shadow-xs">
                 {[
+                  { key: "pending", label: "Pending (Payment / Verify)", count: orderCounts.pending, color: "bg-amber-100 text-amber-800" },
                   { key: "confirmed", label: "Confirmed", count: orderCounts.confirmed, color: "bg-emerald-100 text-emerald-800" },
                   { key: "ready_to_ship", label: "Ready to Ship", count: orderCounts.readyToShip, color: "bg-blue-100 text-blue-800" },
                   { key: "dispatched", label: "Dispatched", count: orderCounts.dispatched, color: "bg-purple-100 text-purple-800" },
@@ -2108,10 +2148,16 @@ export default function AdminPage() {
                     )}
                     {paginatedOrders.map((ord) => {
                       const addr = parseShippingAddress(ord.shippingAddress);
-                      const isPendingStage = ord.status === "PENDING" || ord.status === "CONFIRMED";
-                      const isReadyToShipStage = ord.status === "READY_TO_SHIP" || ord.status === "PROCESSING";
-                      const isDispatchedStage = ord.status === "DISPATCHED" || ord.status === "SHIPPED";
-                      const isReturnedStage = ord.status === "RETURNED" || ord.status === "CANCELLED";
+                      const st = (ord.status || "").toUpperCase();
+                      const pst = (ord.paymentStatus || "").toUpperCase();
+                      const isCod = (ord.paymentMethod || "").toUpperCase() === "COD";
+
+                      const isOrderPending = (st === "PENDING" || (pst === "PENDING" && !isCod)) && st !== "CANCELLED" && st !== "RETURNED";
+                      const isOrderConfirmed = st === "CONFIRMED" && !isOrderPending && st !== "CANCELLED" && st !== "RETURNED";
+                      const isReadyToShipStage = (st === "READY_TO_SHIP" || st === "PROCESSING") && !isOrderPending && st !== "CANCELLED" && st !== "RETURNED";
+                      const isDispatchedStage = (st === "DISPATCHED" || st === "SHIPPED") && st !== "CANCELLED" && st !== "RETURNED";
+                      const isDeliveredStage = st === "DELIVERED";
+                      const isReturnedStage = st === "RETURNED" || st === "CANCELLED";
 
                       return (
                         <tr key={ord.id} className="hover:bg-[#FFF8E7]/50 transition">
@@ -2126,14 +2172,18 @@ export default function AdminPage() {
                               className={`inline-block px-2 py-0.5 rounded text-[10px] font-extrabold ${
                                 isDispatchedStage
                                   ? "bg-purple-100 text-purple-800 border border-purple-300"
+                                  : isDeliveredStage
+                                  ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
                                   : isReadyToShipStage
                                   ? "bg-blue-100 text-blue-800 border border-blue-300"
                                   : isReturnedStage
                                   ? "bg-rose-100 text-rose-800 border border-rose-300"
-                                  : "bg-amber-100 text-amber-800 border border-amber-300"
+                                  : isOrderPending
+                                  ? "bg-amber-100 text-amber-800 border border-amber-300"
+                                  : "bg-emerald-100 text-emerald-800 border border-emerald-300"
                               }`}
                             >
-                              {ord.status.replace(/_/g, " ")}
+                              {isOrderPending ? "PENDING (PAYMENT)" : ord.status.replace(/_/g, " ")}
                             </span>
                           </td>
 
@@ -2226,29 +2276,95 @@ export default function AdminPage() {
                           {/* Stage Actions */}
                           <td className="p-3 align-top text-right space-y-2">
                             {/* Fast Action Buttons Based on Current Stage */}
-                            {isPendingStage && (
-                              <button
-                                type="button"
-                                onClick={() => updateOrderStatus(ord.id, "READY_TO_SHIP")}
-                                className="w-full py-1.5 px-3 bg-[#A90C35] hover:bg-[#870B2B] text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
-                              >
-                                <span>Ready to Ship →</span>
-                              </button>
+                            {isOrderPending && (
+                              <div className="space-y-1.5">
+                                <span className="inline-block px-2 py-0.5 bg-amber-50 text-amber-800 text-[10px] font-extrabold rounded border border-amber-200">
+                                  Payment Pending ⏳
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (confirm(`Confirm order ${ord.orderNumber} and verify payment?`)) {
+                                      updateOrderStatus(ord.id, "CONFIRMED", undefined, isCod ? undefined : "COMPLETED");
+                                    }
+                                  }}
+                                  className="w-full py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
+                                  title="Confirm order & mark payment received"
+                                >
+                                  <Check size={12} />
+                                  <span>Confirm Order ✓</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (confirm(`Cancel pending order ${ord.orderNumber}?`)) {
+                                      updateOrderStatus(ord.id, "CANCELLED");
+                                    }
+                                  }}
+                                  className="w-full py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[10px] font-bold rounded-lg border border-rose-200 transition flex items-center justify-center gap-1"
+                                >
+                                  <span>Cancel Order ✕</span>
+                                </button>
+                              </div>
+                            )}
+
+                            {isOrderConfirmed && (
+                              <div className="space-y-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => updateOrderStatus(ord.id, "READY_TO_SHIP")}
+                                  className="w-full py-1.5 px-3 bg-[#A90C35] hover:bg-[#870B2B] text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
+                                >
+                                  <span>Ready to Ship →</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (confirm(`Cancel confirmed order ${ord.orderNumber}?`)) {
+                                      updateOrderStatus(ord.id, "CANCELLED");
+                                    }
+                                  }}
+                                  className="w-full py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[10px] font-bold rounded-lg border border-rose-200 transition flex items-center justify-center gap-1"
+                                >
+                                  <span>Cancel Order ✕</span>
+                                </button>
+                              </div>
                             )}
 
                             {isReadyToShipStage && (
-                              <button
-                                type="button"
-                                onClick={() => openDispatchModal(ord, "DISPATCHED")}
-                                className="w-full py-1.5 px-3 bg-purple-700 hover:bg-purple-800 text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
-                              >
-                                <Truck size={13} />
-                                <span>Dispatch Order 📦</span>
-                              </button>
+                              <div className="space-y-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => openDispatchModal(ord, "DISPATCHED")}
+                                  className="w-full py-1.5 px-3 bg-purple-700 hover:bg-purple-800 text-white text-[11px] font-extrabold rounded-xl shadow transition flex items-center justify-center gap-1"
+                                >
+                                  <Truck size={13} />
+                                  <span>Dispatch Order 📦</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (confirm(`Cancel order ${ord.orderNumber}?`)) {
+                                      updateOrderStatus(ord.id, "CANCELLED");
+                                    }
+                                  }}
+                                  className="w-full py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[10px] font-bold rounded-lg border border-rose-200 transition flex items-center justify-center gap-1"
+                                >
+                                  <span>Cancel Order ✕</span>
+                                </button>
+                              </div>
                             )}
 
                             {isDispatchedStage && (
                               <div className="space-y-1">
+                                <button
+                                  type="button"
+                                  onClick={() => updateOrderStatus(ord.id, "DELIVERED")}
+                                  className="w-full py-1.5 px-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-extrabold rounded-lg shadow-xs transition flex items-center justify-center gap-1"
+                                >
+                                  <Check size={12} />
+                                  <span>Mark Delivered ✓</span>
+                                </button>
                                 <button
                                   type="button"
                                   onClick={() => openDispatchModal(ord, "DISPATCHED")}
@@ -2259,7 +2375,11 @@ export default function AdminPage() {
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => updateOrderStatus(ord.id, "RETURNED")}
+                                  onClick={() => {
+                                    if (confirm(`Mark order ${ord.orderNumber} as returned?`)) {
+                                      updateOrderStatus(ord.id, "RETURNED");
+                                    }
+                                  }}
                                   className="w-full py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-800 text-[10px] font-bold rounded-lg border border-rose-200 transition flex items-center justify-center gap-1"
                                 >
                                   <span>Mark Returned ↩️</span>
@@ -2267,9 +2387,15 @@ export default function AdminPage() {
                               </div>
                             )}
 
+                            {isDeliveredStage && (
+                              <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded-lg border border-emerald-300">
+                                Delivered ✓
+                              </span>
+                            )}
+
                             {isReturnedStage && (
                               <span className="inline-block px-3 py-1 bg-rose-100 text-rose-800 text-[10px] font-extrabold rounded-lg border border-rose-300">
-                                Returned ↩️
+                                {st === "CANCELLED" ? "Cancelled ✕" : "Returned ↩️"}
                               </span>
                             )}
                           </td>

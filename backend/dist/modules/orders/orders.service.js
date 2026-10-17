@@ -279,6 +279,15 @@ class OrdersService {
         if (!order) {
             throw new custom_error_1.NotFoundError('Order not found');
         }
+        const effectivePaymentStatus = paymentStatus || order.paymentStatus;
+        const isOnlinePayment = (order.paymentMethod || '').toUpperCase() !== 'COD';
+        const isAdvancingToShipping = ['READY_TO_SHIP', 'PROCESSING', 'SHIPPED', 'DISPATCHED', 'DELIVERED'].includes(status);
+        if (isOnlinePayment && effectivePaymentStatus === 'PENDING' && isAdvancingToShipping) {
+            throw new custom_error_1.BadRequestError('Cannot move order to shipping: Payment is still pending. Please confirm payment first.');
+        }
+        if (order.status === 'PENDING' && isAdvancingToShipping) {
+            throw new custom_error_1.BadRequestError('Cannot move pending order directly to shipping stages. Please confirm the order first.');
+        }
         return this.repo.updateStatus(id, status, paymentStatus, courierData);
     }
 }
