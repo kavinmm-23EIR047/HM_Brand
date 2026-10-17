@@ -193,50 +193,49 @@ export function DeliveryReachBanner() {
           <div className="pointer-events-none absolute -left-12 -top-12 h-64 w-64 rounded-full bg-[#F6C84C]/20 blur-3xl" />
           <div className="pointer-events-none absolute -right-12 -bottom-12 h-64 w-64 rounded-full bg-[#9E1830]/15 blur-3xl" />
 
-          {/* Desktop & Tablet Banner Visual Display */}
-          <div className="relative mb-8 overflow-hidden rounded-2xl border border-[#F6C84C]/50 shadow-md group">
-            <div className="relative aspect-[16/9] w-full max-h-[580px] min-h-[260px] sm:min-h-[380px] lg:min-h-[460px]">
-              <Image
-                src="/images/delivery_reach_banner.jpg"
-                alt="HM BRAND delivery reach banner connecting fragrance to 100+ districts across Tamil Nadu, Kerala, Andhra Pradesh, Karnataka, Telangana and Puducherry"
-                fill
-                priority
-                sizes="(max-width: 1400px) 100vw, 1400px"
-                className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.01]"
-              />
-            </div>
+          {/* Side-by-Side Unified Delivery Reach Layout */}
+          <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
+            
+            {/* Left Column: South India Delivery Network Map */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center">
+              <div className="relative w-full max-w-[460px] overflow-hidden rounded-3xl border-2 border-[#F6C84C]/80 bg-gradient-to-b from-[#FFFDF8] via-[#FFF9ED] to-[#FFF3DC] p-3 sm:p-4 shadow-xl group">
+                
+                {/* Glowing Aura behind Map */}
+                <div className="pointer-events-none absolute -left-10 -top-10 h-48 w-48 rounded-full bg-[#F6C84C]/25 blur-2xl" />
+                <div className="pointer-events-none absolute -right-10 -bottom-10 h-48 w-48 rounded-full bg-[#9E1830]/20 blur-2xl" />
 
-            {/* Quick Interactive Ribbon on Banner Bottom */}
-            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-t from-black/75 via-black/40 to-transparent p-4 sm:p-6 text-white backdrop-blur-[2px]">
-              <div className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F6C84C] text-[#173B3A] shadow">
-                  <Truck size={18} />
-                </span>
-                <div>
-                  <p className="text-xs sm:text-sm font-extrabold leading-tight text-[#F6C84C]">
-                    100+ Districts Connected Across South India
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-white/90 font-medium">
-                    Fast dispatched directly from Coimbatore manufacturing facility
-                  </p>
+                <div className="relative aspect-[1167/1347] w-full overflow-hidden rounded-2xl bg-white/50 border border-[#F6C84C]/40 shadow-inner flex items-center justify-center">
+                  <Image
+                    src="/images/South India Delivery Network Map.png"
+                    alt="HM BRAND South India Delivery Network Map covering 100+ districts across Tamil Nadu, Kerala, Andhra Pradesh, Karnataka, Telangana and Puducherry"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 460px"
+                    className="object-contain object-center transition-transform duration-700 group-hover:scale-105"
+                    priority
+                  />
+                </div>
+
+                {/* Bottom Trust Ribbon on Map Card */}
+                <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-[#F6C84C]/60 bg-white/95 px-3 py-2 text-xs shadow-2xs backdrop-blur-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#9E1830] text-white shadow-xs">
+                      <Truck size={14} />
+                    </span>
+                    <span className="font-extrabold text-[#173B3A] text-[11px] sm:text-xs">
+                      100+ Districts Connected
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#3F7D45] bg-[#3F7D45]/10 px-2 py-0.5 rounded-full">
+                    Direct from Coimbatore
+                  </span>
                 </div>
               </div>
-
-              <Link
-                href="/shop"
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#9E1830] hover:bg-[#F47A20] px-4 py-2 text-xs font-bold text-white shadow-md transition hover:scale-105 active:scale-95"
-              >
-                <span>Shop All Fragrances</span>
-                <ArrowRight size={14} />
-              </Link>
             </div>
-          </div>
 
-          {/* Detailed Content & Interactive State Grid */}
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10">
-            
-            {/* Left Column: Heading & Trust Badges */}
-            <div className="space-y-4 lg:col-span-5">
+            {/* Right Column: Heading, Trust Badges & 6 Interactive State Cards */}
+            <div className="lg:col-span-7 space-y-4">
+              
+              {/* Traditional Eyebrow */}
               <div className="flex items-center gap-2">
                 <span className="font-space text-xs font-black tracking-[.25em] text-[#9E1830] uppercase">
                   OUR REACH
@@ -245,6 +244,7 @@ export function DeliveryReachBanner() {
                 <span className="text-xs">🪔</span>
               </div>
 
+              {/* Title & Description */}
               <div>
                 <h2
                   id="delivery-reach-heading"
@@ -255,56 +255,55 @@ export function DeliveryReachBanner() {
                     100+ Districts
                   </span>
                 </h2>
-                <p className="mt-2.5 font-sans text-xs sm:text-sm leading-relaxed text-[#292524]/80">
+                <p className="mt-2 font-sans text-xs sm:text-sm leading-relaxed text-[#292524]/80">
                   Delivering the divine aroma of HM BRAND across Tamil Nadu, Kerala, Andhra Pradesh,
                   Karnataka, Telangana, and Puducherry directly to your doorstep.
                 </p>
               </div>
 
               {/* Delivery Guarantees Bar */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2.5 rounded-xl border border-[#F6C84C]/60 bg-white/90 p-3 shadow-xs">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#9E1830]/10 text-[#9E1830]">
-                    <Truck size={20} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <div className="flex items-center gap-2.5 rounded-xl border border-[#F6C84C]/60 bg-white/95 p-2.5 shadow-2xs">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#9E1830]/10 text-[#9E1830] shrink-0">
+                    <Truck size={17} />
                   </div>
-                  <div>
-                    <span className="block text-xs font-black text-[#173B3A]">
+                  <div className="min-w-0">
+                    <span className="block text-xs font-black text-[#173B3A] truncate">
                       100+ Districts Connected
                     </span>
-                    <span className="block text-[10px] font-semibold text-[#6B4226]">
+                    <span className="block text-[10px] font-semibold text-[#6B4226] truncate">
                       Reliable Postal &amp; Courier Network
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 rounded-xl border border-[#F6C84C]/60 bg-white/90 p-3 shadow-xs">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#3F7D45]/10 text-[#3F7D45]">
-                    <Package size={20} />
+                <div className="flex items-center gap-2.5 rounded-xl border border-[#F6C84C]/60 bg-white/95 p-2.5 shadow-2xs">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#3F7D45]/10 text-[#3F7D45] shrink-0">
+                    <Package size={17} />
                   </div>
-                  <div>
-                    <span className="block text-xs font-black text-[#173B3A]">
+                  <div className="min-w-0">
+                    <span className="block text-xs font-black text-[#173B3A] truncate">
                       Direct from Coimbatore
                     </span>
-                    <span className="block text-[10px] font-semibold text-[#3F7D45]">
+                    <span className="block text-[10px] font-semibold text-[#3F7D45] truncate">
                       Freshly Packed &amp; Fragrance-Sealed
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-xl bg-[#FFF8E7] p-3 text-xs text-[#6B4226] border border-[#C89B3C]/30 flex items-center gap-2">
-                <ShieldCheck size={16} className="text-[#9E1830] shrink-0" />
+              {/* Tip Box */}
+              <div className="rounded-xl bg-[#FFF8E7] px-3 py-2 text-[11px] text-[#6B4226] border border-[#C89B3C]/30 flex items-center gap-2">
+                <ShieldCheck size={15} className="text-[#9E1830] shrink-0" />
                 <span>
                   <strong>Tip:</strong> Click on any state card to inspect the full list of covered
                   districts and verified courier pincodes.
                 </span>
               </div>
-            </div>
 
-            {/* Right Column: 6 Interactive State Pills Grid */}
-            <div className="lg:col-span-7 space-y-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-space text-[11px] font-extrabold uppercase tracking-wider text-[#6B4226]">
+              {/* State Selection Header */}
+              <div className="flex items-center justify-between pt-1">
+                <span className="font-space text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#6B4226]">
                   SELECT YOUR STATE TO VIEW DISTRICT REACH
                 </span>
                 <span className="text-[11px] font-bold text-[#9E1830]">
@@ -312,45 +311,43 @@ export function DeliveryReachBanner() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                {SOUTH_INDIA_STATES.map((state) => {
-                  return (
-                    <button
-                      key={state.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedState(state);
-                        setDistrictSearch("");
-                      }}
-                      className="group relative flex items-center justify-between gap-3 rounded-2xl border-2 border-[#F6C84C]/50 bg-white/95 p-3.5 text-left shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-[#9E1830] hover:shadow-md active:scale-[0.98]"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        {/* Heritage Landmark Icon in Circular Frame */}
-                        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#FFF8E7] border border-[#F6C84C]/50 shadow-2xs group-hover:scale-110 transition-transform">
-                          <StateLandmarkIcon stateId={state.id} />
-                        </div>
-
-                        <div className="min-w-0">
-                          <h3 className="font-heading text-sm font-extrabold text-[#173B3A] group-hover:text-[#9E1830] transition leading-snug truncate">
-                            {state.name}
-                          </h3>
-                          <p className="text-[11px] font-semibold text-[#6B4226]">
-                            {state.districtsCount} Districts Covered
-                          </p>
-                          <span className="text-[10px] text-[#2F855A] font-bold block mt-0.5">
-                            ⚡ {state.dispatchTime}
-                          </span>
-                        </div>
+              {/* 6 Interactive State Pills Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {SOUTH_INDIA_STATES.map((state) => (
+                  <button
+                    key={state.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedState(state);
+                      setDistrictSearch("");
+                    }}
+                    className="group relative flex items-center justify-between gap-3 rounded-2xl border-2 border-[#F6C84C]/50 bg-white/95 p-3 text-left shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-[#9E1830] hover:shadow-md active:scale-[0.98]"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FFF8E7] border border-[#F6C84C]/50 shadow-2xs group-hover:scale-110 transition-transform">
+                        <StateLandmarkIcon stateId={state.id} />
                       </div>
 
-                      {/* Deep Maroon Circular Arrow Button */}
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#9E1830] text-white shadow-xs transition-transform group-hover:translate-x-0.5 group-hover:scale-110">
-                        <ChevronRight size={14} />
-                      </span>
-                    </button>
-                  );
-                })}
+                      <div className="min-w-0">
+                        <h3 className="font-heading text-sm font-extrabold text-[#173B3A] group-hover:text-[#9E1830] transition leading-snug truncate">
+                          {state.name}
+                        </h3>
+                        <p className="text-[11px] font-semibold text-[#6B4226]">
+                          {state.districtsCount} Districts Covered
+                        </p>
+                        <span className="text-[10px] text-[#2F855A] font-bold block">
+                          ⚡ {state.dispatchTime}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#9E1830] text-white shadow-xs transition-transform group-hover:translate-x-0.5 group-hover:scale-110">
+                      <ChevronRight size={13} />
+                    </span>
+                  </button>
+                ))}
               </div>
+
             </div>
 
           </div>
