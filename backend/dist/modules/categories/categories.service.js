@@ -9,8 +9,8 @@ class CategoriesService {
     constructor(repo = categories_repository_1.categoriesRepository) {
         this.repo = repo;
     }
-    async getAllCategories(includeInactive = false) {
-        return this.repo.findAll(includeInactive);
+    async getAllCategories(includeInactive = false, parentId) {
+        return this.repo.findAll(includeInactive, parentId);
     }
     async getCategoryBySlug(slug) {
         const category = await this.repo.findBySlug(slug);
@@ -25,9 +25,16 @@ class CategoriesService {
         if (existing) {
             throw new custom_error_1.ConflictError(`Category with slug '${slug}' already exists.`);
         }
+        if (data.parentId) {
+            const parent = await this.repo.findById(data.parentId);
+            if (!parent) {
+                throw new custom_error_1.NotFoundError('Parent category not found');
+            }
+        }
         return this.repo.create({
             ...data,
             slug,
+            parentId: data.parentId || null,
         });
     }
     async updateCategory(id, data) {
@@ -39,9 +46,16 @@ class CategoriesService {
         if (data.name && data.name !== category.name) {
             slug = (0, slug_util_1.generateSlug)(data.name);
         }
+        if (data.parentId && data.parentId !== id) {
+            const parent = await this.repo.findById(data.parentId);
+            if (!parent) {
+                throw new custom_error_1.NotFoundError('Parent category not found');
+            }
+        }
         return this.repo.update(id, {
             ...data,
             slug,
+            parentId: data.parentId !== undefined ? (data.parentId || null) : undefined,
         });
     }
     async deleteCategory(id) {

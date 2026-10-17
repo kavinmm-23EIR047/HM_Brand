@@ -9,6 +9,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const path_1 = __importDefault(require("path"));
 const routes_1 = __importDefault(require("./routes"));
+const prisma_1 = __importDefault(require("./shared/database/prisma"));
 const error_middleware_1 = require("./shared/middlewares/error.middleware");
 const app = (0, express_1.default)();
 // Security Middlewares
@@ -50,8 +51,26 @@ const limiter = (0, express_rate_limit_1.default)({
 });
 app.use('/api', limiter);
 // Health Check
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/health', async (req, res) => {
+    try {
+        const categoryCount = await prisma_1.default.category.count();
+        const productCount = await prisma_1.default.product.count();
+        res.status(200).json({
+            status: 'ok',
+            timestamp: new Date().toISOString(),
+            database: 'connected',
+            categories: categoryCount,
+            products: productCount,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            status: 'error',
+            timestamp: new Date().toISOString(),
+            database: 'failed',
+            error: error.message,
+        });
+    }
 });
 // API Routes
 const apiPrefix = process.env.API_PREFIX || '/api/v1';

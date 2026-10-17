@@ -9,6 +9,7 @@ exports.createCategorySchema = zod_1.z.object({
         imageUrl: zod_1.z.string().optional(),
         displayOrder: zod_1.z.coerce.number().int().optional().default(0),
         isActive: zod_1.z.boolean().optional().default(true),
+        parentId: zod_1.z.string().optional().nullable(),
     }),
 });
 exports.updateCategorySchema = zod_1.z.object({
@@ -21,5 +22,6 @@ exports.updateCategorySchema = zod_1.z.object({
         imageUrl: zod_1.z.string().optional(),
         displayOrder: zod_1.z.coerce.number().int().optional(),
         isActive: zod_1.z.boolean().optional(),
+        parentId: zod_1.z.string().optional().nullable(),
     }),
 });

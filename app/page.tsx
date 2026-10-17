@@ -11,6 +11,7 @@ import { HeroBannerSlider } from "@/components/hero-banner-slider";
 import { TrustStrip } from "@/components/trust-strip";
 import { BentoPromos } from "@/components/bento-promos";
 import { PromoBanners } from "@/components/promo-banners";
+import { DeliveryReachBanner } from "@/components/delivery-reach-banner";
 import { Testimonials } from "@/components/testimonials";
 import { OurStorySection } from "@/components/our-story-section";
 import { products } from "@/lib/products";
@@ -51,6 +52,9 @@ export default function HomePage() {
 
         {/* 4. BENEFIT / TRUST STRIP */}
         <TrustStrip />
+
+        {/* 5. DELIVERY REACH BANNER (100+ SOUTH INDIA DISTRICTS) */}
+        <DeliveryReachBanner />
 
         {/* 5. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER) */}
         <BentoPromos />

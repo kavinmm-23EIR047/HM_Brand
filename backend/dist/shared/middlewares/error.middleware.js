@@ -26,5 +26,5 @@ function errorHandler(err, req, res, next) {
             return (0, response_util_1.sendError)(res, 'Record not found in database.', 404);
         }
     }
-    return (0, response_util_1.sendError)(res, process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message, 500);
+    return (0, response_util_1.sendError)(res, err.message || 'Internal server error', 500);
 }

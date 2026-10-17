@@ -315,6 +315,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch(`${API_BASE_URL}/addresses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (res.status === 401) {
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(AUTH_USER_KEY);
+        setSavedAddresses([]);
+        return;
+      }
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.data)) {
         setSavedAddresses(data.data);
@@ -468,6 +476,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch(`${API_BASE_URL}/wishlist`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (res.status === 401) {
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(AUTH_USER_KEY);
+        return;
+      }
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.data)) {
         const slugs = data.data.map((item: any) => item.product?.slug).filter(Boolean);

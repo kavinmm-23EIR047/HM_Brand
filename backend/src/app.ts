@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
 import routes from './routes';
+import prisma from './shared/database/prisma';
 import { errorHandler } from './shared/middlewares/error.middleware';
 
 const app: Application = express();
@@ -57,8 +58,25 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Health Check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/health', async (req, res) => {
+  try {
+    const categoryCount = await prisma.category.count();
+    const productCount = await prisma.product.count();
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      database: 'connected',
+      categories: categoryCount,
+      products: productCount,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: 'error',
+      timestamp: new Date().toISOString(),
+      database: 'failed',
+      error: error.message,
+    });
+  }
 });
 
 // API Routes

@@ -18,6 +18,7 @@ class ProductsService {
             limit,
             search: filters.search,
             categorySlug: filters.category,
+            subcategorySlug: filters.subcategory,
             collectionSlug: filters.collection,
             festivalSlug: filters.festival,
             sort: filters.sort,
@@ -111,6 +112,17 @@ class ProductsService {
     }
     async removeProductImage(imageId) {
         return media_service_1.mediaService.deleteProductImage(imageId);
+    }
+    async setPrimaryImage(productId, imageId) {
+        const product = await this.repo.findById(productId);
+        if (!product || product.deletedAt) {
+            throw new custom_error_1.NotFoundError('Product not found');
+        }
+        const targetImage = product.images?.find((img) => img.id === imageId);
+        if (!targetImage) {
+            throw new custom_error_1.NotFoundError('Product image not found on this product');
+        }
+        return this.repo.setPrimaryImage(productId, imageId);
     }
     async deleteProduct(id) {
         const product = await this.repo.findById(id);

@@ -7,7 +7,7 @@ exports.productsRepository = exports.ProductsRepository = void 0;
 const prisma_1 = __importDefault(require("../../shared/database/prisma"));
 class ProductsRepository {
     async findPaginated(filters) {
-        const { page, limit, search, categorySlug, collectionSlug, festivalSlug, sort, isFeatured, includeInactive } = filters;
+        const { page, limit, search, categorySlug, subcategorySlug, collectionSlug, festivalSlug, sort, isFeatured, includeInactive } = filters;
         const skip = (page - 1) * limit;
         const where = {
             deletedAt: null,
@@ -24,8 +24,22 @@ class ProductsRepository {
         if (categorySlug) {
             where.categories = {
                 some: {
-                    category: { slug: categorySlug },
+                    category: {
+                        OR: [
+                            { slug: categorySlug },
+                            { name: categorySlug },
+                        ],
+                    },
                 },
+            };
+        }
+        if (subcategorySlug) {
+            where.subcategory = {
+                OR: [
+                    { slug: subcategorySlug },
+                    { id: subcategorySlug },
+                    { name: subcategorySlug },
+                ],
             };
         }
         if (collectionSlug) {
@@ -58,6 +72,7 @@ class ProductsRepository {
                 include: {
                     images: { orderBy: { displayOrder: 'asc' } },
                     categories: { include: { category: true } },
+                    subcategory: true,
                     collections: { include: { collection: true } },
                 },
             }),
@@ -71,6 +86,7 @@ class ProductsRepository {
             include: {
                 images: { orderBy: { displayOrder: 'asc' } },
                 categories: { include: { category: true } },
+                subcategory: true,
                 collections: { include: { collection: true } },
                 festivals: { include: { festival: true } },
             },
@@ -82,6 +98,7 @@ class ProductsRepository {
             include: {
                 images: { orderBy: { displayOrder: 'asc' } },
                 categories: { include: { category: true } },
+                subcategory: true,
             },
         });
     }
@@ -91,7 +108,7 @@ class ProductsRepository {
         });
     }
     async create(data) {
-        const { categoryIds = [], images = [], ...productData } = data;
+        const { categoryIds = [], images = [], subcategoryId, ...productData } = data;
         const cleanCategoryIds = categoryIds.filter((cid) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
         let resolvedCategoryIds = [];
         if (cleanCategoryIds.length > 0) {
@@ -110,6 +127,7 @@ class ProductsRepository {
         return prisma_1.default.product.create({
             data: {
                 ...productData,
+                subcategoryId: subcategoryId || null,
                 categories: {
                     create: resolvedCategoryIds.map((categoryId) => ({ categoryId })),
                 },
@@ -126,11 +144,15 @@ class ProductsRepository {
             include: {
                 images: true,
                 categories: { include: { category: true } },
+                subcategory: true,
             },
         });
     }
     async update(id, data) {
-        const { categoryIds, images, ...updateData } = data;
+        const { categoryIds, images, subcategoryId, ...updateData } = data;
+        if (subcategoryId !== undefined) {
+            updateData.subcategoryId = subcategoryId || null;
+        }
         return prisma_1.default.$transaction(async (tx) => {
             if (Array.isArray(categoryIds)) {
                 const cleanCategoryIds = categoryIds.filter((cid) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== '');
@@ -175,6 +197,7 @@ class ProductsRepository {
                 include: {
                     images: true,
                     categories: { include: { category: true } },
+                    subcategory: true,
                 },
             });
         }, {
@@ -203,6 +226,18 @@ class ProductsRepository {
     async removeImage(imageId) {
         return prisma_1.default.productImage.delete({
             where: { id: imageId },
+        });
+    }
+    async setPrimaryImage(productId, imageId) {
+        return prisma_1.default.$transaction(async (tx) => {
+            await tx.productImage.updateMany({
+                where: { productId },
+                data: { isPrimary: false },
+            });
+            return tx.productImage.update({
+                where: { id: imageId },
+                data: { isPrimary: true },
+            });
         });
     }
     async delete(id) {

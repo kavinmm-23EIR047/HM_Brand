@@ -36,7 +36,7 @@ export function errorHandler(
 
   return sendError(
     res,
-    process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+    err.message || 'Internal server error',
     500
   );
 }

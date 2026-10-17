@@ -14,6 +14,7 @@ router.get('/:slug', products_controller_1.productsController.getBySlug);
 router.post('/admin', auth_middleware_1.authenticateJWT, (0, auth_middleware_1.requireRole)('ADMIN'), (0, validation_middleware_1.validateRequest)(products_schema_1.createProductSchema), products_controller_1.productsController.create);
 router.patch('/admin/:id', auth_middleware_1.authenticateJWT, (0, auth_middleware_1.requireRole)('ADMIN'), (0, validation_middleware_1.validateRequest)(products_schema_1.updateProductSchema), products_controller_1.productsController.update);
 router.post('/admin/:id/images', auth_middleware_1.authenticateJWT, (0, auth_middleware_1.requireRole)('ADMIN'), products_controller_1.productsController.addImage);
+router.patch('/admin/:id/images/:imageId/primary', auth_middleware_1.authenticateJWT, (0, auth_middleware_1.requireRole)('ADMIN'), products_controller_1.productsController.setPrimaryImage);
 router.delete('/admin/images/:imageId', auth_middleware_1.authenticateJWT, (0, auth_middleware_1.requireRole)('ADMIN'), products_controller_1.productsController.removeImage);
 router.delete('/admin/:id', auth_middleware_1.authenticateJWT, (0, auth_middleware_1.requireRole)('ADMIN'), products_controller_1.productsController.delete);
 exports.default = router;
