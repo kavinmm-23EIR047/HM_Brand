@@ -12,6 +12,8 @@ const routes_1 = __importDefault(require("./routes"));
 const prisma_1 = __importDefault(require("./shared/database/prisma"));
 const error_middleware_1 = require("./shared/middlewares/error.middleware");
 const app = (0, express_1.default)();
+// Trust reverse proxy (required on Render, Heroku, etc. for express-rate-limit)
+app.set('trust proxy', 1);
 // Security Middlewares
 app.use((0, helmet_1.default)({ crossOriginResourcePolicy: false }));
 const allowedOrigins = process.env.CORS_ORIGIN

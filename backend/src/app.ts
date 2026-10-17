@@ -9,6 +9,9 @@ import { errorHandler } from './shared/middlewares/error.middleware';
 
 const app: Application = express();
 
+// Trust reverse proxy (required on Render, Heroku, etc. for express-rate-limit)
+app.set('trust proxy', 1);
+
 // Security Middlewares
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
