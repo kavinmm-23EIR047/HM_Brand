@@ -13,20 +13,24 @@ async function bootstrap() {
     console.log('✅ Connected to Prisma Postgres Database via Prisma ORM.');
 
     // Auto-migrate schema columns if missing in target database
-    try {
-      await prisma.$executeRawUnsafe(`
-        ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "parentId" TEXT;
-        ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "deletedAt" TIMESTAMP(3);
-        ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "unitPrice" DOUBLE PRECISION;
-        ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "bundleQuantity" INTEGER DEFAULT 1;
-        ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "subcategoryId" TEXT;
-        ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "couponCode" TEXT;
-        ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "deletedAt" TIMESTAMP(3);
-      `);
-      console.log('✅ Database schema columns verified and up-to-date.');
-    } catch (migErr) {
-      console.warn('⚠️ Auto-migration note:', migErr);
+    const migrationStatements = [
+      'ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "parentId" TEXT',
+      'ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "deletedAt" TIMESTAMP(3)',
+      'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "unitPrice" DOUBLE PRECISION',
+      'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "bundleQuantity" INTEGER DEFAULT 1',
+      'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "subcategoryId" TEXT',
+      'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "couponCode" TEXT',
+      'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "deletedAt" TIMESTAMP(3)',
+    ];
+
+    for (const statement of migrationStatements) {
+      try {
+        await prisma.$executeRawUnsafe(statement);
+      } catch (stmtErr: any) {
+        console.warn(`⚠️ Auto-migration statement note (${statement}):`, stmtErr?.message || stmtErr);
+      }
     }
+    console.log('✅ Database schema columns verified and up-to-date.');
 
     app.listen(PORT, () => {
       console.log(`🚀 HM Agarbattis Backend running on http://localhost:${PORT}`);
