@@ -6,6 +6,7 @@ export interface ProductFilters {
   limit: number;
   search?: string;
   categorySlug?: string;
+  subcategorySlug?: string;
   collectionSlug?: string;
   festivalSlug?: string;
   sort?: string;
@@ -15,7 +16,7 @@ export interface ProductFilters {
 
 export class ProductsRepository {
   async findPaginated(filters: ProductFilters) {
-    const { page, limit, search, categorySlug, collectionSlug, festivalSlug, sort, isFeatured, includeInactive } = filters;
+    const { page, limit, search, categorySlug, subcategorySlug, collectionSlug, festivalSlug, sort, isFeatured, includeInactive } = filters;
     const skip = (page - 1) * limit;
 
     const where: Prisma.ProductWhereInput = {
@@ -35,8 +36,23 @@ export class ProductsRepository {
     if (categorySlug) {
       where.categories = {
         some: {
-          category: { slug: categorySlug },
+          category: {
+            OR: [
+              { slug: categorySlug },
+              { name: categorySlug },
+            ],
+          },
         },
+      };
+    }
+
+    if (subcategorySlug) {
+      where.subcategory = {
+        OR: [
+          { slug: subcategorySlug },
+          { id: subcategorySlug },
+          { name: subcategorySlug },
+        ],
       };
     }
 
@@ -70,6 +86,7 @@ export class ProductsRepository {
         include: {
           images: { orderBy: { displayOrder: 'asc' } },
           categories: { include: { category: true } },
+          subcategory: true,
           collections: { include: { collection: true } },
         },
       }),
@@ -85,18 +102,20 @@ export class ProductsRepository {
       include: {
         images: { orderBy: { displayOrder: 'asc' } },
         categories: { include: { category: true } },
+        subcategory: true,
         collections: { include: { collection: true } },
         festivals: { include: { festival: true } },
       },
     });
   }
 
-  async findById(id: string): Promise<Product | null> {
+  async findById(id: string): Promise<any> {
     return prisma.product.findUnique({
       where: { id },
       include: {
         images: { orderBy: { displayOrder: 'asc' } },
         categories: { include: { category: true } },
+        subcategory: true,
       },
     });
   }
@@ -121,9 +140,10 @@ export class ProductsRepository {
     isActive?: boolean;
     displayOrder?: number;
     categoryIds?: string[];
+    subcategoryId?: string | null;
     images?: Array<{ url: string; storageKey?: string; altText?: string; isPrimary?: boolean; displayOrder?: number }>;
   }) {
-    const { categoryIds = [], images = [], ...productData } = data;
+    const { categoryIds = [], images = [], subcategoryId, ...productData } = data;
     const cleanCategoryIds = categoryIds.filter(
       (cid: string) => Boolean(cid) && typeof cid === 'string' && cid.trim() !== ''
     );
@@ -146,6 +166,7 @@ export class ProductsRepository {
     return prisma.product.create({
       data: {
         ...productData,
+        subcategoryId: subcategoryId || null,
         categories: {
           create: resolvedCategoryIds.map((categoryId) => ({ categoryId })),
         },
@@ -162,12 +183,17 @@ export class ProductsRepository {
       include: {
         images: true,
         categories: { include: { category: true } },
+        subcategory: true,
       },
     });
   }
 
   async update(id: string, data: any) {
-    const { categoryIds, images, ...updateData } = data;
+    const { categoryIds, images, subcategoryId, ...updateData } = data;
+
+    if (subcategoryId !== undefined) {
+      updateData.subcategoryId = subcategoryId || null;
+    }
 
     return prisma.$transaction(
       async (tx: any) => {
@@ -221,6 +247,7 @@ export class ProductsRepository {
           include: {
             images: true,
             categories: { include: { category: true } },
+            subcategory: true,
           },
         });
       },
@@ -255,6 +282,19 @@ export class ProductsRepository {
   async removeImage(imageId: string) {
     return prisma.productImage.delete({
       where: { id: imageId },
+    });
+  }
+
+  async setPrimaryImage(productId: string, imageId: string) {
+    return prisma.$transaction(async (tx: any) => {
+      await tx.productImage.updateMany({
+        where: { productId },
+        data: { isPrimary: false },
+      });
+      return tx.productImage.update({
+        where: { id: imageId },
+        data: { isPrimary: true },
+      });
     });
   }
 

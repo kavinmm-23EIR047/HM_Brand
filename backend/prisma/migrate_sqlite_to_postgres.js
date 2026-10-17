@@ -17,7 +17,7 @@ function toDate(val) {
 }
 
 async function migrateData() {
-  console.log('🚀 Starting SQLite (dev.db) -> Supabase PostgreSQL Data Migration...');
+  console.log('🚀 Starting SQLite (dev.db) -> PostgreSQL Data Migration...');
   let totalTransferred = 0;
 
   try {

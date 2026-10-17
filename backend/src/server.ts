@@ -10,7 +10,7 @@ async function bootstrap() {
   try {
     // Verify DB connection
     await prisma.$connect();
-    console.log('✅ Connected to SQLite Database via Prisma ORM.');
+    console.log('✅ Connected to Prisma Postgres Database via Prisma ORM.');
 
     app.listen(PORT, () => {
       console.log(`🚀 HM Agarbattis Backend running on http://localhost:${PORT}`);

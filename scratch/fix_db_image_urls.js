@@ -11,9 +11,6 @@ envContent.split('\n').forEach(line => {
   }
 });
 
-if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes(':5432')) {
-  process.env.DATABASE_URL = process.env.DATABASE_URL.replace(':5432', ':6543');
-}
 
 const { PrismaClient } = require('../backend/node_modules/@prisma/client');
 const prisma = new PrismaClient();

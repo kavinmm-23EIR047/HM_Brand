@@ -136,10 +136,16 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="mt-3 flex min-w-0 items-center justify-between gap-2 border-t border-[#F47A20]/15 pt-2.5">
           <div className="min-w-0">
             <div className="flex items-baseline gap-1">
-              <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830]">₹{effectivePrice}</span>
+              {effectivePrice > 0 ? (
+                <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830]">₹{effectivePrice}</span>
+              ) : (
+                <span className="font-heading text-xs sm:text-sm font-extrabold text-[#9E1830]">
+                  {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
+                </span>
+              )}
               {singleDiscount > 0 ? (
                 <span className="text-[10px] text-[#173B3A]/50 line-through">₹{product.price}</span>
-              ) : product.mrp ? (
+              ) : product.mrp && product.mrp !== `₹${product.price}` ? (
                 <span className="text-[10px] text-[#173B3A]/50 line-through">{product.mrp}</span>
               ) : null}
             </div>

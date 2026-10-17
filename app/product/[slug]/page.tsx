@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Star, ShieldCheck, Sparkles, Truck, Heart, ArrowRight, CheckCircle2, Tag } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
+import { ProductGallery } from "@/components/product-gallery";
 import { AddPanel } from "@/app/products/[slug]/panel";
 import { MascotAgarbatti, MascotDiya, MascotMeditate } from "@/components/mascot-art";
 import { products, mapDbProductToProduct, type Product } from "@/lib/products";
@@ -90,38 +91,13 @@ export default async function ProductDetailsPage({
         </nav>
         {/* Product Hero Grid */}
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10">
-          {/* Left Gallery Image Card */}
-          <div className="relative flex min-h-[280px] flex-col items-center justify-center overflow-hidden rounded-[24px] bg-[#f8f0df] p-4 sm:min-h-[440px] sm:rounded-[28px] sm:p-8 lg:col-span-5">
-            {product.badge && (
-              <span className="absolute top-4 left-4 bg-[#E85D04] text-[#FFF8E7] text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded">
-                {product.badge}
-              </span>
-            )}
-
-            {product.image ? (
-              <img
-                src={product.image}
-                alt={product.name}
-                className="max-h-[400px] w-full object-contain mix-blend-multiply"
-              />
-            ) : (
-              <div className="text-center text-[#6B4226] py-12">
-                <span className="text-7xl block mb-4">🪔</span>
-                <span className="font-display text-2xl font-bold block text-[#6B4226]">
-                  {product.name}
-                </span>
-                <p className="text-xs text-[#292524]/60 mt-1 font-sans">
-                  Authentic HM Brand Formulation
-                </p>
-              </div>
-            )}
-
-            <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-[#C89B3C]/30 pt-4 text-[9px] font-semibold text-[#6B4226] sm:text-xs">
-              <span>✦ Charcoal-Free</span>
-              <span>✦ Coimbatore Made</span>
-              <span>✦ Pure Resins</span>
-            </div>
-          </div>
+          {/* Left Gallery Image Card with multi-image support */}
+          <ProductGallery
+            images={product.images}
+            fallbackImage={product.image}
+            productName={product.name}
+            badge={product.badge}
+          />
 
           {/* Right Product Overview & Add to Cart */}
           <div className="space-y-5 lg:col-span-7">
@@ -141,8 +117,14 @@ export default async function ProductDetailsPage({
               </h1>
 
               <div className="mt-4 flex items-baseline gap-3">
-                <span className="text-3xl font-extrabold text-[#a90c35]">₹{product.price}</span>
-                {product.mrp && (
+                {product.price > 0 ? (
+                  <span className="text-3xl font-extrabold text-[#a90c35]">₹{product.price}</span>
+                ) : (
+                  <span className="text-2xl font-extrabold text-[#a90c35]">
+                    {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
+                  </span>
+                )}
+                {product.mrp && product.mrp !== `₹${product.price}` && (
                   <span className="text-base text-[#292524]/50 line-through">{product.mrp}</span>
                 )}
                 {discountPercent > 0 && (

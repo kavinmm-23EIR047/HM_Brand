@@ -65,14 +65,20 @@ export function AddPanel({ product }: { product: Product }) {
       <div className="rounded-xl border border-[#C89B3C]/30 bg-[#FFF8E7] p-4 shadow-xs space-y-2">
         <div className="flex items-baseline justify-between flex-wrap gap-2">
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl sm:text-4xl font-extrabold text-[#9E1830]">
-              ₹{effectiveUnitPrice}
-            </span>
+            {effectiveUnitPrice > 0 ? (
+              <span className="text-3xl sm:text-4xl font-extrabold text-[#9E1830]">
+                ₹{effectiveUnitPrice}
+              </span>
+            ) : (
+              <span className="text-xl sm:text-2xl font-extrabold text-[#9E1830]">
+                {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
+              </span>
+            )}
             {singleItemDiscount > 0 ? (
               <span className="text-sm font-semibold text-[#292524]/50 line-through">
                 ₹{product.price}
               </span>
-            ) : product.mrp ? (
+            ) : product.mrp && product.mrp !== `₹${product.price}` ? (
               <span className="text-sm font-semibold text-[#292524]/50 line-through">
                 {product.mrp}
               </span>

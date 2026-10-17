@@ -91,6 +91,15 @@ export class ProductsController {
     }
   };
 
+  setPrimaryImage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.service.setPrimaryImage(req.params.id, req.params.imageId);
+      return sendSuccess(res, result, 'Primary image updated successfully');
+    } catch (error) {
+      return next(error);
+    }
+  };
+
   delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this.service.deleteProduct(req.params.id);

@@ -33,21 +33,7 @@ export default function HomePage() {
         image: p.image || "/images/media_1790142713668.jpg",
         rawProduct: p,
       }))
-    : [
-        {
-          slug: "bhimseni-camphor",
-          name: "Bhimseni Camphor",
-          badge: "Best Seller",
-          badgeBg: "bg-[#3F7D45]",
-          rating: 4.8,
-          reviews: 120,
-          note: "Distilled to 99.9% edible purity. Naturally sourced and hand-harvested.",
-          price: 199,
-          unit: "50 GMS",
-          image: "/images/camphor_cutout.jpg",
-          rawProduct: products[0],
-        },
-      ];
+    : [];
 
 
   return (
@@ -70,6 +56,7 @@ export default function HomePage() {
         <BentoPromos />
 
         {/* 6. BESTSELLERS PRODUCT SHOWCASE */}
+        {displayPicks.length > 0 && (
         <section className="py-14 sm:py-16 bg-[#FFF4D6]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -97,7 +84,8 @@ export default function HomePage() {
             <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {displayPicks.map((item) => {
                 const wishlisted = isInWishlist(item.slug);
-                const originalProduct = item.rawProduct || products.find((p) => p.slug === item.slug) || products[0];
+                const originalProduct = item.rawProduct || products.find((p) => p.slug === item.slug);
+                if (!originalProduct) return null;
 
                 return (
                   <div
@@ -184,9 +172,9 @@ export default function HomePage() {
                 );
               })}
             </div>
-
           </div>
-        </section>
+          </section>
+          )}
 
         {/* 7. DUAL PROMO BANNERS */}
         <PromoBanners />

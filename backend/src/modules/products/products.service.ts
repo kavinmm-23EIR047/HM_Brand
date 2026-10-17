@@ -11,6 +11,7 @@ export class ProductsService {
     limit?: string;
     search?: string;
     category?: string;
+    subcategory?: string;
     collection?: string;
     festival?: string;
     sort?: string;
@@ -25,6 +26,7 @@ export class ProductsService {
       limit,
       search: filters.search,
       categorySlug: filters.category,
+      subcategorySlug: filters.subcategory,
       collectionSlug: filters.collection,
       festivalSlug: filters.festival,
       sort: filters.sort,
@@ -66,6 +68,7 @@ export class ProductsService {
     stockQuantity: number;
     couponCode?: string | null;
     categoryIds?: string[];
+    subcategoryId?: string | null;
     isFeatured?: boolean;
     displayOrder?: number;
     images?: Array<{ url: string; storageKey: string; altText?: string; isPrimary?: boolean; displayOrder?: number }>;
@@ -147,6 +150,18 @@ export class ProductsService {
 
   async removeProductImage(imageId: string) {
     return mediaService.deleteProductImage(imageId);
+  }
+
+  async setPrimaryImage(productId: string, imageId: string) {
+    const product = await this.repo.findById(productId);
+    if (!product || product.deletedAt) {
+      throw new NotFoundError('Product not found');
+    }
+    const targetImage = (product as any).images?.find((img: any) => img.id === imageId);
+    if (!targetImage) {
+      throw new NotFoundError('Product image not found on this product');
+    }
+    return this.repo.setPrimaryImage(productId, imageId);
   }
 
   async deleteProduct(id: string) {

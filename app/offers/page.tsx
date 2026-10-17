@@ -6,12 +6,15 @@ import Link from "next/link";
 import { ArrowRight, Gift, Sparkles, Tags, Percent, ShieldCheck, Heart } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
-import { collectionsList, products } from "@/lib/products";
+import { collectionsList } from "@/lib/products";
+import { useStore } from "@/components/store";
 
 export default function OffersPage() {
-  const offerProducts = products.filter((product) => {
-    const mrp = Number(product.mrp.replace(/[^0-9.]/g, ""));
-    return mrp > product.price;
+  const { dbProducts } = useStore();
+  const allProducts = dbProducts || [];
+  const offerProducts = allProducts.filter((product) => {
+    const mrp = Number((product.mrp || "").replace(/[^0-9.]/g, ""));
+    return mrp > product.price || Boolean(product.couponCode);
   });
 
   return (
@@ -108,9 +111,13 @@ export default function OffersPage() {
                 <ProductCard key={product.slug} product={product} />
               ))
             ) : (
-              products.slice(0, 8).map((product) => (
-                <ProductCard key={product.slug} product={product} />
-              ))
+              <div className="col-span-full rounded-2xl bg-[#FFF8E7] p-8 text-center text-sm text-[#292524]/80 border border-[#F6C84C]/40">
+                <p>No promotional offers available right now. Check back soon for festive specials!</p>
+                <Link href="/shop" className="inline-flex items-center gap-1.5 font-bold text-[#9E1830] mt-3 hover:underline text-xs">
+                  <span>Explore All Products</span>
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
             )}
           </div>
         </section>

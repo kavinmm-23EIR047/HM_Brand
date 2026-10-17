@@ -2,13 +2,31 @@ import prisma from '../../shared/database/prisma';
 import { Category } from '@prisma/client';
 
 export class CategoriesRepository {
-  async findAll(includeInactive: boolean = false): Promise<Category[]> {
+  async findAll(includeInactive: boolean = false, parentId?: string | null): Promise<Category[]> {
+    const where: any = {
+      deletedAt: null,
+      ...(includeInactive ? {} : { isActive: true }),
+    };
+
+    if (parentId !== undefined) {
+      where.parentId = parentId;
+    }
+
     return prisma.category.findMany({
-      where: {
-        deletedAt: null,
-        ...(includeInactive ? {} : { isActive: true }),
-      },
+      where,
       orderBy: { displayOrder: 'asc' },
+      include: {
+        children: {
+          where: {
+            deletedAt: null,
+            ...(includeInactive ? {} : { isActive: true }),
+          },
+          orderBy: { displayOrder: 'asc' },
+        },
+        parent: {
+          select: { id: true, name: true, slug: true },
+        },
+      },
     });
   }
 
@@ -16,10 +34,17 @@ export class CategoriesRepository {
     return prisma.category.findUnique({
       where: { slug },
       include: {
+        children: {
+          where: { deletedAt: null, isActive: true },
+          orderBy: { displayOrder: 'asc' },
+        },
+        parent: {
+          select: { id: true, name: true, slug: true },
+        },
         products: {
           include: {
             product: {
-              include: { images: true },
+              include: { images: true, subcategory: true },
             },
           },
         },
@@ -30,6 +55,15 @@ export class CategoriesRepository {
   async findById(id: string): Promise<Category | null> {
     return prisma.category.findUnique({
       where: { id },
+      include: {
+        children: {
+          where: { deletedAt: null },
+          orderBy: { displayOrder: 'asc' },
+        },
+        parent: {
+          select: { id: true, name: true, slug: true },
+        },
+      },
     });
   }
 
@@ -40,9 +74,14 @@ export class CategoriesRepository {
     imageUrl?: string;
     displayOrder?: number;
     isActive?: boolean;
+    parentId?: string | null;
   }): Promise<Category> {
     return prisma.category.create({
       data,
+      include: {
+        parent: { select: { id: true, name: true, slug: true } },
+        children: true,
+      },
     });
   }
 
@@ -50,6 +89,10 @@ export class CategoriesRepository {
     return prisma.category.update({
       where: { id },
       data,
+      include: {
+        parent: { select: { id: true, name: true, slug: true } },
+        children: true,
+      },
     });
   }
 

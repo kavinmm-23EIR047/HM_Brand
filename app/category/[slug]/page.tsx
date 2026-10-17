@@ -10,7 +10,34 @@ import {
   MascotBasket,
   MascotMeditate,
 } from "@/components/mascot-art";
-import { products, categories } from "@/lib/products";
+import { categories, mapDbProductToProduct, type Product } from "@/lib/products";
+
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+
+async function getCategoryProducts(categoryName: string, slug: string): Promise<Product[]> {
+  try {
+    const res = await fetch(`${API}/products?limit=100`, { next: { revalidate: 60 } });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        return json.data
+          .map(mapDbProductToProduct)
+          .filter((p: Product) => {
+            const pCat = p.category.toLowerCase().trim();
+            const targetSlug = slug.toLowerCase().trim();
+            const targetName = categoryName.toLowerCase().trim();
+            return (
+              pCat.replaceAll(" ", "-") === targetSlug ||
+              pCat === targetName ||
+              pCat.includes(targetName) ||
+              targetName.includes(pCat)
+            );
+          });
+      }
+    }
+  } catch {}
+  return [];
+}
 
 const categoryRituals: Record<
   string,
@@ -172,11 +199,7 @@ export default async function CategoryPage({
   const decodedSlug = slug.toLowerCase();
   const categoryName = decodedSlug.replaceAll("-", " ");
 
-  const matchingProducts = products.filter(
-    (p) =>
-      p.category.toLowerCase().replaceAll(" ", "-") === decodedSlug ||
-      p.category.toLowerCase() === categoryName
-  );
+  const matchingProducts = await getCategoryProducts(categoryName, decodedSlug);
 
   const ritualData = categoryRituals[decodedSlug] || {
     title: categoryName.replace(/\b\w/g, (x) => x.toUpperCase()),
@@ -274,13 +297,21 @@ export default async function CategoryPage({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {(matchingProducts.length > 0 ? matchingProducts : products.slice(0, 6)).map(
-              (p) => (
+          {matchingProducts.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {matchingProducts.map((p) => (
                 <ProductCard key={p.slug} product={p} />
-              )
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-[#FFF8E7] rounded-2xl border border-[#C89B3C]/40 p-8 text-center text-[#292524]/80">
+              <p className="text-sm">No products currently in this category. Check back soon as new sacred items are crafted.</p>
+              <Link href="/shop" className="inline-flex items-center gap-1.5 font-bold text-[#9E1830] mt-3 hover:underline text-xs">
+                <span>Browse All Products</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          )}
         </section>
 
         {/* Related Categories */}

@@ -7,6 +7,7 @@ export const createCategorySchema = z.object({
     imageUrl: z.string().optional(),
     displayOrder: z.coerce.number().int().optional().default(0),
     isActive: z.boolean().optional().default(true),
+    parentId: z.string().optional().nullable(),
   }),
 });
 
@@ -20,6 +21,7 @@ export const updateCategorySchema = z.object({
     imageUrl: z.string().optional(),
     displayOrder: z.coerce.number().int().optional(),
     isActive: z.boolean().optional(),
+    parentId: z.string().optional().nullable(),
   }),
 });
 

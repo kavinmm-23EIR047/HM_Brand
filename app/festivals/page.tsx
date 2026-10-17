@@ -5,9 +5,12 @@ import Link from "next/link";
 import { Sparkles, ArrowRight, Calendar } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
-import { festivalsList, products } from "@/lib/products";
+import { festivalsList } from "@/lib/products";
+import { useStore } from "@/components/store";
 
 export default function FestivalsPage() {
+  const { dbProducts } = useStore();
+  const featuredFestiveProducts = (dbProducts || []).filter((p) => p.featured);
   return (
     <InnerPage
       eyebrow="FESTIVALS & SACRED OCCASIONS"
@@ -75,12 +78,15 @@ export default function FestivalsPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {products
-              .filter((p) => p.featured)
-              .slice(0, 3)
-              .map((p) => (
+            {featuredFestiveProducts.length > 0 ? (
+              featuredFestiveProducts.slice(0, 4).map((p) => (
                 <ProductCard key={p.slug} product={p} />
-              ))}
+              ))
+            ) : (
+              <div className="col-span-full text-center text-xs text-[#65716a] py-6">
+                Fresh festive formulations arriving soon.
+              </div>
+            )}
           </div>
         </section>
       </div>

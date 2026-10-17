@@ -42,16 +42,27 @@ export class MediaService {
       const primary = requestedImage?.isPrimary ?? (data.isPrimary === 'true' || product.images.length === 0);
       const productSlug = safeSlug(product.slug, 'Product slug');
       folder = `hm_brand/products/${safeSlug(categorySlug, 'Category slug')}/${productSlug}`;
-      const existingFilename = requestedImage?.storageKey?.split('/').pop();
+      const hasBaseSlug = product.images.some(
+        (image) => image.id !== requestedImage?.id && image.storageKey.endsWith(`/${productSlug}`)
+      );
       let suffix = 1;
       while (
-        product.images.some((image) => image.id !== requestedImage?.id && image.storageKey.endsWith(`/${productSlug}-${suffix}`))
-      ) suffix += 1;
-      filename = primary
-        ? productSlug
-        : existingFilename && new RegExp(`^${productSlug}-\\d+$`).test(existingFilename)
-          ? existingFilename
-          : `${productSlug}-${suffix}`;
+        product.images.some(
+          (image) =>
+            image.id !== requestedImage?.id &&
+            (image.storageKey.endsWith(`/${productSlug}-${suffix}`) ||
+             image.storageKey.endsWith(`/${productSlug}-${suffix}.webp`))
+        )
+      ) {
+        suffix += 1;
+      }
+
+      const existingFilename = requestedImage?.storageKey?.split('/').pop();
+      filename = requestedImage
+        ? (existingFilename || (primary && !hasBaseSlug ? productSlug : `${productSlug}-${suffix}`))
+        : (primary && !hasBaseSlug && product.images.length === 0
+            ? productSlug
+            : `${productSlug}-${suffix}-${Date.now().toString().slice(-4)}`);
       const position = requestedImage?.displayOrder ?? Math.max(-1, ...product.images.map((image) => image.displayOrder)) + 1;
       applyUpload = async (url, id) => {
         if (requestedImage) {
@@ -146,8 +157,21 @@ export class MediaService {
     const image = await prisma.productImage.findUnique({ where: { id: imageId } });
     if (!image) throw new NotFoundError('Product image not found.');
     if (productId && image.productId !== productId) throw new BadRequestError('Product image does not belong to this product.');
-    await deleteImage(image.storageKey);
+    await deleteImage(image.storageKey).catch(() => undefined);
     await prisma.productImage.delete({ where: { id: image.id } });
+
+    if (image.isPrimary) {
+      const remainingImage = await prisma.productImage.findFirst({
+        where: { productId: image.productId },
+        orderBy: { displayOrder: 'asc' },
+      });
+      if (remainingImage) {
+        await prisma.productImage.update({
+          where: { id: remainingImage.id },
+          data: { isPrimary: true },
+        });
+      }
+    }
   }
 
   async delete(typeValue: unknown, entityId: string, data: Record<string, unknown>) {

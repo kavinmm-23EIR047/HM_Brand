@@ -52,7 +52,10 @@ model Product {
   price            Float
   mrp              Float
   stockQuantity    Int               @default(0)
+  unitPrice        Float?
+  bundleQuantity   Int?              @default(1)
   couponCode       String?
+  subcategoryId    String?
   isActive         Boolean           @default(true)
   isFeatured       Boolean           @default(false)
   displayOrder     Int               @default(0)
@@ -60,6 +63,7 @@ model Product {
   updatedAt        DateTime          @updatedAt
   deletedAt        DateTime?
 
+  subcategory      Category?         @relation("ProductSubcategory", fields: [subcategoryId], references: [id], onDelete: SetNull)
   images           ProductImage[]
   categories       ProductCategory[]
   collections      CollectionProduct[]
@@ -68,6 +72,7 @@ model Product {
   wishlistItems    WishlistItem[]
 
   @@index([slug])
+  @@index([subcategoryId])
   @@map("products")
 }
 
@@ -96,13 +101,18 @@ model Category {
   imageUrl     String?
   displayOrder Int               @default(0)
   isActive     Boolean           @default(true)
+  parentId     String?
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   deletedAt    DateTime?
 
+  parent       Category?         @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children     Category[]        @relation("CategoryHierarchy")
   products     ProductCategory[]
+  subProducts  Product[]         @relation("ProductSubcategory")
 
   @@index([slug])
+  @@index([parentId])
   @@map("categories")
 }
 

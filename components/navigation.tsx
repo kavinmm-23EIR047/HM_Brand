@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { useStore } from "@/components/store";
-import { categories, collectionsList, products } from "@/lib/products";
+import { categories, collectionsList } from "@/lib/products";
 import { Lotus } from "./illustrations";
 
 type MegaMenu = "shop" | "collections" | null;
@@ -30,7 +30,7 @@ export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<MegaMenu>(null);
   const pathname = usePathname();
-  const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen, user } = useStore();
+  const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen, user, dbProducts } = useStore();
 
   useEffect(() => {
     setOpenMega(null);
@@ -49,7 +49,7 @@ export function Navigation() {
     };
   }, [mobileOpen]);
 
-  const featuredProducts = products.filter((product) => product.featured).slice(0, 4);
+  const featuredProducts = (dbProducts || []).filter((product) => product.featured).slice(0, 4);
   const navLinkClass = (href: string) =>
     `relative whitespace-nowrap py-2 text-[13px] font-bold tracking-[-.01em] transition-colors ${pathname === href ? "text-[#a90c35]" : "text-[#182b28] hover:text-[#a90c35]"}`;
 
@@ -74,19 +74,25 @@ export function Navigation() {
           <p className="text-[10px] font-extrabold tracking-[.16em] text-[#a90c35]">POPULAR PICKS</p>
           <Sparkles size={15} className="text-[#d28a2e]" />
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {featuredProducts.map((product) => (
-            <Link key={product.slug} href={`/product/${product.slug}`} className="group flex min-w-0 items-center gap-3 rounded-xl bg-[#fbf5e9] p-2 transition hover:bg-[#f5e9d2]">
-              <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-white">
-                {product.image ? <img src={product.image} alt="" className="h-full w-full object-contain p-1" /> : <Lotus className="h-10 w-10" />}
-              </div>
-              <div className="min-w-0">
-                <p className="line-clamp-2 text-xs font-bold leading-snug text-[#1c332d] group-hover:text-[#a90c35]">{product.name}</p>
-                <p className="mt-1 text-xs font-extrabold text-[#a90c35]">₹{product.price}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3">
+            {featuredProducts.map((product) => (
+              <Link key={product.slug} href={`/product/${product.slug}`} className="group flex min-w-0 items-center gap-3 rounded-xl bg-[#fbf5e9] p-2 transition hover:bg-[#f5e9d2]">
+                <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-white">
+                  {product.image ? <img src={product.image} alt="" className="h-full w-full object-contain p-1" /> : <Lotus className="h-10 w-10" />}
+                </div>
+                <div className="min-w-0">
+                  <p className="line-clamp-2 text-xs font-bold leading-snug text-[#1c332d] group-hover:text-[#a90c35]">{product.name}</p>
+                  <p className="mt-1 text-xs font-extrabold text-[#a90c35]">₹{product.price}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl bg-[#fbf5e9] p-4 text-center text-xs text-[#203732]/70">
+            Handcrafted incense &amp; camphor arriving soon.
+          </div>
+        )}
       </div>
 
       <div className="relative overflow-hidden rounded-2xl bg-[#e1edcf] p-5">

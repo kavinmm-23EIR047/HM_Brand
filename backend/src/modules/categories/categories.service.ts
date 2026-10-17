@@ -5,8 +5,8 @@ import { NotFoundError, ConflictError } from '../../shared/errors/custom.error';
 export class CategoriesService {
   constructor(private repo: CategoriesRepository = categoriesRepository) {}
 
-  async getAllCategories(includeInactive: boolean = false) {
-    return this.repo.findAll(includeInactive);
+  async getAllCategories(includeInactive: boolean = false, parentId?: string | null) {
+    return this.repo.findAll(includeInactive, parentId);
   }
 
   async getCategoryBySlug(slug: string) {
@@ -23,6 +23,7 @@ export class CategoriesService {
     imageUrl?: string;
     displayOrder?: number;
     isActive?: boolean;
+    parentId?: string | null;
   }) {
     const slug = generateSlug(data.name);
     const existing = await this.repo.findBySlug(slug);
@@ -30,9 +31,17 @@ export class CategoriesService {
       throw new ConflictError(`Category with slug '${slug}' already exists.`);
     }
 
+    if (data.parentId) {
+      const parent = await this.repo.findById(data.parentId);
+      if (!parent) {
+        throw new NotFoundError('Parent category not found');
+      }
+    }
+
     return this.repo.create({
       ...data,
       slug,
+      parentId: data.parentId || null,
     });
   }
 
@@ -44,6 +53,7 @@ export class CategoriesService {
       imageUrl?: string;
       displayOrder?: number;
       isActive?: boolean;
+      parentId?: string | null;
     }
   ) {
     const category = await this.repo.findById(id);
@@ -56,9 +66,17 @@ export class CategoriesService {
       slug = generateSlug(data.name);
     }
 
+    if (data.parentId && data.parentId !== id) {
+      const parent = await this.repo.findById(data.parentId);
+      if (!parent) {
+        throw new NotFoundError('Parent category not found');
+      }
+    }
+
     return this.repo.update(id, {
       ...data,
       slug,
+      parentId: data.parentId !== undefined ? (data.parentId || null) : undefined,
     });
   }
 

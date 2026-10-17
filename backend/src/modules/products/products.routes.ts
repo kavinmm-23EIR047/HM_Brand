@@ -35,6 +35,13 @@ router.post(
   productsController.addImage
 );
 
+router.patch(
+  '/admin/:id/images/:imageId/primary',
+  authenticateJWT,
+  requireRole('ADMIN'),
+  productsController.setPrimaryImage
+);
+
 router.delete(
   '/admin/images/:imageId',
   authenticateJWT,

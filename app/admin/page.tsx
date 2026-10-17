@@ -7,7 +7,7 @@ import {
   Plus, Trash2, Edit2, TrendingUp, Lock, ArrowRight, CheckCircle,
   AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
   Filter, ArrowUpDown, RotateCcw, Upload, Truck, User, Copy, MapPin,
-  Phone, Mail, Calendar, FileText, ExternalLink, Clock, ArrowUpRight, Check,
+  Phone, Mail, Calendar, FileText, ExternalLink, Clock, ArrowUpRight, Check, Star,
 } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore } from "@/components/store";
@@ -239,6 +239,183 @@ function ImageUploadControl({
           </p>
         )}
       </div>
+    </div>
+  );
+}
+
+function ProductMultiImageControl({
+  existingImages,
+  newFiles,
+  disabled,
+  uploadProgressText,
+  onFilesAdded,
+  onRemoveNewFile,
+  onSetPrimaryExisting,
+  onDeleteExisting,
+}: {
+  existingImages: Array<{ id: string; url: string; isPrimary: boolean; displayOrder?: number }>;
+  newFiles: File[];
+  disabled?: boolean;
+  uploadProgressText?: string;
+  onFilesAdded: (files: File[]) => void;
+  onRemoveNewFile: (index: number) => void;
+  onSetPrimaryExisting: (imageId: string) => void;
+  onDeleteExisting: (imageId: string) => void;
+}) {
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+
+  useEffect(() => {
+    const urls = newFiles.map((f) => URL.createObjectURL(f));
+    setNewPreviews(urls);
+    return () => {
+      urls.forEach((u) => URL.revokeObjectURL(u));
+    };
+  }, [newFiles]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selected = Array.from(e.target.files);
+      onFilesAdded(selected);
+      e.target.value = "";
+    }
+  };
+
+  const totalCount = existingImages.length + newFiles.length;
+
+  return (
+    <div className="space-y-3 rounded-2xl border-2 border-[#C89B3C]/40 bg-[#FFF8E7]/60 p-3.5 shadow-xs">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-[#6B4226]">Product Photos</span>
+          <span className="rounded-full bg-[#C89B3C]/30 px-2 py-0.5 text-[10px] font-extrabold text-[#6B4226]">
+            {totalCount} total
+          </span>
+        </div>
+        <span className="text-[10px] text-[#292524]/60">JPEG, PNG, WebP • Multi-image upload</span>
+      </div>
+
+      {/* Uploading Status Bar */}
+      {disabled && (
+        <div className="flex items-center gap-2 rounded-xl bg-[#E85D04]/10 p-2.5 text-xs font-bold text-[#E85D04] border border-[#E85D04]/30 animate-pulse">
+          <RefreshCw size={14} className="animate-spin shrink-0" />
+          <span>{uploadProgressText || "Syncing with Cloudinary CDN... Please wait."}</span>
+        </div>
+      )}
+
+      {/* Existing Saved Images */}
+      {existingImages.length > 0 && (
+        <div>
+          <p className="text-[11px] font-bold text-[#6B4226] mb-2">Saved Images ({existingImages.length}):</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            {existingImages.map((img) => (
+              <div
+                key={img.id}
+                className={`relative group rounded-xl border bg-white p-2 shadow-xs transition-all ${
+                  img.isPrimary ? "border-[#A90C35] ring-2 ring-[#A90C35]/30" : "border-[#C89B3C]/30 hover:border-[#C89B3C]"
+                }`}
+              >
+                <div className="relative h-24 w-full overflow-hidden rounded-lg bg-[#F8F0DF] flex items-center justify-center">
+                  <img src={img.url} alt="" className="h-full w-full object-contain mix-blend-multiply" />
+                  {img.isPrimary && (
+                    <span className="absolute top-1.5 left-1.5 flex items-center gap-1 rounded bg-[#A90C35] px-1.5 py-0.5 text-[9px] font-black text-white shadow-xs">
+                      <Star size={10} fill="currentColor" /> Primary
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-2 flex items-center justify-between gap-1">
+                  {!img.isPrimary ? (
+                    <button
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => onSetPrimaryExisting(img.id)}
+                      className="text-[10px] font-extrabold text-[#6B4226] hover:text-[#A90C35] px-1.5 py-0.5 rounded hover:bg-[#F4D35E]/30 transition"
+                      title="Set as main display image"
+                    >
+                      Make Primary
+                    </button>
+                  ) : (
+                    <span className="text-[10px] font-bold text-[#A90C35] flex items-center gap-0.5">
+                      ★ Active Main
+                    </span>
+                  )}
+
+                  <button
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => onDeleteExisting(img.id)}
+                    className="p-1 text-[#292524]/60 hover:text-red-600 rounded hover:bg-red-50 transition"
+                    title="Delete this image"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Pending New Uploads */}
+      {newFiles.length > 0 && (
+        <div>
+          <p className="text-[11px] font-bold text-[#E85D04] mb-2 flex items-center gap-1">
+            <span>Pending New Images ({newFiles.length}):</span>
+            <span className="text-[10px] font-normal text-[#292524]/60">(will upload on Save)</span>
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            {newFiles.map((file, idx) => (
+              <div
+                key={idx}
+                className="relative group rounded-xl border border-dashed border-[#E85D04] bg-[#FFF8E7] p-2 shadow-xs"
+              >
+                <div className="relative h-24 w-full overflow-hidden rounded-lg bg-white flex items-center justify-center">
+                  {newPreviews[idx] && (
+                    <img src={newPreviews[idx]} alt={file.name} className="h-full w-full object-contain" />
+                  )}
+                  <span className="absolute top-1.5 left-1.5 rounded bg-[#E85D04] px-1.5 py-0.5 text-[9px] font-extrabold text-white">
+                    + New
+                  </span>
+                  <button
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => onRemoveNewFile(idx)}
+                    className="absolute top-1.5 right-1.5 p-1 rounded-full bg-black/60 text-white hover:bg-black transition"
+                    title="Remove from selection"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+                <p className="mt-1 truncate text-[10px] font-semibold text-[#292524]">{file.name}</p>
+                <p className="text-[9px] text-[#292524]/50 font-mono">{(file.size / 1024).toFixed(0)} KB</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* File Dropzone Input for Multiple Files */}
+      <label
+        className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[#C89B3C]/50 bg-white/70 p-4 text-center cursor-pointer hover:bg-white hover:border-[#A90C35] transition ${
+          disabled ? "opacity-50 pointer-events-none" : ""
+        }`}
+      >
+        <Upload size={22} className="text-[#6B4226]" />
+        <span className="text-xs font-bold text-[#6B4226]">
+          Click to choose images or drag & drop here
+        </span>
+        <span className="text-[10px] text-[#292524]/60">
+          Select one or multiple photos at once (JPG, PNG, WebP)
+        </span>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          disabled={disabled}
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+      </label>
     </div>
   );
 }
@@ -880,11 +1057,28 @@ export default function AdminPage() {
   const [bannerModal, setBannerModal] = useState<null | "add" | any>(null);
   const [couponModal, setCouponModal] = useState<null | "add" | any>(null);
 
-  const emptyProduct = { name: "", sku: "", price: "", mrp: "", stockQuantity: "100", description: "", imageUrl: "", imageId: "", categoryId: "", couponCode: "", isActive: true };
+  const emptyProduct = {
+    name: "",
+    sku: "",
+    price: "",
+    mrp: "",
+    stockQuantity: "100",
+    description: "",
+    imageUrl: "",
+    imageId: "",
+    categoryId: "",
+    subcategoryId: "",
+    bundleQuantity: "",
+    couponCode: "",
+    isActive: true,
+    existingImages: [] as Array<{ id: string; url: string; isPrimary: boolean; displayOrder?: number }>,
+  };
   const [pForm, setPForm] = useState(emptyProduct);
   const [pImageFile, setPImageFile] = useState<File | null>(null);
+  const [pNewFiles, setPNewFiles] = useState<File[]>([]);
+  const [uploadProgressText, setUploadProgressText] = useState("");
 
-  const emptyCategory = { name: "", description: "", imageUrl: "" };
+  const emptyCategory = { name: "", description: "", imageUrl: "", parentId: "" };
   const [cForm, setCForm] = useState(emptyCategory);
   const [cImageFile, setCImageFile] = useState<File | null>(null);
 
@@ -903,13 +1097,20 @@ export default function AdminPage() {
     return false;
   };
 
-  const uploadImage = async (file: File, type: "PRODUCT" | "CATEGORY" | "BANNER", entityId: string, imageId?: string) => {
+  const uploadImage = async (
+    file: File,
+    type: "PRODUCT" | "CATEGORY" | "BANNER",
+    entityId: string,
+    imageId?: string,
+    isPrimary?: boolean
+  ) => {
     if (!token) throw new Error("Administrator session expired.");
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", type);
     formData.append("entityId", entityId);
     if (imageId) formData.append("imageId", imageId);
+    if (typeof isPrimary === "boolean") formData.append("isPrimary", String(isPrimary));
     const response = await fetch(`${API}/media/admin/upload`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -917,6 +1118,17 @@ export default function AdminPage() {
     });
     const json = await response.json();
     if (!response.ok || !json.success) throw new Error(json.message || "Image upload failed");
+    return json.data;
+  };
+
+  const setPrimaryProductImage = async (productId: string, imageId: string) => {
+    if (!token) throw new Error("Administrator session expired.");
+    const response = await fetch(`${API}/products/admin/${productId}/images/${imageId}/primary`, {
+      method: "PATCH",
+      headers: authH(token),
+    });
+    const json = await response.json();
+    if (!response.ok || !json.success) throw new Error(json.message || "Failed to set primary image");
     return json.data;
   };
 
@@ -973,6 +1185,8 @@ export default function AdminPage() {
 
   const openProductModal = async (item?: any) => {
     setPImageFile(null);
+    setPNewFiles([]);
+    setUploadProgressText("");
     if (categories.length === 0) {
       const r = await fetch(`${API}/categories`); const j = await r.json();
       if (j.success) setCategories(j.data);
@@ -983,29 +1197,95 @@ export default function AdminPage() {
     }
     if (item) {
       setProductModal(item);
+      const existingImages = Array.isArray(item.images)
+        ? item.images.map((img: any) => ({
+            id: img.id,
+            url: img.url,
+            isPrimary: Boolean(img.isPrimary),
+            displayOrder: img.displayOrder,
+          }))
+        : [];
       setPForm({
         name: item.name || "", sku: item.sku || "", price: String(item.price || ""),
         mrp: String(item.mrp || ""), stockQuantity: String(item.stockQuantity ?? 100),
         description: item.description || "", imageUrl: item.images?.[0]?.url || "", imageId: item.images?.[0]?.id || "",
         categoryId: item.categories?.[0]?.category?.id || item.categories?.[0]?.categoryId || "",
+        subcategoryId: item.subcategoryId || item.subcategory?.id || "",
+        bundleQuantity: item.bundleQuantity ? String(item.bundleQuantity) : "",
         couponCode: item.couponCode || "", isActive: item.isActive !== false,
+        existingImages,
       });
-    } else { setProductModal("add"); setPForm(emptyProduct); }
+    } else {
+      setProductModal("add");
+      setPForm(emptyProduct);
+    }
+  };
+
+  const handleSetPrimaryImage = async (imageId: string) => {
+    if (!productModal?.id) return;
+    setSaving(true);
+    setUploadProgressText("Updating primary image...");
+    try {
+      await setPrimaryProductImage(productModal.id, imageId);
+      setPForm(prev => ({
+        ...prev,
+        existingImages: prev.existingImages.map(img => ({
+          ...img,
+          isPrimary: img.id === imageId,
+        })),
+      }));
+      showStatus("success", "Primary product image updated!");
+      fetchTab();
+      refreshDbData();
+    } catch (error: any) {
+      showStatus("error", error?.message || "Failed to set primary image");
+    } finally {
+      setSaving(false);
+      setUploadProgressText("");
+    }
+  };
+
+  const handleDeleteExistingImage = async (imageId: string) => {
+    if (!productModal?.id || !confirm("Delete this product image?")) return;
+    setSaving(true);
+    setUploadProgressText("Deleting image...");
+    try {
+      await deleteImage("PRODUCT", productModal.id, imageId);
+      setPForm(prev => {
+        const remaining = prev.existingImages.filter(img => img.id !== imageId);
+        const hadPrimary = remaining.some(img => img.isPrimary);
+        if (!hadPrimary && remaining.length > 0) {
+          remaining[0].isPrimary = true;
+        }
+        return { ...prev, existingImages: remaining };
+      });
+      showStatus("success", "Product image deleted.");
+      fetchTab();
+      refreshDbData();
+    } catch (error: any) {
+      showStatus("error", error?.message || "Image deletion failed");
+    } finally {
+      setSaving(false);
+      setUploadProgressText("");
+    }
   };
 
   /* PRODUCT CRUD */
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setSaving(true);
+    setUploadProgressText("Saving product details...");
     const isEdit = productModal !== "add";
     const payload: any = {
       name: pForm.name,
       sku: pForm.sku || `SKU-${Date.now().toString().slice(-6)}`,
-      price: parseFloat(pForm.price || "0"),
-      mrp: parseFloat(pForm.mrp || pForm.price || "0"),
+      price: pForm.price && !isNaN(parseFloat(pForm.price)) ? parseFloat(pForm.price) : 0,
+      mrp: pForm.mrp && !isNaN(parseFloat(pForm.mrp)) ? parseFloat(pForm.mrp) : 0,
       stockQuantity: parseInt(pForm.stockQuantity || "100", 10),
       description: pForm.description || pForm.name,
       categoryIds: pForm.categoryId ? [pForm.categoryId] : [],
+      subcategoryId: pForm.subcategoryId || null,
+      bundleQuantity: pForm.bundleQuantity && !isNaN(parseInt(pForm.bundleQuantity, 10)) ? parseInt(pForm.bundleQuantity, 10) : null,
       couponCode: pForm.couponCode || null,
       isActive: pForm.isActive,
     };
@@ -1014,14 +1294,29 @@ export default function AdminPage() {
       const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(payload) });
       const j = await r.json();
       if (!checkUnauthorized(r, j) && (r.ok || j.success)) {
-        if (pImageFile) await uploadImage(pImageFile, "PRODUCT", j.data.id, pForm.imageId || undefined);
+        const targetId = j.data?.id || productModal?.id;
+        if (targetId && pNewFiles.length > 0) {
+          for (let i = 0; i < pNewFiles.length; i++) {
+            setUploadProgressText(`Uploading image ${i + 1} of ${pNewFiles.length} to Cloudinary CDN...`);
+            const shouldBePrimary = pForm.existingImages.length === 0 && i === 0;
+            await uploadImage(pNewFiles[i], "PRODUCT", targetId, undefined, shouldBePrimary);
+          }
+        }
         showStatus("success", `Product "${pForm.name}" ${isEdit ? "updated" : "created"}!`);
-        setProductModal(null); fetchTab(); refreshDbData();
+        setPNewFiles([]);
+        setProductModal(null);
+        fetchTab();
+        refreshDbData();
       } else {
         const errMsg = j.message || (j.errors && j.errors.map((e: any) => `${e.field}: ${e.message}`).join(', ')) || "Failed";
         showStatus("error", errMsg);
       }
-    } catch (error: any) { showStatus("error", error?.message || "Product saved, but the image upload failed."); } finally { setSaving(false); }
+    } catch (error: any) {
+      showStatus("error", error?.message || "Product saved, but an image upload encountered an issue.");
+    } finally {
+      setSaving(false);
+      setUploadProgressText("");
+    }
   };
 
   const deleteProduct = async (id: string, name: string) => {
@@ -1034,10 +1329,10 @@ export default function AdminPage() {
   };
 
   /* CATEGORY CRUD */
-  const openCategoryModal = (item?: any) => {
+  const openCategoryModal = (item?: any, defaultParentId?: string) => {
     setCImageFile(null);
-    if (item) { setCategoryModal(item); setCForm({ name: item.name, description: item.description || "", imageUrl: item.imageUrl || "" }); }
-    else { setCategoryModal("add"); setCForm(emptyCategory); }
+    if (item) { setCategoryModal(item); setCForm({ name: item.name, description: item.description || "", imageUrl: item.imageUrl || "", parentId: item.parentId || "" }); }
+    else { setCategoryModal("add"); setCForm({ ...emptyCategory, parentId: defaultParentId || "" }); }
   };
 
   const handleSaveCategory = async (e: React.FormEvent) => {
@@ -1045,7 +1340,8 @@ export default function AdminPage() {
     const isEdit = categoryModal !== "add";
     try {
       const url = isEdit ? `${API}/categories/admin/${categoryModal.id}` : `${API}/categories/admin`;
-      const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(cForm) });
+      const catPayload = { ...cForm, parentId: cForm.parentId ? cForm.parentId : null };
+      const r = await fetch(url, { method: isEdit ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(catPayload) });
       const j = await r.json();
       if (!checkUnauthorized(r, j) && (r.ok || j.success)) {
         if (cImageFile) await uploadImage(cImageFile, "CATEGORY", j.data.id);
@@ -1437,16 +1733,52 @@ export default function AdminPage() {
                     {paginatedProducts.map(p => (
                       <tr key={p.id} className="hover:bg-[#FFF8E7]/50 transition">
                         <td className="p-3 font-bold text-[#6B4226]">
-                          <div className="flex items-center gap-2">
-                            {p.images?.[0]?.url && <img src={p.images[0].url} alt="" className="w-8 h-8 rounded object-cover border shrink-0" />}
-                            <span>{p.name}</span>
+                          <div className="flex items-center gap-2.5">
+                            {(() => {
+                              const primaryImg = p.images?.find((img: any) => img.isPrimary)?.url || p.images?.[0]?.url;
+                              return primaryImg ? (
+                                <img src={primaryImg} alt="" className="w-9 h-9 rounded-lg object-contain bg-[#FFF8E7] border border-[#C89B3C]/30 shrink-0" />
+                              ) : null;
+                            })()}
+                            <div>
+                              <span className="block font-bold text-[#6B4226]">{p.name}</span>
+                              {p.images && p.images.length > 1 && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] text-[#A90C35] font-extrabold bg-[#FFF4D6] px-1.5 py-0.2 rounded border border-[#F6C84C]/40">
+                                  📷 {p.images.length} photos
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </td>
-                        <td className="p-3 text-[#292524]/80">{p.categories?.[0]?.category?.name || <span className="text-[#292524]/40 italic">None</span>}</td>
+                        <td className="p-3 text-[#292524]/80">
+                          {p.categories?.[0]?.category?.name ? (
+                            <div>
+                              <span className="font-bold text-[#6B4226] block">{p.categories[0].category.name}</span>
+                              {(p.subcategory?.name || p.subCategory) && (
+                                <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-[#FFF4D6] text-[#A90C35] border border-[#F6C84C]/50 mt-0.5">
+                                  › {p.subcategory?.name || p.subCategory}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-[#292524]/40 italic">None</span>
+                          )}
+                        </td>
                         <td className="p-3 font-mono">
                           {p.couponCode ? <span className="bg-[#F4D35E]/30 text-[#A90C35] px-2 py-0.5 rounded border border-[#C89B3C]/40">{p.couponCode}</span> : <span className="text-[#292524]/40">—</span>}
                         </td>
-                        <td className="p-3 font-bold text-[#A90C35]">₹{p.price} <span className="line-through text-[10px] text-[#292524]/40 font-normal">₹{p.mrp}</span></td>
+                        <td className="p-3 font-bold text-[#A90C35]">
+                          {p.price > 0 ? (
+                            <>
+                              ₹{p.price}
+                              {p.mrp > 0 && p.mrp !== p.price && (
+                                <span className="line-through text-[10px] text-[#292524]/40 font-normal ml-1">₹{p.mrp}</span>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-[11px] font-semibold text-[#6B4226]/60">Empty (₹0)</span>
+                          )}
+                        </td>
                         <td className="p-3">
                           <span className={`px-2 py-0.5 rounded font-extrabold ${p.stockQuantity > 0 ? "bg-[#E6F4EA] text-[#137333]" : "bg-[#FCE8E6] text-[#C5221F]"}`}>{p.stockQuantity}</span>
                         </td>
@@ -1500,12 +1832,36 @@ export default function AdminPage() {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <h4 className="font-bold text-sm text-[#6B4226]">{cat.name}</h4>
+                        {cat.parent && (
+                          <span className="inline-block px-2 py-0.5 bg-[#FFF4D6] text-[#A90C35] border border-[#F6C84C]/50 rounded text-[9px] font-bold">
+                            Subcategory of: {cat.parent.name}
+                          </span>
+                        )}
                         <span className="text-[10px] font-mono text-[#A90C35]">/{cat.slug}</span>
                       </div>
                       <StatusBadge active={cat.isActive} />
                     </div>
                     <p className="text-xs text-[#292524]/70 flex-1">{cat.description || "No description."}</p>
+                    {cat.children && cat.children.length > 0 && (
+                      <div className="pt-1.5 pb-1 border-t border-[#C89B3C]/20 space-y-1">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#A90C35] block">
+                          Subcategories ({cat.children.length}):
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {cat.children.map((child: any) => (
+                            <span key={child.id} className="px-2 py-0.5 rounded bg-[#FFF4D6] border border-[#F6C84C]/50 text-[10px] font-bold text-[#6B4226]">
+                              {child.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     <div className="flex gap-2 pt-1">
+                      {!cat.parentId && (
+                        <button onClick={() => openCategoryModal(undefined, cat.id)} className="px-2.5 py-1.5 text-[10px] font-bold text-[#137333] bg-[#E6F4EA] rounded-lg hover:bg-[#C8E6C9] transition flex items-center justify-center gap-1" title="Add Subcategory">
+                          <Plus size={12} />Subcategory
+                        </button>
+                      )}
                       <button onClick={() => openCategoryModal(cat)} className="flex-1 py-1.5 text-[10px] font-bold text-[#6B4226] bg-[#F4D35E]/30 rounded-lg hover:bg-[#F4D35E]/60 transition flex items-center justify-center gap-1"><Edit2 size={12} />Edit</button>
                       <button onClick={() => deleteCategory(cat.id, cat.name)} className="flex-1 py-1.5 text-[10px] font-bold text-[#991B1B] bg-[#FEF2F2] rounded-lg hover:bg-[#FCA5A5]/30 transition flex items-center justify-center gap-1"><Trash2 size={12} />Delete</button>
                     </div>
@@ -1996,11 +2352,11 @@ export default function AdminPage() {
               <input required type="text" value={pForm.name} onChange={e => setPForm({ ...pForm, name: e.target.value })} className={inp} placeholder="e.g. Royal Jasmine Agarbatti" />
             </FieldRow>
             <div className="grid grid-cols-2 gap-3">
-              <FieldRow label="Price (₹) *">
-                <input required type="number" step="0.01" value={pForm.price} onChange={e => setPForm({ ...pForm, price: e.target.value })} className={inp} placeholder="149" />
+              <FieldRow label="Price (₹)">
+                <input type="number" step="0.01" value={pForm.price} onChange={e => setPForm({ ...pForm, price: e.target.value })} className={inp} placeholder="Leave empty or enter price" />
               </FieldRow>
-              <FieldRow label="MRP (₹) *">
-                <input required type="number" step="0.01" value={pForm.mrp} onChange={e => setPForm({ ...pForm, mrp: e.target.value })} className={inp} placeholder="180" />
+              <FieldRow label="MRP (₹)">
+                <input type="number" step="0.01" value={pForm.mrp} onChange={e => setPForm({ ...pForm, mrp: e.target.value })} className={inp} placeholder="Leave empty or enter MRP" />
               </FieldRow>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -2011,14 +2367,63 @@ export default function AdminPage() {
                 <input type="text" value={pForm.sku} onChange={e => setPForm({ ...pForm, sku: e.target.value })} className={inp} placeholder="HM-001" />
               </FieldRow>
             </div>
-            <FieldRow label="Product Image">
-              <ImageUploadControl currentUrl={pForm.imageUrl} disabled={saving} onFileChange={setPImageFile} onDelete={() => { void (async () => { if (!productModal?.id || !pForm.imageId || !confirm("Delete this product image?")) return; setSaving(true); try { await deleteImage("PRODUCT", productModal.id, pForm.imageId); setPForm({ ...pForm, imageUrl: "", imageId: "" }); showStatus("success", "Product image deleted."); fetchTab(); refreshDbData(); } catch (error: any) { showStatus("error", error.message || "Image deletion failed"); } finally { setSaving(false); } })(); }} />
+            <FieldRow label="Product Photos (Multiple Supported)">
+              <ProductMultiImageControl
+                existingImages={pForm.existingImages}
+                newFiles={pNewFiles}
+                disabled={saving}
+                uploadProgressText={uploadProgressText}
+                onFilesAdded={(files) => setPNewFiles((prev) => [...prev, ...files])}
+                onRemoveNewFile={(idx) => setPNewFiles((prev) => prev.filter((_, i) => i !== idx))}
+                onSetPrimaryExisting={handleSetPrimaryImage}
+                onDeleteExisting={handleDeleteExistingImage}
+              />
             </FieldRow>
             <FieldRow label="Category">
-              <select value={pForm.categoryId} onChange={e => setPForm({ ...pForm, categoryId: e.target.value })} className={inp}>
+              <select
+                value={pForm.categoryId}
+                onChange={e => {
+                  const newCatId = e.target.value;
+                  setPForm({ ...pForm, categoryId: newCatId, subcategoryId: "" });
+                }}
+                className={inp}
+              >
                 <option value="">— Select Category —</option>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {categories.filter((c: any) => !c.parentId).map((c: any) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
               </select>
+            </FieldRow>
+            {(() => {
+              const selectedCat = categories.find((c: any) => c.id === pForm.categoryId);
+              const subcats = selectedCat?.children?.length ? selectedCat.children : categories.filter((c: any) => c.parentId === pForm.categoryId);
+              if (subcats && subcats.length > 0) {
+                return (
+                  <FieldRow label={`Subcategory under ${selectedCat?.name || "Category"}`}>
+                    <select
+                      value={pForm.subcategoryId || ""}
+                      onChange={e => setPForm({ ...pForm, subcategoryId: e.target.value })}
+                      className={inp}
+                    >
+                      <option value="">— Select Subcategory (Optional) —</option>
+                      {subcats.map((sc: any) => (
+                        <option key={sc.id} value={sc.id}>{sc.name}</option>
+                      ))}
+                    </select>
+                  </FieldRow>
+                );
+              }
+              return null;
+            })()}
+            <FieldRow label="Bundle Quantity (Boxes per Bundle - Editable)">
+              <input
+                type="number"
+                min="1"
+                value={pForm.bundleQuantity}
+                onChange={e => setPForm({ ...pForm, bundleQuantity: e.target.value })}
+                className={inp}
+                placeholder="Leave empty or enter number of boxes per bundle (e.g. 10 or 12)"
+              />
             </FieldRow>
             <FieldRow label="Coupon Code (optional)">
               <div className="flex gap-2">
@@ -2049,6 +2454,18 @@ export default function AdminPage() {
           <form onSubmit={handleSaveCategory} className="space-y-3 text-xs">
             <FieldRow label="Category Name *">
               <input required type="text" value={cForm.name} onChange={e => setCForm({ ...cForm, name: e.target.value })} className={inp} placeholder="e.g. Flora Agarbatti" />
+            </FieldRow>
+            <FieldRow label="Parent Category (Optional - select to make this a Subcategory)">
+              <select
+                value={cForm.parentId || ""}
+                onChange={e => setCForm({ ...cForm, parentId: e.target.value })}
+                className={inp}
+              >
+                <option value="">None (Top-Level Category)</option>
+                {categories.filter((c: any) => !c.parentId && (!categoryModal || categoryModal === "add" || categoryModal.id !== c.id)).map((c: any) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
             </FieldRow>
             <FieldRow label="Description">
               <textarea rows={3} value={cForm.description} onChange={e => setCForm({ ...cForm, description: e.target.value })} className={inp} placeholder="Short description..." />

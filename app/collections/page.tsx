@@ -6,7 +6,8 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Heart, Sun, Flame, Moon, Gift } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
-import { collectionsList, products } from "@/lib/products";
+import { collectionsList } from "@/lib/products";
+import { useStore } from "@/components/store";
 
 const collectionVisuals: Record<string, { image: string; icon: any; aura: string; desc: string }> = {
   "morning-puja": {
@@ -36,6 +37,8 @@ const collectionVisuals: Record<string, { image: string; icon: any; aura: string
 };
 
 export default function CollectionsPage() {
+  const { dbProducts } = useStore();
+  const allProducts = dbProducts || [];
   return (
     <InnerPage
       eyebrow="SACRED RITUAL COLLECTIONS"
@@ -59,7 +62,7 @@ export default function CollectionsPage() {
 
         {/* Collections Sections */}
         {collectionsList.map((collection, index) => {
-          const collectionProducts = products.filter((product) =>
+          const collectionProducts = allProducts.filter((product) =>
             collection.items.includes(product.slug)
           );
           const meta = collectionVisuals[collection.id] || {

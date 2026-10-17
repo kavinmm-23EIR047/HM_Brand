@@ -8,7 +8,10 @@ export class CategoriesController {
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const includeInactive = req.user?.role === 'ADMIN' && req.query.includeInactive === 'true';
-      const categories = await this.service.getAllCategories(includeInactive);
+      const parentId = req.query.parentId !== undefined
+        ? (req.query.parentId === 'null' || req.query.parentId === '' ? null : String(req.query.parentId))
+        : undefined;
+      const categories = await this.service.getAllCategories(includeInactive, parentId);
       return sendSuccess(res, categories, 'Categories retrieved successfully');
     } catch (error) {
       return next(error);

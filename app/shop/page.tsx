@@ -3,7 +3,7 @@
 import React, { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { SlidersHorizontal, Search, Sparkles, X } from "lucide-react";
+import { SlidersHorizontal, Search, Sparkles, X, Layers } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { MascotSearch } from "@/components/mascot-art";
@@ -30,12 +30,13 @@ const categoryIllustrations: Record<string, string> = {
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "All";
+  const initialSubcategory = searchParams.get("subcategory") || "All";
 
   const { dbProducts, dbCategories } = useStore();
 
-  const allProducts = dbProducts && dbProducts.length > 0 ? dbProducts : products;
+  const allProducts = dbProducts || [];
   const categoryNames = dbCategories && dbCategories.length > 0
-    ? dbCategories.map((c) => c.name)
+    ? dbCategories.filter((c: any) => !c.parentId).map((c) => c.name)
     : categories;
 
   const matchesCategory = (product: any, category: string) => {
@@ -54,10 +55,48 @@ function ShopContent() {
     category === "All" ? allProducts.length : allProducts.filter((product) => matchesCategory(product, category)).length;
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory);
   const [selectedPriceRange, setSelectedPriceRange] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  const handleSelectCategory = (cat: string) => {
+    setSelectedCategory(cat);
+    setSelectedSubcategory("All");
+  };
+
+  // Find subcategories belonging to the current category selection
+  const availableSubcategories = useMemo(() => {
+    const subs = new Set<string>();
+
+    if (selectedCategory !== "All" && dbCategories && dbCategories.length > 0) {
+      const parentCat = dbCategories.find(
+        (c: any) => !c.parentId && c.name.toLowerCase() === selectedCategory.toLowerCase()
+      );
+      if (parentCat) {
+        dbCategories
+          .filter((c: any) => c.parentId === parentCat.id)
+          .forEach((c: any) => subs.add(c.name));
+      }
+    }
+
+    allProducts.forEach((p) => {
+      if (selectedCategory === "All" || matchesCategory(p, selectedCategory)) {
+        if (p.subCategory) subs.add(p.subCategory);
+      }
+    });
+
+    return Array.from(subs).sort();
+  }, [selectedCategory, dbCategories, allProducts]);
+
+  const getSubcategoryCount = (subcat: string) => {
+    return allProducts.filter((p) => {
+      if (!matchesCategory(p, selectedCategory)) return false;
+      if (subcat === "All") return true;
+      return (p.subCategory || "").toLowerCase() === subcat.toLowerCase();
+    }).length;
+  };
 
   // Meilisearch integration for Shop catalog search (typo-tolerant)
   const [meiliSlugs, setMeiliSlugs] = useState<Set<string> | null>(null);
@@ -96,6 +135,14 @@ function ShopContent() {
         if (!matchesCategory(p, selectedCategory)) {
           return false;
         }
+        // Subcategory filter
+        if (selectedSubcategory !== "All") {
+          const pSub = (p.subCategory || "").toLowerCase().trim();
+          const selSub = selectedSubcategory.toLowerCase().trim();
+          if (pSub !== selSub) {
+            return false;
+          }
+        }
         // Price filter
         if (selectedPriceRange === "under-150" && p.price >= 150) return false;
         if (selectedPriceRange === "150-200" && (p.price < 150 || p.price > 200)) return false;
@@ -125,7 +172,7 @@ function ShopContent() {
         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allProducts, selectedCategory, selectedPriceRange, sortBy, searchQuery, meiliSlugs]);
+  }, [allProducts, selectedCategory, selectedSubcategory, selectedPriceRange, sortBy, searchQuery, meiliSlugs]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
@@ -151,7 +198,7 @@ function ShopContent() {
               <button
                 key={category}
                 type="button"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => handleSelectCategory(category)}
                 aria-pressed={isSelected}
                 className={`group flex min-w-0 flex-col items-center rounded-2xl px-2 py-2.5 text-center transition ${
                   isSelected
@@ -176,18 +223,68 @@ function ShopContent() {
         </div>
       </section>
 
+      {/* Subcategory Pills Strip */}
+      {availableSubcategories.length > 0 && (
+        <section aria-labelledby="shop-subcategories-heading" className="rounded-2xl bg-gradient-to-r from-[#FFF8E7] via-[#FFF4D6] to-[#FCEECC] p-3.5 sm:p-4 border-2 border-[#F6C84C]/60 shadow-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1.5 mr-2 shrink-0">
+              <Layers size={14} className="text-[#9E1830]" />
+              <span id="shop-subcategories-heading" className="text-[11px] font-black uppercase tracking-wider text-[#9E1830] font-space">
+                {selectedCategory !== "All" ? `${selectedCategory} Subcategories:` : "Filter Subcategory:"}
+              </span>
+            </div>
+
+            {["All", ...availableSubcategories].map((subcat) => {
+              const count = getSubcategoryCount(subcat);
+              const isSelected = selectedSubcategory === subcat;
+              return (
+                <button
+                  key={subcat}
+                  type="button"
+                  onClick={() => setSelectedSubcategory(subcat)}
+                  aria-pressed={isSelected}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-extrabold transition-all duration-200 ${
+                    isSelected
+                      ? "bg-[#9E1830] text-white shadow-md scale-105 ring-2 ring-[#9E1830]/30"
+                      : "bg-white text-[#173B3A] border border-[#F6C84C]/50 hover:bg-[#FFF4D6] hover:border-[#9E1830]"
+                  }`}
+                >
+                  <span>{subcat === "All" ? `All ${selectedCategory !== "All" ? selectedCategory : "Products"}` : subcat}</span>
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                      isSelected ? "bg-white/20 text-white" : "bg-[#FFF4D6] text-[#6B4226]"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* Top Controls Bar */}
       <div className="flex flex-col gap-4 border-b border-[#F6C84C]/30 pb-5 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-[#9E1830] px-3.5 py-1.5 text-xs font-bold text-white shadow-xs">
             {filteredProducts.length} Sacred Items
           </span>
           {selectedCategory !== "All" && (
             <button
-              onClick={() => setSelectedCategory("All")}
+              onClick={() => handleSelectCategory("All")}
               className="flex items-center gap-1 rounded-full bg-[#FFF4D6] border border-[#F6C84C]/60 px-3 py-1 text-xs font-bold text-[#9E1830] hover:bg-[#9E1830] hover:text-white transition"
             >
               <span>Category: {selectedCategory}</span>
+              <X size={13} />
+            </button>
+          )}
+          {selectedSubcategory !== "All" && (
+            <button
+              onClick={() => setSelectedSubcategory("All")}
+              className="flex items-center gap-1 rounded-full bg-[#FFF4D6] border border-[#F6C84C]/60 px-3 py-1 text-xs font-bold text-[#9E1830] hover:bg-[#9E1830] hover:text-white transition"
+            >
+              <span>Subcategory: {selectedSubcategory}</span>
               <X size={13} />
             </button>
           )}
@@ -249,7 +346,7 @@ function ShopContent() {
               {["All", ...categoryNames].map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => handleSelectCategory(cat)}
                   className={`w-full text-left text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-between ${
                     selectedCategory === cat
                       ? "bg-[#9E1830] text-white shadow-xs"
@@ -264,6 +361,50 @@ function ShopContent() {
               ))}
             </div>
           </div>
+
+          {/* Subcategories Sidebar Filter */}
+          {availableSubcategories.length > 0 && (
+            <div className="border-t border-[#F6C84C]/20 pt-5">
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="flex items-center gap-1.5 text-sm font-extrabold text-[#173B3A] uppercase tracking-wider font-heading">
+                  <Layers size={14} className="text-[#9E1830]" />
+                  <span>Subcategories</span>
+                </h3>
+                {selectedSubcategory !== "All" && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSubcategory("All")}
+                    className="text-[10px] font-bold text-[#9E1830] hover:underline"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                {["All", ...availableSubcategories].map((subcat) => {
+                  const isSel = selectedSubcategory === subcat;
+                  const cnt = getSubcategoryCount(subcat);
+                  return (
+                    <button
+                      key={subcat}
+                      type="button"
+                      onClick={() => setSelectedSubcategory(subcat)}
+                      className={`w-full text-left text-xs font-bold py-2 px-3 rounded-xl transition flex items-center justify-between ${
+                        isSel
+                          ? "bg-[#9E1830] text-white shadow-xs"
+                          : "text-[#173B3A] hover:bg-[#FFF4D6]"
+                      }`}
+                    >
+                      <span>{subcat === "All" ? `All ${selectedCategory !== "All" ? selectedCategory : "Products"}` : subcat}</span>
+                      <span className={`text-[10px] ${isSel ? "text-white/80" : "text-[#6B4226]"}`}>
+                        {cnt}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Price Range Filter */}
           <div className="border-t border-[#F6C84C]/20 pt-5">
@@ -294,7 +435,7 @@ function ShopContent() {
           {/* Reset Filters */}
           <button
             onClick={() => {
-              setSelectedCategory("All");
+              handleSelectCategory("All");
               setSelectedPriceRange("all");
               setSearchQuery("");
             }}
@@ -317,7 +458,7 @@ function ShopContent() {
               </p>
               <button
                 onClick={() => {
-                  setSelectedCategory("All");
+                  handleSelectCategory("All");
                   setSelectedPriceRange("all");
                   setSearchQuery("");
                 }}
