@@ -317,7 +317,7 @@ function ShopContent() {
     Boolean(searchQuery.trim());
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 font-sans">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-5 sm:space-y-6 font-sans">
       {/* ─── BREADCRUMB ─── */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-[#748078]">
         <Link href="/" className="hover:text-[#9E1830] transition-colors">
@@ -337,50 +337,49 @@ function ShopContent() {
       </nav>
 
       {/* ─── 1. SPLIT HERO BANNER (Authentic Fragrances & Pooja Essentials) ─── */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#FAF3E0]/70 p-6 sm:p-8 lg:p-10 border border-[#C89B3C]/20 shadow-xs">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <section className="relative overflow-hidden rounded-3xl bg-[#FAF3E0]/70 px-5 py-4 sm:px-8 sm:py-5 lg:px-9 lg:py-5 border border-[#C89B3C]/20 shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 items-center">
           {/* Left: Titles & Trust Badges */}
-          <div className="lg:col-span-7 space-y-4 sm:space-y-5">
-            <h1 className="font-playfair text-3xl sm:text-4xl lg:text-[46px] font-bold leading-[1.15] tracking-tight">
+          <div className="lg:col-span-7 space-y-2.5 sm:space-y-3">
+            <h1 className="font-playfair text-2xl sm:text-3xl lg:text-[32px] font-bold leading-tight tracking-tight">
               <span className="text-[#9E1830]">Authentic Fragrances</span>{" "}
-              <span className="text-[#9E1830]">&amp;</span>
-              <br />
+              <span className="text-[#9E1830]">&amp;</span>{" "}
               <span className="text-[#173B3A]">Pooja Essentials</span>
             </h1>
 
-            <p className="text-sm sm:text-base text-[#52625A] leading-relaxed max-w-xl">
+            <p className="text-xs sm:text-sm text-[#52625A] leading-relaxed max-w-xl">
               Handcrafted incense sticks, crystalline bhimseni camphor, pure sambrani, dhoop sticks,
               and traditional pooja essentials from Coimbatore’s trusted Vedic heritage.
             </p>
 
             {/* 4 Feature Badges Row */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-[#173B3A]">
+            <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-1.5 pt-1 text-[11px] sm:text-xs font-semibold text-[#173B3A]">
               <span className="inline-flex items-center gap-1.5">
-                <Leaf size={15} className="text-[#2D6A4F]" />
+                <Leaf size={14} className="text-[#2D6A4F]" />
                 Pure &amp; Natural
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Sparkles size={15} className="text-[#F47A20]" />
+                <Sparkles size={14} className="text-[#F47A20]" />
                 Traditional Fragrances
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Award size={15} className="text-[#9E1830]" />
+                <Award size={14} className="text-[#9E1830]" />
                 Premium Quality
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Truck size={15} className="text-[#4C7FA8]" />
+                <Truck size={14} className="text-[#4C7FA8]" />
                 Pan India Delivery
               </span>
             </div>
           </div>
 
-          {/* Right: Divine Atmospheric Image */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm bg-[#FFF4D6]">
+          {/* Right: Divine Atmospheric Image (Compact Height) */}
+          <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
+            <div className="relative h-32 min-[420px]:h-36 sm:h-44 lg:h-48 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-none overflow-hidden rounded-2xl flex items-center justify-center lg:justify-end">
               <img
                 src="/images/hm_puja_products_scene.png"
                 alt="Authentic pooja essentials altar"
-                className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
+                className="h-full w-full object-contain object-center lg:object-right transition-transform duration-500 hover:scale-105"
                 onError={(e) => {
                   const target = e.currentTarget as HTMLImageElement;
                   if (!target.src.includes("hm_temple_heritage_puja_scene")) {
@@ -388,7 +387,6 @@ function ShopContent() {
                   }
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
           </div>
         </div>
