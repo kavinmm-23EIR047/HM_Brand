@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { collectionsController } from './collections.controller';
-import { authenticateJWT, requireRole } from '../../shared/middlewares/auth.middleware';
+import { authenticateJWT, requireRole, optionalAuthenticateJWT } from '../../shared/middlewares/auth.middleware';
 
 const router = Router();
 
 // Public Routes
-router.get('/', collectionsController.getAll);
-router.get('/:slug', collectionsController.getBySlug);
+router.get('/', optionalAuthenticateJWT, collectionsController.getAll);
+router.get('/:slug', optionalAuthenticateJWT, collectionsController.getBySlug);
 
 // Admin Routes
 router.post('/admin', authenticateJWT, requireRole('ADMIN'), collectionsController.create);

@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { useStore } from "@/components/store";
-import { categories, collectionsList } from "@/lib/products";
+import { categories, collectionsList, subCategoriesMap } from "@/lib/products";
 import { Lotus } from "./illustrations";
 
 type MegaMenu = "shop" | "collections" | null;
@@ -30,7 +30,7 @@ export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<MegaMenu>(null);
   const pathname = usePathname();
-  const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen, user, dbProducts } = useStore();
+  const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen, user, dbProducts, dbCategories } = useStore();
 
   useEffect(() => {
     setOpenMega(null);
@@ -49,20 +49,43 @@ export function Navigation() {
     };
   }, [mobileOpen]);
 
+  const activeCategories = categories;
   const featuredProducts = (dbProducts || []).filter((product) => product.featured).slice(0, 4);
   const navLinkClass = (href: string) =>
     `relative whitespace-nowrap py-2 text-[13px] font-bold tracking-[-.01em] transition-colors ${pathname === href ? "text-[#a90c35]" : "text-[#182b28] hover:text-[#a90c35]"}`;
 
   const shopMenu = (
-    <div className="grid gap-8 p-6 lg:grid-cols-[.8fr_1.4fr_1fr] lg:p-7">
+    <div className="grid gap-8 p-6 lg:grid-cols-[.9fr_1.3fr_1fr] lg:p-7">
       <div>
         <p className="mb-3 text-[10px] font-extrabold tracking-[.16em] text-[#a90c35]">SHOP BY CATEGORY</p>
-        <div className="grid grid-cols-2 gap-x-5 gap-y-1">
-          {categories.map((category) => (
-            <Link key={category} href={`/shop?category=${encodeURIComponent(category)}`} className="rounded-lg px-2 py-2 text-[13px] font-semibold text-[#203732] transition hover:bg-[#f7edda] hover:text-[#a90c35]">
-              {category}
-            </Link>
-          ))}
+        <div className="space-y-1">
+          {activeCategories.map((category) => {
+            const subs = subCategoriesMap[category];
+            return (
+              <div key={category} className="space-y-0.5">
+                <Link
+                  href={`/shop?category=${encodeURIComponent(category)}`}
+                  className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[13px] font-bold text-[#203732] transition hover:bg-[#f7edda] hover:text-[#a90c35]"
+                >
+                  <span>{category}</span>
+                  {subs && <span className="text-[10px] font-normal text-[#9E1830] bg-[#FFF4D6] px-1.5 py-0.5 rounded">3 sub</span>}
+                </Link>
+                {subs && (
+                  <div className="ml-3 pl-2 border-l-2 border-[#F6C84C]/40 space-y-0.5">
+                    {subs.map((sub) => (
+                      <Link
+                        key={sub}
+                        href={`/shop?category=${encodeURIComponent(sub)}`}
+                        className="block rounded-md px-2 py-1 text-xs font-semibold text-[#546864] transition hover:bg-[#f7edda] hover:text-[#a90c35]"
+                      >
+                        ↳ {sub}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
         <Link href="/products" className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold text-[#a90c35] hover:gap-3">
           View all products <ArrowRight size={14} />
@@ -369,17 +392,35 @@ export function Navigation() {
 
                 {mobileSection === "shop" && (
                   <div className="border-t border-[#eadfc9] bg-[#FFF8E7]/90 p-2 space-y-1 animate-in fade-in">
-                    {categories.map((category) => (
-                      <Link
-                        key={category}
-                        href={`/shop?category=${encodeURIComponent(category)}`}
-                        onClick={() => setMobileOpen(false)}
-                        className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold text-[#183c31] hover:bg-[#9E1830] hover:text-white transition"
-                      >
-                        <span>{category}</span>
-                        <span className="text-[10px] text-[#9E1830] group-hover:text-white">✦</span>
-                      </Link>
-                    ))}
+                    {activeCategories.map((category) => {
+                      const subs = subCategoriesMap[category];
+                      return (
+                        <div key={category} className="space-y-0.5">
+                          <Link
+                            href={`/shop?category=${encodeURIComponent(category)}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-bold text-[#183c31] hover:bg-[#9E1830] hover:text-white transition"
+                          >
+                            <span>{category}</span>
+                            <span className="text-[10px] text-[#9E1830] group-hover:text-white">✦</span>
+                          </Link>
+                          {subs && (
+                            <div className="ml-4 pl-2 border-l border-[#F6C84C]/50 space-y-0.5">
+                              {subs.map((sub) => (
+                                <Link
+                                  key={sub}
+                                  href={`/shop?category=${encodeURIComponent(sub)}`}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="block rounded-md px-2.5 py-1 text-[11px] font-semibold text-[#546864] hover:bg-[#9E1830] hover:text-white transition"
+                                >
+                                  ↳ {sub}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                     <Link
                       href="/products"
                       onClick={() => setMobileOpen(false)}

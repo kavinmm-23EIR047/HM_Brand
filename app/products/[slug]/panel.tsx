@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, Heart, ShoppingBag, ArrowRight, Check, Sparkles, Tag } from "lucide-react";
+import { Plus, Minus, Heart, ShoppingBag, ArrowRight, Check, Tag, Truck, Lock, Sparkles } from "lucide-react";
 import { useStore } from "@/components/store";
 import type { Product } from "@/lib/products";
 
@@ -31,6 +31,11 @@ export function AddPanel({ product }: { product: Product }) {
   const totalEffective = effectiveUnitPrice * qty;
   const totalOriginal = product.price * qty;
   const totalSavings = singleItemDiscount * qty;
+
+  const mrpNum = product.mrp ? parseFloat(product.mrp.replace(/[^0-9.]/g, "")) : 0;
+  const discountPercent = mrpNum > product.price
+    ? Math.round(((mrpNum - product.price) / mrpNum) * 100)
+    : 0;
 
   const handleToggleCoupon = async () => {
     if (!product.couponCode) return;
@@ -60,89 +65,89 @@ export function AddPanel({ product }: { product: Product }) {
   };
 
   return (
-    <div className="space-y-6 pt-4 border-t border-[#C89B3C]/40">
-      {/* Live Calibrated Price & Coupon Savings */}
-      <div className="rounded-xl border border-[#C89B3C]/30 bg-[#FFF8E7] p-4 shadow-xs space-y-2">
-        <div className="flex items-baseline justify-between flex-wrap gap-2">
-          <div className="flex items-baseline gap-2">
-            {effectiveUnitPrice > 0 ? (
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#9E1830]">
-                ₹{effectiveUnitPrice}
-              </span>
-            ) : (
-              <span className="text-xl sm:text-2xl font-extrabold text-[#9E1830]">
-                {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
-              </span>
-            )}
-            {singleItemDiscount > 0 ? (
-              <span className="text-sm font-semibold text-[#292524]/50 line-through">
-                ₹{product.price}
-              </span>
-            ) : product.mrp && product.mrp !== `₹${product.price}` ? (
-              <span className="text-sm font-semibold text-[#292524]/50 line-through">
-                {product.mrp}
-              </span>
-            ) : null}
-          </div>
+    <div className="space-y-4 pt-2">
 
-          {singleItemDiscount > 0 ? (
-            <span className="rounded-full bg-[#E1EDCF] px-3 py-1 text-xs font-extrabold text-[#286B45]">
-              SAVE ₹{totalSavings} WITH COUPON
-            </span>
-          ) : (
-            <span className="text-xs font-bold text-[#E85D04]">
-              Inclusive of all taxes
-            </span>
-          )}
-        </div>
-
-        {qty > 1 && (
-          <div className="flex items-center justify-between text-xs text-[#6B4226] border-t border-[#C89B3C]/20 pt-2 font-medium">
-            <span>Subtotal for {qty} items:</span>
-            <div className="flex items-baseline gap-1.5">
-              {singleItemDiscount > 0 && (
-                <span className="text-[11px] text-[#292524]/50 line-through">₹{totalOriginal}</span>
-              )}
-              <span className="font-extrabold text-[#9E1830]">₹{totalEffective}</span>
-            </div>
-          </div>
+      {/* ── PRICE ROW ── */}
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span className="text-3xl font-extrabold text-[#173b3a]">
+          ₹{effectiveUnitPrice}
+        </span>
+        {singleItemDiscount > 0 ? (
+          <span className="text-base text-[#292524]/40 line-through font-semibold">
+            ₹{product.price}
+          </span>
+        ) : product.mrp ? (
+          <span className="text-base text-[#292524]/40 line-through font-semibold">
+            {product.mrp}
+          </span>
+        ) : null}
+        {discountPercent > 0 && (
+          <span className="rounded-full bg-[#e1edcf] px-2.5 py-0.5 text-xs font-extrabold text-[#286b45]">
+            {discountPercent}% OFF
+          </span>
+        )}
+        {singleItemDiscount > 0 && (
+          <span className="rounded-full bg-[#e1edcf] px-2.5 py-0.5 text-xs font-extrabold text-[#286b45]">
+            SAVE ₹{totalSavings}
+          </span>
         )}
       </div>
-      {/* Quantity Selector */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="text-xs font-bold text-[#6B4226] uppercase tracking-wider">
-          Quantity:
-        </span>
-        <div className="flex items-center border-2 border-[#6B4226]/30 rounded-lg bg-white overflow-hidden shadow-sm">
+
+      {/* ── QUANTITY + STOCK ROW ── */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-sm font-semibold text-[#173b3a]">Quantity</span>
+        <div className="inline-flex items-center border border-[#d5cfc4] rounded-lg bg-white overflow-hidden">
           <button
             onClick={() => setQty(Math.max(1, qty - 1))}
-            className="p-2.5 px-3.5 text-[#6B4226] hover:bg-[#F4D35E]/30 transition"
+            className="px-3 py-2 text-[#6B4226] hover:bg-[#faf5e8] transition"
             aria-label="Decrease quantity"
           >
-            <Minus size={15} />
+            <Minus size={14} />
           </button>
-          <span className="px-4 text-sm font-bold text-[#292524]">{qty}</span>
+          <span className="px-4 py-2 text-sm font-semibold text-[#173b3a] border-x border-[#d5cfc4] tabular-nums min-w-[40px] text-center bg-[#faf8f2]">{qty}</span>
           <button
             onClick={() => setQty(qty + 1)}
-            className="p-2.5 px-3.5 text-[#6B4226] hover:bg-[#F4D35E]/30 transition"
+            className="px-3 py-2 text-[#6B4226] hover:bg-[#faf5e8] transition"
             aria-label="Increase quantity"
           >
-            <Plus size={15} />
+            <Plus size={14} />
           </button>
         </div>
-        <span className="text-xs text-[#292524]/60">
-          ({product.quantity})
-        </span>
+
+        {product.inStock ? (
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2D6A4F]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#2D6A4F]" />
+            In stock
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#9E1830]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
+            Out of stock
+          </span>
+        )}
       </div>
+
+      {/* ── SUBTOTAL (when qty > 1 or coupon applied) ── */}
+      {(qty > 1 || singleItemDiscount > 0) && (
+        <div className="flex items-center justify-between text-xs text-[#6B4226] bg-[#faf5e8] rounded-lg px-3.5 py-2 border border-[#e8e0d0]">
+          <span className="font-medium">Subtotal for {qty} {qty > 1 ? "items" : "item"}:</span>
+          <div className="flex items-baseline gap-1.5">
+            {singleItemDiscount > 0 && (
+              <span className="text-[#292524]/40 line-through">₹{totalOriginal}</span>
+            )}
+            <span className="font-bold text-[#173b3a]">₹{totalEffective}</span>
+          </div>
+        </div>
+      )}
 
       {/* Product-Specific Coupon Offer */}
       {product.couponCode && (
-        <div className="rounded-xl border border-dashed border-[#E85D04] bg-[#FFF8E7] p-3 flex items-center justify-between gap-2 shadow-xs">
+        <div className="rounded-lg border border-dashed border-[#E85D04]/50 bg-[#FFF8E7] p-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Tag size={16} className="text-[#E85D04] shrink-0" />
+            <Tag size={15} className="text-[#E85D04] shrink-0" />
             <div className="text-xs">
-              <span className="font-bold text-[#6B4226]">Special Coupon: </span>
-              <span className="font-mono font-black text-[#9E1830] bg-[#FFF0D0] px-1.5 py-0.5 rounded border border-[#C89B3C]/40">
+              <span className="font-semibold text-[#6B4226]">Coupon: </span>
+              <span className="font-mono font-bold text-[#9E1830] bg-[#FFF0D0] px-1.5 py-0.5 rounded text-[11px]">
                 {product.couponCode}
               </span>
             </div>
@@ -150,59 +155,77 @@ export function AddPanel({ product }: { product: Product }) {
           <button
             type="button"
             onClick={handleToggleCoupon}
-            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-xs ${
+            className={`text-[11px] font-semibold px-3 py-1.5 rounded-md transition ${
               isThisCouponApplied
-                ? "bg-[#3F7D45] text-white"
-                : "bg-[#E85D04] text-white hover:bg-[#9E1830]"
+                ? "bg-[#2D6A4F] text-white"
+                : "bg-[#E85D04] text-white hover:bg-[#d64e00]"
             }`}
           >
-            {isThisCouponApplied ? "✓ Coupon Applied" : "Apply Coupon"}
+            {isThisCouponApplied ? "✓ Applied" : "Apply"}
           </button>
         </div>
       )}
 
-      {/* Action Buttons */}
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
+      {/* ── CTA BUTTONS — clean, simple design ── */}
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_44px] items-center gap-2 pt-0.5 sm:gap-3">
+        {/* Add to Cart — solid orange, simple rounded */}
         <button
           onClick={handleAdd}
-          className="btn-saffron flex min-h-11 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-md px-1.5 py-3 text-[9px] font-bold uppercase tracking-normal shadow-solid-sm min-[360px]:gap-1.5 min-[360px]:px-2 min-[360px]:text-[10px] sm:px-4 sm:text-xs sm:tracking-wide"
+          disabled={!product.inStock}
+          className={`flex h-11 w-full items-center justify-center gap-1.5 rounded-xl px-2 text-xs font-semibold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed sm:gap-2 sm:text-sm ${
+            added
+              ? "bg-[#2D6A4F] text-white"
+              : "bg-[#E85D04] text-white hover:bg-[#d64e00]"
+          }`}
         >
           {added ? (
             <>
-              <Check size={14} /> <span className="hidden min-[360px]:inline">Added to Basket</span><span className="min-[360px]:hidden">Added</span>
+              <Check size={16} /> Added!
             </>
           ) : (
             <>
-              <ShoppingBag size={14} /> <span className="hidden min-[360px]:inline">Add to Basket</span><span className="min-[360px]:hidden">Add</span>
+              <ShoppingBag size={16} /> Add to Cart
             </>
           )}
         </button>
 
+        {/* Buy Now — simple text/outlined style */}
         <button
           onClick={handleBuyNow}
-          className="flex min-h-11 min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-md border-2 border-[#C89B3C] bg-[#C89B3C] px-1.5 py-3 text-[9px] font-bold uppercase tracking-normal text-[#FFF8E7] shadow-solid-sm transition hover:bg-[#6B4226] min-[360px]:gap-1.5 min-[360px]:px-2 min-[360px]:text-[10px] sm:px-4 sm:text-xs sm:tracking-wide"
+          disabled={!product.inStock}
+          className="flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-[#d5cfc4] bg-white px-2 text-xs font-semibold text-[#173b3a] transition-colors hover:bg-[#faf5e8] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm"
         >
-          <span className="hidden min-[360px]:inline">Buy Now</span><span className="min-[360px]:hidden">Buy</span>
-          <ArrowRight size={14} />
+          Buy Now <ArrowRight size={15} />
         </button>
 
+        {/* Wishlist */}
         <button
           onClick={() => toggleWishlist(product.slug)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex min-h-11 min-w-10 items-center justify-center rounded-md border-2 p-2 transition sm:p-4 ${
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors ${
             wishlisted
               ? "bg-[#B23A48] border-[#B23A48] text-white"
-              : "bg-[#FFF8E7] border-[#C89B3C] text-[#6B4226] hover:bg-[#B23A48] hover:text-white"
+              : "bg-white border-[#d5cfc4] text-[#6B4226] hover:bg-[#B23A48] hover:border-[#B23A48] hover:text-white"
           }`}
         >
           <Heart size={18} fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
-      {/* Trust reassurance below button */}
-      <div className="bg-[#F4D35E]/20 p-3.5 rounded-lg border border-[#C89B3C]/30 flex items-center gap-2 text-xs font-semibold text-[#6B4226]">
-        <Sparkles size={16} className="text-[#E85D04] shrink-0" />
-        <span>Direct dispatch from Coimbatore • Free shipping over ₹499</span>
+      {/* ── TRUST BADGES — inline row ── */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-[11px] sm:text-xs font-medium text-[#718078]">
+        <span className="inline-flex items-center gap-1.5">
+          <Truck size={14} className="text-[#2D6A4F]" />
+          Free shipping on orders ₹499+
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <Lock size={14} className="text-[#E85D04]" />
+          Secure payment & easy returns
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <Sparkles size={14} className="text-[#9E1830]" />
+          Direct from artisans
+        </span>
       </div>
     </div>
   );

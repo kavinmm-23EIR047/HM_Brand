@@ -1,0 +1,109 @@
+[
+  {
+    "name": "Agarbatti",
+    "slug": "agarbatti",
+    "description": "Divine handcrafted traditional agarbattis and soothing floral fragrances",
+    "displayOrder": 1,
+    "isActive": true,
+    "subCategories": [
+      {
+        "name": "Exclusive",
+        "slug": "exclusive",
+        "description": "Premium luxury signature blends and artisanal agarbatti collections",
+        "displayOrder": 1,
+        "isActive": true,
+        "subCategories": [
+          { "name": "Cardamom", "slug": "cardamom", "description": "Exclusive Agarbatti fragrance", "displayOrder": 1, "isActive": true },
+          { "name": "Kasturi", "slug": "kasturi", "description": "Exclusive Agarbatti fragrance", "displayOrder": 2, "isActive": true },
+          { "name": "Karpoor Loban", "slug": "karpoor-loban", "description": "Exclusive Agarbatti fragrance", "displayOrder": 3, "isActive": true },
+          { "name": "Kesar Loban", "slug": "kesar-loban", "description": "Exclusive Agarbatti fragrance", "displayOrder": 4, "isActive": true },
+          { "name": "Pancha Rudhra", "slug": "pancha-rudhra", "description": "Exclusive Agarbatti fragrance", "displayOrder": 5, "isActive": true },
+          { "name": "Real Stone", "slug": "real-stone", "description": "Exclusive Agarbatti fragrance", "displayOrder": 6, "isActive": true },
+          { "name": "Fancy Flora", "slug": "fancy-flora", "description": "Exclusive Agarbatti fragrance", "displayOrder": 7, "isActive": true }
+        ]
+      },
+      {
+        "name": "Budget Pack (12 pcs)",
+        "slug": "budget-pack-12-pcs",
+        "description": "Value-packed 12 pcs daily prayer and ritual fragrance packs",
+        "displayOrder": 2,
+        "isActive": true
+      },
+      {
+        "name": "Super Series",
+        "slug": "super-series",
+        "description": "High-potency long-lasting classic agarbatti fragrances",
+        "displayOrder": 3,
+        "isActive": true,
+        "subCategories": [
+          { "name": "Rose", "slug": "rose", "description": "Super Series Agarbatti fragrance", "displayOrder": 1, "isActive": true },
+          { "name": "Pineapple", "slug": "pineapple", "description": "Super Series Agarbatti fragrance", "displayOrder": 2, "isActive": true },
+          { "name": "Sandal", "slug": "sandal", "description": "Super Series Agarbatti fragrance", "displayOrder": 3, "isActive": true },
+          { "name": "Glory", "slug": "glory", "description": "Super Series Agarbatti fragrance", "displayOrder": 4, "isActive": true },
+          { "name": "Fantasy", "slug": "fantasy", "description": "Super Series Agarbatti fragrance", "displayOrder": 5, "isActive": true },
+          { "name": "Jasmine", "slug": "jasmine", "description": "Super Series Agarbatti fragrance", "displayOrder": 6, "isActive": true },
+          { "name": "Lavender", "slug": "lavender", "description": "Super Series Agarbatti fragrance", "displayOrder": 7, "isActive": true },
+          { "name": "Ecstasy", "slug": "ecstasy", "description": "Super Series Agarbatti fragrance", "displayOrder": 8, "isActive": true },
+          { "name": "Kewda", "slug": "kewda", "description": "Super Series Agarbatti fragrance", "displayOrder": 9, "isActive": true },
+          { "name": "Loban", "slug": "loban", "description": "Super Series Agarbatti fragrance", "displayOrder": 10, "isActive": true }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Camphor",
+    "slug": "camphor",
+    "description": "100% Pure refined and Bhimseni camphor for sacred aarti and puja",
+    "displayOrder": 2,
+    "isActive": true
+  },
+  {
+    "name": "Dhoop Stick / Bambooless Stick",
+    "slug": "dhoop-stick-bambooless-stick",
+    "description": "Pure herbal bambooless dhoop sticks for pure, smoke-controlled devotion",
+    "displayOrder": 3,
+    "isActive": true
+  },
+  {
+    "name": "Incense Cone",
+    "slug": "incense-cone",
+    "description": "Natural charcoal-free aromatic dhoop cones and backflow cones",
+    "displayOrder": 4,
+    "isActive": true
+  },
+  {
+    "name": "Chandan Cups",
+    "slug": "chandan-cups",
+    "description": "Sacred sandalwood filled sambrani cups for deep meditation and positivity",
+    "displayOrder": 5,
+    "isActive": true
+  },
+  {
+    "name": "Sambhrani Powder",
+    "slug": "sambhrani-powder",
+    "description": "Traditional pure resin sambrani powder for divine temple smoke & peace",
+    "displayOrder": 6,
+    "isActive": true
+  },
+  {
+    "name": "Pooja Essentials",
+    "slug": "pooja-essentials",
+    "description": "Complete daily ritual, havan, and mandir worship essentials",
+    "displayOrder": 7,
+    "isActive": true
+  },
+  {
+    "name": "Gift Sets",
+    "slug": "gift-sets",
+    "description": "Elegant luxury festive gift hampers and celebratory boxes",
+    "displayOrder": 8,
+    "isActive": true
+  },
+  {
+    "name": "Family Pack",
+    "slug": "family-pack",
+    "description": "Assorted mega economy packs crafted for the entire family",
+    "displayOrder": 9,
+    "isActive": true
+  }
+]

@@ -19,6 +19,7 @@ const coupons_routes_1 = __importDefault(require("../modules/coupons/coupons.rou
 const admin_routes_1 = __importDefault(require("../modules/admin/admin.routes"));
 const addresses_routes_1 = __importDefault(require("../modules/addresses/addresses.routes"));
 const media_routes_1 = __importDefault(require("../modules/media/media.routes"));
+const content_routes_1 = __importDefault(require("../modules/content/content.routes"));
 const router = (0, express_1.Router)();
 router.use('/auth', auth_routes_1.default);
 router.use('/addresses', addresses_routes_1.default);
@@ -35,4 +36,5 @@ router.use('/wishlist', wishlist_routes_1.default);
 router.use('/coupons', coupons_routes_1.default);
 router.use('/admin', admin_routes_1.default);
 router.use('/media', media_routes_1.default);
+router.use('/content', content_routes_1.default);
 exports.default = router;

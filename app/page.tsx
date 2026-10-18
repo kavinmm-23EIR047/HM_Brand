@@ -14,27 +14,24 @@ import { PromoBanners } from "@/components/promo-banners";
 import { DeliveryReachBanner } from "@/components/delivery-reach-banner";
 import { Testimonials } from "@/components/testimonials";
 import { OurStorySection } from "@/components/our-story-section";
-import { products } from "@/lib/products";
 import { useStore } from "@/components/store";
 
 export default function HomePage() {
   const { add, toggleWishlist, isInWishlist, dbProducts } = useStore();
 
-  const displayPicks = dbProducts && dbProducts.length > 0
-    ? dbProducts.slice(0, 8).map((p, idx) => ({
-        slug: p.slug,
-        name: p.name,
-        badge: p.couponCode ? `COUPON: ${p.couponCode}` : (p.badge || "Best Seller"),
-        badgeBg: idx % 3 === 0 ? "bg-[#3F7D45]" : idx % 3 === 1 ? "bg-[#9E1830]" : "bg-[#7653A6]",
-        rating: p.rating || 4.9,
-        reviews: p.reviewCount || 48,
-        note: p.note || p.description?.slice(0, 80),
-        price: p.price,
-        unit: p.quantity || "150 GMS",
-        image: p.image || "/images/media_1790142713668.jpg",
-        rawProduct: p,
-      }))
-    : [];
+  const displayPicks = (dbProducts || []).slice(0, 8).map((p, idx) => ({
+    slug: p.slug,
+    name: p.name,
+    badge: p.couponCode ? `COUPON: ${p.couponCode}` : (p.badge || (p.featured ? "Featured" : "Best Seller")),
+    badgeBg: idx % 3 === 0 ? "bg-[#3F7D45]" : idx % 3 === 1 ? "bg-[#9E1830]" : "bg-[#7653A6]",
+    rating: p.rating || 4.9,
+    reviews: p.reviewCount || 48,
+    note: p.note || p.description?.slice(0, 80),
+    price: p.price,
+    unit: p.quantity || "150 GMS",
+    image: p.image || "/images/media_1790142713668.jpg",
+    rawProduct: p,
+  }));
 
 
   return (
@@ -88,7 +85,7 @@ export default function HomePage() {
             <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {displayPicks.map((item) => {
                 const wishlisted = isInWishlist(item.slug);
-                const originalProduct = item.rawProduct || products.find((p) => p.slug === item.slug);
+                const originalProduct = item.rawProduct || (dbProducts || []).find((p: any) => p.slug === item.slug);
                 if (!originalProduct) return null;
 
                 return (

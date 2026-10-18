@@ -3,323 +3,156 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, X, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { Search, X, ArrowRight, Sparkles, Loader2, Clock3, Grid2X2, ChevronRight } from "lucide-react";
 import { useStore } from "@/components/store";
 import { MascotSearch } from "@/components/mascot-art";
 
+const API = "/api/search";
+const RECENT_KEY = "hm_recent_searches";
+const popularTags = ["Bhimseni Camphor", "HM Super Series", "Cup Sambrani", "Kesar Loban", "Chandan Dhoop", "Kasturi"];
+const sacredCategories = [
+  { name: "Agarbatti", note: "Divine Fragrances", image: "/images/hm_wellness_incense_scene.png", slug: "agarbatti" },
+  { name: "Camphor", note: "Pure & Natural", image: "/images/hm_puja_products_scene.png", slug: "camphor" },
+  { name: "Sambrani", note: "Traditional Bliss", image: "/images/hm_mindful_ritual_scene.png", slug: "sambhrani-powder" },
+  { name: "Dhoop & Loban", note: "Spiritual Essence", image: "/images/hm_ayurvedic_journal_scene.png", slug: "dhoop-stick-bambooless-stick" },
+  { name: "Pooja Essentials", note: "For Every Ritual", image: "/images/hm_puja_products_scene.png", slug: "pooja-essentials" },
+  { name: "Gift Packs", note: "Thoughtful Gifting", image: "/images/special_offer_gift_transparent.png", slug: "gift-sets" },
+];
+
 export function SearchModal() {
   const router = useRouter();
-  const { isSearchOpen, setIsSearchOpen } = useStore();
+  const { isSearchOpen, setIsSearchOpen, dbProducts, dbCategories } = useStore();
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [hits, setHits] = useState<any[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [searchSource, setSearchSource] = useState<string>("meilisearch");
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
-  // Debounce search input (250ms) to avoid requesting on every single keystroke
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedQuery(query.trim());
-    }, 250);
+    const timer = setTimeout(() => setDebouncedQuery(query.trim()), 250);
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Execute search against our server-side Meilisearch API
   useEffect(() => {
-    if (!debouncedQuery) {
-      setHits([]);
-      setSuggestions([]);
-      setLoading(false);
-      return;
-    }
-
-    let isCurrent = true;
+    if (!debouncedQuery) { setHits([]); setSuggestions([]); setLoading(false); return; }
+    let current = true;
     setLoading(true);
-
-    fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}&type=autocomplete&limit=8`)
+    fetch(`${API}?q=${encodeURIComponent(debouncedQuery)}&type=autocomplete&limit=8`)
       .then((res) => res.json())
-      .then((data) => {
-        if (isCurrent && data.success) {
-          setHits(data.hits || []);
-          setSuggestions(data.suggestions || []);
-          setSearchSource(data.source || "meilisearch");
-        }
-      })
-      .catch((err) => {
-        console.warn("Search autocomplete fetch error", err);
-      })
-      .finally(() => {
-        if (isCurrent) setLoading(false);
-      });
-
-    return () => {
-      isCurrent = false;
-    };
+      .then((data) => { if (current && data.success) { setHits(data.hits || []); setSuggestions(data.suggestions || []); } })
+      .catch((err) => console.warn("Search autocomplete fetch error", err))
+      .finally(() => { if (current) setLoading(false); });
+    return () => { current = false; };
   }, [debouncedQuery]);
 
   useEffect(() => {
     if (isSearchOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery("");
-      setDebouncedQuery("");
-      setHits([]);
-      setSuggestions([]);
+      try { const stored = localStorage.getItem(RECENT_KEY); if (stored) setRecentSearches(JSON.parse(stored)); } catch {}
+      const timer = setTimeout(() => {
+        if (window.matchMedia("(max-width: 639px)").matches) mobileInputRef.current?.focus();
+        else inputRef.current?.focus();
+      }, 80);
+      return () => clearTimeout(timer);
     }
+    setQuery(""); setDebouncedQuery(""); setHits([]); setSuggestions([]);
   }, [isSearchOpen]);
 
-  const handleExecuteSearch = useCallback(
-    (searchQuery: string) => {
-      const q = searchQuery.trim();
-      if (!q) return;
-      setIsSearchOpen(false);
-      router.push(`/search?q=${encodeURIComponent(q)}`);
-    },
-    [router, setIsSearchOpen]
-  );
+  const handleExecuteSearch = useCallback((value: string) => {
+    const q = value.trim();
+    if (!q) return;
+    setRecentSearches((current) => {
+      const updated = [q, ...current.filter((item) => item.toLowerCase() !== q.toLowerCase())].slice(0, 5);
+      try { localStorage.setItem(RECENT_KEY, JSON.stringify(updated)); } catch {}
+      return updated;
+    });
+    setIsSearchOpen(false);
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  }, [router, setIsSearchOpen]);
 
   if (!isSearchOpen) return null;
 
-  const popularTags = [
-    "Bhimseni Camphor",
-    "HM Super Series",
-    "Cup Sambrani",
-    "Kesar Loban",
-    "Chandan Dhoop",
-    "Kasturi",
-  ];
+  const clearRecent = () => { setRecentSearches([]); try { localStorage.removeItem(RECENT_KEY); } catch {} };
+  const removeRecent = (item: string) => setRecentSearches((current) => {
+    const updated = current.filter((value) => value !== item);
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(updated)); } catch {}
+    return updated;
+  });
+  const categoryCards = dbCategories.length ? dbCategories.map((category: any) => ({
+    name: category.name,
+    note: category.description || "Explore collection",
+    image: category.imageUrl || "/images/hm_wellness_incense_scene.png",
+    slug: category.slug,
+  })) : sacredCategories;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-charcoal/60 transition-opacity"
-        onClick={() => setIsSearchOpen(false)}
-        aria-hidden="true"
-      />
-
-      <div className="relative flex min-h-[100dvh] items-start justify-center px-2 pb-8 pt-12 sm:min-h-screen sm:px-4 sm:pt-20 sm:pb-12">
-        <div className="relative w-full max-w-2xl bg-sacredCream border-2 border-antiqueGold rounded-2xl shadow-2xl overflow-hidden text-charcoal">
-          {/* Search Header */}
-          <div className="flex items-center gap-2 border-b border-antiqueGold/40 bg-turmeric/20 p-3 sm:gap-3 sm:p-5">
-            <Search className="text-saffron shrink-0" size={22} />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && query.trim()) {
-                  e.preventDefault();
-                  handleExecuteSearch(query);
-                }
-              }}
-              placeholder="Search sacred agarbatti, camphor, sambrani..."
-              className="min-w-0 flex-1 border-none bg-transparent text-sm text-charcoal outline-none placeholder-charcoal/40 sm:text-base font-sans"
-            />
-            {loading && <Loader2 size={16} className="text-[#E85D04] animate-spin shrink-0" />}
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                className="text-xs font-bold text-earthBrown bg-sacredCream px-2 py-1 rounded shrink-0 hover:bg-white transition"
-              >
-                CLEAR
-              </button>
-            )}
-            <button
-              onClick={() => setIsSearchOpen(false)}
-              className="p-1 text-earthBrown hover:bg-sacredCream rounded-full transition shrink-0"
-              aria-label="Close search"
-            >
-              <X size={20} />
-            </button>
+    <div className="fixed inset-0 z-[100] overflow-hidden" role="dialog" aria-modal="true" aria-label="Search products">
+      <button className="absolute inset-0 bg-[#123936]/55 backdrop-blur-[3px]" onClick={() => setIsSearchOpen(false)} aria-label="Close search overlay" />
+      <div className="relative flex h-[100dvh] items-stretch justify-center sm:h-full sm:items-start sm:overflow-y-auto sm:px-4 sm:py-12 lg:pt-[12vh]">
+        <div className="relative flex h-full w-full max-w-[920px] flex-col overflow-hidden bg-[#FFF8E8] text-[#173B3A] shadow-2xl sm:h-auto sm:max-h-[84vh] sm:rounded-[26px] sm:border sm:border-[#D9B467]/80 sm:shadow-[0_28px_90px_rgba(23,59,58,0.32)]">
+          <div className="hidden shrink-0 items-center gap-3 border-b border-[#E8D7B3] px-6 py-5 sm:flex lg:px-8">
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-[#CBA66A] bg-white px-4 py-3 shadow-sm focus-within:ring-2 focus-within:ring-[#E8B23D]/50">
+              <Search size={21} className="shrink-0 text-[#A90C35]" />
+              <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") handleExecuteSearch(query); if (e.key === "Escape") setIsSearchOpen(false); }} placeholder="Search sacred agarbatti, camphor, sambrani, pooja items..." className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#8B8B7F]" />
+              {loading && <Loader2 size={16} className="animate-spin text-[#A90C35]" />}
+              {query && <button onClick={() => setQuery("")} aria-label="Clear search" className="text-[#815D42]"><X size={17} /></button>}
+            </div>
+            <kbd className="rounded-lg bg-[#F4E6C8] px-2.5 py-2 text-[11px] font-bold text-[#76573C]">Ctrl</kbd><kbd className="-ml-2 rounded-lg bg-[#F4E6C8] px-2.5 py-2 text-[11px] font-bold text-[#76573C]">K</kbd>
+            <button onClick={() => setIsSearchOpen(false)} className="ml-1 grid h-10 w-10 place-items-center rounded-full text-[#8C1830] hover:bg-[#F4EBD9]" aria-label="Close search"><X size={21} /></button>
           </div>
 
-          {/* Search-As-You-Type Suggestions Bar */}
-          {query.trim() && (
-            <div className="bg-[#FFF8E7] border-b border-antiqueGold/30 p-2.5 sm:p-3 space-y-2">
-              <button
-                type="button"
-                onClick={() => handleExecuteSearch(query)}
-                className="w-full flex items-center justify-between text-left p-2 rounded-xl bg-white hover:bg-[#F4D35E]/30 border border-[#C89B3C]/30 text-xs font-bold text-[#6B4226] transition group shadow-xs"
-              >
-                <div className="flex items-center gap-2 truncate">
-                  <Search size={14} className="text-[#E85D04] shrink-0" />
-                  <span className="truncate">
-                    Search for &ldquo;<strong className="text-[#A90C35]">{query}</strong>&rdquo;
-                  </span>
-                </div>
-                <span className="text-[10px] text-[#292524]/50 group-hover:text-[#6B4226] flex items-center gap-1 shrink-0 ml-2">
-                  Press Enter <ArrowRight size={11} />
-                </span>
-              </button>
-
-              {suggestions.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  <span className="text-[10px] uppercase font-bold text-[#292524]/60 mr-1">
-                    Suggestions:
-                  </span>
-                  {suggestions.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => {
-                        setQuery(s);
-                        handleExecuteSearch(s);
-                      }}
-                      className="text-[11px] bg-white hover:bg-[#E85D04] hover:text-white text-[#6B4226] border border-[#C89B3C]/40 px-2.5 py-0.5 rounded-full font-semibold transition"
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
+          <div className="flex shrink-0 items-center justify-between border-b border-[#E8D7B3] px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] sm:hidden">
+            <button onClick={() => setIsSearchOpen(false)} className="grid h-9 w-9 place-items-center text-[#9E1830]" aria-label="Back"><ArrowRight className="rotate-180" size={20} /></button>
+            <h2 className="text-sm font-extrabold">Search</h2>
+            <button onClick={() => setIsSearchOpen(false)} className="grid h-9 w-9 place-items-center text-[#9E1830]" aria-label="Close search"><X size={21} /></button>
+          </div>
+          <div className="shrink-0 px-4 py-3 sm:hidden">
+            <div className="flex items-center gap-2.5 rounded-xl border border-[#CBA66A] bg-white px-3.5 py-3 shadow-sm focus-within:ring-2 focus-within:ring-[#E8B23D]/50">
+              <Search size={19} className="shrink-0 text-[#A90C35]" />
+              <input ref={mobileInputRef} value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") handleExecuteSearch(query); if (e.key === "Escape") setIsSearchOpen(false); }} placeholder="Search agarbatti, camphor..." className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[#898A80]" />
+              {loading && <Loader2 size={15} className="animate-spin text-[#A90C35]" />}
+              {query && <button onClick={() => setQuery("")} aria-label="Clear search" className="text-[#815D42]"><X size={16} /></button>}
             </div>
-          )}
+          </div>
 
-          {/* Search Content */}
-          <div className="max-h-[65dvh] overflow-y-auto p-4 sm:max-h-[60vh] sm:p-6">
-            {!query.trim() ? (
-              <div>
-                <p className="text-xs font-bold tracking-widest text-kumkum uppercase mb-3">
-                  Popular Sacred Searches
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {popularTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => {
-                        setQuery(tag);
-                        handleExecuteSearch(tag);
-                      }}
-                      className="text-xs bg-sacredCream border border-antiqueGold text-earthBrown hover:bg-templeOrange hover:text-sacredCream px-3.5 py-2 rounded-full font-semibold transition"
-                    >
-                      ✦ {tag}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-antiqueGold/30 flex items-center justify-between">
-                  <div>
-                    <h4 className="font-display text-xl text-earthBrown">
-                      Explore Sacred Categories
-                    </h4>
-                    <p className="text-xs text-charcoal/70 mt-0.5">
-                      Find authentic products for daily worship
-                    </p>
-                  </div>
-                  <Link
-                    href="/shop"
-                    onClick={() => setIsSearchOpen(false)}
-                    className="text-xs font-bold text-saffron hover:text-kumkum flex items-center gap-1"
-                  >
-                    View All <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </div>
-            ) : loading || debouncedQuery !== query.trim() ? (
-              <div className="py-12 text-center flex flex-col items-center justify-center">
-                <Loader2 className="w-8 h-8 text-saffron animate-spin mb-3" />
-                <p className="text-xs font-semibold text-earthBrown">Searching sacred catalogue...</p>
-              </div>
-            ) : hits.length === 0 ? (
-              <div className="text-center py-6 flex flex-col items-center max-w-md mx-auto">
-                <MascotSearch size={140} />
-                <h3 className="font-display text-2xl text-earthBrown mt-4">
-                  No products found for &ldquo;{debouncedQuery || query}&rdquo;
-                </h3>
-                <div className="text-xs text-charcoal/80 mt-3 space-y-1.5 text-left bg-white p-4 rounded-2xl border border-antiqueGold/40 w-full shadow-xs">
-                  <p className="font-bold text-[#6B4226]">Try:</p>
-                  <ul className="list-disc list-inside space-y-1.5 text-[#292524]/85 text-xs pl-2">
-                    <li>checking the spelling</li>
-                    <li>using fewer words</li>
-                    <li>searching by product name or category</li>
-                  </ul>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                  {popularTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => {
-                        setQuery(tag);
-                        handleExecuteSearch(tag);
-                      }}
-                      className="text-xs bg-white border border-antiqueGold text-earthBrown hover:bg-saffron hover:text-white px-3 py-1.5 rounded-full font-semibold transition shadow-xs"
-                    >
-                      ✦ {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between pb-1">
-                  <p className="text-xs font-bold tracking-widest text-kumkum uppercase">
-                    Found {hits.length} Sacred Items
-                  </p>
-                  <button
-                    onClick={() => handleExecuteSearch(query)}
-                    className="text-xs font-bold text-saffron hover:text-kumkum flex items-center gap-1"
-                  >
-                    View All Results <ArrowRight size={12} />
-                  </button>
-                </div>
-
-                {hits.map((product) => {
-                  const highlightedName = product._formatted?.name || product.name;
-                  const highlightedCategory = product._formatted?.category || product.category;
-
-                  return (
-                    <Link
-                      key={product.id || product.slug}
-                      href={`/product/${product.slug}`}
-                      onClick={() => setIsSearchOpen(false)}
-                      className="flex min-w-0 items-center justify-between gap-2 rounded-xl border border-antiqueGold/30 bg-white p-2.5 transition group hover:border-saffron hover:shadow-xs sm:p-3.5"
-                    >
-                      <div className="flex min-w-0 items-center gap-2 sm:gap-3.5">
-                        {product.image ? (
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-12 h-12 rounded-lg object-cover border border-earthBrown/20 shrink-0"
-                          />
-                        ) : (
-                          <div className="w-12 h-12 rounded-lg bg-turmeric/40 border border-earthBrown/20 flex items-center justify-center text-xl shrink-0">
-                            🪔
-                          </div>
-                        )}
-                        <div className="min-w-0">
-                          <h4
-                            className="truncate font-display text-sm text-earthBrown transition group-hover:text-saffron sm:text-base font-bold"
-                            dangerouslySetInnerHTML={{ __html: highlightedName }}
-                          />
-                          <p
-                            className="text-xs text-charcoal/60 truncate"
-                            dangerouslySetInnerHTML={{
-                              __html: `${highlightedCategory} • ${product.shortDescription || "Natural Heritage"}`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="shrink-0 text-right">
-                        <span className="font-bold text-kumkum">₹{product.price}</span>
-                        {product.mrp && product.mrp > product.price && (
-                          <span className="block text-[11px] text-charcoal/50 line-through">
-                            ₹{product.mrp}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-[max(22px,env(safe-area-inset-bottom))] pt-4 sm:px-6 sm:py-6 lg:px-8">
+            {!query.trim() ? <div className="space-y-6 sm:space-y-7">
+              {recentSearches.length > 0 && <section>
+                <div className="mb-3 flex items-center justify-between"><h3 className="flex items-center gap-2 text-sm font-extrabold"><Clock3 size={16} className="text-[#9E1830]" />Recent Searches</h3><button onClick={clearRecent} className="text-xs font-semibold text-[#A90C35]">Clear all</button></div>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">{recentSearches.map((item) => {
+                  const match = dbProducts.find((product) => product.name.toLowerCase().includes(item.toLowerCase()) || item.toLowerCase().includes(product.name.toLowerCase()));
+                  return <div key={item} className="flex min-w-0 items-center gap-2 rounded-xl border border-[#E8D7B3] bg-white p-2 shadow-[0_1px_3px_rgba(40,50,40,0.04)]">
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[#F7E8C8]">{match?.image ? <img src={match.image} alt="" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center text-lg">🪔</span>}</div>
+                    <button onClick={() => handleExecuteSearch(item)} className="min-w-0 flex-1 text-left text-[11px] font-medium leading-snug text-[#173B3A]">{item}</button>
+                    <button aria-label={`Remove ${item}`} onClick={() => removeRecent(item)} className="shrink-0 p-1 text-[#9A7356]"><X size={13} /></button>
+                  </div>;
+                })}</div>
+              </section>}
+              <section>
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-extrabold"><Sparkles size={16} className="text-[#9E1830]" />Popular Searches</h3>
+                <div className="flex flex-wrap gap-2">{popularTags.map((tag) => <button key={tag} onClick={() => handleExecuteSearch(tag)} className="rounded-full border border-[#E4AA38] px-3.5 py-2 text-[11px] font-semibold text-[#9E1830] transition hover:bg-[#9E1830] hover:text-white sm:text-xs"><span className="mr-1">✦</span>{tag}</button>)}</div>
+              </section>
+              <section className="border-t border-[#E8D7B3] pt-5">
+                <div className="mb-4 flex items-center justify-between gap-3"><h3 className="flex items-center gap-2 text-sm font-extrabold"><Grid2X2 size={17} className="text-[#9E1830]" />Explore Sacred Categories</h3><Link href="/shop" onClick={() => setIsSearchOpen(false)} className="flex shrink-0 items-center gap-1 text-xs font-bold text-[#A90C35]">View All <ArrowRight size={13} /></Link></div>
+                <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-3">{categoryCards.map((category: any) => <Link key={category.slug} href={`/category/${category.slug}`} onClick={() => setIsSearchOpen(false)} className="group flex min-w-0 items-center gap-2 rounded-2xl border border-[#E8D7B3]/90 bg-white/80 p-2 transition hover:border-[#D7A845] hover:shadow-sm sm:gap-3 sm:p-2.5"><div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#F7E8C8] sm:h-14 sm:w-14"><img src={category.image} alt="" className="h-full w-full object-cover" /></div><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-extrabold sm:text-xs">{category.name}</p><p className="truncate text-[9px] text-[#758078] sm:text-[10px]">{category.note}</p></div><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#F5E5C4] text-[#9E1830]"><ChevronRight size={15} /></span></Link>)}</div>
+              </section>
+            </div> : loading || debouncedQuery !== query.trim() ? <div className="flex flex-col items-center justify-center py-12"><Loader2 className="mb-3 h-8 w-8 animate-spin text-[#A90C35]" /><p className="text-xs font-semibold text-[#76573C]">Searching the catalogue...</p></div> : <div className="space-y-3">
+              {suggestions.length > 0 && <div className="flex flex-wrap gap-2 border-b border-[#E8D7B3] pb-3"><span className="w-full text-[10px] font-bold uppercase tracking-wider text-[#758078]">Suggestions</span>{suggestions.map((item) => <button key={item} onClick={() => handleExecuteSearch(item)} className="rounded-full border border-[#E4AA38] px-3 py-1.5 text-[11px] text-[#9E1830]">{item}</button>)}</div>}
+              <div className="flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-wider text-[#9E1830]">{hits.length} {hits.length === 1 ? "item" : "items"} found</p><button onClick={() => handleExecuteSearch(query)} className="flex items-center gap-1 text-xs font-bold text-[#A90C35]">View all <ArrowRight size={13} /></button></div>
+              {hits.length ? hits.map((product) => {
+                const name = product._formatted?.name || product.name;
+                const category = product._formatted?.category || product.category;
+                return <Link key={product.id || product.slug} href={`/product/${product.slug}`} onClick={() => setIsSearchOpen(false)} className="group flex min-w-0 items-center justify-between gap-3 rounded-xl border border-[#E8D7B3] bg-white p-2.5 transition hover:border-[#D7A845] hover:shadow-sm sm:p-3.5">
+                  <div className="flex min-w-0 items-center gap-3"><div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#E8D7B3] bg-[#F7E8C8]">{product.image ? <img src={product.image} alt="" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center">🪔</span>}</div><div className="min-w-0"><p className="truncate text-sm font-bold text-[#173B3A] group-hover:text-[#A90C35]" dangerouslySetInnerHTML={{ __html: name }} /><p className="truncate text-[11px] text-[#758078]" dangerouslySetInnerHTML={{ __html: `${category || "Sacred essentials"} · ${product.shortDescription || "Natural heritage"}` }} /></div></div>
+                  <div className="shrink-0 text-right"><span className="font-bold text-[#9E1830]">₹{product.price}</span>{product.mrp && product.mrp > product.price && <span className="block text-[10px] text-[#758078] line-through">₹{product.mrp}</span>}</div>
+                </Link>;
+              }) : <div className="flex flex-col items-center py-6 text-center"><MascotSearch size={120} /><h3 className="mt-3 font-bold">No products found for “{query}”</h3><p className="mt-1 text-xs text-[#758078]">Try another product name or category.</p><div className="mt-4 flex flex-wrap justify-center gap-2">{popularTags.slice(0, 4).map((tag) => <button key={tag} onClick={() => handleExecuteSearch(tag)} className="rounded-full border border-[#E4AA38] px-3 py-1.5 text-[11px] text-[#9E1830]">{tag}</button>)}</div></div>}
+            </div>}
           </div>
         </div>
       </div>
     </div>
   );
 }
-

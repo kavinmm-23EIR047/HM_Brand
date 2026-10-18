@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 
 const prisma = new PrismaClient();
 
@@ -22,26 +24,77 @@ async function main() {
   console.log('👤 Admin user created:', admin.email);
 
   // 2. Create Categories
-  const categoryData = [
-    { name: 'Agarbatti & Flora', slug: 'agarbatti-flora', description: 'Divine Handcrafted traditional agarbattis & floral fragrances', displayOrder: 1 },
-    { name: 'Bhimseni Camphor', slug: 'bhimseni-camphor', description: '99.9% Pure pine bhimseni camphor for auspicious rituals', displayOrder: 2 },
-    { name: 'Sambrani', slug: 'sambrani', description: 'Pure natural resin sambrani cups & dhoop', displayOrder: 3 },
-    { name: 'Loban & Dhoop', slug: 'loban-dhoop', description: 'Sacred air cleansing loban & charcoal-free dhoop cones', displayOrder: 4 },
-    { name: 'Sandalwood', slug: 'sandalwood', description: 'Calming Mysore sandalwood incense & products', displayOrder: 5 },
-    { name: 'Pooja Essentials', slug: 'pooja-essentials', description: 'Daily temple needs & sacred puja essentials', displayOrder: 6 },
-    { name: 'Gift Sets', slug: 'gift-sets', description: 'Festive luxury fragrance gift packs & boxes', displayOrder: 7 },
-  ];
+  const jsonPath = path.join(__dirname, 'categories.json');
+  const fileContent = fs.readFileSync(jsonPath, 'utf-8');
+  const categoryData = JSON.parse(fileContent);
 
   const categories = [];
+  let currentOrder = 1;
   for (const cat of categoryData) {
     const created = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: cat,
-      create: cat,
+      update: {
+        name: cat.name,
+        description: cat.description ?? null,
+        displayOrder: cat.displayOrder ?? currentOrder,
+        isActive: cat.isActive !== false,
+      },
+      create: {
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description ?? null,
+        displayOrder: cat.displayOrder ?? currentOrder,
+        isActive: cat.isActive !== false,
+      },
     });
     categories.push(created);
+    currentOrder++;
+
+    if (cat.subCategories && Array.isArray(cat.subCategories)) {
+      for (const sub of cat.subCategories) {
+        const subCreated = await prisma.category.upsert({
+          where: { slug: sub.slug },
+          update: {
+            name: sub.name,
+            description: sub.description ?? null,
+            displayOrder: (cat.displayOrder ?? currentOrder) * 10 + (sub.displayOrder ?? 1),
+            isActive: sub.isActive !== false,
+          },
+          create: {
+            name: sub.name,
+            slug: sub.slug,
+            description: sub.description ?? null,
+            displayOrder: (cat.displayOrder ?? currentOrder) * 10 + (sub.displayOrder ?? 1),
+            isActive: sub.isActive !== false,
+          },
+        });
+        categories.push(subCreated);
+        if (sub.subCategories && Array.isArray(sub.subCategories)) {
+          for (const child of sub.subCategories) {
+            const childOrder = (subCreated.displayOrder * 10) + (child.displayOrder ?? 1);
+            const childCreated = await prisma.category.upsert({
+              where: { slug: child.slug },
+              update: {
+                name: child.name,
+                description: child.description ?? null,
+                displayOrder: childOrder,
+                isActive: child.isActive !== false,
+              },
+              create: {
+                name: child.name,
+                slug: child.slug,
+                description: child.description ?? null,
+                displayOrder: childOrder,
+                isActive: child.isActive !== false,
+              },
+            });
+            categories.push(childCreated);
+          }
+        }
+      }
+    }
   }
-  console.log(`📁 ${categories.length} Categories seeded.`);
+  console.log(`📁 ${categories.length} Categories & Subcategories seeded.`);
 
   // 3. Create Sample Products with Images
   const sampleProducts = [
@@ -57,7 +110,7 @@ async function main() {
       couponCode: 'CHANDAN10',
       isFeatured: true,
       displayOrder: 1,
-      categorySlug: 'agarbatti-flora',
+      categorySlug: 'agarbatti',
       images: [
         { url: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80', storageKey: 'seed/chandan-1.jpg', isPrimary: true },
         { url: 'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=600&q=80', storageKey: 'seed/chandan-2.jpg', isPrimary: false },
@@ -75,7 +128,7 @@ async function main() {
       couponCode: 'FLORA15',
       isFeatured: true,
       displayOrder: 2,
-      categorySlug: 'agarbatti-flora',
+      categorySlug: 'agarbatti',
       images: [
         { url: 'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=600&q=80', storageKey: 'seed/kewda-1.jpg', isPrimary: true },
       ],
@@ -92,7 +145,7 @@ async function main() {
       couponCode: 'DHOOP20',
       isFeatured: true,
       displayOrder: 3,
-      categorySlug: 'loban-dhoop',
+      categorySlug: 'incense-cone',
       images: [
         { url: 'https://images.unsplash.com/photo-1541689592655-f5f52825a3b8?auto=format&fit=crop&w=600&q=80', storageKey: 'seed/guggal-1.jpg', isPrimary: true },
       ],

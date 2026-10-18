@@ -9,13 +9,20 @@ import { ProductCard } from "@/components/product-card";
 import { MascotSearch } from "@/components/mascot-art";
 import { RitualArt } from "@/components/illustrations/RitualArt";
 import { useStore } from "@/components/store";
-import { products, categories } from "@/lib/products";
+import { products, categories, subCategoriesMap } from "@/lib/products";
 
 const categoryIllustrations: Record<string, string> = {
   "Agarbatti": "incense",
   "Agarbatti & Flora": "incense",
+  "Exclusive": "sandalwood",
+  "Budget Pack (12 pcs)": "incense",
+  "Super Series": "incense",
   "Camphor": "camphor",
   "Bhimseni Camphor": "camphor",
+  "Dhoop Stick / Bambooless Stick": "loban",
+  "Incense Cone": "loban",
+  "Chandan Cups": "sambrani",
+  "Sambhrani Powder": "sambrani",
   "Sambrani": "sambrani",
   "Loban": "loban",
   "Loban & Dhoop": "loban",
@@ -25,6 +32,7 @@ const categoryIllustrations: Record<string, string> = {
   "Premium Fragrances": "diya",
   "Special Collections": "gift",
   "Gift Sets": "gift",
+  "Family Pack": "gift",
 };
 
 function ShopContent() {
@@ -43,12 +51,38 @@ function ShopContent() {
     if (category === "All") return true;
     const catLower = category.toLowerCase().trim();
     const prodCatLower = (product.category || "").toLowerCase().trim();
+    const prodSubCatLower = (product.subCategory || "").toLowerCase().trim();
+    const productCategoryLabels = Array.isArray(product.categoryLabels)
+      ? product.categoryLabels.map((label: string) => label.toLowerCase().trim())
+      : [];
+
+    // If Agarbatti is selected, include all Agarbatti subcategories as well
+    if (catLower === "agarbatti") {
+      if (
+        prodCatLower.includes("agarbatti") ||
+        prodCatLower.includes("exclusive") ||
+        prodCatLower.includes("budget pack") ||
+        prodCatLower.includes("super series") ||
+        prodSubCatLower.includes("exclusive") ||
+        prodSubCatLower.includes("budget pack") ||
+        prodSubCatLower.includes("super series")
+      ) {
+        return true;
+      }
+    }
+
     // Exact match or partial match in both directions
-    if (prodCatLower === catLower) return true;
+    if (productCategoryLabels.includes(catLower)) return true;
+    if (prodCatLower === catLower || prodSubCatLower === catLower) return true;
     if (prodCatLower.includes(catLower) || catLower.includes(prodCatLower)) return true;
-    // Keyword match: e.g. "Bhimseni Camphor" category matches product.category="Bhimseni Camphor"
+    if (prodSubCatLower.includes(catLower) || catLower.includes(prodSubCatLower)) return true;
+
     const catWords = catLower.split(/\s+/);
-    return catWords.some((word) => word.length > 3 && prodCatLower.includes(word));
+    return catWords.some((word) => word.length > 3 && (
+      prodCatLower.includes(word) ||
+      prodSubCatLower.includes(word) ||
+      productCategoryLabels.some((label: string) => label.includes(word))
+    ));
   };
 
   const getCategoryCount = (category: string) =>
@@ -343,22 +377,46 @@ function ShopContent() {
               Filter by Category
             </h3>
             <div className="space-y-1.5">
-              {["All", ...categoryNames].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleSelectCategory(cat)}
-                  className={`w-full text-left text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-between ${
-                    selectedCategory === cat
-                      ? "bg-[#9E1830] text-white shadow-xs"
-                      : "text-[#173B3A] hover:bg-[#FFF4D6]"
-                  }`}
-                >
-                  <span>{cat}</span>
-                  <span className={`text-[10px] ${selectedCategory === cat ? "text-white/80" : "text-[#6B4226]"}`}>
-                    {getCategoryCount(cat)}
-                  </span>
-                </button>
-              ))}
+              {["All", ...categoryNames].map((cat) => {
+                const subs = subCategoriesMap[cat];
+                return (
+                  <div key={cat} className="space-y-1">
+                    <button
+                      onClick={() => handleSelectCategory(cat)}
+                      className={`w-full text-left text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-between ${
+                        selectedCategory === cat
+                          ? "bg-[#9E1830] text-white shadow-xs"
+                          : "text-[#173B3A] hover:bg-[#FFF4D6]"
+                      }`}
+                    >
+                      <span>{cat}</span>
+                      <span className={`text-[10px] ${selectedCategory === cat ? "text-white/80" : "text-[#6B4226]"}`}>
+                        {getCategoryCount(cat)}
+                      </span>
+                    </button>
+                    {subs && (
+                      <div className="ml-3 pl-2 border-l-2 border-[#F6C84C]/40 space-y-1">
+                        {subs.map((sub) => (
+                          <button
+                            key={sub}
+                            onClick={() => setSelectedCategory(sub)}
+                            className={`w-full text-left text-[11px] font-semibold py-1.5 px-2 rounded-lg transition flex items-center justify-between ${
+                              selectedCategory === sub
+                                ? "bg-[#9E1830] text-white font-bold"
+                                : "text-[#546864] hover:bg-[#FFF4D6]"
+                            }`}
+                          >
+                            <span>↳ {sub}</span>
+                            <span className={`text-[9px] ${selectedCategory === sub ? "text-white/80" : "text-[#6B4226]"}`}>
+                              {getCategoryCount(sub)}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -486,7 +544,7 @@ export default function ShopPage() {
     <InnerPage
       eyebrow="EXPLORE THE SACRED CATALOGUE"
       title="Authentic Fragrances &amp; Pooja Essentials"
-      subtitle="Handcrafted incense sticks, crystalline Bhimseni camphor, wild sambrani cups, and festive formulations from Coimbatore."
+      subtitle="Handcrafted incense sticks, crystalline Bhimseni camphor, wild sambrani cups, and authentic sacred formulations."
     >
       <Suspense fallback={<div className="p-12 text-center text-[#9E1830] font-bold">Loading sacred collection...</div>}>
         <ShopContent />

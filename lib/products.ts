@@ -12,6 +12,7 @@ export interface Product {
   slug: string;
   name: string;
   category: string;
+  categoryLabels?: string[];
   subCategory?: string;
   subcategoryId?: string | null;
   note: string;
@@ -37,7 +38,7 @@ export interface Product {
 export function mapDbProductToProduct(p: any): Product {
   const rawImages: any[] = Array.isArray(p.images) ? p.images : [];
   const primaryImgObj = rawImages.find((img: any) => img.isPrimary) || rawImages[0];
-  const primaryImg = primaryImgObj?.url || p.imageUrl || undefined;
+  const primaryImg = primaryImgObj?.url || p.imageUrl || "/images/media_1790142713668.jpg";
 
   const images: ProductImageItem[] = rawImages.length > 0
     ? rawImages.map((img: any, idx: number) => ({
@@ -50,13 +51,16 @@ export function mapDbProductToProduct(p: any): Product {
       }))
     : (primaryImg ? [{ url: primaryImg, isPrimary: true, displayOrder: 0 }] : []);
 
-  const categoryName = p.categories?.[0]?.category?.name || p.category || "Agarbatti & Flora";
+  const categoryRelations = (p.categories || [])
+    .map((link: any) => link.category)
+    .filter(Boolean)
+    .sort((a: any, b: any) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+  const categoryLabels = categoryRelations.map((category: any) => category.name);
+  const categoryName = categoryLabels[0] || p.categories?.[0]?.category?.name || p.category || "Agarbatti & Flora";
   
   // shortDescription doubles as "unit" label (e.g. "50 GMS · Camphor")
   const shortDesc = p.shortDescription || "";
-  // Extract quantity portion: everything before the first "·" or the whole thing
   const quantityPart = shortDesc.split("·")[0]?.trim() || "150 GMS";
-  // Extract note from after "·" or fallback to description slice
   const notePart = shortDesc.includes("·")
     ? shortDesc.split("·").slice(1).join("·").trim()
     : (p.description ? p.description.slice(0, 90) : "Handcrafted natural fragrance.");
@@ -69,7 +73,8 @@ export function mapDbProductToProduct(p: any): Product {
     slug: p.slug,
     name: p.name,
     category: categoryName,
-    subCategory: p.subcategory?.name || p.subCategory || undefined,
+    categoryLabels,
+    subCategory: p.subcategory?.name || p.subCategory || notePart || "Natural Heritage Aroma",
     subcategoryId: p.subcategoryId || p.subcategory?.id || null,
     note: p.description ? p.description.slice(0, 100) : notePart || "Handcrafted natural fragrance.",
     description: p.description || p.name,
@@ -129,7 +134,7 @@ export function mapDbProductToProduct(p: any): Product {
   };
 }
 
-
+// All data is dynamically fetched from backend DB
 export const products: Product[] = [];
 
 export const categories = [
@@ -142,6 +147,51 @@ export const categories = [
   "Pooja Essentials",
   "Gift Sets",
   "Family Pack"
+];
+
+export const subCategoriesMap: Record<string, string[]> = {
+  "Agarbatti": [
+    "Exclusive",
+    "Budget Pack (12 pcs)",
+    "Super Series"
+  ]
+};
+
+export interface CatalogCategory {
+  name: string;
+  children?: CatalogCategory[];
+}
+
+// Brochure taxonomy only. Product records remain managed separately in the admin panel.
+export const categoryTree: CatalogCategory[] = [
+  {
+    name: "Agarbatti",
+    children: [
+      { name: "Exclusive", children: [
+        { name: "Cardamom" },
+        { name: "Kasturi" },
+        { name: "Karpoor Loban" },
+        { name: "Kesar Loban" },
+        { name: "Pancha Rudhra" },
+        { name: "Real Stone" },
+        { name: "Fancy Flora" },
+      ] },
+      { name: "Budget Pack (12 pcs)" },
+      { name: "Super Series", children: [
+        { name: "Rose" },
+        { name: "Pineapple" },
+        { name: "Sandal" },
+        { name: "Glory" },
+        { name: "Fantasy" },
+        { name: "Jasmine" },
+        { name: "Lavender" },
+        { name: "Ecstasy" },
+        { name: "Kewda" },
+        { name: "Loban" },
+      ] },
+    ],
+  },
+  ...categories.slice(1).map((name) => ({ name })),
 ];
 
 export const collectionsList = [
@@ -207,7 +257,7 @@ export const festivalsList = [
     name: "Navaratri & Vijayadashami",
     dateText: "Sharad Navaratri",
     description: "Nine nights of devotion, music, and prayer. Fill each sacred evening with paal sambrani and sweet floral agarbatti.",
-    recommendedCategory: "Sambrani",
+    recommendedCategory: "Sambhrani Powder",
     featuredSlugs: ["cup-sambrani", "fancy-flora", "kesar-loban"],
     ritualNote: "Perform evening dhoop aarti before the Golu display."
   },
@@ -225,7 +275,7 @@ export const festivalsList = [
     name: "Ganesh Chaturthi",
     dateText: "Bhadrapada Shukla Chaturthi",
     description: "Welcome Lord Ganesha with fragrant loban, sweet modak aromas, and special pancha rudhra formulations.",
-    recommendedCategory: "Loban",
+    recommendedCategory: "Dhoop Stick / Bambooless Stick",
     featuredSlugs: ["kesar-loban", "pancha-rudhra", "bhimseni-camphor"],
     ritualNote: "Begin all new ventures with Lord Ganesha's sacred blessings."
   },
@@ -234,7 +284,7 @@ export const festivalsList = [
     name: "Krishna Janmashtami",
     dateText: "Shravana Rohini",
     description: "Celebrate little Krishna's advent with sweet kasturi musk, creamy chandan, and floral mogra agarbattis.",
-    recommendedCategory: "Special Collections",
+    recommendedCategory: "Exclusive",
     featuredSlugs: ["kasturi", "chandan-pure-dhoop", "fancy-flora"],
     ritualNote: "Midnight aarti with pure aromatic camphor and flowers."
   },

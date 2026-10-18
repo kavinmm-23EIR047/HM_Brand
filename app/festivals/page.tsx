@@ -10,7 +10,8 @@ import { useStore } from "@/components/store";
 
 export default function FestivalsPage() {
   const { dbProducts } = useStore();
-  const featuredFestiveProducts = (dbProducts || []).filter((p) => p.featured);
+  const allProducts = dbProducts || [];
+  const featuredFestiveProducts = allProducts.filter((p: any) => p.featured);
   return (
     <InnerPage
       eyebrow="FESTIVALS & SACRED OCCASIONS"
@@ -79,7 +80,7 @@ export default function FestivalsPage() {
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {featuredFestiveProducts.length > 0 ? (
-              featuredFestiveProducts.slice(0, 4).map((p) => (
+              featuredFestiveProducts.slice(0, 4).map((p: any) => (
                 <ProductCard key={p.slug} product={p} />
               ))
             ) : (

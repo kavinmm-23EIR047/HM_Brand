@@ -147,6 +147,39 @@ model Collection {
   @@map("collections")
 }
 
+model SiteContent {
+  id        String   @id @default(uuid())
+  page      String
+  content   Json
+  updatedAt DateTime @updatedAt
+
+  @@unique([page])
+  @@map("site_content")
+}
+
+model BlogPost {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  label     String
+  title     String
+  excerpt   String
+  readingTime String  @default("5 min read")
+  tag       String
+  highlight String?
+  color     String   @default("#9E1830")
+  background String @default("#FFF4D6")
+  author    String?
+  body      String?
+  isFeatured Boolean @default(false)
+  isPublished Boolean @default(true)
+  displayOrder Int   @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, displayOrder])
+  @@map("blog_posts")
+}
+
 model CollectionProduct {
   collectionId String
   productId    String

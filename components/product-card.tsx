@@ -161,10 +161,11 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
 
           <button
-            onClick={() => add(product)}
-            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl bg-[#F47A20] px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-white shadow-xs transition-all hover:bg-[#9E1830] active:scale-95 whitespace-nowrap"
+            onClick={() => product.inStock && add(product)}
+            disabled={!product.inStock}
+            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl bg-[#F47A20] px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-white shadow-xs transition-all hover:bg-[#9E1830] active:scale-95 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <ShoppingBag size={13} /> Add
+            <ShoppingBag size={13} /> {product.inStock ? "Add" : "Out of Stock"}
           </button>
         </div>
       </div>

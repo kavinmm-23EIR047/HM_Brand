@@ -7,13 +7,11 @@ import { InnerPage } from "@/components/inner-page";
 import { ProductCard } from "@/components/product-card";
 import { MascotBasket } from "@/components/mascot-art";
 import { useStore } from "@/components/store";
-import { products } from "@/lib/products";
-
 export default function WishlistPage() {
   const { wishlist, dbProducts } = useStore();
 
   const productsBySlug = new Map(
-    [...products, ...dbProducts].map((product) => [product.slug, product])
+    (dbProducts || []).map((product) => [product.slug, product])
   );
   const wishlistedProducts = wishlist.flatMap((slug) => {
     const product = productsBySlug.get(slug);

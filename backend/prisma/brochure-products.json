@@ -1,0 +1,39 @@
+{
+  "source": "HM brochure product list supplied by the user",
+  "products": [
+    { "sku": "HM-SAM-008", "slug": "exclusive-cardamom-sambrani", "name": "Cardamom", "price": 110, "mrp": 110, "quantity": "50 NOS", "categorySlugs": ["agarbatti", "exclusive", "cardamom"] },
+    { "sku": "HM-SAM-009", "slug": "kasturi-sambrani", "name": "Kasturi", "price": 110, "mrp": 110, "quantity": "65 NOS", "categorySlugs": ["agarbatti", "exclusive", "kasturi"] },
+    { "sku": "HM-SAM-010", "slug": "karpoor-loban-sambrani", "name": "Karpoor Loban", "price": 110, "mrp": 110, "quantity": "50 NOS", "categorySlugs": ["agarbatti", "exclusive", "karpoor-loban"] },
+    { "sku": "HM-SAM-011", "slug": "kesar-loban-sambrani", "name": "Kesar Loban", "price": 110, "mrp": 110, "quantity": "50 NOS", "categorySlugs": ["agarbatti", "exclusive", "kesar-loban"] },
+    { "sku": "HM-SAM-012", "slug": "pancha-rudhra-sambrani", "name": "Pancha Rudhra", "price": 110, "mrp": 110, "quantity": "65 NOS", "categorySlugs": ["agarbatti", "exclusive", "pancha-rudhra"] },
+    { "sku": "HM-SAM-013", "slug": "real-stone-sambrani", "name": "Real Stone", "price": 110, "mrp": 110, "quantity": "65 NOS", "categorySlugs": ["agarbatti", "exclusive", "real-stone"] },
+    { "sku": "HM-SAM-014", "slug": "fancy-flora-sambrani", "name": "Fancy Flora", "price": 110, "mrp": 110, "quantity": "65 NOS", "categorySlugs": ["agarbatti", "exclusive", "fancy-flora"] },
+
+    { "sku": "HM-BR-AGB-SUP-ROSE", "slug": "super-series-rose", "name": "Rose", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "rose"] },
+    { "sku": "HM-BR-AGB-SUP-PINEAPPLE", "slug": "super-series-pineapple", "name": "Pineapple", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "pineapple"] },
+    { "sku": "HM-BR-AGB-SUP-SANDAL", "slug": "super-series-sandal", "name": "Sandal", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "sandal"] },
+    { "sku": "HM-BR-AGB-SUP-GLORY", "slug": "super-series-glory", "name": "Glory", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "glory"] },
+    { "sku": "HM-BR-AGB-SUP-FANTASY", "slug": "super-series-fantasy", "name": "Fantasy", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "fantasy"] },
+    { "sku": "HM-BR-AGB-SUP-JASMINE", "slug": "super-series-jasmine", "name": "Jasmine", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "jasmine"] },
+    { "sku": "HM-BR-AGB-SUP-LAVENDER", "slug": "super-series-lavender", "name": "Lavender", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "lavender"] },
+    { "sku": "HM-BR-AGB-SUP-ECSTASY", "slug": "super-series-ecstasy", "name": "Ecstasy", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "ecstasy"] },
+    { "sku": "HM-BR-AGB-SUP-KEWDA", "slug": "super-series-kewda", "name": "Kewda", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "kewda"] },
+    { "sku": "HM-BR-AGB-SUP-LOBAN", "slug": "super-series-loban", "name": "Loban", "price": 75, "mrp": 75, "quantity": "100 GMS", "categorySlugs": ["agarbatti", "super-series", "loban"] },
+
+    { "sku": "HM-BR-AGB-UNIDENTIFIED-12", "slug": "agarbatti-unidentified-12-mrp", "name": "Agarbatti (MRP ₹12)", "price": 12, "mrp": 12, "quantity": "16 NOS", "description": "The brochure shows MRP ₹12 and quantity 16 NOS but does not identify the product name. Verify the packaging name before renaming.", "categorySlugs": ["agarbatti"] },
+
+    { "sku": "HM-CAMP-005", "slug": "pure-camphor-rounds", "name": "HM Camphor", "price": 12, "mrp": 12, "quantity": "16 NOS", "categorySlugs": ["camphor"] },
+    { "sku": "HM-CAMP-004", "slug": "camphor-tablets-50nos", "name": "HM Camphor", "price": 55, "mrp": 55, "quantity": "50 NOS", "categorySlugs": ["camphor"] },
+    { "sku": "HM-CAMP-003", "slug": "camphor-tablets-80nos", "name": "HM Camphor", "price": 85, "mrp": 85, "quantity": "80 NOS", "categorySlugs": ["camphor"] },
+    { "sku": "HM-CAMP-002", "slug": "bhimseni-camphor-15g", "name": "Bhimseni Camphor", "price": 55, "mrp": 55, "quantity": "15 GMS", "categorySlugs": ["camphor"] },
+    { "sku": "HM-CAMP-001", "slug": "hm-super-series-camphor", "name": "HM Camphor 99.9% Pure", "price": 180, "mrp": 180, "quantity": "50 GMS", "categorySlugs": ["camphor"] },
+
+    { "sku": "HM-BR-DHOOP-INDIAN-BAKHOOR", "slug": "indian-bakhoor", "name": "Indian Bakhoor", "price": 120, "mrp": 120, "quantity": "55 GMS", "categorySlugs": ["dhoop-stick-bambooless-stick"] },
+    { "sku": "HM-AGB-017", "slug": "mehak-italian-agarbatti", "name": "Italian Mehak", "price": 110, "mrp": 110, "quantity": "65 NOS", "categorySlugs": ["dhoop-stick-bambooless-stick"] },
+
+    { "sku": "HM-LOB-018", "slug": "exclusive-4in1-loban-series", "name": "Exclusive 4-in-1 Loban Series", "price": 180, "mrp": 180, "quantity": "250 GMS", "categorySlugs": ["sambhrani-powder"] },
+    { "sku": "HM-SAM-016", "slug": "cup-sambrani-15nos", "name": "Cup Sambrani", "price": 125, "mrp": 125, "quantity": "15 NOS", "categorySlugs": ["chandan-cups"] },
+
+    { "sku": "HM-BR-FAMILY-10IN1", "slug": "10-in-1-family-pack", "name": "10-in-1 Family Pack", "price": 120, "mrp": 120, "quantity": "150 GMS", "categorySlugs": ["family-pack"] }
+  ]
+}

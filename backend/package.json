@@ -9,7 +9,9 @@
     "start": "node dist/server.js",
     "prisma:generate": "node ./node_modules/prisma/build/index.js generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "ts-node prisma/seed.ts"
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:categories": "ts-node prisma/import-categories.ts",
+    "prisma:brochure-products": "ts-node prisma/import-brochure-products.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",

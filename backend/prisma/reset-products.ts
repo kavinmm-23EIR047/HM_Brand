@@ -19,6 +19,12 @@ async function main() {
   const catMap: Record<string, string> = {};
   for (const c of cats) catMap[c.slug] = c.id;
 
+  // Aliases for compatibility
+  if (catMap['camphor'] && !catMap['bhimseni-camphor']) catMap['bhimseni-camphor'] = catMap['camphor'];
+  if (catMap['sambhrani-powder'] && !catMap['sambrani']) catMap['sambrani'] = catMap['sambhrani-powder'];
+  if (catMap['agarbatti'] && !catMap['agarbatti-flora']) catMap['agarbatti-flora'] = catMap['agarbatti'];
+  if (catMap['dhoop-stick-bambooless-stick'] && !catMap['loban-dhoop']) catMap['loban-dhoop'] = catMap['dhoop-stick-bambooless-stick'];
+
   console.log('📁 Available categories:', Object.keys(catMap));
 
   const products = [

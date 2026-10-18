@@ -8,6 +8,12 @@ export class CollectionsRepository {
         ...(includeInactive ? {} : { isActive: true }),
       },
       orderBy: { displayOrder: 'asc' },
+      include: {
+        products: {
+          orderBy: { displayOrder: 'asc' },
+          include: { product: { include: { images: true, categories: { include: { category: true } } } } },
+        },
+      },
     });
   }
 
@@ -19,7 +25,7 @@ export class CollectionsRepository {
           orderBy: { displayOrder: 'asc' },
           include: {
             product: {
-              include: { images: true },
+              include: { images: true, categories: { include: { category: true } } },
             },
           },
         },
@@ -54,7 +60,7 @@ export class CollectionsRepository {
         },
       },
       include: {
-        products: { include: { product: true } },
+        products: { include: { product: { include: { images: true, categories: { include: { category: true } } } } } },
       },
     });
   }
@@ -85,7 +91,7 @@ export class CollectionsRepository {
           where: { id },
           data: updateData,
           include: {
-            products: { include: { product: true } },
+            products: { include: { product: { include: { images: true, categories: { include: { category: true } } } } } },
           },
         });
       },

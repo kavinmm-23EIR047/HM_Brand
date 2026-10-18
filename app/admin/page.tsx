@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import {
-  Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket,
+  Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket, Layers, FileText as ArticleIcon, Gift, Heart,
   Plus, Trash2, Edit2, TrendingUp, Lock, ArrowRight, CheckCircle,
   AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
   Filter, ArrowUpDown, RotateCcw, Upload, Truck, User, Copy, MapPin,
@@ -14,6 +14,21 @@ import { useStore } from "@/components/store";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 const PAGE_SIZE = 10;
+const defaultBenefitsContent = {
+  eyebrow: "HOLISTIC PURITY & AYURVEDA", title: "The Sacred Natural Benefits of Pure Botanical Fragrance",
+  subtitle: "Discover why botanical incense and sacred aromatics elevate daily rituals.", heroBadge: "100% CHARCOAL-FREE BOTANICAL WELLNESS",
+  heroTitle: "Breathe clean, pure, and spiritually uplifting fragrance.", heroDescription: "In traditional Ayurveda, fragrance is a sacred part of mindful living. Pure resins, camphor, and herbal incense bring a gentle aroma to your space.",
+  comparisonTitle: "HM Agarbattis vs. Ordinary Market Incense", ingredientsTitle: "Sacred Ingredients & Their Benefits",
+  comparison: [], ingredients: [],
+};
+const defaultOffersContent = {
+  eyebrow: "FESTIVE OFFERS & SPECIAL BUNDLES", title: "Sacred Fragrances, Special Festive Blessings",
+  subtitle: "Discover limited-time offers, value combos, and curated gift boxes.", badge: "LIMITED TIME FESTIVE PRICING",
+  heroTitle: "A Little More Joy & Fragrance in Every Order.", description: "Handcrafted fragrances and sacred essentials for your daily pooja and celebrations.",
+  featureOne: "Direct from Coimbatore", featureTwo: "Free Samples Included", cta: "Explore Offer Picks",
+  picksTitle: "Popular Offer Picks", bundlesTitle: "Shop By Pooja & Celebration Occasion", bundleDescription: "Specially paired fragrant sets for home warming, festivals, and personal wellness.",
+  productIds: [], collectionIds: [],
+};
 
 /* ──────────────────────────────────────────── helpers */
 function authH(token: string) {
@@ -620,6 +635,9 @@ export default function AdminPage() {
   const [banners, setBanners] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [coupons, setCoupons] = useState<any[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [pageContent, setPageContent] = useState<any>({});
   const [metrics, setMetrics] = useState<any>(null);
 
   // Search, Filter, Sort and Pagination States
@@ -1091,6 +1109,12 @@ export default function AdminPage() {
   const [categoryModal, setCategoryModal] = useState<null | "add" | any>(null);
   const [bannerModal, setBannerModal] = useState<null | "add" | any>(null);
   const [couponModal, setCouponModal] = useState<null | "add" | any>(null);
+  const [collectionModal, setCollectionModal] = useState<null | "add" | any>(null);
+  const [articleModal, setArticleModal] = useState<null | "add" | any>(null);
+  const [contentForm, setContentForm] = useState<any>({});
+  const [jsonDraft, setJsonDraft] = useState<{ comparison: string; ingredients: string }>({ comparison: "[]", ingredients: "[]" });
+  const [collectionForm, setCollectionForm] = useState<any>({ title: "", description: "", bannerUrl: "", isActive: true, productIds: [] });
+  const [articleForm, setArticleForm] = useState<any>({ title: "", slug: "", label: "", excerpt: "", readingTime: "5 min read", tag: "", highlight: "", author: "", body: "", color: "#9E1830", background: "#FFF4D6", isFeatured: false, isPublished: true, displayOrder: "0" });
 
   const emptyProduct = {
     name: "",
@@ -1212,6 +1236,29 @@ export default function AdminPage() {
         const r = await fetch(`${API}/coupons/admin`, { headers: h });
         const j = await r.json();
         if (!checkUnauthorized(r, j) && j.success) setCoupons(j.data);
+      } else if (activeTab === "collections") {
+        const r = await fetch(`${API}/collections?includeInactive=true`, { headers: h });
+        const j = await r.json();
+        if (!checkUnauthorized(r, j) && j.success) setCollections(j.data);
+        const prodRes = await fetch(`${API}/products?limit=500&includeInactive=true`, { headers: h });
+        const prodJson = await prodRes.json(); if (prodJson.success) setProducts(prodJson.data);
+      } else if (activeTab === "blog") {
+        const r = await fetch(`${API}/content/blog/admin`, { headers: h });
+        const j = await r.json(); if (!checkUnauthorized(r, j) && j.success) setArticles(j.data);
+      } else if (["benefits", "offers"].includes(activeTab)) {
+        const r = await fetch(`${API}/content/pages/${activeTab}`);
+        const j = await r.json();
+        if (j.success) {
+          const next = j.data || (activeTab === "benefits" ? defaultBenefitsContent : defaultOffersContent);
+          setContentForm(next);
+          if (activeTab === "benefits") setJsonDraft({ comparison: JSON.stringify(next.comparison || [], null, 2), ingredients: JSON.stringify(next.ingredients || [], null, 2) });
+        }
+        if (activeTab === "offers") {
+          const prodRes = await fetch(`${API}/products?limit=500&includeInactive=true`, { headers: h });
+          const prodJson = await prodRes.json(); if (prodJson.success) setProducts(prodJson.data);
+          const colRes = await fetch(`${API}/collections?includeInactive=true`, { headers: h });
+          const colJson = await colRes.json(); if (colJson.success) setCollections(colJson.data);
+        }
       }
     } catch { showStatus("error", "Failed to load tab data. Please check server status."); } finally { setLoading(false); }
   }, [token, activeTab]);
@@ -1471,6 +1518,62 @@ export default function AdminPage() {
     else if (!j.success) showStatus("error", j.message || "Delete failed");
   };
 
+  const savePageContent = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return; setSaving(true);
+    try {
+      let nextContent = contentForm;
+      if (activeTab === "benefits") nextContent = { ...contentForm, comparison: JSON.parse(jsonDraft.comparison), ingredients: JSON.parse(jsonDraft.ingredients) };
+      const r = await fetch(`${API}/content/pages/${activeTab}`, { method: "PUT", headers: authH(token), body: JSON.stringify({ content: nextContent }) });
+      const j = await r.json();
+      if (!checkUnauthorized(r, j) && j.success) showStatus("success", `${activeTab === "benefits" ? "Benefits" : "Offers"} page content saved.`);
+      else showStatus("error", j.message || "Unable to save page content");
+    } catch (error: any) { showStatus("error", error.message || "Network error"); } finally { setSaving(false); }
+  };
+
+  const openCollectionModal = (item?: any) => {
+    setCollectionModal(item || "add");
+    setCollectionForm(item ? { title: item.title, description: item.description || "", bannerUrl: item.bannerUrl || "", isActive: item.isActive !== false, productIds: (item.products || []).map((entry: any) => entry.productId) } : { title: "", description: "", bannerUrl: "", isActive: true, productIds: [] });
+  };
+
+  const saveCollection = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return; setSaving(true);
+    const editing = collectionModal !== "add";
+    try {
+      const r = await fetch(editing ? `${API}/collections/admin/${collectionModal.id}` : `${API}/collections/admin`, { method: editing ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify(collectionForm) });
+      const j = await r.json();
+      if (!checkUnauthorized(r, j) && j.success) { showStatus("success", `Collection ${editing ? "updated" : "created"}.`); setCollectionModal(null); fetchTab(); }
+      else showStatus("error", j.message || "Unable to save collection");
+    } catch (error: any) { showStatus("error", error.message || "Network error"); } finally { setSaving(false); }
+  };
+
+  const deleteCollection = async (item: any) => {
+    if (!confirm(`Delete collection "${item.title}"?`)) return;
+    const r = await fetch(`${API}/collections/admin/${item.id}`, { method: "DELETE", headers: authH(token || "") }); const j = await r.json();
+    if (!checkUnauthorized(r, j) && j.success) { showStatus("success", "Collection deleted."); fetchTab(); } else showStatus("error", j.message || "Delete failed");
+  };
+
+  const openArticleModal = (item?: any) => {
+    setArticleModal(item || "add");
+    setArticleForm(item ? { ...item, displayOrder: String(item.displayOrder || 0) } : { title: "", slug: "", label: "", excerpt: "", readingTime: "5 min read", tag: "", highlight: "", author: "", body: "", color: "#9E1830", background: "#FFF4D6", isFeatured: false, isPublished: true, displayOrder: "0" });
+  };
+
+  const saveArticle = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return; setSaving(true);
+    const editing = articleModal !== "add";
+    try {
+      const r = await fetch(editing ? `${API}/content/blog/admin/${articleModal.id}` : `${API}/content/blog/admin`, { method: editing ? "PATCH" : "POST", headers: authH(token), body: JSON.stringify({ ...articleForm, displayOrder: Number(articleForm.displayOrder) || 0 }) });
+      const j = await r.json();
+      if (!checkUnauthorized(r, j) && j.success) { showStatus("success", `Article ${editing ? "updated" : "created"}.`); setArticleModal(null); fetchTab(); }
+      else showStatus("error", j.message || "Unable to save article");
+    } catch (error: any) { showStatus("error", error.message || "Network error"); } finally { setSaving(false); }
+  };
+
+  const deleteArticle = async (item: any) => {
+    if (!confirm(`Delete article "${item.title}"?`)) return;
+    const r = await fetch(`${API}/content/blog/admin/${item.id}`, { method: "DELETE", headers: authH(token || "") }); const j = await r.json();
+    if (!checkUnauthorized(r, j) && j.success) { showStatus("success", "Article deleted."); fetchTab(); } else showStatus("error", j.message || "Delete failed");
+  };
+
   /* ORDER STATUS & DISPATCH */
   const updateOrderStatus = async (
     orderId: string,
@@ -1571,10 +1674,14 @@ export default function AdminPage() {
     { id: "banners", label: "Banners", icon: ImageIcon },
     { id: "orders", label: "Orders", icon: ShoppingBag },
     { id: "coupons", label: "Coupons", icon: Ticket },
+    { id: "collections", label: "Collections", icon: Layers },
+    { id: "blog", label: "Blog", icon: ArticleIcon },
+    { id: "benefits", label: "Benefits", icon: Heart },
+    { id: "offers", label: "Offers", icon: Gift },
   ];
 
   return (
-    <InnerPage eyebrow="ADMIN DASHBOARD" title="Store Management Console" subtitle="Add, edit and delete products, categories, banners, orders and coupons.">
+    <InnerPage eyebrow="ADMIN DASHBOARD" title="Store Management Console" subtitle="Manage store catalog, page content, collections, articles, offers, and orders.">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
         <StatusMsg msg={status} onDismiss={() => setStatus(null)} />
@@ -2467,6 +2574,55 @@ export default function AdminPage() {
             </div>
           )}
 
+          {activeTab === "collections" && (
+            <div className="space-y-5">
+              <SectionHeader title="Manage Collections" subtitle="Create collections and choose which database products appear in each one." action={<AddBtn onClick={() => openCollectionModal()} label="Add Collection" />} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {collections.map((item) => <div key={item.id} className="p-4 bg-white rounded-2xl border border-[#C89B3C]/30 space-y-2">
+                  <div className="flex items-center justify-between"><h3 className="font-bold text-[#6B4226]">{item.title}</h3><StatusBadge active={item.isActive} /></div>
+                  <p className="text-xs text-[#292524]/70">{item.description || "No description"}</p>
+                  <p className="text-[11px] text-[#292524]/60">{item.products?.length || 0} linked products</p>
+                  <div className="flex gap-2"><button onClick={() => openCollectionModal(item)} className="flex-1 py-2 text-xs font-bold bg-[#F4D35E]/30 rounded-lg"><Edit2 size={12} className="inline mr-1" />Edit</button><button onClick={() => deleteCollection(item)} className="flex-1 py-2 text-xs font-bold text-red-700 bg-red-50 rounded-lg"><Trash2 size={12} className="inline mr-1" />Delete</button></div>
+                </div>)}
+                {!collections.length && <p className="text-sm text-[#292524]/60">No collections yet. Add one to publish it on the Collections page.</p>}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "blog" && (
+            <div className="space-y-5">
+              <SectionHeader title="Manage Blog Articles" subtitle="Draft, publish, edit, and remove journal articles." action={<AddBtn onClick={() => openArticleModal()} label="Add Article" />} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {articles.map((item) => <div key={item.id} className="p-4 bg-white rounded-2xl border border-[#C89B3C]/30 space-y-2">
+                  <div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase text-[#A90C35]">{item.tag}</span><StatusBadge active={item.isPublished} /></div>
+                  <h3 className="font-bold text-[#6B4226]">{item.title}</h3><p className="text-xs text-[#292524]/70">{item.excerpt}</p>
+                  <div className="flex gap-2"><button onClick={() => openArticleModal(item)} className="flex-1 py-2 text-xs font-bold bg-[#F4D35E]/30 rounded-lg"><Edit2 size={12} className="inline mr-1" />Edit</button><button onClick={() => deleteArticle(item)} className="flex-1 py-2 text-xs font-bold text-red-700 bg-red-50 rounded-lg"><Trash2 size={12} className="inline mr-1" />Delete</button></div>
+                </div>)}
+                {!articles.length && <p className="text-sm text-[#292524]/60">No articles yet. Add your first article here.</p>}
+              </div>
+            </div>
+          )}
+
+          {(activeTab === "benefits" || activeTab === "offers") && (
+            <form onSubmit={savePageContent} className="space-y-4">
+              <SectionHeader title={activeTab === "benefits" ? "Benefits Page Content" : "Offers Page Content"} subtitle="Edit public page text and choose content directly from your product and collection catalog." />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {Object.entries(contentForm).filter(([key, value]) => !["comparison", "ingredients", "productIds", "collectionIds"].includes(key) && typeof value === "string").map(([key, value]) => <FieldRow key={key} label={key.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase())}><textarea rows={key.toLowerCase().includes("description") || key.toLowerCase().includes("subtitle") ? 3 : 2} value={value as string} onChange={(e) => setContentForm({ ...contentForm, [key]: e.target.value })} className={inp} /></FieldRow>)}
+              </div>
+              {activeTab === "benefits" && <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {(["comparison", "ingredients"] as const).map((key) => <FieldRow key={key} label={`${key === "comparison" ? "Comparison rows" : "Ingredient cards"} (JSON)`}>
+                  <textarea rows={10} value={jsonDraft[key]} onChange={(e) => setJsonDraft({ ...jsonDraft, [key]: e.target.value })} className={`${inp} font-mono text-[11px]`} />
+                  <p className="mt-1 text-[10px] text-[#292524]/60">{key === "comparison" ? 'Each row: { "feature": "...", "hm": "...", "others": "..." }' : 'Each item: { "name": "...", "tag": "...", "desc": "...", "icon": "🌿" }'}</p>
+                </FieldRow>)}
+              </div>}
+              {activeTab === "offers" && <>
+                <FieldRow label="Products shown in offer picks"><div className="max-h-56 overflow-auto rounded-xl border border-[#C89B3C]/30 bg-white p-3 space-y-2">{products.map((product) => <label key={product.id} className="flex items-center gap-2 text-xs"><input type="checkbox" checked={(contentForm.productIds || []).includes(product.id)} onChange={(e) => setContentForm({ ...contentForm, productIds: e.target.checked ? [...(contentForm.productIds || []), product.id] : (contentForm.productIds || []).filter((id: string) => id !== product.id) })} />{product.name} — ₹{product.price}</label>)}</div></FieldRow>
+                <FieldRow label="Collections shown as bundles"><div className="max-h-40 overflow-auto rounded-xl border border-[#C89B3C]/30 bg-white p-3 space-y-2">{collections.map((collection) => <label key={collection.id} className="flex items-center gap-2 text-xs"><input type="checkbox" checked={(contentForm.collectionIds || []).includes(collection.id)} onChange={(e) => setContentForm({ ...contentForm, collectionIds: e.target.checked ? [...(contentForm.collectionIds || []), collection.id] : (contentForm.collectionIds || []).filter((id: string) => id !== collection.id) })} />{collection.title}</label>)}</div></FieldRow>
+              </>}
+              <div className="flex justify-end"><button disabled={saving} className="px-5 py-2.5 rounded-xl bg-[#A90C35] text-white text-xs font-bold flex items-center gap-2"><Save size={14} />Save Page Content</button></div>
+            </form>
+          )}
+
         </div>
       </div>
 
@@ -2665,6 +2821,32 @@ export default function AdminPage() {
           </form>
         </Modal>
       )}
+
+      {collectionModal && <Modal title={collectionModal === "add" ? "Add Collection" : `Edit: ${collectionModal.title}`} onClose={() => setCollectionModal(null)}>
+        <form onSubmit={saveCollection} className="space-y-3 text-xs">
+          <FieldRow label="Collection title *"><input required value={collectionForm.title} onChange={(e) => setCollectionForm({ ...collectionForm, title: e.target.value })} className={inp} /></FieldRow>
+          <FieldRow label="Description"><textarea rows={3} value={collectionForm.description} onChange={(e) => setCollectionForm({ ...collectionForm, description: e.target.value })} className={inp} /></FieldRow>
+          <FieldRow label="Banner image URL"><input value={collectionForm.bannerUrl} onChange={(e) => setCollectionForm({ ...collectionForm, bannerUrl: e.target.value })} className={inp} placeholder="https://..." /></FieldRow>
+          <FieldRow label="Products in collection"><div className="max-h-56 overflow-auto rounded-xl border border-[#C89B3C]/30 bg-white p-3 space-y-2">{products.map((product) => <label key={product.id} className="flex items-center gap-2"><input type="checkbox" checked={collectionForm.productIds.includes(product.id)} onChange={(e) => setCollectionForm({ ...collectionForm, productIds: e.target.checked ? [...collectionForm.productIds, product.id] : collectionForm.productIds.filter((id: string) => id !== product.id) })} />{product.name}</label>)}</div></FieldRow>
+          <label className="flex items-center gap-2"><input type="checkbox" checked={collectionForm.isActive} onChange={(e) => setCollectionForm({ ...collectionForm, isActive: e.target.checked })} />Visible on the website</label>
+          <FormButtons onCancel={() => setCollectionModal(null)} saving={saving} />
+        </form>
+      </Modal>}
+
+      {articleModal && <Modal title={articleModal === "add" ? "Add Blog Article" : `Edit: ${articleModal.title}`} onClose={() => setArticleModal(null)}>
+        <form onSubmit={saveArticle} className="space-y-3 text-xs">
+          <FieldRow label="Article title *"><input required value={articleForm.title} onChange={(e) => setArticleForm({ ...articleForm, title: e.target.value })} className={inp} /></FieldRow>
+          <div className="grid grid-cols-2 gap-3"><FieldRow label="Slug (optional)"><input value={articleForm.slug} onChange={(e) => setArticleForm({ ...articleForm, slug: e.target.value })} className={inp} /></FieldRow><FieldRow label="Category label *"><input required value={articleForm.label} onChange={(e) => setArticleForm({ ...articleForm, label: e.target.value })} className={inp} /></FieldRow></div>
+          <FieldRow label="Short excerpt *"><textarea required rows={3} value={articleForm.excerpt} onChange={(e) => setArticleForm({ ...articleForm, excerpt: e.target.value })} className={inp} /></FieldRow>
+          <div className="grid grid-cols-2 gap-3"><FieldRow label="Tag *"><input required value={articleForm.tag} onChange={(e) => setArticleForm({ ...articleForm, tag: e.target.value })} className={inp} /></FieldRow><FieldRow label="Reading time"><input value={articleForm.readingTime} onChange={(e) => setArticleForm({ ...articleForm, readingTime: e.target.value })} className={inp} /></FieldRow></div>
+          <FieldRow label="Key takeaway"><input value={articleForm.highlight} onChange={(e) => setArticleForm({ ...articleForm, highlight: e.target.value })} className={inp} /></FieldRow>
+          <FieldRow label="Article body"><textarea rows={5} value={articleForm.body} onChange={(e) => setArticleForm({ ...articleForm, body: e.target.value })} className={inp} /></FieldRow>
+          <FieldRow label="Author"><input value={articleForm.author} onChange={(e) => setArticleForm({ ...articleForm, author: e.target.value })} className={inp} /></FieldRow>
+          <div className="grid grid-cols-3 gap-3"><FieldRow label="Text color"><input value={articleForm.color} onChange={(e) => setArticleForm({ ...articleForm, color: e.target.value })} className={inp} /></FieldRow><FieldRow label="Card background"><input value={articleForm.background} onChange={(e) => setArticleForm({ ...articleForm, background: e.target.value })} className={inp} /></FieldRow><FieldRow label="Order"><input type="number" value={articleForm.displayOrder} onChange={(e) => setArticleForm({ ...articleForm, displayOrder: e.target.value })} className={inp} /></FieldRow></div>
+          <div className="flex gap-5"><label className="flex items-center gap-2"><input type="checkbox" checked={articleForm.isFeatured} onChange={(e) => setArticleForm({ ...articleForm, isFeatured: e.target.checked })} />Featured</label><label className="flex items-center gap-2"><input type="checkbox" checked={articleForm.isPublished} onChange={(e) => setArticleForm({ ...articleForm, isPublished: e.target.checked })} />Published</label></div>
+          <FormButtons onCancel={() => setArticleModal(null)} saving={saving} />
+        </form>
+      </Modal>}
 
       {/* DISPATCH ORDER MODAL */}
       {dispatchModal && (

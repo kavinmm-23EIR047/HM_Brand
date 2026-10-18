@@ -1,73 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, ShieldCheck, FlaskConical, Award, Sparkles, CheckCircle2, XCircle, Heart, Wind, Sun, Moon } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2, XCircle } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
-import { MandalaMotif } from "@/components/illustrations";
-
-const comparisonData = [
-  {
-    feature: "Base Material",
-    hm: "Pure flower petals, herbal powders & natural tree resins",
-    others: "Cheap black charcoal powder & coal dust",
-  },
-  {
-    feature: "Fragrance Source",
-    hm: "100% therapeutic essential oils & botanical extracts",
-    others: "Synthetic chemicals, phthalates & artificial musk",
-  },
-  {
-    feature: "Smoke Quality",
-    hm: "Light, gentle white fragrant smoke (clean indoor air)",
-    others: "Heavy, dark soot that stains walls & irritates lungs",
-  },
-  {
-    feature: "Respiratory Safety",
-    hm: "Safe for kids, elders, and pets (zero throat burn)",
-    others: "Causes headaches, coughing, and indoor air pollution",
-  },
-  {
-    feature: "Spiritual Vibration",
-    hm: "Authentic Agamic sacred formulation for temple peace",
-    others: "Commercial mass-produced synthetic perfume",
-  },
-];
-
-const ingredients = [
-  {
-    name: "Bhimseni Camphor",
-    tag: "PURITY & CLARITY",
-    desc: "100% pure edible-grade camphor from tree bark. Clears mental fog, dispels negative energy, and purifies indoor atmosphere.",
-    icon: "💎",
-  },
-  {
-    name: "Sacred Loban & Sambrani",
-    tag: "POSITIVE AURA",
-    desc: "Ancient tree resin with proven antimicrobial properties. Creates an authentic South Indian temple ambiance and calms anxiety.",
-    icon: "🪵",
-  },
-  {
-    name: "Mysore Sandalwood",
-    tag: "MEDITATION & PEACE",
-    desc: "Soothing woody aroma that activates the third-eye chakra and promotes deep meditative stillness and sound sleep.",
-    icon: "🌿",
-  },
-  {
-    name: "Fresh Temple Flowers",
-    tag: "DEVOTION & JOY",
-    desc: "Naturally harvested rose, jasmine, and marigold petals that uplift mood and evoke divine blessings in your home.",
-    icon: "🌸",
-  },
-];
-
 export default function BenefitsPage() {
+  const [content, setContent] = useState<any>({});
+  useEffect(() => {
+    const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+    fetch(`${api}/content/pages/benefits`).then((r) => r.json()).then((j) => { if (j.success && j.data) setContent(j.data); }).catch(() => {});
+  }, []);
+  const comparisonData: any[] = Array.isArray(content.comparison) ? content.comparison : [];
+  const ingredients: any[] = Array.isArray(content.ingredients) ? content.ingredients : [];
   return (
     <InnerPage
-      eyebrow="HOLISTIC PURITY & AYURVEDA"
-      title="The Sacred Natural Benefits of Pure Botanical Fragrance"
-      subtitle="Discover why burning 100% charcoal-free agarbattis, pure Bhimseni camphor, and sacred sambrani elevates your health, mental peace, and spiritual aura."
+      eyebrow={content.eyebrow || "HOLISTIC PURITY & AYURVEDA"}
+      title={content.title || "The Sacred Natural Benefits of Pure Botanical Fragrance"}
+      subtitle={content.subtitle || "Discover why botanical incense and sacred aromatics elevate daily rituals."}
     >
       <div className="mx-auto max-w-7xl space-y-16 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         
@@ -78,15 +28,15 @@ export default function BenefitsPage() {
             <div className="lg:col-span-7 space-y-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[#287541]/30 bg-[#287541]/10 px-3 py-1 text-[11px] font-extrabold tracking-widest text-[#287541] uppercase">
                 <Sparkles size={12} className="text-[#F47A20]" />
-                <span>100% CHARCOAL-FREE BOTANICAL WELLNESS</span>
+                <span>{content.heroBadge || "100% CHARCOAL-FREE BOTANICAL WELLNESS"}</span>
               </span>
 
               <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#173B3A] leading-tight">
-                Breathe clean, pure, and spiritually uplifting fragrance.
+                {content.heroTitle || "Breathe clean, pure, and spiritually uplifting fragrance."}
               </h2>
 
               <p className="font-sans text-sm sm:text-base text-[#292524]/85 leading-relaxed">
-                In traditional Ayurveda, fragrance is not merely an aroma—it is a sacred healing medicine for the mind, body, and soul. Burning pure resins, camphor, and herbal incense purifies the subtle energy of your living space while protecting your respiratory health.
+                {content.heroDescription || "In traditional Ayurveda, fragrance is a sacred part of mindful living. Pure resins, camphor, and herbal incense bring a gentle aroma to your space."}
               </p>
 
               <div className="grid grid-cols-2 gap-3 pt-2">
@@ -125,10 +75,10 @@ export default function BenefitsPage() {
               THE PURITY DIFFERENCE
             </span>
             <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#173B3A]">
-              HM Agarbattis vs. Ordinary Market Incense
+              {content.comparisonTitle || "HM Agarbattis vs. Ordinary Market Incense"}
             </h2>
             <p className="text-sm text-[#292524]/80">
-              See why switching to pure botanical incense transforms your daily ritual.
+              {content.comparisonDescription || "See why switching to pure botanical incense transforms your daily ritual."}
             </p>
           </div>
 
@@ -173,10 +123,10 @@ export default function BenefitsPage() {
               PURE HERBAL HERITAGE
             </span>
             <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#173B3A]">
-              Sacred Ingredients &amp; Their Benefits
+              {content.ingredientsTitle || "Sacred Ingredients & Their Benefits"}
             </h2>
             <p className="text-sm text-[#292524]/80">
-              Each natural resin and herb is selected for its uplifting aromatherapeutic energy.
+              {content.ingredientsDescription || "Each natural resin and herb is selected for its uplifting aromatherapeutic energy."}
             </p>
           </div>
 
@@ -205,13 +155,13 @@ export default function BenefitsPage() {
         <section className="rounded-3xl bg-gradient-to-r from-[#9E1830] via-[#851227] to-[#5A0919] p-8 sm:p-12 text-white border-2 border-[#F6C84C]/60 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
             <span className="font-script text-2xl sm:text-3xl text-[#F6C84C]">
-              Experience Natural Purity
+              {content.ctaEyebrow || "Experience Natural Purity"}
             </span>
             <h2 className="font-heading text-2xl sm:text-3xl font-extrabold leading-snug">
-              Transform Your Home With Clean Temple Fragrances
+              {content.ctaTitle || "Transform Your Home With Clean Temple Fragrances"}
             </h2>
             <p className="text-xs sm:text-sm text-white/85 leading-relaxed">
-              Shop 100% natural agarbattis, Bhimseni camphor, and cup sambrani crafted in Coimbatore.
+              {content.ctaDescription || "Shop natural agarbattis, camphor, and sambrani crafted in Coimbatore."}
             </p>
           </div>
 
