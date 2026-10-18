@@ -103,7 +103,7 @@ export function CartDrawer() {
                   <div className="flex-1 min-w-0">
                     <h4 className="font-display text-lg text-earthBrown truncate">{line.product.name}</h4>
                     <p className="text-xs text-charcoal/60">{line.product.quantity}</p>
-                    <p className="text-sm font-bold text-kumkum mt-1">₹{line.product.price}</p>
+                    <p className="font-price text-sm font-bold text-kumkum mt-1 tabular-nums">₹{line.product.price}</p>
                   </div>
 
                   <div className="flex shrink-0 flex-col items-end gap-2">
@@ -122,7 +122,7 @@ export function CartDrawer() {
                       >
                         <Minus size={13} />
                       </button>
-                      <span className="px-2 text-xs font-bold text-charcoal">{line.qty}</span>
+                      <span className="font-price px-2 text-xs font-bold text-charcoal tabular-nums">{line.qty}</span>
                       <button
                         onClick={() => setQty(line.product.slug, line.qty + 1)}
                         className="p-1 px-2 text-earthBrown hover:bg-turmeric/30"
@@ -163,7 +163,7 @@ export function CartDrawer() {
                     <Tag size={12} /> Coupon ({appliedCoupon.code})
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="font-extrabold">-₹{couponDiscount}</span>
+                    <span className="font-price font-extrabold tabular-nums">-₹{couponDiscount}</span>
                     <button
                       onClick={removeCoupon}
                       className="text-[#9E1830] hover:underline text-[10px] font-semibold"
@@ -181,19 +181,19 @@ export function CartDrawer() {
 
               <div className="flex items-center justify-between text-sm">
                 <span className="text-charcoal/70">Subtotal</span>
-                <span className="font-semibold text-earthBrown">₹{subtotal}</span>
+                <span className="font-price font-semibold text-earthBrown tabular-nums">₹{subtotal}</span>
               </div>
 
               {appliedCoupon && couponDiscount > 0 && (
                 <div className="flex items-center justify-between text-sm text-[#3F7D45]">
                   <span>Discount</span>
-                  <span className="font-bold">-₹{couponDiscount}</span>
+                  <span className="font-price font-bold tabular-nums">-₹{couponDiscount}</span>
                 </div>
               )}
 
               <div className="flex items-center justify-between text-lg font-bold pt-1 border-t border-antiqueGold/20">
                 <span className="font-display text-xl text-earthBrown">Estimated Total</span>
-                <span className="text-saffron">₹{Math.max(0, subtotal - couponDiscount)}</span>
+                <span className="font-price text-saffron tabular-nums">₹{Math.max(0, subtotal - couponDiscount)}</span>
               </div>
               <p className="text-[11px] text-charcoal/60">Taxes and shipping calculated at checkout.</p>
 

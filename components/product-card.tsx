@@ -122,14 +122,18 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="min-w-0">
             <div className="flex items-baseline gap-1.5">
               {effectivePrice > 0 ? (
-                <span className="font-playfair text-base sm:text-lg font-bold text-[#9E1830]">₹{effectivePrice}</span>
+                <span className="font-price font-extrabold text-base sm:text-lg text-[#9E1830] tracking-tight">
+                  ₹{effectivePrice}
+                </span>
               ) : (
-                <span className="text-xs font-semibold text-[#9E1830]">
+                <span className="font-heading text-xs font-bold text-[#9E1830]">
                   {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
                 </span>
               )}
               {product.mrp && product.mrp !== `₹${product.price}` && (
-                <span className="text-[11px] text-stone-400 line-through">{product.mrp}</span>
+                <span className="font-price text-[11px] font-medium text-stone-400 line-through">
+                  {product.mrp}
+                </span>
               )}
             </div>
           </div>

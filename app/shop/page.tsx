@@ -317,7 +317,7 @@ function ShopContent() {
     Boolean(searchQuery.trim());
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-5 sm:space-y-6 font-sans">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-4 sm:space-y-5 font-sans">
       {/* ─── BREADCRUMB ─── */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-[#748078]">
         <Link href="/" className="hover:text-[#9E1830] transition-colors">
@@ -336,38 +336,38 @@ function ShopContent() {
         </span>
       </nav>
 
-      {/* ─── 1. SPLIT HERO BANNER (Authentic Fragrances & Pooja Essentials) ─── */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#FAF3E0]/70 px-5 py-4 sm:px-8 sm:py-5 lg:px-9 lg:py-5 border border-[#C89B3C]/20 shadow-xs">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 items-center">
+      {/* ─── 1. COMPACT SPLIT HERO BANNER ─── */}
+      <section className="relative overflow-hidden rounded-2xl bg-[#FAF3E0]/70 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-7 lg:py-3.5 border border-[#C89B3C]/20 shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
           {/* Left: Titles & Trust Badges */}
-          <div className="lg:col-span-7 space-y-2.5 sm:space-y-3">
-            <h1 className="font-playfair text-2xl sm:text-3xl lg:text-[32px] font-bold leading-tight tracking-tight">
+          <div className="lg:col-span-7 space-y-1.5 sm:space-y-2">
+            <h1 className="font-playfair text-xl sm:text-2xl lg:text-[28px] font-bold leading-tight tracking-tight">
               <span className="text-[#9E1830]">Authentic Fragrances</span>{" "}
               <span className="text-[#9E1830]">&amp;</span>{" "}
               <span className="text-[#173B3A]">Pooja Essentials</span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-[#52625A] leading-relaxed max-w-xl">
+            <p className="text-xs sm:text-[13px] text-[#52625A] leading-relaxed max-w-xl">
               Handcrafted incense sticks, crystalline bhimseni camphor, pure sambrani, dhoop sticks,
               and traditional pooja essentials from Coimbatore’s trusted Vedic heritage.
             </p>
 
             {/* 4 Feature Badges Row */}
-            <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-1.5 pt-1 text-[11px] sm:text-xs font-semibold text-[#173B3A]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-0.5 text-[11px] font-semibold text-[#173B3A]">
               <span className="inline-flex items-center gap-1.5">
-                <Leaf size={14} className="text-[#2D6A4F]" />
+                <Leaf size={13} className="text-[#2D6A4F]" />
                 Pure &amp; Natural
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Sparkles size={14} className="text-[#F47A20]" />
+                <Sparkles size={13} className="text-[#F47A20]" />
                 Traditional Fragrances
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Award size={14} className="text-[#9E1830]" />
+                <Award size={13} className="text-[#9E1830]" />
                 Premium Quality
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Truck size={14} className="text-[#4C7FA8]" />
+                <Truck size={13} className="text-[#4C7FA8]" />
                 Pan India Delivery
               </span>
             </div>
@@ -375,7 +375,7 @@ function ShopContent() {
 
           {/* Right: Divine Atmospheric Image (Compact Height) */}
           <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
-            <div className="relative h-32 min-[420px]:h-36 sm:h-44 lg:h-48 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-none overflow-hidden rounded-2xl flex items-center justify-center lg:justify-end">
+            <div className="relative h-28 sm:h-36 lg:h-38 w-full max-w-[300px] sm:max-w-[360px] lg:max-w-none overflow-hidden rounded-xl flex items-center justify-center lg:justify-end">
               <img
                 src="/images/hm_puja_products_scene.png"
                 alt="Authentic pooja essentials altar"
@@ -394,12 +394,12 @@ function ShopContent() {
 
       {/* ─── 2. SLIDE-BASED CATEGORIES CAROUSEL ("catgories is slide based") ─── */}
       <section aria-label="Browse by Category" className="relative">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-2.5">
           <div>
             <span className="font-space text-[10px] sm:text-xs font-bold tracking-widest text-[#9E1830] uppercase block">
               SACRED REPERTOIRE
             </span>
-            <h2 className="font-playfair text-xl sm:text-2xl font-bold text-[#173B3A]">
+            <h2 className="font-playfair text-lg sm:text-xl font-bold text-[#173B3A]">
               Shop by Category
             </h2>
           </div>
@@ -410,7 +410,7 @@ function ShopContent() {
               type="button"
               onClick={() => scrollSlider("left")}
               aria-label="Scroll categories left"
-              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white text-[#173B3A] shadow-xs border border-stone-200 hover:border-[#9E1830] hover:text-[#9E1830] transition active:scale-95"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173B3A] shadow-xs border border-stone-200 hover:border-[#9E1830] hover:text-[#9E1830] transition active:scale-95"
             >
               <ChevronLeft size={16} />
             </button>
@@ -418,7 +418,7 @@ function ShopContent() {
               type="button"
               onClick={() => scrollSlider("right")}
               aria-label="Scroll categories right"
-              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white text-[#173B3A] shadow-xs border border-stone-200 hover:border-[#9E1830] hover:text-[#9E1830] transition active:scale-95"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173B3A] shadow-xs border border-stone-200 hover:border-[#9E1830] hover:text-[#9E1830] transition active:scale-95"
             >
               <ChevronRight size={16} />
             </button>
@@ -447,17 +447,15 @@ function ShopContent() {
                 type="button"
                 onClick={() => handleSelectCategory(catKey)}
                 aria-pressed={isSelected}
-                className={`group flex flex-col items-center justify-between rounded-2xl bg-white p-3 sm:p-3.5 text-center transition-all duration-200 shrink-0 w-[114px] sm:w-[130px] cursor-pointer snap-start ${
-                  isSelected
+                className={`group flex flex-col items-center justify-between rounded-2xl bg-white p-3 text-center transition-all duration-200 shrink-0 w-[110px] sm:w-[124px] cursor-pointer snap-start ${isSelected
                     ? "border-2 border-[#9E1830] shadow-sm bg-white scale-[1.02]"
                     : "border border-stone-200/90 hover:border-[#9E1830]/40 hover:shadow-xs"
-                }`}
+                  }`}
               >
                 {/* Visual Thumbnail */}
                 <div
-                  className={`relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl flex items-center justify-center overflow-hidden mb-2 p-1.5 transition-transform duration-300 group-hover:scale-105 ${
-                    isSelected ? "bg-[#FFF4D6]" : "bg-[#FAF3E0]/70"
-                  }`}
+                  className={`relative h-14 w-14 sm:h-18 sm:w-18 rounded-2xl flex items-center justify-center overflow-hidden mb-2 p-1.5 transition-transform duration-300 group-hover:scale-105 ${isSelected ? "bg-[#FFF4D6]" : "bg-[#FAF3E0]/70"
+                    }`}
                 >
                   {meta.image ? (
                     <img
@@ -473,9 +471,8 @@ function ShopContent() {
                 {/* Title & Count */}
                 <div className="w-full">
                   <span
-                    className={`block text-xs sm:text-[13px] font-bold leading-tight line-clamp-2 ${
-                      isSelected ? "text-[#9E1830]" : "text-[#173B3A]"
-                    }`}
+                    className={`block text-xs sm:text-[13px] font-bold leading-tight line-clamp-2 ${isSelected ? "text-[#9E1830]" : "text-[#173B3A]"
+                      }`}
                   >
                     {meta.label}
                   </span>
@@ -490,18 +487,17 @@ function ShopContent() {
       </section>
 
       {/* ─── 3. ACTIVE FILTERS CHIP BAR & SORT CONTROL ─── */}
-      <div className="flex flex-col gap-3 border-y border-stone-200/70 py-3 sm:py-3.5 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 border-y border-stone-200/70 py-3 md:flex-row md:items-center md:justify-between">
         {/* Left: Active Chips & Category Tabs */}
         <div className="flex flex-wrap items-center gap-2">
           {/* All Products Pill */}
           <button
             type="button"
             onClick={() => handleSelectCategory("All")}
-            className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
-              selectedCategory === "All"
+            className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${selectedCategory === "All"
                 ? "bg-[#9E1830] text-white shadow-xs"
                 : "bg-white text-[#173B3A] border border-stone-200 hover:border-[#9E1830]"
-            }`}
+              }`}
           >
             All Products ({allProducts.length})
           </button>
@@ -614,7 +610,7 @@ function ShopContent() {
       {/* ─── 4. MAIN LAYOUT: DESKTOP FILTERS SIDEBAR + PRODUCT GRID ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Desktop Sidebar Filters */}
-        <aside className="hidden lg:block lg:col-span-3 space-y-6 rounded-3xl bg-white p-6 border border-stone-200/80 shadow-xs sticky top-24">
+        <aside className="hidden lg:block lg:col-span-3 space-y-5 rounded-3xl bg-white p-5 border border-stone-200/80 shadow-xs sticky top-24">
           <div className="flex items-center justify-between border-b border-stone-100 pb-3">
             <h3 className="font-playfair font-bold text-lg text-[#173B3A]">Filters</h3>
             {isAnyFilterActive && (
@@ -672,7 +668,7 @@ function ShopContent() {
 
           {/* Subcategories (if available) */}
           {availableSubcategories.length > 0 && (
-            <div className="border-t border-stone-100 pt-5">
+            <div className="border-t border-stone-100 pt-4">
               <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
                 Sub Category
               </h4>
@@ -724,12 +720,12 @@ function ShopContent() {
           )}
 
           {/* Price Range Slider & Preset Pills */}
-          <div className="border-t border-stone-100 pt-5 space-y-3">
+          <div className="border-t border-stone-100 pt-4 space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A]">
                 Price Range
               </h4>
-              <span className="text-xs font-bold text-[#9E1830]">
+              <span className="font-price text-xs font-bold text-[#9E1830] tabular-nums">
                 Up to ₹{maxPriceSlider}
               </span>
             </div>
@@ -747,7 +743,7 @@ function ShopContent() {
               }}
               className="w-full accent-[#9E1830] cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-stone-400 font-medium">
+            <div className="flex justify-between text-[10px] text-stone-400 font-medium font-price tabular-nums">
               <span>₹0</span>
               <span>₹500</span>
             </div>
@@ -767,11 +763,10 @@ function ShopContent() {
                     setPricePreset(p.id as any);
                     setMaxPriceSlider(500);
                   }}
-                  className={`rounded-lg py-1.5 px-2 text-[11px] font-semibold transition ${
-                    pricePreset === p.id
+                  className={`font-price rounded-lg py-1.5 px-2 text-[11px] font-semibold transition tabular-nums ${pricePreset === p.id
                       ? "bg-[#9E1830] text-white"
                       : "bg-stone-100 text-[#173B3A] hover:bg-stone-200"
-                  }`}
+                    }`}
                 >
                   {p.label}
                 </button>
@@ -889,11 +884,10 @@ function ShopContent() {
                       key={p.id}
                       type="button"
                       onClick={() => setPricePreset(p.id as any)}
-                      className={`rounded-lg py-2 px-3 text-xs font-semibold ${
-                        pricePreset === p.id
+                      className={`font-price rounded-lg py-2 px-3 text-xs font-semibold tabular-nums ${pricePreset === p.id
                           ? "bg-[#9E1830] text-white"
                           : "bg-stone-100 text-[#173B3A]"
-                      }`}
+                        }`}
                     >
                       {p.label}
                     </button>

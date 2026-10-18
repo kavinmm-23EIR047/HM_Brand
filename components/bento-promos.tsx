@@ -38,8 +38,8 @@ export function BentoPromos() {
                 {/* Price & CTA Row */}
                 <div className="pt-2 flex flex-wrap items-center gap-3">
                   <div className="flex items-baseline gap-1.5 bg-black/25 border border-[#F6C84C]/40 px-3 py-1.5 rounded-xl">
-                    <span className="text-[11px] line-through text-white/60 font-semibold">₹120</span>
-                    <span className="text-base sm:text-lg font-black text-[#F6C84C]">₹100</span>
+                    <span className="font-price text-[11px] line-through text-white/60 font-medium tabular-nums">₹120</span>
+                    <span className="font-price text-base sm:text-lg font-extrabold text-[#F6C84C] tabular-nums">₹100</span>
                   </div>
 
                   <Link

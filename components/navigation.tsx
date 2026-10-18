@@ -106,7 +106,7 @@ export function Navigation() {
                 </div>
                 <div className="min-w-0">
                   <p className="line-clamp-2 text-xs font-bold leading-snug text-[#1c332d] group-hover:text-[#a90c35]">{product.name}</p>
-                  <p className="mt-1 text-xs font-extrabold text-[#a90c35]">₹{product.price}</p>
+                  <p className="font-price mt-1 text-xs font-extrabold text-[#a90c35] tabular-nums">₹{product.price}</p>
                 </div>
               </Link>
             ))}

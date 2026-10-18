@@ -68,25 +68,25 @@ export function AddPanel({ product }: { product: Product }) {
     <div className="space-y-5 pt-3">
       {/* ── PRICE & SAVINGS ── */}
       <div className="flex flex-wrap items-baseline gap-x-3.5 gap-y-1">
-        <span className="font-playfair text-3xl sm:text-4xl font-bold tracking-tight text-[#9E1830]">
+        <span className="font-price text-3xl sm:text-4xl font-extrabold tracking-tight text-[#9E1830]">
           ₹{effectiveUnitPrice}
         </span>
         {singleItemDiscount > 0 ? (
-          <span className="text-base text-stone-400 line-through font-normal">
+          <span className="font-price text-base text-stone-400 line-through font-medium">
             ₹{product.price}
           </span>
         ) : product.mrp ? (
-          <span className="text-base text-stone-400 line-through font-normal">
+          <span className="font-price text-base text-stone-400 line-through font-medium">
             {product.mrp}
           </span>
         ) : null}
         {discountPercent > 0 && (
-          <span className="text-xs font-semibold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-0.5 rounded-full">
+          <span className="font-heading text-xs font-bold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-0.5 rounded-full">
             {discountPercent}% OFF
           </span>
         )}
         {singleItemDiscount > 0 && (
-          <span className="text-xs font-semibold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-0.5 rounded-full">
+          <span className="font-heading text-xs font-bold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-0.5 rounded-full">
             Save ₹{totalSavings}
           </span>
         )}
@@ -102,7 +102,7 @@ export function AddPanel({ product }: { product: Product }) {
           >
             <Minus size={13} />
           </button>
-          <span className="px-3.5 text-sm font-semibold text-[#173B3A] tabular-nums min-w-[32px] text-center">
+          <span className="font-price px-3.5 text-sm font-bold text-[#173B3A] tabular-nums min-w-[32px] text-center">
             {qty}
           </span>
           <button
@@ -128,7 +128,7 @@ export function AddPanel({ product }: { product: Product }) {
 
         {(qty > 1 || singleItemDiscount > 0) && (
           <span className="text-xs text-stone-500 ml-auto">
-            Total: <strong className="text-[#173B3A] font-semibold">₹{totalEffective}</strong>
+            Total: <strong className="font-price text-[#173B3A] font-bold">₹{totalEffective}</strong>
           </span>
         )}
       </div>
