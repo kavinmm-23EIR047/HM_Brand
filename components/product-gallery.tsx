@@ -52,17 +52,17 @@ export function ProductGallery({
   return (
     <div className="flex flex-col gap-4 lg:col-span-5">
       {/* Main Image Container */}
-      <div className="relative flex min-h-[320px] sm:min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-[24px] sm:rounded-[28px] bg-[#f8f0df] p-4 sm:p-8 shadow-sm border border-[#C89B3C]/20 group">
+      <div className="relative flex min-h-[320px] sm:min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#FAF3E0]/60 p-4 sm:p-8 transition-colors group">
         {/* Badge */}
         {badge && (
-          <span className="absolute top-4 left-4 z-10 bg-[#E85D04] text-[#FFF8E7] text-[10px] sm:text-xs font-bold tracking-wider uppercase px-3 py-1 rounded shadow-xs">
+          <span className="absolute top-4 left-4 z-10 bg-[#9E1830] text-[#FFF8E7] text-[10px] sm:text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full">
             {badge}
           </span>
         )}
 
         {/* Counter indicator */}
         {validImages.length > 1 && (
-          <span className="absolute top-4 right-4 z-10 bg-black/50 backdrop-blur-xs text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
+          <span className="absolute top-4 right-4 z-10 bg-[#173B3A]/60 backdrop-blur-md text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
             {activeIndex + 1} / {validImages.length}
           </span>
         )}
@@ -74,54 +74,47 @@ export function ProductGallery({
               key={activeImage.url}
               src={activeImage.url}
               alt={activeImage.altText || productName}
-              className="max-h-[340px] sm:max-h-[400px] w-full object-contain mix-blend-multiply transition-all duration-300 group-hover:scale-105"
+              className="max-h-[340px] sm:max-h-[400px] w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         ) : (
           <div className="text-center text-[#6B4226] py-12">
             <span className="text-7xl block mb-4">🪔</span>
-            <span className="font-display text-2xl font-bold block text-[#6B4226]">
+            <span className="font-playfair text-2xl font-bold block text-[#173B3A]">
               {productName}
             </span>
-            <p className="text-xs text-[#292524]/60 mt-1 font-sans">
+            <p className="text-xs text-[#52625A] mt-1 font-sans">
               Authentic HM Brand Formulation
             </p>
           </div>
         )}
 
-        {/* Prev / Next navigation buttons (visible on hover or mobile) */}
+        {/* Prev / Next navigation buttons */}
         {validImages.length > 1 && (
           <>
             <button
               type="button"
               onClick={handlePrev}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/90 text-[#6B4226] hover:bg-white hover:text-[#a90c35] shadow-md transition-all sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-white/90 text-[#173B3A] hover:text-[#9E1830] shadow-sm transition-all sm:opacity-0 sm:group-hover:opacity-100"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={18} />
             </button>
             <button
               type="button"
               onClick={handleNext}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/90 text-[#6B4226] hover:bg-white hover:text-[#a90c35] shadow-md transition-all sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-white/90 text-[#173B3A] hover:text-[#9E1830] shadow-sm transition-all sm:opacity-0 sm:group-hover:opacity-100"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={18} />
             </button>
           </>
         )}
-
-        {/* Quality Badges */}
-        <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-[#C89B3C]/30 pt-4 text-[9px] font-semibold text-[#6B4226] sm:text-xs">
-          <span>✦ Charcoal-Free</span>
-          <span>✦ Coimbatore Made</span>
-          <span>✦ Pure Resins</span>
-        </div>
       </div>
 
       {/* Thumbnails row (shown when multiple images exist) */}
       {validImages.length > 1 && (
-        <div className="flex items-center gap-2.5 overflow-x-auto pb-2 px-1 scrollbar-thin">
+        <div className="flex items-center gap-2.5 overflow-x-auto pb-1 px-0.5">
           {validImages.map((img, idx) => {
             const isSelected = idx === activeIndex;
             return (
@@ -130,10 +123,10 @@ export function ProductGallery({
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 aria-label={`View image ${idx + 1}`}
-                className={`relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-[#f8f0df] p-1 transition-all ${
+                className={`relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl bg-[#FAF3E0]/70 p-1.5 transition-all ${
                   isSelected
-                    ? "border-[#a90c35] ring-2 ring-[#a90c35]/30 shadow-md scale-105"
-                    : "border-[#C89B3C]/30 hover:border-[#C89B3C] opacity-75 hover:opacity-100"
+                    ? "ring-2 ring-[#9E1830] opacity-100 scale-105"
+                    : "opacity-60 hover:opacity-100"
                 }`}
               >
                 <img
@@ -141,11 +134,6 @@ export function ProductGallery({
                   alt={img.altText || `${productName} thumbnail ${idx + 1}`}
                   className="h-full w-full object-contain mix-blend-multiply"
                 />
-                {img.isPrimary && (
-                  <span className="absolute bottom-0.5 right-0.5 bg-[#a90c35] text-white text-[8px] font-black px-1 rounded">
-                    ★
-                  </span>
-                )}
               </button>
             );
           })}

@@ -38,15 +38,15 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card">
+    <article className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl bg-white/80 p-3 transition-all duration-300 hover:bg-white hover:shadow-card hover:-translate-y-1">
       {/* Top Image & Badge Container */}
-      <div className="relative aspect-square w-full overflow-hidden bg-[#fffaf0] flex items-center justify-center p-2 sm:aspect-[4/3] sm:p-4">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#FAF3E0]/60 flex items-center justify-center p-3 sm:p-4">
         <Link href={`/product/${product.slug}`} className="absolute inset-0 flex items-center justify-center">
           {product.image ? (
             <img
               src={product.image}
               alt={product.name}
-              className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]"
+              className="h-full w-full object-contain mix-blend-multiply transition duration-500 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget as HTMLImageElement;
                 if (!target.src.includes("media_1790142713668")) {
@@ -65,22 +65,15 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </Link>
 
-        {/* Category / Coupon / Bestseller Badge */}
-        {product.couponCode ? (
+        {/* Badge */}
+        {product.badge && (
           <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E7] px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830] shadow-sm border border-[#C89B3C]">
-              <Tag size={10} className="text-[#E85D04]" />
-              <span>Coupon: <span className="font-mono font-black">{product.couponCode}</span></span>
-            </span>
-          </div>
-        ) : product.badge ? (
-          <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830] shadow-xs border border-[#F6C84C]/50 backdrop-blur-xs">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#9E1830] backdrop-blur-xs shadow-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
               {product.badge}
             </span>
           </div>
-        ) : null}
+        )}
 
         {/* Wishlist Button */}
         <button
@@ -89,10 +82,10 @@ export function ProductCard({ product }: { product: Product }) {
             toggleWishlist(product.slug);
           }}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute right-2.5 top-2.5 z-10 h-7 w-7 rounded-full flex items-center justify-center shadow-xs transition backdrop-blur-xs ${
+          className={`absolute right-2.5 top-2.5 z-10 h-7 w-7 rounded-full flex items-center justify-center transition backdrop-blur-xs ${
             wishlisted
               ? "bg-[#9E1830] text-white"
-              : "bg-white/90 text-[#173B3A]/70 hover:bg-[#9E1830] hover:text-white border border-[#F6C84C]/30"
+              : "bg-white/90 text-[#173B3A]/70 hover:bg-[#9E1830] hover:text-white"
           }`}
         >
           <Heart size={13} fill={wishlisted ? "currentColor" : "none"} />
@@ -100,72 +93,54 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Product Information */}
-      <div className="flex min-w-0 flex-1 flex-col justify-between p-2.5 sm:p-4">
+      <div className="flex min-w-0 flex-1 flex-col justify-between pt-3">
         <div>
           {/* Rating */}
-          <div className="flex items-center gap-1 text-xs mb-1">
+          <div className="flex items-center gap-1.5 text-xs mb-1">
             <div className="flex text-[#F47A20]">
               <Star size={11} fill="currentColor" />
             </div>
-            <span className="font-bold text-[11px] sm:text-xs text-[#173B3A]">{product.rating}</span>
-            <span className="text-[#173B3A]/50 text-[10px]">({product.reviewCount})</span>
+            <span className="font-bold text-[11px] text-[#173B3A]">{product.rating}</span>
+            <span className="text-stone-400 text-[10px]">({product.reviewCount})</span>
           </div>
 
           {/* Title */}
           <Link href={`/product/${product.slug}`}>
-            <h3 className="line-clamp-2 break-words font-heading text-xs min-[360px]:text-sm sm:text-base font-extrabold leading-snug text-[#173B3A] transition group-hover:text-[#9E1830]">
+            <h3 className="line-clamp-2 break-words font-heading text-sm sm:text-base font-bold leading-snug text-[#173B3A] transition group-hover:text-[#9E1830]">
               {product.name}
             </h3>
           </Link>
 
-          {/* Note */}
-          <p className="mt-1 line-clamp-2 text-[10px] sm:text-[11px] leading-relaxed text-[#173B3A]/70 font-sans">
+          {/* Note / Subtitle */}
+          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#52625A] font-sans">
             {product.note}
           </p>
-
-          {/* Coupon Offer Badge if available */}
-          {product.couponCode && (
-            <div className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-[#FFF8E7] px-2 py-0.5 border border-[#C89B3C]/50 text-[10px] font-bold text-[#E85D04]">
-              <Tag size={10} className="shrink-0 text-[#E85D04]" />
-              <span>Coupon <span className="font-mono font-black text-[#9E1830]">{product.couponCode}</span> {isCouponAppliedForProduct ? "applied (₹" + effectivePrice + ")" : "eligible"}</span>
-            </div>
-          )}
         </div>
 
         {/* Price & Action */}
-        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 border-t border-[#F47A20]/15 pt-2.5">
+        <div className="mt-3.5 flex min-w-0 items-center justify-between gap-2 pt-2 border-t border-stone-100">
           <div className="min-w-0">
-            <div className="flex items-baseline gap-1">
+            <div className="flex items-baseline gap-1.5">
               {effectivePrice > 0 ? (
-                <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830]">₹{effectivePrice}</span>
+                <span className="font-playfair text-base sm:text-lg font-bold text-[#9E1830]">₹{effectivePrice}</span>
               ) : (
-                <span className="font-heading text-xs sm:text-sm font-extrabold text-[#9E1830]">
+                <span className="text-xs font-semibold text-[#9E1830]">
                   {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
                 </span>
               )}
-              {singleDiscount > 0 ? (
-                <span className="text-[10px] text-[#173B3A]/50 line-through">₹{product.price}</span>
-              ) : product.mrp && product.mrp !== `₹${product.price}` ? (
-                <span className="text-[10px] text-[#173B3A]/50 line-through">{product.mrp}</span>
-              ) : null}
+              {product.mrp && product.mrp !== `₹${product.price}` && (
+                <span className="text-[11px] text-stone-400 line-through">{product.mrp}</span>
+              )}
             </div>
-            {singleDiscount > 0 ? (
-              <span className="text-[9px] font-extrabold text-[#3F7D45] tracking-wider uppercase block">
-                Save ₹{singleDiscount} (Coupon Active)
-              </span>
-            ) : discountPercent > 0 ? (
-              <span className="text-[9px] font-bold text-[#3F7D45] tracking-wider uppercase block">
-                Save {discountPercent}%
-              </span>
-            ) : null}
           </div>
 
           <button
             onClick={() => product.inStock && add(product)}
             disabled={!product.inStock}
-            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl bg-[#F47A20] px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-extrabold text-white shadow-xs transition-all hover:bg-[#9E1830] active:scale-95 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-[#173B3A] px-3.5 py-1.5 text-xs font-medium text-white transition-all hover:bg-[#9E1830] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <ShoppingBag size={13} /> {product.inStock ? "Add" : "Out of Stock"}
+            <ShoppingBag size={12} />
+            <span>{product.inStock ? "Add" : "Sold Out"}</span>
           </button>
         </div>
       </div>

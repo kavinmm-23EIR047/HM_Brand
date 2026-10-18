@@ -14,24 +14,11 @@ import { PromoBanners } from "@/components/promo-banners";
 import { DeliveryReachBanner } from "@/components/delivery-reach-banner";
 import { Testimonials } from "@/components/testimonials";
 import { OurStorySection } from "@/components/our-story-section";
+import { ProductCard } from "@/components/product-card";
 import { useStore } from "@/components/store";
 
 export default function HomePage() {
-  const { add, toggleWishlist, isInWishlist, dbProducts } = useStore();
-
-  const displayPicks = (dbProducts || []).slice(0, 8).map((p, idx) => ({
-    slug: p.slug,
-    name: p.name,
-    badge: p.couponCode ? `COUPON: ${p.couponCode}` : (p.badge || (p.featured ? "Featured" : "Best Seller")),
-    badgeBg: idx % 3 === 0 ? "bg-[#3F7D45]" : idx % 3 === 1 ? "bg-[#9E1830]" : "bg-[#7653A6]",
-    rating: p.rating || 4.9,
-    reviews: p.reviewCount || 48,
-    note: p.note || p.description?.slice(0, 80),
-    price: p.price,
-    unit: p.quantity || "150 GMS",
-    image: p.image || "/images/media_1790142713668.jpg",
-    rawProduct: p,
-  }));
+  const { dbProducts } = useStore();
 
 
   return (
@@ -57,7 +44,7 @@ export default function HomePage() {
         <BentoPromos />
 
         {/* 6. BESTSELLERS PRODUCT SHOWCASE */}
-        {displayPicks.length > 0 && (
+        {(dbProducts || []).length > 0 && (
         <section className="py-14 sm:py-16 bg-[#FFF4D6]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -81,97 +68,11 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Product Cards Grid */}
+            {/* Product Cards Grid - Using clean unboxed ProductCard */}
             <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {displayPicks.map((item) => {
-                const wishlisted = isInWishlist(item.slug);
-                const originalProduct = item.rawProduct || (dbProducts || []).find((p: any) => p.slug === item.slug);
-                if (!originalProduct) return null;
-
-                return (
-                  <div
-                    key={item.slug}
-                    className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative border border-[#F6C84C]/30"
-                  >
-                    {/* Top Image Box */}
-                    <div className="relative aspect-square w-full rounded-xl bg-[#fffaf0] p-2.5 flex items-center justify-center overflow-hidden mb-2.5">
-                      
-                      {/* Refined Luxury Micro-Badge */}
-                      <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830] shadow-xs border border-[#F6C84C]/50 backdrop-blur-xs">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
-                        {item.badge}
-                      </span>
-
-                      {/* Wishlist Button */}
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleWishlist(item.slug);
-                        }}
-                        className={`absolute top-2 right-2 z-10 h-7 w-7 rounded-full flex items-center justify-center shadow-xs transition backdrop-blur-xs ${
-                          wishlisted
-                            ? "bg-[#9E1830] text-white"
-                            : "bg-white/90 text-[#173B3A]/70 hover:bg-[#9E1830] hover:text-white border border-[#F6C84C]/30"
-                        }`}
-                        aria-label="Wishlist"
-                      >
-                        <Heart size={13} fill={wishlisted ? "currentColor" : "none"} />
-                      </button>
-
-                      <Link href={`/product/${item.slug}`} className="w-full h-full flex items-center justify-center">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="max-h-32 sm:max-h-40 object-contain group-hover:scale-105 transition duration-500"
-                        />
-                      </Link>
-                    </div>
-
-                    {/* Product Details */}
-                    <div>
-                      {/* Rating */}
-                      <div className="flex items-center gap-1 text-xs text-[#173B3A] mb-1">
-                        <div className="flex text-[#F47A20]">
-                          {Array(5).fill(null).map((_, i) => (
-                            <Star key={i} size={11} fill="currentColor" />
-                          ))}
-                        </div>
-                        <span className="font-bold text-[11px] sm:text-xs">{item.rating}</span>
-                        <span className="text-[#173B3A]/50 text-[10px]">({item.reviews})</span>
-                      </div>
-
-                      <Link href={`/product/${item.slug}`}>
-                        <h3 className="font-heading font-extrabold text-xs min-[360px]:text-sm sm:text-base text-[#173B3A] group-hover:text-[#9E1830] transition leading-snug line-clamp-2">
-                          {item.name}
-                        </h3>
-                      </Link>
-
-                      <p className="font-sans text-[11px] sm:text-xs text-[#173B3A]/70 mt-1 line-clamp-2 leading-relaxed">
-                        {item.note}
-                      </p>
-                    </div>
-
-                    {/* Price & Add to Cart Action */}
-                    <div className="mt-3 pt-2.5 border-t border-[#FFF4D6] flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <span className="font-heading text-base sm:text-lg font-extrabold text-[#9E1830] block leading-none">₹{item.price}</span>
-                        <span className="font-space text-[9px] text-[#173B3A]/60 font-semibold block uppercase tracking-wider mt-0.5">
-                          {item.unit}
-                        </span>
-                      </div>
-
-                      <button
-                        onClick={() => add(originalProduct)}
-                        className="bg-[#F47A20] hover:bg-[#9E1830] text-white text-[11px] sm:text-xs font-extrabold px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-xs active:scale-95 whitespace-nowrap shrink-0"
-                      >
-                        <ShoppingBag size={13} />
-                        <span>Add</span>
-                      </button>
-                    </div>
-
-                  </div>
-                );
-              })}
+              {(dbProducts || []).slice(0, 8).map((product: any) => (
+                <ProductCard key={product.slug} product={product} />
+              ))}
             </div>
           </div>
           </section>

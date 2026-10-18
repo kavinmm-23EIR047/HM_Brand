@@ -65,122 +65,107 @@ export function AddPanel({ product }: { product: Product }) {
   };
 
   return (
-    <div className="space-y-4 pt-2">
-
-      {/* ── PRICE ROW ── */}
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="text-3xl font-extrabold text-[#173b3a]">
+    <div className="space-y-5 pt-3">
+      {/* ── PRICE & SAVINGS ── */}
+      <div className="flex flex-wrap items-baseline gap-x-3.5 gap-y-1">
+        <span className="font-playfair text-3xl sm:text-4xl font-bold tracking-tight text-[#9E1830]">
           ₹{effectiveUnitPrice}
         </span>
         {singleItemDiscount > 0 ? (
-          <span className="text-base text-[#292524]/40 line-through font-semibold">
+          <span className="text-base text-stone-400 line-through font-normal">
             ₹{product.price}
           </span>
         ) : product.mrp ? (
-          <span className="text-base text-[#292524]/40 line-through font-semibold">
+          <span className="text-base text-stone-400 line-through font-normal">
             {product.mrp}
           </span>
         ) : null}
         {discountPercent > 0 && (
-          <span className="rounded-full bg-[#e1edcf] px-2.5 py-0.5 text-xs font-extrabold text-[#286b45]">
+          <span className="text-xs font-semibold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-0.5 rounded-full">
             {discountPercent}% OFF
           </span>
         )}
         {singleItemDiscount > 0 && (
-          <span className="rounded-full bg-[#e1edcf] px-2.5 py-0.5 text-xs font-extrabold text-[#286b45]">
-            SAVE ₹{totalSavings}
+          <span className="text-xs font-semibold text-[#2D6A4F] bg-[#2D6A4F]/10 px-2.5 py-0.5 rounded-full">
+            Save ₹{totalSavings}
           </span>
         )}
       </div>
 
-      {/* ── QUANTITY + STOCK ROW ── */}
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-sm font-semibold text-[#173b3a]">Quantity</span>
-        <div className="inline-flex items-center border border-[#d5cfc4] rounded-lg bg-white overflow-hidden">
+      {/* ── QUANTITY & STOCK STATUS ── */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="inline-flex items-center rounded-full bg-[#FAF3E0] px-2 py-1">
           <button
             onClick={() => setQty(Math.max(1, qty - 1))}
-            className="px-3 py-2 text-[#6B4226] hover:bg-[#faf5e8] transition"
+            className="flex h-7 w-7 items-center justify-center rounded-full text-[#6B4226] hover:bg-white/80 transition"
             aria-label="Decrease quantity"
           >
-            <Minus size={14} />
+            <Minus size={13} />
           </button>
-          <span className="px-4 py-2 text-sm font-semibold text-[#173b3a] border-x border-[#d5cfc4] tabular-nums min-w-[40px] text-center bg-[#faf8f2]">{qty}</span>
+          <span className="px-3.5 text-sm font-semibold text-[#173B3A] tabular-nums min-w-[32px] text-center">
+            {qty}
+          </span>
           <button
             onClick={() => setQty(qty + 1)}
-            className="px-3 py-2 text-[#6B4226] hover:bg-[#faf5e8] transition"
+            className="flex h-7 w-7 items-center justify-center rounded-full text-[#6B4226] hover:bg-white/80 transition"
             aria-label="Increase quantity"
           >
-            <Plus size={14} />
+            <Plus size={13} />
           </button>
         </div>
 
         {product.inStock ? (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2D6A4F]">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2D6A4F]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#2D6A4F]" />
-            In stock
+            In stock & ready to ship
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#9E1830]">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#9E1830]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
-            Out of stock
+            Currently out of stock
+          </span>
+        )}
+
+        {(qty > 1 || singleItemDiscount > 0) && (
+          <span className="text-xs text-stone-500 ml-auto">
+            Total: <strong className="text-[#173B3A] font-semibold">₹{totalEffective}</strong>
           </span>
         )}
       </div>
 
-      {/* ── SUBTOTAL (when qty > 1 or coupon applied) ── */}
-      {(qty > 1 || singleItemDiscount > 0) && (
-        <div className="flex items-center justify-between text-xs text-[#6B4226] bg-[#faf5e8] rounded-lg px-3.5 py-2 border border-[#e8e0d0]">
-          <span className="font-medium">Subtotal for {qty} {qty > 1 ? "items" : "item"}:</span>
-          <div className="flex items-baseline gap-1.5">
-            {singleItemDiscount > 0 && (
-              <span className="text-[#292524]/40 line-through">₹{totalOriginal}</span>
-            )}
-            <span className="font-bold text-[#173b3a]">₹{totalEffective}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Product-Specific Coupon Offer */}
+      {/* ── REFINED INLINE COUPON ── */}
       {product.couponCode && (
-        <div className="rounded-lg border border-dashed border-[#E85D04]/50 bg-[#FFF8E7] p-3 flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between text-xs py-2 px-3 rounded-xl bg-[#FAF3E0]/60 text-[#6B4226]">
           <div className="flex items-center gap-2">
-            <Tag size={15} className="text-[#E85D04] shrink-0" />
-            <div className="text-xs">
-              <span className="font-semibold text-[#6B4226]">Coupon: </span>
-              <span className="font-mono font-bold text-[#9E1830] bg-[#FFF0D0] px-1.5 py-0.5 rounded text-[11px]">
-                {product.couponCode}
-              </span>
-            </div>
+            <Sparkles size={14} className="text-[#F47A20]" />
+            <span>
+              Special offer code <strong className="font-mono text-[#9E1830]">{product.couponCode}</strong>
+            </span>
           </div>
           <button
             type="button"
             onClick={handleToggleCoupon}
-            className={`text-[11px] font-semibold px-3 py-1.5 rounded-md transition ${
-              isThisCouponApplied
-                ? "bg-[#2D6A4F] text-white"
-                : "bg-[#E85D04] text-white hover:bg-[#d64e00]"
-            }`}
+            className="font-semibold text-xs text-[#9E1830] hover:underline transition"
           >
-            {isThisCouponApplied ? "✓ Applied" : "Apply"}
+            {isThisCouponApplied ? "✓ Applied" : "Apply Code"}
           </button>
         </div>
       )}
 
-      {/* ── CTA BUTTONS — clean, simple design ── */}
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_44px] items-center gap-2 pt-0.5 sm:gap-3">
-        {/* Add to Cart — solid orange, simple rounded */}
+      {/* ── CTA ACTIONS ── */}
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_48px] items-center gap-3 pt-1">
         <button
           onClick={handleAdd}
           disabled={!product.inStock}
-          className={`flex h-11 w-full items-center justify-center gap-1.5 rounded-xl px-2 text-xs font-semibold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed sm:gap-2 sm:text-sm ${
+          className={`flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-3 text-sm font-semibold transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed ${
             added
               ? "bg-[#2D6A4F] text-white"
-              : "bg-[#E85D04] text-white hover:bg-[#d64e00]"
+              : "bg-[#9E1830] text-white hover:bg-[#851227] active:scale-[0.99]"
           }`}
         >
           {added ? (
             <>
-              <Check size={16} /> Added!
+              <Check size={16} /> Added to Cart
             </>
           ) : (
             <>
@@ -189,42 +174,40 @@ export function AddPanel({ product }: { product: Product }) {
           )}
         </button>
 
-        {/* Buy Now — simple text/outlined style */}
         <button
           onClick={handleBuyNow}
           disabled={!product.inStock}
-          className="flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-[#d5cfc4] bg-white px-2 text-xs font-semibold text-[#173b3a] transition-colors hover:bg-[#faf5e8] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#173B3A] text-white px-3 text-sm font-semibold transition-all hover:bg-[#1f4a49] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Buy Now <ArrowRight size={15} />
         </button>
 
-        {/* Wishlist */}
         <button
           onClick={() => toggleWishlist(product.slug)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all ${
             wishlisted
-              ? "bg-[#B23A48] border-[#B23A48] text-white"
-              : "bg-white border-[#d5cfc4] text-[#6B4226] hover:bg-[#B23A48] hover:border-[#B23A48] hover:text-white"
+              ? "bg-[#9E1830] text-white"
+              : "bg-[#FAF3E0] text-[#173B3A] hover:bg-[#9E1830] hover:text-white"
           }`}
         >
           <Heart size={18} fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
-      {/* ── TRUST BADGES — inline row ── */}
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-[11px] sm:text-xs font-medium text-[#718078]">
+      {/* ── CLEAN INLINE TRUST ROW ── */}
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 text-xs text-stone-500">
         <span className="inline-flex items-center gap-1.5">
           <Truck size={14} className="text-[#2D6A4F]" />
-          Free shipping on orders ₹499+
+          Free delivery on ₹499+
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <Lock size={14} className="text-[#E85D04]" />
-          Secure payment & easy returns
+          <Lock size={14} className="text-[#6B4226]" />
+          Secure checkout
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <Sparkles size={14} className="text-[#9E1830]" />
-          Direct from artisans
+          <Sparkles size={14} className="text-[#F47A20]" />
+          Handmade in Tamil Nadu
         </span>
       </div>
     </div>

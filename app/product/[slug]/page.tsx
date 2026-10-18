@@ -126,299 +126,222 @@ export default async function ProductDetailsPage({
               badge={product.badge}
             />
 
-            {/* Trust strip under image */}
-            <div className="mt-4 flex w-full items-center justify-between gap-2 rounded-2xl bg-white/80 backdrop-blur-sm border border-[#C89B3C]/20 px-4 py-3 shadow-sm text-[10px] sm:text-xs font-semibold text-[#6B4226]">
+            {/* Clean inline trust line under image */}
+            <div className="mt-4 flex w-full items-center justify-center gap-4 text-xs font-medium text-[#748078]">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck size={14} className="text-[#2D6A4F]" />
                 Charcoal-Free
               </span>
-              <span className="w-px h-4 bg-[#C89B3C]/30" />
+              <span className="text-stone-300">·</span>
               <span className="flex items-center gap-1.5">
-                <Sparkles size={14} className="text-[#E85D04]" />
+                <Sparkles size={14} className="text-[#F47A20]" />
                 Handcrafted
               </span>
-              <span className="w-px h-4 bg-[#C89B3C]/30" />
+              <span className="text-stone-300">·</span>
               <span className="flex items-center gap-1.5">
-                <Leaf size={14} className="text-[#588157]" />
+                <Leaf size={14} className="text-[#3F7D45]" />
                 Pure Resins
               </span>
             </div>
           </div>
 
           {/* ── RIGHT: PRODUCT DETAILS ── */}
-          <div className="min-w-0 space-y-4 lg:col-span-7 lg:max-w-[660px] lg:space-y-3.5">
+          <div className="min-w-0 space-y-5 lg:col-span-7 lg:max-w-[640px]">
 
-            {/* Rating */}
-            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-              <div className="flex">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={16} fill="#F47A20" stroke="#F47A20" />
-                ))}
+            {/* Category Eyebrow & Rating */}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-space text-xs font-bold tracking-widest text-[#9E1830] uppercase">
+                {product.category}
+              </span>
+
+              <div className="flex items-center gap-2">
+                <div className="flex text-[#F47A20]">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={13} fill="currentColor" />
+                  ))}
+                </div>
+                <span className="text-xs font-bold text-[#173B3A]">{product.rating}</span>
+                <span className="text-xs text-stone-400">({product.reviewCount} reviews)</span>
               </div>
-              <span className="text-sm font-extrabold text-[#173b3a]">{product.rating}</span>
-              <span className="text-xs text-[#718078] font-medium">({product.reviewCount} customer reviews)</span>
             </div>
 
             {/* Product Name */}
-            <h1 className="max-w-2xl text-3xl font-extrabold leading-[1.08] tracking-[-.03em] text-[#173b3a] sm:text-4xl lg:text-[40px]">
+            <h1 className="font-playfair text-3xl sm:text-4xl lg:text-[42px] font-bold leading-tight tracking-tight text-[#173B3A]">
               {product.name}
             </h1>
 
-            {/* Price & Discount */}
-            <div className="mt-2 flex items-baseline gap-3">
-              {product.price > 0 ? (
-                <span className="text-3xl font-extrabold text-[#a90c35]">₹{product.price}</span>
-              ) : (
-                <span className="text-2xl font-extrabold text-[#a90c35]">
-                  {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive Edition" : "Price on Request"}
-                </span>
-              )}
-              {product.mrp && product.mrp !== `₹${product.price}` && (
-                <span className="text-base text-[#292524]/50 line-through">{product.mrp}</span>
-              )}
-              {discountPercent > 0 && (
-                <span className="rounded-full bg-[#e1edcf] px-2.5 py-1 text-xs font-extrabold text-[#286b45]">
-                  {discountPercent}% OFF
-                </span>
-              )}
-            </div>
-
-            {/* Product-Specific Coupon Offer Banner */}
-            {product.couponCode && (
-              <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-dashed border-[#E85D04] bg-[#FFF8E7] p-3 sm:p-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#E85D04]/10 text-[#E85D04]">
-                    <Sparkles size={18} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-[#173B3A]">
-                      Special Sacred Discount Available!
-                    </p>
-                    <p className="text-[11px] text-[#52625A]">
-                      Use coupon code <span className="font-mono font-black text-[#9E1830] bg-[#FFF0D0] px-1.5 py-0.5 rounded border border-[#C89B3C]/50">{product.couponCode}</span> for extra discount on this item at checkout.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Description */}
-            <p className="max-w-2xl text-sm leading-6 text-[#52625a]">
+            {/* Editorial Product Description */}
+            <p className="text-base leading-relaxed text-[#52625A] font-sans">
               {product.description}
             </p>
 
-            {/* ── KEY SPECS ROW (with circular icons, like reference) ── */}
-            <div className="grid max-w-xl grid-cols-2 gap-2.5 pt-0.5">
-              <div className="flex min-h-[64px] min-w-0 items-center gap-2.5 rounded-xl border border-[#C89B3C]/25 bg-[#FFF8E7] p-3 shadow-xs">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F4D35E]/30 text-[#6B4226]">
-                  <Package size={16} />
-                </div>
-                <div>
-                  <span className="text-xs sm:text-sm font-bold text-[#173b3a] block leading-tight">{product.quantity}</span>
-                  <span className="text-[10px] text-[#718078] font-medium">Pack Size</span>
-                </div>
+            {/* ── CLEAN SPECIFICATIONS (Unboxed minimal format) ── */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 py-3 border-y border-stone-200/80 text-xs text-[#173B3A]">
+              <div className="flex items-center gap-2">
+                <Package size={14} className="text-[#9E1830]" />
+                <span>Pack Size: <strong className="font-semibold">{product.quantity}</strong></span>
               </div>
 
-
-
-
               {product.burnTime ? (
-                <div className="flex min-h-[64px] min-w-0 items-center gap-2.5 rounded-xl border border-[#C89B3C]/25 bg-[#FFF8E7] p-3 shadow-xs">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F4D35E]/30 text-[#6B4226]">
-                    <Clock size={16} />
-                  </div>
-                  <div>
-                    <span className="text-xs sm:text-sm font-bold text-[#173b3a] block leading-tight">{product.burnTime}</span>
-                    <span className="text-[10px] text-[#718078] font-medium">Burning Time</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Clock size={14} className="text-[#9E1830]" />
+                  <span>Burning Duration: <strong className="font-semibold">{product.burnTime}</strong></span>
                 </div>
               ) : (
-                <div className="flex min-h-[64px] min-w-0 items-center gap-2.5 rounded-xl border border-[#C89B3C]/25 bg-[#FFF8E7] p-3 shadow-xs">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F4D35E]/30 text-[#6B4226]">
-                    <Wind size={16} />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="block text-xs font-bold leading-tight text-[#173b3a]">Calm &amp; uplifting</span>
-                    <span className="text-[10px] font-medium text-[#718078]">A spiritual experience</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Wind size={14} className="text-[#9E1830]" />
+                  <span>Aroma: <strong className="font-semibold">Calm & Uplifting</strong></span>
                 </div>
               )}
+
+              <div className="flex items-center gap-2">
+                <Sparkles size={14} className="text-[#9E1830]" />
+                <span>Soot: <strong className="font-semibold">Zero Charcoal</strong></span>
+              </div>
             </div>
 
             {/* ── FRAGRANCE NOTES ── */}
             {product.fragranceNotes && product.fragranceNotes.length > 0 && (
-              <div className="pt-0.5">
-                <span className="text-xs font-bold text-[#6B4226] uppercase tracking-widest block mb-2.5">
-                  Fragrance Notes:
+              <div className="space-y-2 pt-1">
+                <span className="text-xs font-semibold text-[#173B3A] tracking-wider uppercase block">
+                  Aromatic Notes
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {product.fragranceNotes.map((note, i) => {
-                    const icons = [Droplets, Flame, Leaf];
-                    const NoteIcon = icons[i % icons.length];
-                    return (
-                      <span
-                        key={note}
-                        className="inline-flex items-center gap-1.5 bg-white border border-[#C89B3C]/40 text-[#6B4226] text-xs font-semibold pl-2.5 pr-3.5 py-2 rounded-full shadow-xs hover:bg-[#FFF8E7] transition-colors"
-                      >
-                        <NoteIcon size={13} className="text-[#E85D04]" />
-                        {note}
-                      </span>
-                    );
-                  })}
+                  {product.fragranceNotes.map((note) => (
+                    <span
+                      key={note}
+                      className="inline-flex items-center gap-1.5 bg-[#FAF3E0] text-[#6B4226] text-xs font-medium px-3 py-1 rounded-full"
+                    >
+                      <Sparkles size={11} className="text-[#F47A20]" />
+                      {note}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
 
-            {/* Interactive Add to Cart & Buy Now Panel — includes price, quantity, coupon, buttons */}
+            {/* Interactive Add to Cart & Buy Now Panel */}
             <AddPanel product={product} />
 
           </div>
         </div>
 
         {/* ════════════════════════════════════════════════════
-            SACRED USAGE GUIDE  
+            SACRED USAGE RITUAL (Clean Editorial Format)
             ════════════════════════════════════════════════════ */}
-        <section className="mt-20 overflow-hidden rounded-[28px] border border-[#C89B3C]/25 bg-gradient-to-br from-[#faf5e8] via-[#f8f0df] to-[#f0e6c8] shadow-lg">
-          <div className="grid grid-cols-1 items-stretch lg:grid-cols-12">
-            {/* Left: Mascot / decorative visual */}
-            <div className="relative flex items-center justify-center bg-gradient-to-br from-[#6B4226]/5 to-[#C89B3C]/10 p-6 sm:p-8 lg:col-span-4 lg:p-6 xl:p-8">
-              <div className="relative max-w-full">
-                <div className="absolute -inset-4 rounded-full bg-[#F4D35E]/15 blur-2xl" />
-                <div className="relative rounded-3xl border-2 border-[#C89B3C]/30 bg-white/80 p-5 shadow-md backdrop-blur-sm sm:p-7">
-                  <MascotComponent size={180} className="max-w-full" />
+        <section className="mt-20 pt-16 border-t border-stone-200/80">
+          <div className="max-w-3xl mb-12">
+            <span className="font-space text-xs font-bold tracking-widest text-[#9E1830] uppercase block mb-2">
+              THE SACRED RITUAL
+            </span>
+            <h2 className="font-playfair text-3xl sm:text-4xl text-[#173B3A] font-bold tracking-tight">
+              Kindling Peace with {product.name}
+            </h2>
+            <p className="mt-3 text-base text-[#52625A] leading-relaxed">
+              Lighting incense is an ancient Vedic practice of cleansing the air, centering the mind, and inviting divine grace into every corner of your sanctuary.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            {/* Steps in clean unboxed layout */}
+            <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {product.howToUse.map((step, i) => (
+                <div key={i} className="space-y-2">
+                  <span className="font-playfair text-2xl font-bold text-[#9E1830] block">
+                    0{i + 1}
+                  </span>
+                  <h3 className="text-sm font-bold text-[#173B3A] tracking-wide">
+                    Step {i + 1}
+                  </h3>
+                  <p className="text-sm text-[#52625A] leading-relaxed">
+                    {step}
+                  </p>
                 </div>
-              </div>
+              ))}
             </div>
 
-            {/* Right: Steps */}
-            <div className="min-w-0 space-y-5 p-6 sm:p-8 lg:col-span-8 lg:p-8 xl:p-10">
-              <div>
-                <div className="inline-flex items-center gap-2 text-[11px] font-bold text-[#9E1830] tracking-[.2em] uppercase mb-3">
-                  <span className="w-6 h-px bg-[#9E1830]" />
-                  Sacred Usage Guide
-                </div>
-                <h2 className="font-display text-2xl sm:text-3xl text-[#6B4226] font-bold leading-tight">
-                  How to Use {product.name}
-                </h2>
-                <p className="mt-2 text-sm text-[#52625a] max-w-lg">
-                  Brings purity, positivity and a divine aura to your space.
-                </p>
-              </div>
-
-              {/* Numbered steps */}
-              <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2 sm:gap-4">
-                {product.howToUse.map((step, i) => (
-                  <div key={i} className="flex min-w-0 items-start gap-3 rounded-2xl border border-[#C89B3C]/20 bg-white/70 p-3 shadow-xs backdrop-blur-sm sm:gap-4 sm:p-4">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E85D04] text-sm font-extrabold text-white shadow-md sm:h-10 sm:w-10">
-                      {String(i + 1).padStart(2, '0')}
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-sm font-bold text-[#173b3a] block mb-1">
-                        Step {i + 1}
-                      </span>
-                      <p className="text-xs text-[#52625a] leading-relaxed">{step}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Usage image */}
-              <div className="pt-1">
-                <img
-                  src={usageImage}
-                  alt={`Sacred usage guide for ${product.name}`}
-                  className="mx-auto block h-auto w-full rounded-2xl border border-[#C89B3C]/30 bg-white/50 object-contain shadow-sm lg:mx-0"
-                />
-              </div>
+            {/* Visual preview */}
+            <div className="lg:col-span-4">
+              <img
+                src={usageImage}
+                alt={`Sacred usage ritual for ${product.name}`}
+                className="w-full h-auto rounded-3xl object-contain bg-[#FAF3E0]/50 p-4"
+              />
             </div>
           </div>
         </section>
 
         {/* ════════════════════════════════════════════════════
-            BENEFITS & PACKAGING CARE  
+            BENEFITS & PRESERVATION (Clean Open Layout)
             ════════════════════════════════════════════════════ */}
-        <section className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-
+        <section className="mt-20 pt-16 border-t border-stone-200/80 grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16">
           {/* Sacred Benefits */}
-          <div className="rounded-[24px] bg-white border border-[#e8e0d0] p-7 sm:p-8 shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="font-display text-2xl text-[#173b3a] font-bold mb-2">
-              Sacred Benefits
-            </h3>
-            <p className="text-xs text-[#718078] mb-5">
-              A symbol of purity and positivity, used in homes, temples and spiritual practices.
-            </p>
-            <ul className="space-y-4 font-sans text-sm text-[#292524]/85">
-              {product.benefits.map((b, i) => {
-                const benefitIcons = [Leaf, ShieldCheck, Sun];
-                const BIcon = benefitIcons[i % benefitIcons.length];
-                return (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#2D6A4F]/10 text-[#2D6A4F] mt-0.5">
-                      <BIcon size={16} />
-                    </div>
-                    <div>
-                      <span className="font-bold text-[#173b3a] block text-sm">{b}</span>
-                      <span className="text-[11px] text-[#718078]">
-                        {i === 0 ? "Pure and ethically sourced ingredients." :
-                         i === 1 ? "Safe for indoor use." :
-                         "Creates a calm and positive environment."}
-                      </span>
-                    </div>
-                  </li>
-                );
-              })}
+          <div className="space-y-6">
+            <div>
+              <span className="font-space text-xs font-bold tracking-widest text-[#9E1830] uppercase block mb-1">
+                WELLBEING & PURITY
+              </span>
+              <h3 className="font-playfair text-2xl sm:text-3xl text-[#173B3A] font-bold tracking-tight">
+                Sacred Botanical Benefits
+              </h3>
+              <p className="mt-2 text-sm text-[#52625A] leading-relaxed">
+                Handcrafted using pure temple herbs, natural essential oils, and unadulterated botanical resins.
+              </p>
+            </div>
+
+            <ul className="space-y-4">
+              {product.benefits.map((b, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="h-2 w-2 rounded-full bg-[#2D6A4F] mt-2 shrink-0" />
+                  <div>
+                    <span className="font-semibold text-sm text-[#173B3A] block">{b}</span>
+                    <p className="text-xs text-[#718078] leading-relaxed mt-0.5">
+                      {i === 0
+                        ? "100% natural composition honoring traditional Ayurvedic practices."
+                        : i === 1
+                        ? "Safe for daily indoor use around elders, children, and pets."
+                        : "Purifies negative energies and restores tranquil mindfulness."}
+                    </p>
+                  </div>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Auspicious Packaging & Care */}
-          <div className="rounded-[24px] bg-white border border-[#e8e0d0] p-7 sm:p-8 shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="font-display text-2xl text-[#173b3a] font-bold mb-2">
-              Auspicious Packaging & Care
-            </h3>
-            <p className="text-xs text-[#718078] mb-5">
-              Store in a cool, dry place away from direct sunlight. To preserve maximum fragrance intensity, keep the package sealed after daily use.
-            </p>
+          {/* Preservation & Storage */}
+          <div className="space-y-6">
+            <div>
+              <span className="font-space text-xs font-bold tracking-widest text-[#9E1830] uppercase block mb-1">
+                NATURAL CARE
+              </span>
+              <h3 className="font-playfair text-2xl sm:text-3xl text-[#173B3A] font-bold tracking-tight">
+                Preserving Maximum Fragrance
+              </h3>
+              <p className="mt-2 text-sm text-[#52625A] leading-relaxed">
+                Because our incense and camphor are made from pure essential oils without artificial chemical fixatives, mindful storage ensures their aroma remains rich for months.
+              </p>
+            </div>
 
-            {/* Product image + care tips layout */}
-            <div className="grid grid-cols-[1fr_auto] gap-4 items-center">
-              {/* Product image in packaging card */}
-              <div className="flex items-center justify-center rounded-2xl bg-[#faf5e8] border border-[#C89B3C]/20 p-4 min-h-[180px]">
-                {product.image ? (
-                  <img
-                    src={product.image}
-                    alt={`${product.name} packaging`}
-                    className="max-h-[150px] w-auto object-contain drop-shadow-md"
-                  />
-                ) : (
-                  <div className="text-center text-[#6B4226]">
-                    <span className="text-5xl block">📦</span>
-                    <span className="text-xs font-semibold mt-2 block">{product.name}</span>
-                  </div>
-                )}
+            <div className="space-y-4 text-sm text-[#52625A]">
+              <div className="flex items-start gap-3">
+                <Sun size={16} className="text-[#F47A20] mt-0.5 shrink-0" />
+                <p>
+                  <strong className="text-[#173B3A] font-semibold">Keep in shade:</strong> Store in a cool, dry place away from direct sunlight and heat radiators.
+                </p>
               </div>
 
-              {/* Care tips */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4D35E]/25 text-[#6B4226]">
-                    <Sun size={14} />
-                  </div>
-                  <span className="text-[11px] font-semibold text-[#52625a] leading-tight">Keep away from<br/>direct sunlight</span>
-                </div>
+              <div className="flex items-start gap-3">
+                <Droplets size={16} className="text-[#4C7FA8] mt-0.5 shrink-0" />
+                <p>
+                  <strong className="text-[#173B3A] font-semibold">Resist humidity:</strong> Ensure the packaging or container is resealed after each prayer to lock in aromatic oils.
+                </p>
+              </div>
 
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4D35E]/25 text-[#6B4226]">
-                    <Droplets size={14} />
-                  </div>
-                  <span className="text-[11px] font-semibold text-[#52625a] leading-tight">Store in a cool,<br/>dry place</span>
-                </div>
-
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4D35E]/25 text-[#6B4226]">
-                    <Lock size={14} />
-                  </div>
-                  <span className="text-[11px] font-semibold text-[#52625a] leading-tight">Keep the package<br/>sealed</span>
-                </div>
+              <div className="flex items-start gap-3">
+                <Lock size={16} className="text-[#9E1830] mt-0.5 shrink-0" />
+                <p>
+                  <strong className="text-[#173B3A] font-semibold">Preserve freshness:</strong> Use within 12 months of opening to enjoy peak botanical fragrance intensity.
+                </p>
               </div>
             </div>
           </div>
