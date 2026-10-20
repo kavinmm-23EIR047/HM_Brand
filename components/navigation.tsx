@@ -18,6 +18,8 @@ import {
   ShieldCheck,
   X,
   Leaf,
+  Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { useStore } from "@/components/store";
 
@@ -217,8 +219,8 @@ export function Navigation() {
               <span className="font-playfair text-base sm:text-xl font-bold tracking-tight text-[#173B3A]">
                 HM <span className="text-[#9E1830]">BRAND</span>
               </span>
-              <span className="font-script text-xs sm:text-[13px] text-[#9E1830] -mt-0.5">
-                Agarbattis
+              <span className="font-script text-[11px] sm:text-xs text-[#9E1830] -mt-0.5 whitespace-nowrap">
+                Discover the Divine Within
               </span>
             </div>
           </Link>
@@ -271,25 +273,7 @@ export function Navigation() {
               {pathname === "/about" && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#9E1830] rounded-full" />}
             </Link>
 
-            <Link
-              href="/benefits"
-              className={`relative py-6 text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-colors ${
-                pathname === "/benefits" ? "text-[#9E1830]" : "text-[#173B3A] hover:text-[#9E1830]"
-              }`}
-            >
-              <span>BENEFITS</span>
-              {pathname === "/benefits" && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#9E1830] rounded-full" />}
-            </Link>
 
-            <Link
-              href="/blog"
-              className={`relative py-6 text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-colors ${
-                pathname === "/blog" ? "text-[#9E1830]" : "text-[#173B3A] hover:text-[#9E1830]"
-              }`}
-            >
-              <span>BLOG</span>
-              {pathname === "/blog" && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#9E1830] rounded-full" />}
-            </Link>
 
             <Link
               href="/contact"
@@ -452,16 +436,33 @@ export function Navigation() {
                     </div>
                   </div>
 
-                  {/* View All Products Link */}
+                  {/* View All Products & Quick Links */}
                   <div className="pt-4 mt-2 border-t border-[#EADBBD]/50">
                     <Link
                       href="/shop"
                       onClick={() => setOpenMega(null)}
-                      className="font-space text-xs font-bold text-[#9E1830] hover:text-[#800F23] flex items-center gap-1.5 uppercase tracking-wider group transition"
+                      className="font-space text-xs font-bold text-[#9E1830] hover:text-[#800F23] flex items-center justify-between uppercase tracking-wider group transition"
                     >
                       <span>View All Products</span>
                       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
+                    <div className="flex items-center gap-2.5 pt-2 text-[11px] font-semibold text-[#173B3A]/70">
+                      <Link
+                        href="/benefits"
+                        onClick={() => setOpenMega(null)}
+                        className="hover:text-[#9E1830] transition-colors"
+                      >
+                        Natural Benefits
+                      </Link>
+                      <span>•</span>
+                      <Link
+                        href="/blog"
+                        onClick={() => setOpenMega(null)}
+                        className="hover:text-[#9E1830] transition-colors"
+                      >
+                        Blog &amp; Rituals
+                      </Link>
+                    </div>
                   </div>
                 </div>
 
@@ -618,25 +619,70 @@ export function Navigation() {
                   </div>
 
                   <div className="relative z-10">
-                    <span className="font-space text-[10px] font-bold tracking-[0.2em] text-[#C27E23] uppercase block mb-2">
+                    <span className="font-space text-[10px] font-bold tracking-[0.2em] text-[#C27E23] uppercase block mb-1.5">
                       FRAGRANCE FOR A BETTER TOMORROW
                     </span>
-                    <h3 className="font-playfair text-2xl lg:text-[28px] font-bold text-[#173B3A] leading-[1.18]">
+                    <h3 className="font-playfair text-xl lg:text-2xl font-bold text-[#173B3A] leading-tight">
                       Find a fragrance for every ritual
                     </h3>
-                    <p className="font-sans text-xs sm:text-[13px] text-[#173B3A]/75 leading-relaxed mt-3 max-w-[240px]">
-                      Discover our complete range of agarbattis, camphor, dhoop sticks, pooja essentials and more, crafted with pure ingredients and timeless traditions.
+                    <p className="font-sans text-xs text-[#173B3A]/75 leading-relaxed mt-1.5 max-w-[270px]">
+                      Discover pure temple fragrances, charcoal-free sticks &amp; sacred puja essentials.
                     </p>
                   </div>
 
-                  <div className="relative z-10 pt-6">
+                  {/* Dedicated Benefits & Blog Interactive Feature Cards */}
+                  <div className="relative z-10 my-3 space-y-2">
+                    <Link
+                      href="/benefits"
+                      onClick={() => setOpenMega(null)}
+                      className="group flex items-center gap-3 rounded-2xl bg-white/85 hover:bg-white backdrop-blur-xs border border-white/90 p-2.5 shadow-2xs hover:shadow-md hover:border-[#3F7D45] transition-all"
+                    >
+                      <div className="h-8 w-8 rounded-xl bg-[#3F7D45]/15 text-[#3F7D45] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Sparkles size={15} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-playfair font-bold text-xs sm:text-sm text-[#173B3A] group-hover:text-[#3F7D45] transition-colors">
+                            Natural Benefits
+                          </span>
+                          <ArrowRight size={12} className="text-[#3F7D45] transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                        <span className="block text-[10px] sm:text-[11px] text-[#173B3A]/70 line-clamp-1">
+                          Therapeutic herbs, charcoal-free &amp; clean burn
+                        </span>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/blog"
+                      onClick={() => setOpenMega(null)}
+                      className="group flex items-center gap-3 rounded-2xl bg-white/85 hover:bg-white backdrop-blur-xs border border-white/90 p-2.5 shadow-2xs hover:shadow-md hover:border-[#9E1830] transition-all"
+                    >
+                      <div className="h-8 w-8 rounded-xl bg-[#9E1830]/15 text-[#9E1830] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <BookOpen size={15} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-playfair font-bold text-xs sm:text-sm text-[#173B3A] group-hover:text-[#9E1830] transition-colors">
+                            Spiritual Blog &amp; Rituals
+                          </span>
+                          <ArrowRight size={12} className="text-[#9E1830] transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                        <span className="block text-[10px] sm:text-[11px] text-[#173B3A]/70 line-clamp-1">
+                          Vedic customs, fragrance guides &amp; puja lore
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+
+                  <div className="relative z-10 pt-1">
                     <Link
                       href="/collections"
                       onClick={() => setOpenMega(null)}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#9E1830] hover:bg-[#800F23] text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-sm transition-transform hover:scale-105 active:scale-95"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#9E1830] hover:bg-[#800F23] text-white px-4 py-2 text-xs font-bold uppercase tracking-wider shadow-sm transition-transform hover:scale-105 active:scale-95"
                     >
                       <span>Explore Collections</span>
-                      <ArrowRight size={14} />
+                      <ArrowRight size={13} />
                     </Link>
                   </div>
 
@@ -663,10 +709,13 @@ export function Navigation() {
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-[#EADBBD]">
                 <div className="flex items-center gap-2">
-                  <div className="relative h-8 w-8">
+                  <div className="relative h-8 w-8 shrink-0">
                     <Image src="/images/brand_logo_icon_transparent.png" alt="" fill className="object-contain" />
                   </div>
-                  <span className="font-playfair font-bold text-base text-[#173B3A]">HM BRAND</span>
+                  <div className="flex flex-col justify-center leading-tight">
+                    <span className="font-playfair font-bold text-base text-[#173B3A]">HM BRAND</span>
+                    <span className="font-script text-[11px] text-[#9E1830] -mt-0.5">Discover the Divine Within</span>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -715,20 +764,29 @@ export function Navigation() {
                 >
                   About
                 </Link>
-                <Link
-                  href="/benefits"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-bold text-sm text-[#173B3A] py-1"
-                >
-                  Benefits
-                </Link>
-                <Link
-                  href="/blog"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-bold text-sm text-[#173B3A] py-1"
-                >
-                  Blog
-                </Link>
+
+                <div className="py-2 my-1 border-y border-[#EADBBD]/50 space-y-1.5">
+                  <span className="text-[10px] font-bold tracking-wider text-[#9E1830] uppercase block">
+                    Discover More
+                  </span>
+                  <Link
+                    href="/benefits"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between text-xs font-semibold text-[#173B3A]/85 hover:text-[#9E1830] py-1"
+                  >
+                    <span>🌿 Natural Benefits</span>
+                    <ArrowRight size={12} className="text-[#9E1830]" />
+                  </Link>
+                  <Link
+                    href="/blog"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between text-xs font-semibold text-[#173B3A]/85 hover:text-[#9E1830] py-1"
+                  >
+                    <span>📖 Spiritual Blog &amp; Guides</span>
+                    <ArrowRight size={12} className="text-[#9E1830]" />
+                  </Link>
+                </div>
+
                 <Link
                   href="/contact"
                   onClick={() => setMobileOpen(false)}

@@ -13,7 +13,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "HM Agarbattis | Find Your God Within — Sacred Temple Fragrances Coimbatore",
+  title: "HM Agarbattis | Discover the Divine Within — Sacred Temple Fragrances Coimbatore",
   description:
     "Handcrafted Indian spiritual fragrances, Bhimseni camphor, cup sambrani, dhoop cones and sacred puja essentials by HM Agarbattis Coimbatore.",
   metadataBase: new URL("https://www.hmagarbattis.com"),

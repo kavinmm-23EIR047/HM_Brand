@@ -35,17 +35,14 @@ export default function HomePage() {
         {/* 3. VISUAL CATEGORY NAVIGATION (7 CIRCLES) */}
         <CategoryStrip />
 
-        {/* 4. BENEFIT / TRUST STRIP */}
-        <TrustStrip />
+        {/* 4. BESTSELLERS PRODUCT SHOWCASE */}
+        <BestsellerShowcase />
 
         {/* 5. DELIVERY REACH BANNER (100+ SOUTH INDIA DISTRICTS) */}
         <DeliveryReachBanner />
 
-        {/* 5. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER) */}
+        {/* 6. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER) */}
         <BentoPromos />
-
-        {/* 6. BESTSELLERS PRODUCT SHOWCASE */}
-        <BestsellerShowcase />
 
         {/* 7. DUAL PROMO BANNERS */}
         <PromoBanners />
@@ -76,7 +73,7 @@ export default function HomePage() {
 
                 <div>
                   <span className="font-script text-2xl sm:text-4xl lg:text-5xl text-[#F6C84C] font-normal block leading-tight">
-                    Find Your God Within
+                    Discover the Divine Within
                   </span>
                   <h2 className="mt-0.5 font-heading text-base sm:text-2xl lg:text-3xl font-extrabold text-white leading-snug">
                     Bring Sacred Fragrance &amp; Peace Into Your Everyday Life
@@ -127,6 +124,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* 11. THE HM PURITY PROMISE / TRUST STRIP */}
+        <TrustStrip />
 
       </main>
 

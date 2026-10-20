@@ -202,7 +202,7 @@ export function Footer() {
         <div className="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/75 text-center sm:text-left">
           <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved. • <Link href="/admin" className="hover:text-[#F6C84C] transition underline font-semibold">Admin Console</Link></p>
           <div className="flex items-center gap-1 font-script text-base text-[#F6C84C]">
-            <span>Find Your God Within</span>
+            <span>Discover the Divine Within</span>
             <Heart size={14} className="text-[#F47A20] fill-[#F47A20] ml-1" />
           </div>
           <p>Handcrafted in Coimbatore, India 🇮🇳</p>
