@@ -36,12 +36,12 @@
   --charcoal: #292524;
 
   /* Font variables */
-  --font-heading: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-price: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-cormorant: var(--font-heading);
-  --font-manrope: var(--font-body);
+  --font-heading: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-body: 'Manrope', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-price: 'Outfit', 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-cormorant: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-manrope: 'Manrope', 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 /* Reduced Motion Support */
@@ -105,20 +105,20 @@ h1, h2, h3, h4, h5 {
 }
 
 .font-playfair {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
 }
 
 .font-heading {
-  font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
 }
 
 .font-sans {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-family: var(--font-body) !important;
 }
 
 /* Tabular, crisp price font ensuring currency glyph and numbers match seamlessly */
 .font-price {
-  font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: var(--font-price) !important;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
 }
@@ -148,57 +148,89 @@ h1, h2, h3, h4, h5 {
 
 /* Solid CTA Button Styles (STRICTLY NO GRADIENTS) */
 .btn-saffron {
-  background-color: var(--saffron);
-  color: var(--sacred-cream);
-  border: 1.5px solid var(--saffron);
+  background-color: #F47A20;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
   font-family: var(--font-manrope);
   font-weight: 700;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-saffron:hover {
-  background-color: var(--vermilion);
-  border-color: var(--vermilion);
-  transform: translateY(-2px);
+  background-color: #9E1830;
 }
 
 .btn-outline-earth {
-  background-color: transparent;
-  color: var(--earth-brown);
-  border: 1.5px solid var(--earth-brown);
+  background-color: #173B3A;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
   font-family: var(--font-manrope);
   font-weight: 700;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-outline-earth:hover {
-  background-color: var(--earth-brown);
-  color: var(--sacred-cream);
-  transform: translateY(-2px);
+  background-color: #9E1830;
+  color: #ffffff;
 }
 
 .btn-gold {
-  background-color: var(--antique-gold);
-  color: var(--sacred-cream);
-  border: 1.5px solid var(--antique-gold);
+  background-color: #C89B3C;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
   font-family: var(--font-manrope);
   font-weight: 700;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-gold:hover {
-  background-color: var(--earth-brown);
-  border-color: var(--earth-brown);
-  transform: translateY(-2px);
+  background-color: #9E1830;
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto w-full max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-spacing {
+    @apply py-8 sm:py-10 lg:py-12;
+  }
+
+  .surface-card {
+    @apply rounded-2xl bg-white shadow-card;
+  }
+
+  .surface-muted {
+    @apply rounded-2xl bg-sandalLight;
+  }
+
+  .btn-primary {
+    @apply inline-flex h-11 items-center justify-center rounded-lg bg-[#9E1830] px-5 text-sm font-bold text-white transition-colors hover:bg-[#851227] sm:h-12;
+  }
+
+  .btn-secondary {
+    @apply inline-flex h-11 items-center justify-center rounded-lg bg-darkText px-5 text-sm font-bold text-white transition-colors hover:bg-[#9E1830] sm:h-12;
+  }
+
+  .btn-icon {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-darkText transition-colors hover:bg-[#9E1830] hover:text-white;
+  }
+
+  .empty-state {
+    @apply rounded-2xl bg-sandalLight px-6 py-12 text-center sm:px-10 sm:py-14;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-[#F4E8C8];
+  }
 }
 
 /* Handcrafted Indian Decorative Accent */
 .paper-pattern {
   background-color: var(--sacred-cream);
-}
-
-.font-sans {
-  font-family: var(--font-manrope);
 }
 
 /* Floating & Ambient Micro-Animations */
@@ -465,5 +497,15 @@ h1, h2, h3, h4, h5 {
     animation: none;
   }
 }
-
-
+/* Scrollbar hiding utilities */
+.scrollbar-none,
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+.scrollbar-none::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}

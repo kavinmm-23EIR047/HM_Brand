@@ -38,7 +38,7 @@ export interface Product {
 export function mapDbProductToProduct(p: any): Product {
   const rawImages: any[] = Array.isArray(p.images) ? p.images : [];
   const primaryImgObj = rawImages.find((img: any) => img.isPrimary) || rawImages[0];
-  const primaryImg = primaryImgObj?.url || p.imageUrl || "/images/media_1790142713668.jpg";
+  const primaryImg = primaryImgObj?.url || p.imageUrl || "/images/agarbatti_cutout.jpg";
 
   const images: ProductImageItem[] = rawImages.length > 0
     ? rawImages.map((img: any, idx: number) => ({

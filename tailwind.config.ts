@@ -22,7 +22,7 @@ const config: Config = {
         darkText: "#173B3A",
 
         // Legacy Aliases
-        sacredCream: "#FFF4D6",
+        sacredCream: "#FFF8E7",
         charcoal: "#173B3A",
         earthBrown: "#9E1830",
         antiqueGold: "#F6C84C",
@@ -31,19 +31,19 @@ const config: Config = {
         leaf: "#3F7D45",
       },
       fontFamily: {
-        sans: ["'Plus Jakarta Sans'", "system-ui", "-apple-system", "sans-serif"],
-        heading: ["'Outfit'", "'Plus Jakarta Sans'", "system-ui", "sans-serif"],
-        display: ["'Playfair Display'", "'Outfit'", "Georgia", "serif"],
+        sans: ["'Manrope'", "'Plus Jakarta Sans'", "system-ui", "-apple-system", "sans-serif"],
+        heading: ["'Cormorant Garamond'", "'Playfair Display'", "Georgia", "serif"],
+        display: ["'Cormorant Garamond'", "'Playfair Display'", "Georgia", "serif"],
         script: ["'Caveat'", "cursive"],
         playfair: ["'Playfair Display'", "Georgia", "serif"],
-        price: ["'Outfit'", "'Plus Jakarta Sans'", "system-ui", "-apple-system", "sans-serif"],
+        price: ["'Outfit'", "'Manrope'", "system-ui", "-apple-system", "sans-serif"],
         label: ["'Space Grotesk'", "sans-serif"],
         space: ["'Space Grotesk'", "monospace", "sans-serif"],
       },
       boxShadow: {
-        'solid-sm': '2px 2px 0px #9E1830',
-        'solid-md': '4px 4px 0px #9E1830',
-        'solid-gold': '3px 3px 0px #F6C84C',
+        'solid-sm': '0 1px 2px rgba(23, 59, 58, 0.08)',
+        'solid-md': '0 4px 12px rgba(23, 59, 58, 0.08)',
+        'solid-gold': '0 2px 8px rgba(246, 200, 76, 0.25)',
         'card': '0 6px 24px -4px rgba(23, 59, 58, 0.07)',
       },
       keyframes: {

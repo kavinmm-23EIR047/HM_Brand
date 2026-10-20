@@ -41,7 +41,7 @@ export default function ContactPage() {
       title="We Are Here For Your Sacred Moments"
       subtitle="Have a question about our traditional botanical fragrances, 10-in-1 Aroma Family Pack, bulk festive orders, or distribution? Reach out directly to our Coimbatore team."
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
           
           {/* Left: Official Contact & Workshop Information */}

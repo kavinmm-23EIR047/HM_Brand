@@ -18,7 +18,7 @@ export default function FestivalsPage() {
       title="Celebrate Every Auspicious Moment"
       subtitle="From the grand illumination of Diwali to everyday morning prayer, discover thoughtfully curated sacred essentials for India's cherished traditions."
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 py-12 space-y-16">
         {/* Festival Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {festivalsList.map((f) => (

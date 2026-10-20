@@ -4,6 +4,7 @@ import { StoreProvider } from "@/components/store";
 import { CartDrawer } from "@/components/cart-drawer";
 import { SearchModal } from "@/components/search-modal";
 import { NotificationToast } from "@/components/notification-toast";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -39,12 +40,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
       <body
-        className="bg-sacredCream text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden"
+        className="bg-sandalLight text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0"
         suppressHydrationWarning
       >
         <StoreProvider>
@@ -52,6 +53,7 @@ export default function RootLayout({
           <CartDrawer />
           <SearchModal />
           <NotificationToast />
+          <MobileBottomNav />
         </StoreProvider>
       </body>
     </html>

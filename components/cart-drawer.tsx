@@ -39,7 +39,7 @@ export function CartDrawer() {
       />
 
       <div className="fixed inset-y-0 right-0 flex w-full max-w-full justify-end">
-        <aside className="flex h-[100dvh] w-full max-w-md flex-col justify-between bg-sacredCream text-charcoal shadow-2xl sm:border-l-2 sm:border-antiqueGold">
+        <aside className="flex h-[100dvh] w-full max-w-md flex-col justify-between bg-sacredCream text-charcoal shadow-2xl">
           {/* Header */}
           <div className="border-b border-antiqueGold/30 bg-turmeric/20 p-4 sm:p-6">
             <div className="flex items-center justify-between">
@@ -57,7 +57,7 @@ export function CartDrawer() {
             </div>
 
             {/* Free Delivery Meter */}
-            <div className="mt-4 rounded-lg border border-antiqueGold/40 bg-sacredCream p-3">
+            <div className="mt-4 rounded-lg bg-white/80 p-3">
               <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs font-semibold text-earthBrown">
                 <span className="flex items-center gap-1.5">
                   <Sparkles size={14} className="text-saffron" />
@@ -94,9 +94,9 @@ export function CartDrawer() {
               lines.map((line) => (
                 <div
                   key={line.product.slug}
-                  className="flex items-center gap-2 rounded-xl border border-antiqueGold/40 bg-sacredCream p-3 shadow-sm sm:gap-4 sm:p-4"
+                  className="flex items-center gap-2 rounded-xl bg-white/80 p-3 sm:gap-4 sm:p-4"
                 >
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg border border-earthBrown/20 bg-turmeric sm:h-16 sm:w-16">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-turmeric sm:h-16 sm:w-16">
                     <span className="text-2xl">🪔</span>
                   </div>
 
@@ -114,7 +114,7 @@ export function CartDrawer() {
                     >
                       <Trash2 size={16} />
                     </button>
-                    <div className="flex items-center border border-earthBrown/30 rounded-md bg-white">
+                    <div className="flex items-center rounded-lg bg-white ring-1 ring-stone-200">
                       <button
                         onClick={() => setQty(line.product.slug, line.qty - 1)}
                         className="p-1 px-2 text-earthBrown hover:bg-turmeric/30"
@@ -142,7 +142,7 @@ export function CartDrawer() {
             <div className="space-y-3 border-t border-antiqueGold/30 bg-sacredCream p-4 sm:p-6">
               {/* Available Item Coupons Prompt */}
               {cartCouponCodes.length > 0 && !appliedCoupon && (
-                <div className="flex items-center justify-between gap-2 rounded-lg bg-[#FFF8E7] p-2.5 border border-dashed border-[#E85D04] text-xs">
+                <div className="flex items-center justify-between gap-2 rounded-lg bg-[#FFF8E7] p-2.5 text-xs">
                   <div className="flex items-center gap-1.5 text-[#6B4226]">
                     <Tag size={13} className="text-[#E85D04] shrink-0" />
                     <span>Eligible coupon: <strong className="font-mono text-[#9E1830]">{cartCouponCodes[0]}</strong></span>
@@ -158,7 +158,7 @@ export function CartDrawer() {
 
               {/* Applied Coupon Tag */}
               {appliedCoupon && (
-                <div className="flex items-center justify-between text-xs text-[#3F7D45] bg-[#E1EDCF]/70 px-2.5 py-1.5 rounded-lg border border-[#3F7D45]/30">
+                <div className="flex items-center justify-between text-xs text-[#3F7D45] bg-[#E1EDCF]/70 px-2.5 py-1.5 rounded-lg">
                   <span className="flex items-center gap-1 font-bold">
                     <Tag size={12} /> Coupon ({appliedCoupon.code})
                   </span>

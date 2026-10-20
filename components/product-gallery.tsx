@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, ShieldCheck, Sparkles, Leaf } from "lucide-react";
+import { Lotus } from "@/components/illustrations/Lotus";
 import type { ProductImageItem } from "@/lib/products";
 
 interface ProductGalleryProps {
@@ -17,15 +18,28 @@ export function ProductGallery({
   productName,
   badge,
 }: ProductGalleryProps) {
-  // Normalize images list
-  const validImages: Array<{ url: string; altText?: string; isPrimary?: boolean }> =
-    images && images.length > 0
-      ? images
-      : fallbackImage
-      ? [{ url: fallbackImage, altText: productName, isPrimary: true }]
-      : [];
+  // Normalize images list with supplementary angles if only 1 image provided
+  const baseImages = images && images.length > 0
+    ? images
+    : fallbackImage
+    ? [{ url: fallbackImage, altText: productName, isPrimary: true }]
+    : [{ url: "/images/agarbatti_cutout.jpg", altText: productName, isPrimary: true }];
 
-  // Determine initial index (primary image if found)
+  // Ensure at least 3 thumbnail angles for a rich visual gallery matching mockup
+  const validImages: Array<{ url: string; altText?: string; isPrimary?: boolean }> = [...baseImages];
+  if (validImages.length === 1) {
+    validImages.push({
+      url: "/images/brochure-incense-boxes.png",
+      altText: `${productName} packaging`,
+      isPrimary: false,
+    });
+    validImages.push({
+      url: "/images/hm_wellness_incense_scene.png",
+      altText: `${productName} sanctuary scene`,
+      isPrimary: false,
+    });
+  }
+
   const initialIndex = Math.max(
     0,
     validImages.findIndex((img) => img.isPrimary)
@@ -33,7 +47,6 @@ export function ProductGallery({
 
   const [activeIndex, setActiveIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
-  // Sync if images change
   useEffect(() => {
     const idx = validImages.findIndex((img) => img.isPrimary);
     setActiveIndex(idx >= 0 ? idx : 0);
@@ -50,53 +63,52 @@ export function ProductGallery({
   };
 
   return (
-    <div className="flex flex-col gap-4 lg:col-span-5">
-      {/* Main Image Container */}
-      <div className="relative flex min-h-[320px] sm:min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#FAF3E0]/60 p-4 sm:p-8 transition-colors group">
-        {/* Badge */}
-        {badge && (
-          <span className="absolute top-4 left-4 z-10 bg-[#9E1830] text-[#FFF8E7] text-[10px] sm:text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full">
-            {badge}
+    <div className="flex flex-col gap-4 w-full">
+      {/* ── 1. MAIN ATMOSPHERIC PRODUCT IMAGE ── */}
+      <div className="relative w-full aspect-[4/3.8] sm:aspect-[4/3.8] lg:aspect-[4/4] overflow-hidden rounded-3xl border border-[#EADBBD] bg-[#FAF6EE] shadow-sm group">
+        
+        {/* Top-Left Featured Badge */}
+        <div className="absolute top-3.5 left-3.5 z-20">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#9E1830] px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white shadow-xs">
+            <Star size={11} fill="currentColor" />
+            <span>{badge || "FEATURED"}</span>
           </span>
-        )}
+        </div>
 
-        {/* Counter indicator */}
-        {validImages.length > 1 && (
-          <span className="absolute top-4 right-4 z-10 bg-[#173B3A]/60 backdrop-blur-md text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
-            {activeIndex + 1} / {validImages.length}
+        {/* Top-Right Counter Pill (e.g. 1/3) */}
+        <div className="absolute top-3.5 right-3.5 z-20">
+          <span className="inline-flex items-center rounded-full bg-black/45 backdrop-blur-md px-2.5 py-0.5 text-xs font-semibold text-white border border-white/20 shadow-xs">
+            {activeIndex + 1}/{validImages.length}
           </span>
-        )}
+        </div>
 
-        {/* Active Image or Fallback */}
+        {/* Main Image Display */}
         {activeImage?.url ? (
-          <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+          <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
             <img
               key={activeImage.url}
               src={activeImage.url}
               alt={activeImage.altText || productName}
-              className="max-h-[340px] sm:max-h-[400px] w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </div>
         ) : (
-          <div className="text-center text-[#6B4226] py-12">
-            <span className="text-7xl block mb-4">🪔</span>
-            <span className="font-playfair text-2xl font-bold block text-[#173B3A]">
+          <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-[#173B3A]/40">
+            <span className="text-6xl mb-2">🪔</span>
+            <span className="font-playfair text-xl font-bold text-[#173B3A]">
               {productName}
             </span>
-            <p className="text-xs text-[#52625A] mt-1 font-sans">
-              Authentic HM Brand Formulation
-            </p>
           </div>
         )}
 
-        {/* Prev / Next navigation buttons */}
+        {/* Prev / Next Navigation Buttons */}
         {validImages.length > 1 && (
           <>
             <button
               type="button"
               onClick={handlePrev}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-white/90 text-[#173B3A] hover:text-[#9E1830] shadow-sm transition-all sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/95 border border-[#EADBBD] text-[#173B3A] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830] shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <ChevronLeft size={18} />
             </button>
@@ -104,7 +116,7 @@ export function ProductGallery({
               type="button"
               onClick={handleNext}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-white/90 text-[#173B3A] hover:text-[#9E1830] shadow-sm transition-all sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/95 border border-[#EADBBD] text-[#173B3A] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830] shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <ChevronRight size={18} />
             </button>
@@ -112,9 +124,9 @@ export function ProductGallery({
         )}
       </div>
 
-      {/* Thumbnails row (shown when multiple images exist) */}
+      {/* ── 2. THUMBNAILS ROW ── */}
       {validImages.length > 1 && (
-        <div className="flex items-center gap-2.5 overflow-x-auto pb-1 px-0.5">
+        <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-1 scrollbar-none">
           {validImages.map((img, idx) => {
             const isSelected = idx === activeIndex;
             return (
@@ -123,22 +135,65 @@ export function ProductGallery({
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 aria-label={`View image ${idx + 1}`}
-                className={`relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl bg-[#FAF3E0]/70 p-1.5 transition-all ${
+                className={`relative h-16 w-16 sm:h-20 sm:w-20 aspect-square shrink-0 overflow-hidden rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs ${
                   isSelected
-                    ? "ring-2 ring-[#9E1830] opacity-100 scale-105"
-                    : "opacity-60 hover:opacity-100"
+                    ? "border-2 border-[#9E1830] ring-2 ring-[#9E1830]/25 shadow-sm scale-105"
+                    : "border-[#EADBBD] opacity-80 hover:opacity-100 hover:border-[#9E1830]/60"
                 }`}
               >
                 <img
                   src={img.url}
                   alt={img.altText || `${productName} thumbnail ${idx + 1}`}
-                  className="h-full w-full object-contain mix-blend-multiply"
+                  className="h-full w-full object-cover aspect-square pointer-events-none"
                 />
               </button>
             );
           })}
         </div>
       )}
+
+      {/* ── 3. 4 FEATURE CARDS (CHARCOAL-FREE, HANDCRAFTED, PURE BOTANICALS, SAFE & NATURAL) ── */}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-3 pt-1">
+        {/* Charcoal-Free */}
+        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2 sm:p-3 text-center flex flex-col items-center justify-center gap-1 shadow-2xs hover:border-[#2D6A4F] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#2D6A4F]/10 text-[#2D6A4F] flex items-center justify-center">
+            <Leaf size={14} />
+          </div>
+          <span className="text-[10px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+            Charcoal-Free
+          </span>
+        </div>
+
+        {/* Handcrafted */}
+        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2 sm:p-3 text-center flex flex-col items-center justify-center gap-1 shadow-2xs hover:border-[#F47A20] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#F47A20]/10 text-[#F47A20] flex items-center justify-center">
+            <Sparkles size={14} />
+          </div>
+          <span className="text-[10px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+            Handcrafted
+          </span>
+        </div>
+
+        {/* Pure Botanicals */}
+        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2 sm:p-3 text-center flex flex-col items-center justify-center gap-1 shadow-2xs hover:border-[#9E1830] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#9E1830]/10 text-[#9E1830] flex items-center justify-center">
+            <Lotus className="w-4 h-3.5 sm:w-5 sm:h-4" />
+          </div>
+          <span className="text-[10px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+            Pure Botanicals
+          </span>
+        </div>
+
+        {/* Safe & Natural */}
+        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2 sm:p-3 text-center flex flex-col items-center justify-center gap-1 shadow-2xs hover:border-[#2D6A4F] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#2D6A4F]/10 text-[#2D6A4F] flex items-center justify-center">
+            <ShieldCheck size={14} />
+          </div>
+          <span className="text-[10px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+            Safe &amp; Natural
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

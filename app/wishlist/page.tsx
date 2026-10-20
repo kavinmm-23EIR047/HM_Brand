@@ -24,7 +24,7 @@ export default function WishlistPage() {
       title="Saved for Your Sacred Moments"
       subtitle="Keep track of your favorite handcrafted agarbattis, pure camphor, and spiritual essentials."
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 py-12">
         {wishlistedProducts.length === 0 ? (
           <div className="bg-[#FFF8E7] rounded-3xl border-2 border-[#C89B3C] p-12 sm:p-16 text-center max-w-2xl mx-auto shadow-solid-sm flex flex-col items-center">
             <MascotBasket size={180} />

@@ -19,7 +19,7 @@ export default function BenefitsPage() {
       title={content.title || "The Sacred Natural Benefits of Pure Botanical Fragrance"}
       subtitle={content.subtitle || "Discover why botanical incense and sacred aromatics elevate daily rituals."}
     >
-      <div className="mx-auto max-w-7xl space-y-16 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] space-y-16 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         
         {/* HERO SECTION WITH AYURVEDIC BOTANICAL ART */}
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF4D6] via-[#FFF8E7] to-[#FCEECC] p-6 sm:p-10 lg:p-12 border-2 border-[#F6C84C]/60 shadow-lg">

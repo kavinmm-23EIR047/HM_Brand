@@ -119,7 +119,7 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 py-12">
       {/* Search Input Box */}
       <div className="max-w-2xl mx-auto mb-10">
         <form

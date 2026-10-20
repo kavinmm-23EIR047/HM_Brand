@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef, Suspense } from "react";
+import React, { useState, useMemo, useRef, Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -8,160 +8,336 @@ import {
   Search,
   Sparkles,
   X,
-  Layers,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
   Leaf,
-  Truck,
   Award,
-  ChevronDown,
+  Heart,
+  ShoppingBag,
+  Star,
+  LayoutGrid,
+  List,
+  RotateCcw,
+  Home,
+  Gem,
+  Flame,
 } from "lucide-react";
-import { InnerPage } from "@/components/inner-page";
-import { ProductCard } from "@/components/product-card";
-import { MascotSearch } from "@/components/mascot-art";
-import { RitualArt } from "@/components/illustrations/RitualArt";
 import { useStore } from "@/components/store";
-import { categories, subCategoriesMap } from "@/lib/products";
+import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/footer";
+import { categories, subCategoriesMap, mapDbProductToProduct } from "@/lib/products";
 
 // Metadata and visuals for the 9 canonical categories matching reference design
 const categoryMeta: Record<
   string,
-  { label: string; image?: string; art: string; subtitle?: string }
+  {
+    label: string;
+    tag: string;
+    titlePart1: string;
+    titlePart2: string;
+    description: string;
+    bannerImage: string;
+    image: string;
+    features: string[];
+    subcategories: string[];
+  }
 > = {
-  Agarbatti: {
-    label: "Agarbatti Sticks",
-    image: "/images/agarbatti_cutout.jpg",
-    art: "incense",
-    subtitle: "Flora & Fragrance",
+  All: {
+    label: "All Categories",
+    tag: "PURE & TRADITIONAL",
+    titlePart1: "Sacred",
+    titlePart2: "Fragrances",
+    description:
+      "Experience the divine purity of natural agarbattis, crystalline bhimseni camphor, wild sambrani cups, and authentic sacred pooja essentials.",
+    bannerImage: "/images/camphor_banner.jpg",
+    image: "/images/camphor_cutout.jpg",
+    features: ["100% Natural", "Pure & Safe", "Traditional Use", "Premium Quality"],
+    subcategories: [],
   },
   Camphor: {
     label: "Camphor Items",
+    tag: "PURE & TRADITIONAL",
+    titlePart1: "Camphor",
+    titlePart2: "Items",
+    description:
+      "Experience the divine purity of natural camphor, crafted for pooja, meditation, and spiritual well-being.",
+    bannerImage: "/images/camphor_banner.jpg",
     image: "/images/camphor_cutout.jpg",
-    art: "camphor",
-    subtitle: "Pure Bhimseni",
+    features: ["100% Natural", "Pure & Safe", "Traditional Use", "Premium Quality"],
+    subcategories: [
+      "Regular Camphor",
+      "Bhimseni Camphor",
+      "Camphor Tablets",
+      "Pooja Camphor",
+      "Aromatic Camphor",
+      "Camphor Powder",
+    ],
+  },
+  Agarbatti: {
+    label: "Agarbatti Sticks",
+    tag: "TEMPLE HERITAGE",
+    titlePart1: "Agarbatti",
+    titlePart2: "Sticks",
+    description:
+      "Sacred flora incense rolled with temple resins, natural flower petals, and aromatic herbs for daily rituals.",
+    bannerImage: "/images/hm_puja_products_scene.png",
+    image: "/images/agarbatti_cutout.jpg",
+    features: ["100% Charcoal Free", "Pure Temple Flora", "Long Lasting", "Vedic Heritage"],
+    subcategories: ["Exclusive", "Super Series", "Budget Pack (12 pcs)"],
   },
   "Dhoop Stick / Bamboo-less Stick": {
-    label: "Dhoop Sticks",
+    label: "Dhoop Stick Bamboo-less",
+    tag: "VEDIC WELLNESS",
+    titlePart1: "Dhoop Stick",
+    titlePart2: "Bamboo-less",
+    description:
+      "Pure bamboo-less dhoop sticks releasing rich, tranquil aromas of sacred herbs, woods, and essential oils.",
+    bannerImage: "/images/hm_wellness_incense_scene.png",
     image: "/images/brochure-incense-boxes.png",
-    art: "loban",
-    subtitle: "Bambooless",
+    features: ["Bamboo-less", "Dense Sacred Aroma", "Zero Harmful Smoke", "Meditation Grade"],
+    subcategories: ["Indian Bakhoor", "Italian Mehak"],
   },
   "Incense Cones": {
-    label: "Incense Cones",
+    label: "Incense Cone",
+    tag: "SACRED AROMA",
+    titlePart1: "Incense",
+    titlePart2: "Cones",
+    description:
+      "Dense, aromatic cones infused with natural essential resins and woods for focused meditation and evening puja.",
+    bannerImage: "/images/hm_temple_heritage_puja_scene.png",
     image: "/images/media_1790142713668.jpg",
-    art: "loban",
-    subtitle: "Sacred Cones",
+    features: ["Instant Rich Smoke", "Natural Resins", "Concentrated Aroma", "Clean Burning"],
+    subcategories: [],
   },
   "Havan Cups": {
     label: "Havan Cups",
+    tag: "TRADITIONAL YAGNA",
+    titlePart1: "Havan",
+    titlePart2: "Cups",
+    description:
+      "Ready-to-light charcoal-free cups infused with pure sambrani, loban, guggal, and sacred havan samagri.",
+    bannerImage: "/images/hm_temple_heritage_puja_scene.png",
     image: "/images/sambrani.jpg",
-    art: "sambrani",
-    subtitle: "Instant Sambrani",
+    features: ["Ready to Light", "Pure Sambrani", "Negative Energy Cleanser", "Havan Samagri"],
+    subcategories: ["Cup Sambrani"],
   },
   "Sambrani Powder": {
     label: "Sambrani Powder",
+    tag: "ANCIENT PURITY",
+    titlePart1: "Sambrani",
+    titlePart2: "Powder",
+    description:
+      "Natural Benzoin and pure tree resin powder for traditional dhoop burners, home purification, and festive pujas.",
+    bannerImage: "/images/hm_puja_products_scene.png",
     image: "/images/sambrani.jpg",
-    art: "sambrani",
-    subtitle: "Natural Resin",
+    features: ["Benzoin Resin", "Air Purifier", "Traditional Aroma", "Vastu Cleansing"],
+    subcategories: ["Exclusive 4-in-1 Loban Series"],
   },
   "Pooja Essentials": {
     label: "Pooja Essentials",
+    tag: "DIVINE RITUALS",
+    titlePart1: "Pooja",
+    titlePart2: "Essentials",
+    description:
+      "Authentic puja items, brass deepams, pure oils, and sacred accessories crafted for daily mandir rituals.",
+    bannerImage: "/images/hm_puja_products_scene.png",
     image: "/images/hm_bhimseni_camphor_aarti_scene.png",
-    art: "diya",
-    subtitle: "Daily Worship",
+    features: ["Temple Grade", "Authentic Items", "Pure Brass & Oils", "Daily Worship"],
+    subcategories: [],
   },
   "Gift Sets": {
     label: "Gift Sets",
+    tag: "SACRED BLESSINGS",
+    titlePart1: "Gift",
+    titlePart2: "Sets",
+    description:
+      "Thoughtfully curated festive gift boxes containing sacred agarbattis, pure camphor, and divine aromas.",
+    bannerImage: "/images/hm_temple_heritage_puja_scene.png",
     image: "/images/special_offer_gift.png",
-    art: "gift",
-    subtitle: "Sacred Gifting",
+    features: ["Festive Packaging", "Assorted Fragrances", "Spiritual Gifting", "Premium Quality"],
+    subcategories: [],
   },
   "Family Pack": {
     label: "Family Pack",
+    tag: "VALUE BLESSINGS",
+    titlePart1: "Family",
+    titlePart2: "Pack",
+    description:
+      "Economical jumbo packs of long-burning incense and sacred camphor for joint families and temple pujas.",
+    bannerImage: "/images/hm_puja_products_scene.png",
     image: "/images/hm_family_pack_mascot.jpg",
-    art: "gift",
-    subtitle: "Value Packs",
+    features: ["Mega Value", "Multi-Fragrance", "Daily Puja Supply", "10-in-1 Assortment"],
+    subcategories: ["10-in-1 Family Pack"],
   },
 };
 
+// Canonical category list ordered precisely as requested
+const canonicalCategories = [
+  "Agarbatti",
+  "Camphor",
+  "Dhoop Stick / Bamboo-less Stick",
+  "Incense Cones",
+  "Havan Cups",
+  "Sambrani Powder",
+  "Pooja Essentials",
+  "Gift Sets",
+  "Family Pack",
+];
+
+// Helper to determine product badge - ONLY use backend data
+function getProductBadge(product: any) {
+  if (!product.badge) return null;
+  const bLower = product.badge.toLowerCase();
+  if (bLower.includes("best") || bLower.includes("bestseller")) {
+    return { text: product.badge, bg: "bg-[#F47A20]" };
+  }
+  if (bLower.includes("pure") || bLower.includes("natural")) {
+    return { text: product.badge, bg: "bg-[#287541]" };
+  }
+  if (bLower.includes("new")) {
+    return { text: product.badge, bg: "bg-[#0284C7]" };
+  }
+  return { text: product.badge, bg: "bg-[#9E1830]" };
+}
+
 function ShopContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category") || "All";
+  const initialCategory = searchParams.get("category") || "Camphor";
   const initialSubcategory = searchParams.get("subcategory") || "All";
 
-  const { dbProducts, dbCategories } = useStore();
+  const { dbProducts, dbCategories, add, toggleWishlist, isInWishlist } = useStore();
 
-  const allProducts = dbProducts || [];
-  const categoryNames =
-    dbCategories && dbCategories.length > 0
-      ? dbCategories.filter((c: any) => !c.parentId).map((c) => c.name)
-      : categories;
+  const [productsList, setProductsList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  // Fallback direct API fetch if store hasn't populated yet
+  useEffect(() => {
+    if (dbProducts && dbProducts.length > 0) {
+      setProductsList(dbProducts);
+    } else {
+      setLoading(true);
+      const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+      fetch(`${api}/products?limit=100`)
+        .then((r) => r.json())
+        .then((json) => {
+          if (json.success && Array.isArray(json.data)) {
+            setProductsList(json.data.map((item: any) => mapDbProductToProduct(item)));
+          }
+        })
+        .catch((err) => console.error("Error fetching shop products:", err))
+        .finally(() => setLoading(false));
+    }
+  }, [dbProducts]);
+
+  const allProducts = productsList;
+
+  // Filter states
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory);
+  const [pricePreset, setPricePreset] = useState<"all" | "0-100" | "100-300" | "300+">("all");
+  const [maxPriceSlider, setMaxPriceSlider] = useState<number>(500);
+  const [availability, setAvailability] = useState<{ inStock: boolean; outOfStock: boolean }>({
+    inStock: true,
+    outOfStock: false,
+  });
+  const [sortBy, setSortBy] = useState("featured");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [visibleCount, setVisibleCount] = useState<number>(8);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  // Category horizontal scroll ref
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollCategoryTrack = (direction: "left" | "right") => {
+    if (categoryScrollRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      categoryScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  // Category matching helper
   const matchesCategory = (product: any, category: string) => {
     if (category === "All") return true;
     const catLower = category.toLowerCase().trim();
     const prodCatLower = (product.category || "").toLowerCase().trim();
     const prodSubCatLower = (product.subCategory || "").toLowerCase().trim();
     const productCategoryLabels = Array.isArray(product.categoryLabels)
-      ? product.categoryLabels.map((label: string) => label.toLowerCase().trim())
+      ? product.categoryLabels.map((l: string) => l.toLowerCase().trim())
       : [];
 
+    // Special category aliasing
+    if (catLower === "camphor") {
+      return (
+        prodCatLower.includes("camphor") ||
+        prodSubCatLower.includes("camphor") ||
+        productCategoryLabels.some((l: string) => l.includes("camphor")) ||
+        product.name.toLowerCase().includes("camphor")
+      );
+    }
+
     if (catLower === "agarbatti") {
-      if (
+      return (
         prodCatLower.includes("agarbatti") ||
         prodCatLower.includes("exclusive") ||
         prodCatLower.includes("budget pack") ||
         prodCatLower.includes("super series") ||
-        prodSubCatLower.includes("exclusive") ||
-        prodSubCatLower.includes("budget pack") ||
-        prodSubCatLower.includes("super series")
-      ) {
-        return true;
-      }
+        productCategoryLabels.some(
+          (l: string) =>
+            l.includes("agarbatti") ||
+            l.includes("exclusive") ||
+            l.includes("super series") ||
+            l.includes("budget pack")
+        )
+      );
+    }
+
+    if (catLower.includes("dhoop")) {
+      return (
+        prodCatLower.includes("dhoop") ||
+        prodCatLower.includes("bambooless") ||
+        prodCatLower.includes("bakhoor") ||
+        prodCatLower.includes("mehak")
+      );
+    }
+
+    if (catLower.includes("havan") || catLower.includes("chandan cups")) {
+      return (
+        prodCatLower.includes("havan") ||
+        prodCatLower.includes("chandan cups") ||
+        productCategoryLabels.some((l: string) => l.includes("chandan") || l.includes("havan"))
+      );
+    }
+
+    if (catLower.includes("sambrani") || catLower.includes("sambhrani")) {
+      return (
+        prodCatLower.includes("sambrani") ||
+        prodCatLower.includes("sambhrani") ||
+        productCategoryLabels.some((l: string) => l.includes("sambrani") || l.includes("sambhrani"))
+      );
+    }
+
+    if (catLower.includes("family")) {
+      return prodCatLower.includes("family") || product.name.toLowerCase().includes("family");
     }
 
     if (productCategoryLabels.includes(catLower)) return true;
     if (prodCatLower === catLower || prodSubCatLower === catLower) return true;
     if (prodCatLower.includes(catLower) || catLower.includes(prodCatLower)) return true;
-    if (prodSubCatLower.includes(catLower) || catLower.includes(prodSubCatLower)) return true;
 
-    const catWords = catLower.split(/\s+/);
-    return catWords.some(
-      (word) =>
-        word.length > 3 &&
-        (prodCatLower.includes(word) ||
-          prodSubCatLower.includes(word) ||
-          productCategoryLabels.some((label: string) => label.includes(word)))
-    );
+    return false;
   };
 
-  const getCategoryCount = (category: string) =>
-    category === "All"
-      ? allProducts.length
-      : allProducts.filter((product) => matchesCategory(product, category)).length;
-
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory);
-  const [pricePreset, setPricePreset] = useState<"all" | "0-100" | "100-300" | "300+">("all");
-  const [maxPriceSlider, setMaxPriceSlider] = useState<number>(500);
-  const [sortBy, setSortBy] = useState("featured");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-
-  // Category horizontal carousel ref & scroll handlers
-  const sliderRef = useRef<HTMLDivElement>(null);
-
-  const scrollSlider = (direction: "left" | "right") => {
-    if (sliderRef.current) {
-      const scrollAmount = direction === "left" ? -280 : 280;
-      sliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+  const getCategoryCount = (catKey: string) => {
+    return allProducts.filter((p) => matchesCategory(p, catKey)).length;
   };
 
   const handleSelectCategory = (cat: string) => {
     setSelectedCategory(cat);
     setSelectedSubcategory("All");
+    setVisibleCount(8);
   };
 
   const handleClearAllFilters = () => {
@@ -169,777 +345,1008 @@ function ShopContent() {
     setSelectedSubcategory("All");
     setPricePreset("all");
     setMaxPriceSlider(500);
+    setAvailability({ inStock: true, outOfStock: false });
     setSearchQuery("");
+    setVisibleCount(8);
   };
 
-  // Find subcategories belonging to current category selection
-  const availableSubcategories = useMemo(() => {
+  // Derive dynamic subcategory list for current category
+  const dynamicSubcategories = useMemo(() => {
+    const currentMeta = categoryMeta[selectedCategory];
+    if (currentMeta && currentMeta.subcategories.length > 0) {
+      return currentMeta.subcategories;
+    }
+
+    // Dynamic extraction from products in current category
     const subs = new Set<string>();
-
-    if (selectedCategory !== "All" && dbCategories && dbCategories.length > 0) {
-      const parentCat = dbCategories.find(
-        (c: any) => !c.parentId && c.name.toLowerCase() === selectedCategory.toLowerCase()
-      );
-      if (parentCat) {
-        dbCategories
-          .filter((c: any) => c.parentId === parentCat.id)
-          .forEach((c: any) => subs.add(c.name));
-      }
-    }
-
-    if (selectedCategory === "Agarbatti" || selectedCategory === "All") {
-      (subCategoriesMap["Agarbatti"] || []).forEach((s) => subs.add(s));
-    }
-
     allProducts.forEach((p) => {
-      if (selectedCategory === "All" || matchesCategory(p, selectedCategory)) {
-        if (p.subCategory) subs.add(p.subCategory);
+      if (matchesCategory(p, selectedCategory)) {
+        if (p.subCategory && p.subCategory !== "Natural Heritage Aroma") {
+          subs.add(p.subCategory);
+        }
+        if (Array.isArray(p.categoryLabels)) {
+          p.categoryLabels.forEach((label: string) => {
+            if (label.toLowerCase() !== selectedCategory.toLowerCase()) {
+              subs.add(label);
+            }
+          });
+        }
       }
     });
 
-    return Array.from(subs).sort();
-  }, [selectedCategory, dbCategories, allProducts]);
+    return Array.from(subs).filter((s) => s.length > 2);
+  }, [selectedCategory, allProducts]);
 
-  const getSubcategoryCount = (subcat: string) => {
+  const getSubcategoryCount = (sub: string) => {
+    const subLower = sub.toLowerCase();
     return allProducts.filter((p) => {
       if (!matchesCategory(p, selectedCategory)) return false;
-      if (subcat === "All") return true;
-      return (p.subCategory || "").toLowerCase() === subcat.toLowerCase();
+      const nameMatch = p.name.toLowerCase().includes(subLower);
+      const subCatMatch = (p.subCategory || "").toLowerCase().includes(subLower);
+      const labelsMatch = (p.categoryLabels || []).some((l: string) =>
+        l.toLowerCase().includes(subLower)
+      );
+      return nameMatch || subCatMatch || labelsMatch;
     }).length;
   };
 
-  // Typo-tolerant Meilisearch integration
-  const [meiliSlugs, setMeiliSlugs] = useState<Set<string> | null>(null);
+  // Dynamic In Stock & Out of Stock counts for current category
+  const inStockCount = useMemo(() => {
+    return allProducts.filter(
+      (p) => matchesCategory(p, selectedCategory) && ((p.stockQuantity ?? 1) > 0 || p.inStock)
+    ).length;
+  }, [allProducts, selectedCategory]);
 
-  React.useEffect(() => {
-    const q = searchQuery.trim();
-    if (!q) {
-      setMeiliSlugs(null);
-      return;
-    }
-    const timer = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(q)}&type=full&limit=50`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.success && Array.isArray(data.hits)) {
-            const slugs = new Set<string>();
-            data.hits.forEach((h: any) => {
-              if (h.slug) slugs.add(String(h.slug).toLowerCase());
-              if (h.name) slugs.add(String(h.name).toLowerCase());
-            });
-            setMeiliSlugs(slugs);
-          } else {
-            setMeiliSlugs(new Set());
-          }
-        })
-        .catch(() => setMeiliSlugs(null));
-    }, 200);
+  const outOfStockCount = useMemo(() => {
+    return allProducts.filter(
+      (p) => matchesCategory(p, selectedCategory) && ((p.stockQuantity ?? 0) === 0 && !p.inStock)
+    ).length;
+  }, [allProducts, selectedCategory]);
 
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
+  // Main Filtered and Sorted Products
   const filteredProducts = useMemo(() => {
     return allProducts
       .filter((p) => {
-        // Category filter
-        if (!matchesCategory(p, selectedCategory)) {
+        // Category
+        if (!matchesCategory(p, selectedCategory)) return false;
+
+        // Subcategory
+        if (selectedSubcategory !== "All") {
+          const subLower = selectedSubcategory.toLowerCase();
+          const nameMatch = p.name.toLowerCase().includes(subLower);
+          const subCatMatch = (p.subCategory || "").toLowerCase().includes(subLower);
+          const labelsMatch = (p.categoryLabels || []).some((l: string) =>
+            l.toLowerCase().includes(subLower)
+          );
+          if (!nameMatch && !subCatMatch && !labelsMatch) return false;
+        }
+
+        // Availability Filter
+        const isProductInStock = (p.stockQuantity ?? 1) > 0 || p.inStock;
+        if (availability.inStock && !availability.outOfStock && !isProductInStock) {
+          return false;
+        }
+        if (!availability.inStock && availability.outOfStock && isProductInStock) {
           return false;
         }
 
-        // Subcategory filter
-        if (selectedSubcategory !== "All") {
-          const pSub = (p.subCategory || "").toLowerCase().trim();
-          const selSub = selectedSubcategory.toLowerCase().trim();
-          if (pSub !== selSub) {
-            return false;
-          }
-        }
-
-        // Price range presets
+        // Price presets
         if (pricePreset === "0-100" && p.price > 100) return false;
         if (pricePreset === "100-300" && (p.price < 100 || p.price > 300)) return false;
         if (pricePreset === "300+" && p.price < 300) return false;
 
-        // Price slider ceiling (if slider was moved below max)
+        // Price slider
         if (maxPriceSlider < 500 && p.price > maxPriceSlider) return false;
 
-        // Search filter
+        // Search query
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
-          const pSlug = (p.slug || "").toLowerCase();
           const pName = (p.name || "").toLowerCase();
-          const meiliMatch = meiliSlugs ? meiliSlugs.has(pSlug) || meiliSlugs.has(pName) : false;
-          if (meiliMatch) return true;
-
-          const matchName = pName.includes(q);
-          const matchNote = (p.note || "").toLowerCase().includes(q);
-          const matchCat = (p.category || "").toLowerCase().includes(q);
-          const matchSubCategory = (p.subCategory || "").toLowerCase().includes(q);
-          const matchDescription = (p.description || "").toLowerCase().includes(q);
-          const matchFragrance =
-            p.fragranceNotes?.some((note: string) => note.toLowerCase().includes(q)) || false;
-          if (
-            !matchName &&
-            !matchNote &&
-            !matchCat &&
-            !matchSubCategory &&
-            !matchDescription &&
-            !matchFragrance
-          ) {
+          const pDesc = (p.description || "").toLowerCase();
+          const pNote = (p.note || "").toLowerCase();
+          const pCat = (p.category || "").toLowerCase();
+          if (!pName.includes(q) && !pDesc.includes(q) && !pNote.includes(q) && !pCat.includes(q)) {
             return false;
           }
         }
+
         return true;
       })
       .sort((a, b) => {
         if (sortBy === "price-low") return a.price - b.price;
         if (sortBy === "price-high") return b.price - a.price;
-        if (sortBy === "rating") return b.rating - a.rating;
+        if (sortBy === "rating") return (b.rating || 4.9) - (a.rating || 4.9);
+        if (sortBy === "newest") return (b.id || "").localeCompare(a.id || "");
         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     allProducts,
     selectedCategory,
     selectedSubcategory,
+    availability,
     pricePreset,
     maxPriceSlider,
-    sortBy,
     searchQuery,
-    meiliSlugs,
+    sortBy,
   ]);
 
+  const activeMeta = categoryMeta[selectedCategory] || categoryMeta.All;
   const isAnyFilterActive =
     selectedCategory !== "All" ||
     selectedSubcategory !== "All" ||
     pricePreset !== "all" ||
     maxPriceSlider < 500 ||
+    !availability.inStock ||
+    availability.outOfStock ||
     Boolean(searchQuery.trim());
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-4 sm:space-y-5 font-sans">
-      {/* ─── BREADCRUMB ─── */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-[#748078]">
-        <Link href="/" className="hover:text-[#9E1830] transition-colors">
-          Home
-        </Link>
-        <span className="text-stone-300">›</span>
-        <span
-          onClick={() => handleSelectCategory("All")}
-          className="cursor-pointer hover:text-[#9E1830] transition-colors"
+    <div className="min-h-screen flex flex-col justify-between bg-[#FBF8F3] text-[#173B3A] font-sans">
+      <div>
+        <Navigation />
+        <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 space-y-6 pt-4 pb-16">
+        
+        {/* ─── 1. BREADCRUMB ─── */}
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-1.5 sm:gap-2 text-xs font-medium text-stone-500"
         >
-          All Products
-        </span>
-        <span className="text-stone-300">›</span>
-        <span className="text-[#9E1830] font-semibold">
-          {selectedCategory === "All" ? "Authentic Fragrances & Pooja Essentials" : selectedCategory}
-        </span>
-      </nav>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-[#9E1830] hover:text-[#7A1225] transition-colors"
+          >
+            <Home size={14} className="text-[#9E1830]" />
+            <span>Home</span>
+          </Link>
+          <span className="text-stone-300">›</span>
+          <button
+            type="button"
+            onClick={() => handleSelectCategory("All")}
+            className="hover:text-[#9E1830] transition-colors"
+          >
+            Shop
+          </button>
+          <span className="text-stone-300">›</span>
+          <span className="text-[#9E1830] font-semibold">
+            {selectedCategory === "All" ? "All Products" : activeMeta.label}
+          </span>
+        </nav>
 
-      {/* ─── 1. COMPACT SPLIT HERO BANNER ─── */}
-      <section className="relative overflow-hidden rounded-2xl bg-[#FAF3E0]/70 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-7 lg:py-3.5 border border-[#C89B3C]/20 shadow-xs">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-          {/* Left: Titles & Trust Badges */}
-          <div className="lg:col-span-7 space-y-1.5 sm:space-y-2">
-            <h1 className="font-playfair text-xl sm:text-2xl lg:text-[28px] font-bold leading-tight tracking-tight">
-              <span className="text-[#9E1830]">Authentic Fragrances</span>{" "}
-              <span className="text-[#9E1830]">&amp;</span>{" "}
-              <span className="text-[#173B3A]">Pooja Essentials</span>
-            </h1>
+        {/* ─── 2. EDITORIAL HERO CATEGORY BANNER ─── */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFF9EE] via-[#FFF3E1] to-[#FCECC9] border border-[#EADBBD] p-6 sm:p-8 lg:p-10 shadow-xs">
+          {/* Subtle Corner Leaf Ornaments */}
+          <div className="pointer-events-none absolute -top-10 -right-10 w-44 h-44 opacity-25 bg-[radial-gradient(#287541_1px,transparent_1px)] [background-size:12px_12px]" />
+          <div className="pointer-events-none absolute -bottom-10 -left-10 w-44 h-44 opacity-25 bg-[radial-gradient(#9E1830_1px,transparent_1px)] [background-size:12px_12px]" />
 
-            <p className="text-xs sm:text-[13px] text-[#52625A] leading-relaxed max-w-xl">
-              Handcrafted incense sticks, crystalline bhimseni camphor, pure sambrani, dhoop sticks,
-              and traditional pooja essentials from Coimbatore’s trusted Vedic heritage.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-3 sm:space-y-4">
+              <span className="inline-block font-space text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#9E1830]">
+                {activeMeta.tag}
+              </span>
 
-            {/* 4 Feature Badges Row */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-0.5 text-[11px] font-semibold text-[#173B3A]">
-              <span className="inline-flex items-center gap-1.5">
-                <Leaf size={13} className="text-[#2D6A4F]" />
-                Pure &amp; Natural
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Sparkles size={13} className="text-[#F47A20]" />
-                Traditional Fragrances
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Award size={13} className="text-[#9E1830]" />
-                Premium Quality
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Truck size={13} className="text-[#4C7FA8]" />
-                Pan India Delivery
-              </span>
+              <h1 className="font-playfair text-2xl sm:text-4xl lg:text-[42px] font-bold leading-tight">
+                <span className="text-[#173B3A]">{activeMeta.titlePart1}</span>{" "}
+                <span className="text-[#9E1830]">{activeMeta.titlePart2}</span>
+              </h1>
+
+              <p className="text-xs sm:text-sm text-[#4A5568] leading-relaxed max-w-xl font-sans">
+                {activeMeta.description}
+              </p>
+
+              {/* 4 Feature Badges */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-[#EADBBD] px-3 py-1.5 text-[11px] font-semibold text-[#173B3A] shadow-2xs">
+                  <Leaf size={13} className="text-[#287541]" />
+                  <span>100% Natural</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-[#EADBBD] px-3 py-1.5 text-[11px] font-semibold text-[#173B3A] shadow-2xs">
+                  <ShieldCheck size={13} className="text-[#9E1830]" />
+                  <span>Pure &amp; Safe</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-[#EADBBD] px-3 py-1.5 text-[11px] font-semibold text-[#173B3A] shadow-2xs">
+                  <Sparkles size={13} className="text-[#F47A20]" />
+                  <span>Traditional Use</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-[#EADBBD] px-3 py-1.5 text-[11px] font-semibold text-[#173B3A] shadow-2xs">
+                  <Gem size={13} className="text-[#B45309]" />
+                  <span>Premium Quality</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Focal Image */}
+            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
+              <div className="relative h-44 sm:h-52 lg:h-60 w-full max-w-[420px] rounded-2xl overflow-hidden shadow-md border-2 border-white/80 bg-white/40">
+                <img
+                  src={activeMeta.bannerImage}
+                  alt={activeMeta.label}
+                  className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    if (!target.src.includes("camphor_banner")) {
+                      target.src = "/images/camphor_banner.jpg";
+                    }
+                  }}
+                />
+              </div>
             </div>
           </div>
+        </section>
 
-          {/* Right: Divine Atmospheric Image (Compact Height) */}
-          <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
-            <div className="relative h-28 sm:h-36 lg:h-38 w-full max-w-[300px] sm:max-w-[360px] lg:max-w-none overflow-hidden rounded-xl flex items-center justify-center lg:justify-end">
-              <img
-                src="/images/hm_puja_products_scene.png"
-                alt="Authentic pooja essentials altar"
-                className="h-full w-full object-contain object-center lg:object-right transition-transform duration-500 hover:scale-105"
-                onError={(e) => {
-                  const target = e.currentTarget as HTMLImageElement;
-                  if (!target.src.includes("hm_temple_heritage_puja_scene")) {
-                    target.src = "/images/hm_temple_heritage_puja_scene.png";
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 2. SLIDE-BASED CATEGORIES CAROUSEL ("catgories is slide based") ─── */}
-      <section aria-label="Browse by Category" className="relative">
-        <div className="flex items-center justify-between mb-2.5">
-          <div>
-            <span className="font-space text-[10px] sm:text-xs font-bold tracking-widest text-[#9E1830] uppercase block">
-              SACRED REPERTOIRE
-            </span>
-            <h2 className="font-playfair text-lg sm:text-xl font-bold text-[#173B3A]">
+        {/* ─── 3. SHOP BY CATEGORY ROW ─── */}
+        <section aria-label="Shop by Category" className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="font-playfair text-xl sm:text-2xl font-bold text-[#173B3A]">
               Shop by Category
             </h2>
-          </div>
-
-          {/* Arrow navigation buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => scrollSlider("left")}
-              aria-label="Scroll categories left"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173B3A] shadow-xs border border-stone-200 hover:border-[#9E1830] hover:text-[#9E1830] transition active:scale-95"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollSlider("right")}
-              aria-label="Scroll categories right"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#173B3A] shadow-xs border border-stone-200 hover:border-[#9E1830] hover:text-[#9E1830] transition active:scale-95"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-
-        {/* Horizontal Scrolling Track */}
-        <div
-          ref={sliderRef}
-          className="flex items-stretch gap-3 overflow-x-auto scroll-smooth py-2 px-1 snap-x scrollbar-none"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {/* Canonical Category Cards in Slider */}
-          {categoryNames.map((catKey) => {
-            const meta = categoryMeta[catKey] || {
-              label: catKey,
-              art: "natural",
-              subtitle: "Pure Formula",
-            };
-            const isSelected = selectedCategory === catKey;
-            const count = getCategoryCount(catKey);
-
-            return (
+            <div className="flex items-center gap-1.5">
               <button
-                key={catKey}
                 type="button"
-                onClick={() => handleSelectCategory(catKey)}
-                aria-pressed={isSelected}
-                className={`group flex flex-col items-center justify-between rounded-2xl bg-white p-3 text-center transition-all duration-200 shrink-0 w-[110px] sm:w-[124px] cursor-pointer snap-start ${isSelected
-                    ? "border-2 border-[#9E1830] shadow-sm bg-white scale-[1.02]"
-                    : "border border-stone-200/90 hover:border-[#9E1830]/40 hover:shadow-xs"
-                  }`}
+                onClick={() => scrollCategoryTrack("left")}
+                aria-label="Scroll left"
+                className="h-8 w-8 rounded-full border border-stone-200 bg-white flex items-center justify-center text-[#173B3A] hover:border-[#9E1830] hover:text-[#9E1830] transition shadow-2xs"
               >
-                {/* Visual Thumbnail */}
-                <div
-                  className={`relative h-14 w-14 sm:h-18 sm:w-18 rounded-2xl flex items-center justify-center overflow-hidden mb-2 p-1.5 transition-transform duration-300 group-hover:scale-105 ${isSelected ? "bg-[#FFF4D6]" : "bg-[#FAF3E0]/70"
-                    }`}
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollCategoryTrack("right")}
+                aria-label="Scroll right"
+                className="h-8 w-8 rounded-full border border-stone-200 bg-white flex items-center justify-center text-[#173B3A] hover:border-[#9E1830] hover:text-[#9E1830] transition shadow-2xs"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Category Cards Track */}
+          <div
+            ref={categoryScrollRef}
+            className="flex items-stretch gap-3 overflow-x-auto scroll-smooth py-1 scrollbar-none snap-x"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {canonicalCategories.map((catKey) => {
+              const meta = categoryMeta[catKey] || {
+                label: catKey,
+                image: "/images/agarbatti_cutout.jpg",
+              };
+              const isSelected = selectedCategory === catKey;
+
+              return (
+                <button
+                  key={catKey}
+                  type="button"
+                  onClick={() => handleSelectCategory(catKey)}
+                  className={`group flex flex-col items-center justify-between rounded-2xl p-2.5 sm:p-3 text-center transition-all duration-200 shrink-0 w-[114px] sm:w-[124px] lg:shrink lg:flex-1 lg:w-auto cursor-pointer snap-start ${
+                    isSelected
+                      ? "border-2 border-[#9E1830] bg-[#FFF5F6] shadow-xs"
+                      : "border border-stone-200/80 bg-white hover:border-[#EADBBD] hover:bg-[#FFFDF9]"
+                  }`}
                 >
-                  {meta.image ? (
+                  {/* Category Thumbnail Box */}
+                  <div
+                    className={`relative h-14 w-14 sm:h-16 sm:w-16 rounded-xl flex items-center justify-center overflow-hidden mb-2 p-1.5 transition-transform duration-300 group-hover:scale-105 ${
+                      isSelected ? "bg-[#FFE8EC]" : "bg-[#FAF4EB]"
+                    }`}
+                  >
                     <img
                       src={meta.image}
                       alt={meta.label}
                       className="h-full w-full object-contain mix-blend-multiply"
                     />
-                  ) : (
-                    <RitualArt kind={(meta.art || "natural") as any} className="h-full w-full p-1" />
-                  )}
-                </div>
+                  </div>
 
-                {/* Title & Count */}
-                <div className="w-full">
+                  {/* Label */}
                   <span
-                    className={`block text-xs sm:text-[13px] font-bold leading-tight line-clamp-2 ${isSelected ? "text-[#9E1830]" : "text-[#173B3A]"
-                      }`}
+                    className={`block text-xs font-bold leading-tight line-clamp-2 ${
+                      isSelected ? "text-[#9E1830]" : "text-[#173B3A]"
+                    }`}
                   >
                     {meta.label}
                   </span>
-                  <span className="text-[10px] text-stone-400 font-medium block mt-0.5">
-                    {count} items
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ─── 3. ACTIVE FILTERS CHIP BAR & SORT CONTROL ─── */}
-      <div className="flex flex-col gap-3 border-y border-stone-200/70 py-3 md:flex-row md:items-center md:justify-between">
-        {/* Left: Active Chips & Category Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* All Products Pill */}
-          <button
-            type="button"
-            onClick={() => handleSelectCategory("All")}
-            className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${selectedCategory === "All"
-                ? "bg-[#9E1830] text-white shadow-xs"
-                : "bg-white text-[#173B3A] border border-stone-200 hover:border-[#9E1830]"
-              }`}
-          >
-            All Products ({allProducts.length})
-          </button>
-
-          {/* Active Category Chip */}
-          {selectedCategory !== "All" && (
-            <button
-              type="button"
-              onClick={() => handleSelectCategory("All")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF3E0] text-[#9E1830] border border-[#C89B3C]/30 px-3 py-1.5 text-xs font-bold hover:bg-[#9E1830] hover:text-white transition"
-            >
-              <span>{categoryMeta[selectedCategory]?.label || selectedCategory}</span>
-              <X size={13} />
-            </button>
-          )}
-
-          {/* Active Subcategory Chip */}
-          {selectedSubcategory !== "All" && (
-            <button
-              type="button"
-              onClick={() => setSelectedSubcategory("All")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF3E0] text-[#9E1830] border border-[#C89B3C]/30 px-3 py-1.5 text-xs font-bold hover:bg-[#9E1830] hover:text-white transition"
-            >
-              <span>{selectedSubcategory}</span>
-              <X size={13} />
-            </button>
-          )}
-
-          {/* Active Price Preset Chip */}
-          {pricePreset !== "all" && (
-            <button
-              type="button"
-              onClick={() => setPricePreset("all")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF3E0] text-[#9E1830] border border-[#C89B3C]/30 px-3 py-1.5 text-xs font-bold hover:bg-[#9E1830] hover:text-white transition"
-            >
-              <span>
-                {pricePreset === "0-100" ? "₹0 - ₹100" : pricePreset === "100-300" ? "₹100 - ₹300" : "₹300+"}
-              </span>
-              <X size={13} />
-            </button>
-          )}
-
-          {/* Active Search Query Chip */}
-          {searchQuery.trim() && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF3E0] text-[#9E1830] border border-[#C89B3C]/30 px-3 py-1.5 text-xs font-bold hover:bg-[#9E1830] hover:text-white transition"
-            >
-              <span>&ldquo;{searchQuery}&rdquo;</span>
-              <X size={13} />
-            </button>
-          )}
-
-          {/* Clear All Link */}
-          {isAnyFilterActive && (
-            <button
-              type="button"
-              onClick={handleClearAllFilters}
-              className="text-xs font-semibold text-[#9E1830] hover:underline px-2 py-1"
-            >
-              Clear All
-            </button>
-          )}
-        </div>
-
-        {/* Right: Quick Search, Sort, and Mobile Filter Toggle */}
-        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-          {/* Quick Search Input */}
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search agarbatti, camphor..."
-              aria-label="Search catalog"
-              className="w-44 sm:w-56 rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs text-[#173B3A] placeholder:text-stone-400 outline-none focus:border-[#9E1830] transition pr-8 shadow-xs"
-            />
-            <Search size={13} className="pointer-events-none absolute right-3 top-2.5 text-stone-400" />
+                </button>
+              );
+            })}
           </div>
+        </section>
 
-          {/* Sort Dropdown */}
-          <div className="relative inline-flex items-center">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              aria-label="Sort products"
-              className="appearance-none rounded-full border border-stone-200 bg-white pl-3.5 pr-8 py-1.5 text-xs font-semibold text-[#173B3A] outline-none focus:border-[#9E1830] shadow-xs cursor-pointer"
-            >
-              <option value="featured">Sort by: Featured</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
-            </select>
-            <ChevronDown size={14} className="pointer-events-none absolute right-2.5 text-stone-400" />
-          </div>
-
-          {/* Mobile Filter Sheet Button */}
-          <button
-            type="button"
-            onClick={() => setMobileFilterOpen(true)}
-            className="lg:hidden inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-bold text-[#173B3A] shadow-xs hover:border-[#9E1830]"
-          >
-            <SlidersHorizontal size={13} className="text-[#9E1830]" />
-            <span>Filters</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ─── 4. MAIN LAYOUT: DESKTOP FILTERS SIDEBAR + PRODUCT GRID ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Desktop Sidebar Filters */}
-        <aside className="hidden lg:block lg:col-span-3 space-y-5 rounded-3xl bg-white p-5 border border-stone-200/80 shadow-xs sticky top-24">
-          <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-            <h3 className="font-playfair font-bold text-lg text-[#173B3A]">Filters</h3>
-            {isAnyFilterActive && (
-              <button
-                type="button"
-                onClick={handleClearAllFilters}
-                className="text-xs font-semibold text-[#9E1830] hover:underline"
-              >
-                Clear All
-              </button>
-            )}
-          </div>
-
-          {/* Categories Checkboxes List */}
-          <div>
-            <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
-              Category
-            </h4>
-            <div className="space-y-2">
-              {categoryNames.map((catKey) => {
-                const isChecked = selectedCategory === catKey;
-                const count = getCategoryCount(catKey);
-                const displayLabel = categoryMeta[catKey]?.label || catKey;
-
-                return (
-                  <label
-                    key={catKey}
-                    className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] transition group select-none"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => {
-                          if (isChecked) {
-                            handleSelectCategory("All");
-                          } else {
-                            handleSelectCategory(catKey);
-                          }
-                        }}
-                        className="h-4 w-4 rounded border-stone-300 text-[#9E1830] focus:ring-[#9E1830] accent-[#9E1830] cursor-pointer"
-                      />
-                      <span className={`truncate ${isChecked ? "font-bold text-[#9E1830]" : "font-normal"}`}>
-                        {displayLabel}
-                      </span>
-                    </div>
-                    <span className="text-stone-400 font-medium text-[11px] shrink-0 ml-2">
-                      ({count})
-                    </span>
-                  </label>
-                );
-              })}
+        {/* ─── 4. MAIN LAYOUT: SIDEBAR FILTERS + PRODUCT GRID ─── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start pt-2">
+          
+          {/* DESKTOP SIDEBAR FILTERS */}
+          <aside className="hidden lg:block lg:col-span-3 bg-white rounded-2xl p-5 border border-[#EADBBD]/80 shadow-2xs space-y-6 sticky top-24">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <h3 className="font-playfair font-bold text-lg text-[#173B3A]">Filters</h3>
+              {isAnyFilterActive && (
+                <button
+                  type="button"
+                  onClick={handleClearAllFilters}
+                  className="text-xs font-semibold text-[#9E1830] hover:underline cursor-pointer"
+                >
+                  Clear All
+                </button>
+              )}
             </div>
-          </div>
 
-          {/* Subcategories (if available) */}
-          {availableSubcategories.length > 0 && (
-            <div className="border-t border-stone-100 pt-4">
+            {/* Category Section */}
+            <div>
               <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
-                Sub Category
+                Category
+              </h4>
+              <div className="space-y-2">
+                {/* "All" Checkbox */}
+                <label className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] transition select-none">
+                  <div className="flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      checked={selectedCategory === "All" && selectedSubcategory === "All"}
+                      onChange={() => handleSelectCategory("All")}
+                      className="h-4 w-4 rounded accent-[#9E1830] cursor-pointer"
+                    />
+                    <span
+                      className={
+                        selectedCategory === "All" && selectedSubcategory === "All"
+                          ? "font-bold text-[#9E1830]"
+                          : "font-normal"
+                      }
+                    >
+                      All
+                    </span>
+                  </div>
+                  <span className="text-stone-400 font-medium text-[11px]">
+                    ({allProducts.length})
+                  </span>
+                </label>
+
+                {/* Subcategories of active category, or all categories if "All" is active */}
+                {selectedCategory !== "All" && dynamicSubcategories.length > 0
+                  ? dynamicSubcategories.map((subcat) => {
+                      const isChecked = selectedSubcategory === subcat;
+                      const count = getSubcategoryCount(subcat);
+
+                      return (
+                        <label
+                          key={subcat}
+                          className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] transition select-none"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => {
+                                setSelectedSubcategory(isChecked ? "All" : subcat);
+                                setVisibleCount(8);
+                              }}
+                              className="h-4 w-4 rounded accent-[#9E1830] cursor-pointer"
+                            />
+                            <span
+                              className={`truncate ${
+                                isChecked ? "font-bold text-[#9E1830]" : "font-normal"
+                              }`}
+                            >
+                              {subcat}
+                            </span>
+                          </div>
+                          <span className="text-stone-400 font-medium text-[11px] shrink-0 ml-2">
+                            ({count})
+                          </span>
+                        </label>
+                      );
+                    })
+                  : canonicalCategories.map((catKey) => {
+                      const isChecked = selectedCategory === catKey;
+                      const count = getCategoryCount(catKey);
+                      const displayLabel = categoryMeta[catKey]?.label || catKey;
+
+                      return (
+                        <label
+                          key={catKey}
+                          className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] transition select-none"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => handleSelectCategory(isChecked ? "All" : catKey)}
+                              className="h-4 w-4 rounded accent-[#9E1830] cursor-pointer"
+                            />
+                            <span
+                              className={`truncate ${
+                                isChecked ? "font-bold text-[#9E1830]" : "font-normal"
+                              }`}
+                            >
+                              {displayLabel}
+                            </span>
+                          </div>
+                          <span className="text-stone-400 font-medium text-[11px] shrink-0 ml-2">
+                            ({count})
+                          </span>
+                        </label>
+                      );
+                    })}
+              </div>
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="border-t border-stone-100 pt-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A]">
+                  Price Range
+                </h4>
+                <span className="text-xs font-bold text-[#9E1830] tabular-nums">
+                  ₹0 - ₹{maxPriceSlider}
+                </span>
+              </div>
+
+              {/* Slider */}
+              <input
+                type="range"
+                min="0"
+                max="500"
+                step="10"
+                value={maxPriceSlider}
+                onChange={(e) => {
+                  setMaxPriceSlider(Number(e.target.value));
+                  setPricePreset("all");
+                  setVisibleCount(8);
+                }}
+                className="w-full accent-[#9E1830] cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-stone-400 font-medium tabular-nums">
+                <span>₹0</span>
+                <span>₹500</span>
+              </div>
+
+              {/* Price Preset Pills Grid */}
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                {[
+                  { id: "all", label: "All" },
+                  { id: "0-100", label: "₹0 - ₹100" },
+                  { id: "100-300", label: "₹100 - ₹300" },
+                  { id: "300+", label: "₹300+" },
+                ].map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => {
+                      setPricePreset(p.id as any);
+                      setMaxPriceSlider(500);
+                      setVisibleCount(8);
+                    }}
+                    className={`rounded-lg py-1.5 px-2 text-xs font-semibold transition tabular-nums text-center ${
+                      pricePreset === p.id
+                        ? "bg-[#9E1830] text-white"
+                        : "bg-[#F5F5F5] text-[#173B3A] hover:bg-stone-200"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Availability Filter */}
+            <div className="border-t border-stone-100 pt-5 space-y-3">
+              <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A]">
+                Availability
               </h4>
               <div className="space-y-2">
                 <label className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] select-none">
                   <div className="flex items-center gap-2.5">
                     <input
-                      type="radio"
-                      name="subcategory"
-                      checked={selectedSubcategory === "All"}
-                      onChange={() => setSelectedSubcategory("All")}
-                      className="accent-[#9E1830] cursor-pointer"
+                      type="checkbox"
+                      checked={availability.inStock}
+                      onChange={(e) => {
+                        setAvailability((prev) => ({ ...prev, inStock: e.target.checked }));
+                        setVisibleCount(8);
+                      }}
+                      className="h-4 w-4 rounded accent-[#9E1830] cursor-pointer"
                     />
-                    <span className={selectedSubcategory === "All" ? "font-bold text-[#9E1830]" : ""}>
-                      All
+                    <span className={availability.inStock ? "font-bold text-[#173B3A]" : ""}>
+                      In Stock
                     </span>
                   </div>
+                  <span className="text-stone-400 font-medium text-[11px]">
+                    ({inStockCount})
+                  </span>
                 </label>
 
-                {availableSubcategories.map((subcat) => {
-                  const isChecked = selectedSubcategory === subcat;
-                  const count = getSubcategoryCount(subcat);
+                <label className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] select-none">
+                  <div className="flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      checked={availability.outOfStock}
+                      onChange={(e) => {
+                        setAvailability((prev) => ({ ...prev, outOfStock: e.target.checked }));
+                        setVisibleCount(8);
+                      }}
+                      className="h-4 w-4 rounded accent-[#9E1830] cursor-pointer"
+                    />
+                    <span className={availability.outOfStock ? "font-bold text-[#173B3A]" : ""}>
+                      Out of Stock
+                    </span>
+                  </div>
+                  <span className="text-stone-400 font-medium text-[11px]">
+                    ({outOfStockCount})
+                  </span>
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          {/* MAIN PRODUCT AREA */}
+          <div className="lg:col-span-9 space-y-5">
+            
+            {/* Top Toolbar (Product count, Sort dropdown, Grid/List view toggle) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-white rounded-xl p-3 sm:px-4 border border-[#EADBBD]/70 shadow-2xs">
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading text-sm sm:text-base font-bold text-[#173B3A]">
+                  {selectedCategory === "All" ? "All Products" : activeMeta.label}
+                </h3>
+                <span className="text-xs text-stone-500 font-medium">
+                  ({filteredProducts.length})
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                {/* Mobile Filter Button */}
+                <button
+                  type="button"
+                  onClick={() => setMobileFilterOpen(true)}
+                  className="lg:hidden inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold text-[#173B3A]"
+                >
+                  <SlidersHorizontal size={13} className="text-[#9E1830]" />
+                  <span>Filters</span>
+                </button>
+
+                {/* Sort Dropdown */}
+                <div className="relative inline-flex items-center">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    aria-label="Sort products"
+                    className="appearance-none rounded-lg border border-stone-200 bg-white pl-3 pr-8 py-1.5 text-xs font-semibold text-[#173B3A] outline-none focus:border-[#9E1830] cursor-pointer shadow-2xs"
+                  >
+                    <option value="featured">Sort by: Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Customer Rating</option>
+                    <option value="newest">Newest Arrival</option>
+                  </select>
+                  <ChevronDown
+                    size={14}
+                    className="pointer-events-none absolute right-2.5 text-stone-400"
+                  />
+                </div>
+
+                {/* Grid / List View Toggle */}
+                <div className="flex items-center gap-1 border border-stone-200 rounded-lg p-0.5 bg-stone-50">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("grid")}
+                    aria-label="Grid view"
+                    className={`p-1.5 rounded-md transition ${
+                      viewMode === "grid"
+                        ? "bg-[#9E1830] text-white shadow-2xs"
+                        : "text-stone-500 hover:text-[#173B3A]"
+                    }`}
+                  >
+                    <LayoutGrid size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    aria-label="List view"
+                    className={`p-1.5 rounded-md transition ${
+                      viewMode === "list"
+                        ? "bg-[#9E1830] text-white shadow-2xs"
+                        : "text-stone-500 hover:text-[#173B3A]"
+                    }`}
+                  >
+                    <List size={15} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Grid / List */}
+            {loading ? (
+              <div className="p-16 text-center text-[#9E1830] font-bold">
+                Loading authentic collection...
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center space-y-3">
+                <Flame size={44} className="mx-auto text-[#9E1830]/50" />
+                <h4 className="font-playfair text-xl font-bold text-[#173B3A]">
+                  No Products Match Your Filter
+                </h4>
+                <p className="text-xs text-stone-500 max-w-sm mx-auto">
+                  Try clearing selected categories or price filters to see more authentic items.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleClearAllFilters}
+                  className="rounded-full bg-[#9E1830] px-5 py-2 text-xs font-bold text-white hover:bg-[#801224] transition shadow-xs"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            ) : viewMode === "grid" ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-4.5">
+                {filteredProducts.slice(0, visibleCount).map((product) => {
+                  const badge = getProductBadge(product);
+                  const isWishlisted = isInWishlist(product.slug);
 
                   return (
-                    <label
-                      key={subcat}
-                      className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer hover:text-[#9E1830] select-none"
+                    <div
+                      key={product.slug || product.id}
+                      className="group relative flex flex-col justify-between rounded-2xl border border-[#EADBBD]/60 bg-white p-3 shadow-2xs transition-all duration-300 hover:shadow-md hover:border-[#EADBBD]"
                     >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <input
-                          type="radio"
-                          name="subcategory"
-                          checked={isChecked}
-                          onChange={() => setSelectedSubcategory(subcat)}
-                          className="accent-[#9E1830] cursor-pointer"
-                        />
-                        <span className={`truncate ${isChecked ? "font-bold text-[#9E1830]" : ""}`}>
-                          {subcat}
-                        </span>
+                      {/* Top Image Box */}
+                      <div className="relative aspect-square w-full rounded-xl bg-[#FAF6EE] overflow-hidden flex items-center justify-center p-3">
+                        <Link
+                          href={`/product/${product.slug}`}
+                          className="absolute inset-0 flex items-center justify-center"
+                        >
+                          <img
+                            src={product.image || "/images/camphor_cutout.jpg"}
+                            alt={product.name}
+                            className="h-full w-full object-contain mix-blend-multiply transition duration-500 group-hover:scale-105"
+                            onError={(e) => {
+                              const target = e.currentTarget as HTMLImageElement;
+                              if (!target.src.includes("camphor_cutout")) {
+                                target.src = "/images/camphor_cutout.jpg";
+                              }
+                            }}
+                          />
+                        </Link>
+
+                        {/* Top Badge */}
+                        {badge && (
+                          <span
+                            className={`absolute left-2.5 top-2.5 z-10 rounded-md px-2 py-0.5 text-[9px] font-bold text-white shadow-2xs ${badge.bg}`}
+                          >
+                            {badge.text}
+                          </span>
+                        )}
+
+                        {/* Wishlist Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleWishlist(product.slug);
+                          }}
+                          aria-label="Wishlist"
+                          className="absolute right-2.5 top-2.5 z-10 h-7 w-7 rounded-full bg-white/95 flex items-center justify-center shadow-xs transition hover:scale-110 cursor-pointer"
+                        >
+                          <Heart
+                            size={13}
+                            className={
+                              isWishlisted
+                                ? "fill-[#9E1830] text-[#9E1830]"
+                                : "text-stone-500 hover:text-[#9E1830]"
+                            }
+                          />
+                        </button>
                       </div>
-                      <span className="text-stone-400 font-medium text-[11px] shrink-0 ml-2">
-                        ({count})
-                      </span>
-                    </label>
+
+                      {/* Content Box */}
+                      <div className="pt-3 flex flex-1 flex-col justify-between">
+                        <div>
+                          {/* Rating & Review Count */}
+                          <div className="flex items-center gap-1.5 text-xs mb-1">
+                            <Star size={12} className="fill-[#F47A20] text-[#F47A20]" />
+                            <span className="font-bold text-[11px] text-[#173B3A]">
+                              {product.rating || 4.9}
+                            </span>
+                            <span className="text-stone-400 text-[10px]">
+                              ({product.reviewCount || 128})
+                            </span>
+                          </div>
+
+                          {/* Product Title */}
+                          <Link href={`/product/${product.slug}`}>
+                            <h4 className="font-heading text-sm font-bold text-[#173B3A] line-clamp-1 group-hover:text-[#9E1830] transition-colors">
+                              {product.name}
+                            </h4>
+                          </Link>
+
+                          {/* Subtitle / Note */}
+                          <p className="text-[11px] text-stone-500 line-clamp-1 mt-0.5">
+                            {product.subCategory || product.note || "Pure & Natural Camphor"}
+                          </p>
+                        </div>
+
+                        {/* Price & Add Button */}
+                        <div className="mt-3.5 flex items-center justify-between gap-1.5 pt-2 border-t border-stone-100">
+                          <div className="flex items-baseline gap-1">
+                            <span className="font-price font-extrabold text-base sm:text-lg text-[#173B3A]">
+                              ₹{product.price}
+                            </span>
+                            {product.mrp && product.mrp !== `₹${product.price}` && (
+                              <span className="text-[11px] text-stone-400 line-through">
+                                {product.mrp}
+                              </span>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => product.inStock && add(product)}
+                            disabled={!product.inStock}
+                            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#9E1830] hover:bg-[#801224] text-white px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <ShoppingBag size={12} />
+                            <span>{product.inStock ? "Add" : "Sold"}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
-            </div>
-          )}
+            ) : (
+              /* LIST VIEW */
+              <div className="space-y-3">
+                {filteredProducts.slice(0, visibleCount).map((product) => {
+                  const badge = getProductBadge(product);
+                  const isWishlisted = isInWishlist(product.slug);
 
-          {/* Price Range Slider & Preset Pills */}
-          <div className="border-t border-stone-100 pt-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A]">
-                Price Range
-              </h4>
-              <span className="font-price text-xs font-bold text-[#9E1830] tabular-nums">
-                Up to ₹{maxPriceSlider}
-              </span>
-            </div>
-
-            {/* Slider */}
-            <input
-              type="range"
-              min="0"
-              max="500"
-              step="10"
-              value={maxPriceSlider}
-              onChange={(e) => {
-                setMaxPriceSlider(Number(e.target.value));
-                setPricePreset("all");
-              }}
-              className="w-full accent-[#9E1830] cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] text-stone-400 font-medium font-price tabular-nums">
-              <span>₹0</span>
-              <span>₹500</span>
-            </div>
-
-            {/* Preset Pills */}
-            <div className="grid grid-cols-2 gap-1.5 pt-1">
-              {[
-                { id: "all", label: "All" },
-                { id: "0-100", label: "₹0 - ₹100" },
-                { id: "100-300", label: "₹100 - ₹300" },
-                { id: "300+", label: "₹300+" },
-              ].map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => {
-                    setPricePreset(p.id as any);
-                    setMaxPriceSlider(500);
-                  }}
-                  className={`font-price rounded-lg py-1.5 px-2 text-[11px] font-semibold transition tabular-nums ${pricePreset === p.id
-                      ? "bg-[#9E1830] text-white"
-                      : "bg-stone-100 text-[#173B3A] hover:bg-stone-200"
-                    }`}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </aside>
-
-        {/* Product Cards Grid Area */}
-        <div className="lg:col-span-9">
-          {filteredProducts.length === 0 ? (
-            <div className="rounded-3xl bg-white p-12 text-center flex flex-col items-center border border-stone-200/80 shadow-xs">
-              <MascotSearch size={140} />
-              <h3 className="font-playfair text-2xl text-[#173B3A] mt-4 font-bold">
-                No Sacred Items Found
-              </h3>
-              <p className="text-sm text-stone-500 mt-2 max-w-md leading-relaxed">
-                We couldn&apos;t find products matching your selected filters. Try clearing some filters or
-                choosing another category.
-              </p>
-              <button
-                type="button"
-                onClick={handleClearAllFilters}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#9E1830] hover:bg-[#851227] text-white px-6 py-2.5 font-semibold text-xs uppercase tracking-wider transition shadow-sm active:scale-95"
-              >
-                Reset All Filters
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5">
-              {filteredProducts.map((p) => (
-                <ProductCard key={p.slug} product={p} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ─── 5. MOBILE FILTER DRAWER (MODAL SHEET) ─── */}
-      {mobileFilterOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
-            onClick={() => setMobileFilterOpen(false)}
-          />
-
-          {/* Drawer Body */}
-          <div className="relative ml-auto flex h-full w-full max-w-xs flex-col bg-white p-6 shadow-xl overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-stone-100 pb-4">
-              <h3 className="font-playfair font-bold text-lg text-[#173B3A]">Filters</h3>
-              <button
-                type="button"
-                onClick={() => setMobileFilterOpen(false)}
-                className="p-1 rounded-full text-stone-400 hover:text-[#173B3A]"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="space-y-6 py-5">
-              {/* Category Checkboxes */}
-              <div>
-                <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
-                  Category
-                </h4>
-                <div className="space-y-2.5">
-                  {categoryNames.map((catKey) => {
-                    const isChecked = selectedCategory === catKey;
-                    const count = getCategoryCount(catKey);
-                    const displayLabel = categoryMeta[catKey]?.label || catKey;
-
-                    return (
-                      <label
-                        key={catKey}
-                        className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer"
-                      >
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {
-                              if (isChecked) {
-                                handleSelectCategory("All");
-                              } else {
-                                handleSelectCategory(catKey);
-                              }
-                            }}
-                            className="h-4 w-4 rounded accent-[#9E1830]"
+                  return (
+                    <div
+                      key={product.slug || product.id}
+                      className="group flex flex-col sm:flex-row items-center gap-4 rounded-2xl border border-[#EADBBD]/70 bg-white p-4 shadow-2xs transition hover:shadow-md"
+                    >
+                      {/* Image */}
+                      <div className="relative h-28 w-28 sm:h-32 sm:w-32 shrink-0 rounded-xl bg-[#FAF6EE] overflow-hidden flex items-center justify-center p-2">
+                        <Link
+                          href={`/product/${product.slug}`}
+                          className="absolute inset-0 flex items-center justify-center"
+                        >
+                          <img
+                            src={product.image || "/images/camphor_cutout.jpg"}
+                            alt={product.name}
+                            className="h-full w-full object-contain mix-blend-multiply"
                           />
-                          <span className={isChecked ? "font-bold text-[#9E1830]" : ""}>
-                            {displayLabel}
+                        </Link>
+                        {badge && (
+                          <span
+                            className={`absolute left-2 top-2 rounded-md px-2 py-0.5 text-[9px] font-bold text-white ${badge.bg}`}
+                          >
+                            {badge.text}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0 space-y-1 text-center sm:text-left">
+                        <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs">
+                          <Star size={12} className="fill-[#F47A20] text-[#F47A20]" />
+                          <span className="font-bold text-[11px] text-[#173B3A]">
+                            {product.rating || 4.9}
+                          </span>
+                          <span className="text-stone-400 text-[10px]">
+                            ({product.reviewCount || 128})
                           </span>
                         </div>
-                        <span className="text-stone-400 text-[11px]">({count})</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
+                        <Link href={`/product/${product.slug}`}>
+                          <h4 className="font-heading text-base font-bold text-[#173B3A] hover:text-[#9E1830] transition-colors">
+                            {product.name}
+                          </h4>
+                        </Link>
+                        <p className="text-xs text-stone-500 line-clamp-2 max-w-xl">
+                          {product.description || product.note}
+                        </p>
+                      </div>
 
-              {/* Price Preset Filter */}
-              <div className="border-t border-stone-100 pt-5">
-                <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
-                  Price Range
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { id: "all", label: "All" },
-                    { id: "0-100", label: "₹0 - ₹100" },
-                    { id: "100-300", label: "₹100 - ₹300" },
-                    { id: "300+", label: "₹300+" },
-                  ].map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => setPricePreset(p.id as any)}
-                      className={`font-price rounded-lg py-2 px-3 text-xs font-semibold tabular-nums ${pricePreset === p.id
-                          ? "bg-[#9E1830] text-white"
-                          : "bg-stone-100 text-[#173B3A]"
-                        }`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+                      {/* Price & Action */}
+                      <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 shrink-0">
+                        <div className="text-right">
+                          <div className="font-price font-extrabold text-lg text-[#173B3A]">
+                            ₹{product.price}
+                          </div>
+                          {product.mrp && product.mrp !== `₹${product.price}` && (
+                            <div className="text-xs text-stone-400 line-through">
+                              {product.mrp}
+                            </div>
+                          )}
+                        </div>
 
-            {/* Apply & Close */}
-            <div className="mt-auto pt-4 border-t border-stone-100 space-y-2">
-              <button
-                type="button"
-                onClick={() => setMobileFilterOpen(false)}
-                className="w-full rounded-full bg-[#9E1830] text-white py-2.5 text-xs font-bold uppercase tracking-wider"
-              >
-                Apply Filters ({filteredProducts.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  handleClearAllFilters();
-                  setMobileFilterOpen(false);
-                }}
-                className="w-full text-center text-xs font-semibold text-stone-500 hover:text-[#9E1830] py-1"
-              >
-                Reset All
-              </button>
-            </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => toggleWishlist(product.slug)}
+                            aria-label="Wishlist"
+                            className="h-8 w-8 rounded-full border border-stone-200 bg-white flex items-center justify-center"
+                          >
+                            <Heart
+                              size={14}
+                              className={
+                                isWishlisted
+                                  ? "fill-[#9E1830] text-[#9E1830]"
+                                  : "text-stone-400 hover:text-[#9E1830]"
+                              }
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => product.inStock && add(product)}
+                            disabled={!product.inStock}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#9E1830] hover:bg-[#801224] text-white px-4 py-2 text-xs font-semibold shadow-2xs transition-colors"
+                          >
+                            <ShoppingBag size={13} />
+                            <span>{product.inStock ? "Add to Cart" : "Sold Out"}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* ─── 5. LOAD MORE PRODUCTS PAGINATION ─── */}
+            {filteredProducts.length > visibleCount && (
+              <div className="pt-6 flex flex-col items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((prev) => prev + 8)}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#EADBBD] bg-[#FFF8F0] px-7 py-2.5 text-xs sm:text-sm font-semibold text-[#9E1830] shadow-2xs hover:bg-[#FFEEDB] transition-all cursor-pointer"
+                >
+                  <RotateCcw size={14} />
+                  <span>Load More Products</span>
+                </button>
+                <span className="text-[11px] text-stone-500 font-medium">
+                  Showing {Math.min(visibleCount, filteredProducts.length)} of{" "}
+                  {filteredProducts.length} products
+                </span>
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        {/* ─── 6. MOBILE FILTER MODAL DRAWER ─── */}
+        {mobileFilterOpen && (
+          <div className="fixed inset-0 z-50 flex lg:hidden">
+            <div
+              className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+              onClick={() => setMobileFilterOpen(false)}
+            />
+            <div className="relative ml-auto flex h-full w-full max-w-xs flex-col bg-white p-6 shadow-xl overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-stone-100 pb-4">
+                <h3 className="font-playfair font-bold text-lg text-[#173B3A]">Filters</h3>
+                <button
+                  type="button"
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="p-1 rounded-full text-stone-400 hover:text-[#173B3A]"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-6 py-5">
+                {/* Categories */}
+                <div>
+                  <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
+                    Category
+                  </h4>
+                  <div className="space-y-2.5">
+                    <label className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategory === "All"}
+                          onChange={() => handleSelectCategory("All")}
+                          className="h-4 w-4 rounded accent-[#9E1830]"
+                        />
+                        <span className={selectedCategory === "All" ? "font-bold text-[#9E1830]" : ""}>
+                          All Categories
+                        </span>
+                      </div>
+                      <span className="text-stone-400 text-[11px]">({allProducts.length})</span>
+                    </label>
+
+                    {canonicalCategories.map((catKey) => {
+                      const isChecked = selectedCategory === catKey;
+                      const count = getCategoryCount(catKey);
+                      const displayLabel = categoryMeta[catKey]?.label || catKey;
+
+                      return (
+                        <label
+                          key={catKey}
+                          className="flex items-center justify-between text-xs text-[#173B3A] cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => handleSelectCategory(isChecked ? "All" : catKey)}
+                              className="h-4 w-4 rounded accent-[#9E1830]"
+                            />
+                            <span className={isChecked ? "font-bold text-[#9E1830]" : ""}>
+                              {displayLabel}
+                            </span>
+                          </div>
+                          <span className="text-stone-400 text-[11px]">({count})</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Price Presets */}
+                <div className="border-t border-stone-100 pt-5">
+                  <h4 className="font-space text-xs font-bold uppercase tracking-wider text-[#173B3A] mb-3">
+                    Price Range
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: "all", label: "All" },
+                      { id: "0-100", label: "₹0 - ₹100" },
+                      { id: "100-300", label: "₹100 - ₹300" },
+                      { id: "300+", label: "₹300+" },
+                    ].map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setPricePreset(p.id as any)}
+                        className={`rounded-lg py-2 px-3 text-xs font-semibold tabular-nums ${
+                          pricePreset === p.id
+                            ? "bg-[#9E1830] text-white"
+                            : "bg-stone-100 text-[#173B3A]"
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="mt-auto pt-4 border-t border-stone-100 space-y-2">
+                <button
+                  type="button"
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="w-full rounded-lg bg-[#9E1830] py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs"
+                >
+                  Apply Filters ({filteredProducts.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleClearAllFilters();
+                    setMobileFilterOpen(false);
+                  }}
+                  className="w-full text-center text-xs font-semibold text-stone-500 hover:text-[#9E1830] py-1"
+                >
+                  Reset All
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }
 
 export default function ShopPage() {
   return (
-    <InnerPage
-      eyebrow="AUTHENTIC FRAGRANCES & POOJA ESSENTIALS"
-      title="Authentic Fragrances & Pooja Essentials"
-      subtitle="Handcrafted incense sticks, crystalline bhimseni camphor, wild sambrani cups, and authentic sacred formulations."
-      showHero={false}
+    <Suspense
+      fallback={
+        <div className="p-16 text-center text-[#9E1830] font-bold">
+          Loading sacred collection...
+        </div>
+      }
     >
-      <Suspense
-        fallback={
-          <div className="p-16 text-center text-[#9E1830] font-bold">
-            Loading sacred collection...
-          </div>
-        }
-      >
-        <ShopContent />
-      </Suspense>
-    </InnerPage>
+      <ShopContent />
+    </Suspense>
   );
 }

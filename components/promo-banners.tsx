@@ -23,7 +23,7 @@ export function PromoBanners() {
 
   return (
     <section className="py-10 bg-[#FFF4D6] w-full overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Left: Special Offers Just for You */}

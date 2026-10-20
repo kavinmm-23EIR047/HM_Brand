@@ -15,6 +15,7 @@ import { DeliveryReachBanner } from "@/components/delivery-reach-banner";
 import { Testimonials } from "@/components/testimonials";
 import { OurStorySection } from "@/components/our-story-section";
 import { ProductCard } from "@/components/product-card";
+import { BestsellerShowcase } from "@/components/bestseller-showcase";
 import { useStore } from "@/components/store";
 
 export default function HomePage() {
@@ -22,7 +23,7 @@ export default function HomePage() {
 
 
   return (
-    <div className="min-h-screen bg-[#FFF4D6] text-[#173B3A] flex flex-col justify-between w-full max-w-full overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-sandalLight text-[#173B3A] flex flex-col justify-between w-full max-w-full overflow-x-hidden font-sans">
       
       {/* 1. ANNOUNCEMENT BAR & NAVBAR */}
       <Navigation />
@@ -44,39 +45,7 @@ export default function HomePage() {
         <BentoPromos />
 
         {/* 6. BESTSELLERS PRODUCT SHOWCASE */}
-        {(dbProducts || []).length > 0 && (
-        <section className="py-14 sm:py-16 bg-[#FFF4D6]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-              <div>
-                <span className="font-space text-xs font-bold tracking-widest text-[#9E1830] uppercase block mb-1">
-                  OUR BEST SELLERS
-                </span>
-                <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-[#173B3A]">
-                  Popular Picks for a <span className="text-[#9E1830]">Peaceful Home</span>
-                </h2>
-              </div>
-              
-              <Link
-                href="/shop"
-                className="font-sans text-xs font-bold text-[#F47A20] hover:text-[#9E1830] flex items-center gap-1 uppercase tracking-wider transition group"
-              >
-                <span>View All Products</span>
-                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-
-            {/* Product Cards Grid - Using clean unboxed ProductCard */}
-            <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {(dbProducts || []).slice(0, 8).map((product: any) => (
-                <ProductCard key={product.slug} product={product} />
-              ))}
-            </div>
-          </div>
-          </section>
-          )}
+        <BestsellerShowcase />
 
         {/* 7. DUAL PROMO BANNERS */}
         <PromoBanners />
@@ -88,8 +57,8 @@ export default function HomePage() {
         <OurStorySection />
 
         {/* 10. FINAL CTA BANNER ("Find Your God Within") */}
-        <section className="py-8 sm:py-12 bg-[#FFF4D6] px-3 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto relative overflow-hidden rounded-tl-[36px] rounded-br-[36px] rounded-tr-2xl rounded-bl-2xl sm:rounded-tl-[52px] sm:rounded-br-[52px] sm:rounded-tr-3xl sm:rounded-bl-3xl border-2 border-[#F6C84C]/60 bg-gradient-to-r from-[#3e1b60] via-[#562d7c] to-[#351654] p-4 sm:p-8 lg:p-10 shadow-[0_20px_45px_-15px_rgba(53,22,84,0.6)]">
+        <section className="section-spacing bg-sandalLight px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] mx-auto relative overflow-hidden rounded-tl-[36px] rounded-br-[36px] rounded-tr-2xl rounded-bl-2xl sm:rounded-tl-[52px] sm:rounded-br-[52px] sm:rounded-tr-3xl sm:rounded-bl-3xl bg-gradient-to-r from-[#3e1b60] via-[#562d7c] to-[#351654] p-4 sm:p-8 lg:p-10">
             
             {/* Background Ambient Glow & Mandala Watermark */}
             <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-[#F6C84C]/15 blur-3xl" />
@@ -131,7 +100,7 @@ export default function HomePage() {
                 <div className="pt-1.5 sm:pt-2">
                   <Link
                     href="/shop"
-                    className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#F6C84C] px-4 py-2 sm:px-7 sm:py-3 font-bold text-[11px] sm:text-xs tracking-wide text-[#173B3A] shadow-md transition hover:bg-[#F47A20] hover:text-white hover:scale-105 active:scale-95"
+                    className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#F6C84C] px-4 py-2 sm:px-7 sm:h-12 sm:py-3 font-bold text-[11px] sm:text-xs tracking-wide text-[#173B3A] transition hover:bg-[#F47A20] hover:text-white"
                   >
                     <span>Shop Sacred Collection</span>
                     <ArrowRight size={14} />
@@ -141,7 +110,7 @@ export default function HomePage() {
 
               {/* Right Column: Die-Cut Arched Window Radius Frame */}
               <div className="w-[42%] sm:w-[38%] lg:w-[35%] flex items-center justify-center shrink-0">
-                <div className="group relative aspect-[4/5] w-full max-w-[150px] min-[400px]:max-w-[180px] sm:max-w-[240px] lg:max-w-[280px] overflow-hidden rounded-t-full rounded-b-2xl sm:rounded-b-3xl border-2 border-[#F6C84C]/70 bg-gradient-to-t from-black/35 via-white/5 to-white/15 p-2 sm:p-3.5 shadow-2xl backdrop-blur-xs flex items-center justify-center">
+                <div className="group relative aspect-[4/5] w-full max-w-[150px] min-[400px]:max-w-[180px] sm:max-w-[240px] lg:max-w-[280px] overflow-hidden rounded-t-full rounded-b-2xl sm:rounded-b-3xl bg-gradient-to-t from-black/35 via-white/5 to-white/15 p-2 sm:p-3.5 shadow-card backdrop-blur-xs flex items-center justify-center">
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#ffd54c]/20 via-transparent to-transparent" />
                   <div className="relative h-full w-full">
                     <Image

@@ -62,7 +62,7 @@ export function Footer() {
       </div>
 
       {/* 3. MAIN FOOTER CONTENT */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-10 relative z-10 w-full space-y-8">
+      <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-10 relative z-10 w-full space-y-8">
         
         {/* TOP BRAND STRIP: Brand Logo, Quote & 4 Trust Pills */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center border-b border-white/15 pb-8">

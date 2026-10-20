@@ -41,7 +41,7 @@ export function Carousel({ children, gap = "gap-4", className = "", showArrows =
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {children.map((child, index) => (
-          <div key={index} className="snap-start shrink-0 flex-none w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-1rem)]">
+          <div key={index} className="snap-start shrink-0 flex-none w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.75rem)] lg:w-[calc(25%-0.75rem)] xl:w-[calc(20%-0.8rem)]">
             {child}
           </div>
         ))}

@@ -21,13 +21,13 @@ export function InnerPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#FFF8E7] text-[#173B3A] font-sans antialiased selection:bg-[#F6C84C] selection:text-[#173B3A]">
+    <div className="min-h-screen flex flex-col justify-between bg-sandalLight text-[#173B3A] font-sans antialiased selection:bg-[#F6C84C] selection:text-[#173B3A]">
       <div>
         <Navigation />
 
         {/* Premium Temple Heritage Page Banner */}
         {showHero && (
-          <section className="relative overflow-hidden border-b border-[#F6C84C]/40 bg-gradient-to-r from-[#FFF4D6] via-[#FFF8E7] to-[#FFF4D6] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 shadow-xs">
+          <section className="relative overflow-hidden bg-gradient-to-r from-[#FFF4D6] via-[#FFF8E7] to-[#FFF4D6] py-8 sm:py-10">
             {/* Ambient Background Glow & Rotating Golden Mandala */}
             <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96 opacity-15">
               <MandalaMotif speed={90} strokeColor="#F47A20" strokeWidth={1.5} counterRotate={true} />
@@ -36,7 +36,7 @@ export function InnerPage({
               <MandalaMotif speed={110} strokeColor="#9E1830" strokeWidth={1.4} />
             </div>
 
-            <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-8">
+            <div className="page-container relative flex items-center justify-between gap-8">
               <div className="max-w-3xl space-y-3">
                 
                 {/* Breadcrumb Navigation */}
@@ -50,7 +50,7 @@ export function InnerPage({
                 </nav>
 
                 {/* Eyebrow Badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-[#F6C84C]/70 bg-white/80 px-3 py-1 text-[10px] sm:text-xs font-extrabold tracking-widest text-[#9E1830] uppercase shadow-xs backdrop-blur-xs">
+                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white/80 px-3 py-1 text-[10px] sm:text-xs font-extrabold tracking-widest text-[#9E1830] uppercase">
                   <Sparkles size={13} className="text-[#F47A20] animate-pulse" />
                   <span>{eyebrow}</span>
                 </div>
@@ -70,7 +70,7 @@ export function InnerPage({
 
               {/* Decorative Golden Sunburst Medallion (Desktop) */}
               <div className="hidden lg:flex shrink-0 items-center justify-center relative">
-                <div className="h-32 w-32 rounded-full border-2 border-dashed border-[#F6C84C]/70 bg-[#FFF4D6] p-2 flex items-center justify-center shadow-inner">
+                <div className="h-32 w-32 rounded-full bg-[#FFF4D6] p-2 flex items-center justify-center">
                   <div className="h-full w-full rounded-full bg-gradient-to-br from-[#9E1830] to-[#6A0C1E] flex flex-col items-center justify-center text-center p-3 shadow-md">
                     <span className="font-script text-xl text-[#F6C84C]">Coimbatore</span>
                     <span className="text-[9px] font-bold text-white uppercase tracking-widest mt-0.5">Pure Heritage</span>

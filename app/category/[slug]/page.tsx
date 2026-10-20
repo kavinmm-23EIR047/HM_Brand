@@ -244,7 +244,7 @@ export default async function CategoryPage({
       title={ritualData.title}
       subtitle={ritualData.description}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 py-12">
         {/* Category Hero / How to Use Section */}
         <section className="bg-[#F4D35E]/20 p-8 sm:p-10 rounded-2xl border-2 border-[#6B4226] mb-14 shadow-solid-md grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-4 flex justify-center">

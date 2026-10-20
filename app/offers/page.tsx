@@ -41,7 +41,7 @@ export default function OffersPage() {
       title={content.title || "Sacred Fragrances, Special Festive Blessings"}
       subtitle={content.subtitle || "Discover limited-time offers, value combos, and curated gift boxes for your daily puja, family celebrations, and wellness gifting."}
     >
-      <div className="mx-auto max-w-7xl space-y-16 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] space-y-16 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         
         {/* HERO BANNER WITH ANIMATED FESTIVE GIFT BOX GIF */}
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#9E1830] via-[#851227] to-[#5A0919] p-6 sm:p-10 lg:p-12 text-white border-2 border-[#F6C84C]/70 shadow-xl">

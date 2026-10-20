@@ -17,7 +17,7 @@ export default function BlogPage() {
 
   return (
     <InnerPage eyebrow="THE HM JOURNAL & WELLNESS" title="Sacred Notes for a Mindful, Fragrant Home" subtitle="Explore articles, rituals, and wellness insights from the HM Journal.">
-      <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] space-y-12 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {featured && <section className="rounded-3xl bg-gradient-to-br from-[#FFF4D6] via-[#FFF8E7] to-[#FCEECC] p-6 sm:p-10 border-2 border-[#F6C84C]/60 shadow-lg">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#9E1830]/30 bg-[#9E1830]/10 px-3 py-1 text-[11px] font-extrabold tracking-widest text-[#9E1830] uppercase"><Sparkles size={12} />{featured.label || "FEATURED ARTICLE"}</span>
           <h2 className="mt-4 max-w-3xl font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#173B3A] leading-tight">{featured.title}</h2>

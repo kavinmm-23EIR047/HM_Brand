@@ -6,7 +6,7 @@ import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 export function BentoPromos() {
   return (
     <section className="bg-[#FFF4D6] py-6 sm:py-9">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
         <div className="grid items-stretch gap-5 lg:grid-cols-12">
           
           {/* MAIN FLAGSHIP CARD: 10-IN-1 AROMA FAMILY PACK */}

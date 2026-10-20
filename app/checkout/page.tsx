@@ -333,9 +333,9 @@ export default function CheckoutPage() {
       title="Almost There"
       subtitle="Complete your sacred purchase with encrypted security and direct dispatch from Coimbatore."
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+      <div className="page-container py-8 sm:py-10">
         {lines.length === 0 ? (
-          <div className="bg-[#FFF8E7] rounded-3xl border-2 border-[#C89B3C] p-12 text-center max-w-xl mx-auto shadow-sm">
+          <div className="empty-state mx-auto max-w-xl">
             <h2 className="font-display text-3xl text-[#6B4226] font-bold">
               Your basket is empty
             </h2>
@@ -383,7 +383,7 @@ export default function CheckoutPage() {
 
               {/* Step 1: Address Details */}
               {step === 1 && (
-                <div className="bg-[#FFF8E7] p-6 sm:p-8 rounded-2xl border-2 border-[#C89B3C]/40 space-y-6">
+                <div className="surface-card space-y-6 p-6 sm:p-8">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#C89B3C]/30 pb-3">
                     <div>
                       <h3 className="font-display text-2xl text-[#6B4226] font-bold">
@@ -636,13 +636,13 @@ export default function CheckoutPage() {
 
               {/* Step 2: Delivery Method */}
               {step === 2 && (
-                <div className="bg-[#FFF8E7] p-8 rounded-2xl border-2 border-[#C89B3C]/40 space-y-5">
+                <div className="surface-card space-y-5 p-8">
                   <h3 className="font-display text-2xl text-[#6B4226] font-bold">
                     2. Select Delivery Option
                   </h3>
 
                   <div className="space-y-3">
-                    <label className="flex items-center justify-between p-4 bg-white border-2 border-[#E85D04] rounded-xl cursor-pointer">
+                    <label className="flex items-center justify-between p-4 bg-white rounded-xl ring-2 ring-[#E85D04] cursor-pointer">
                       <div className="flex items-center gap-3">
                         <input
                           type="radio"
@@ -687,7 +687,7 @@ export default function CheckoutPage() {
 
               {/* Step 3: Payment Method */}
               {step === 3 && (
-                <form onSubmit={handleSubmitOrder} className="bg-[#FFF8E7] p-8 rounded-2xl border-2 border-[#C89B3C]/40 space-y-6">
+                <form onSubmit={handleSubmitOrder} className="surface-card space-y-6 p-8">
                   <h3 className="font-display text-2xl text-[#6B4226] font-bold">
                     3. Secure Payment Method
                   </h3>
@@ -756,7 +756,7 @@ export default function CheckoutPage() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="btn-saffron flex-1 py-4 text-center text-xs font-bold uppercase tracking-wider rounded-md flex items-center justify-center gap-2 shadow-solid-sm disabled:opacity-50"
+                      className="btn-primary flex-1 gap-2 text-xs uppercase tracking-wider disabled:opacity-50"
                     >
                       {loading ? (
                         <span>Processing Order...</span>
@@ -773,7 +773,7 @@ export default function CheckoutPage() {
 
             {/* Right Order Summary & Reassurance */}
             <div className="lg:col-span-5 space-y-6">
-              <aside className="bg-[#FFF8E7] p-6 rounded-2xl border-2 border-[#6B4226] shadow-solid-sm space-y-4">
+              <aside className="surface-card space-y-4 p-6">
                 <h3 className="font-display text-xl text-[#6B4226] font-bold border-b border-[#C89B3C]/30 pb-3">
                   Sacred Basket ({totalItems} items)
                 </h3>

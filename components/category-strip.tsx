@@ -204,7 +204,7 @@ export function CategoryStrip() {
 
   return (
     <section className="w-full overflow-visible bg-[#fffaf0] py-4 sm:py-6 border-b border-[#F6C84C]/30 relative z-30" ref={containerRef}>
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-3 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center mb-3 sm:mb-4 flex items-center justify-center gap-2">
@@ -267,7 +267,9 @@ export function CategoryStrip() {
 
                 {/* Interactive Dropdown / Flyout Menu for Subcategories */}
                 {hasSubs && isDropdownOpen && (
-                  <div className="absolute left-0 top-full z-50 w-[min(580px,calc(100vw-1.5rem))] pt-3 text-left animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className={`absolute top-full z-50 w-[min(580px,calc(100vw-1.5rem))] pt-3 text-left animate-in fade-in slide-in-from-top-1 duration-150 ${
+                    idx > 4 ? "right-0" : "left-0"
+                  }`}>
                     <div className="overflow-hidden rounded-3xl border border-[#E8D8B2] bg-white shadow-[0_20px_55px_rgba(36,44,35,0.2)]">
                       <div className="flex items-start justify-between gap-4 bg-gradient-to-r from-[#FFF8E7] to-white px-5 py-4 sm:px-6">
                         <div>

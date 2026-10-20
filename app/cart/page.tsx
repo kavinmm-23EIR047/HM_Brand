@@ -54,9 +54,9 @@ export default function CartPage() {
       title="Review Your Sacred Selection"
       subtitle="Verify your chosen products, adjust quantities, and proceed to secure checkout."
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <div className="page-container py-8 sm:py-10">
         {lines.length === 0 ? (
-          <div className="bg-[#FFF8E7] rounded-3xl border-2 border-[#C89B3C] p-12 sm:p-16 text-center max-w-2xl mx-auto shadow-solid-sm flex flex-col items-center">
+          <div className="empty-state mx-auto flex max-w-2xl flex-col items-center">
             <MascotBasket size={180} />
             <h2 className="font-display text-3xl sm:text-4xl text-[#6B4226] font-bold mt-6">
               Your ritual basket is waiting
@@ -66,7 +66,7 @@ export default function CartPage() {
             </p>
             <Link
               href="/shop"
-              className="btn-saffron mt-8 inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md px-5 py-3 text-[10px] font-bold uppercase tracking-wide shadow-solid-sm sm:px-8 sm:py-4 sm:text-xs sm:tracking-wider"
+              className="btn-primary mt-8 gap-2 px-5 text-[10px] uppercase tracking-wide sm:px-8 sm:text-xs"
             >
               <span>Discover Fragrances</span>
               <ArrowRight size={15} />
@@ -77,7 +77,7 @@ export default function CartPage() {
             {/* Products List (Left) */}
             <div className="lg:col-span-8 space-y-6">
               {/* Free Delivery Meter */}
-              <div className="bg-[#F4D35E]/25 p-4 rounded-xl border border-[#C89B3C]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="surface-muted p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-xs font-bold text-[#6B4226]">
                   <Sparkles size={16} className="text-[#E85D04]" />
                   <span>
@@ -95,14 +95,14 @@ export default function CartPage() {
               </div>
 
               {/* Items Table */}
-              <div className="bg-[#FFF8E7] rounded-2xl border-2 border-[#C89B3C]/40 overflow-hidden shadow-sm divide-y divide-[#C89B3C]/20">
+              <div className="surface-card overflow-hidden divide-y divide-[#eadfc9]">
                 {lines.map((line) => (
                   <div
                     key={line.product.slug}
                     className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-6"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 bg-[#F4D35E]/40 rounded-xl border border-[#6B4226]/20 flex items-center justify-center text-3xl shrink-0">
+                      <div className="w-20 h-20 bg-[#F4D35E]/40 rounded-xl flex items-center justify-center text-3xl shrink-0">
                         🪔
                       </div>
                       <div>
@@ -124,7 +124,7 @@ export default function CartPage() {
 
                     <div className="flex items-center justify-between gap-2 pt-2 sm:justify-end sm:gap-6 sm:pt-0">
                       {/* Quantity Selector */}
-                      <div className="flex items-center border border-[#6B4226]/30 rounded-lg bg-white overflow-hidden">
+                      <div className="flex items-center rounded-lg bg-white overflow-hidden ring-1 ring-stone-200">
                         <button
                           onClick={() => setQty(line.product.slug, line.qty - 1)}
                           className="p-2 text-[#6B4226] hover:bg-[#F4D35E]/30"
@@ -181,7 +181,7 @@ export default function CartPage() {
 
             {/* Order Summary Box (Right) */}
             <div className="lg:col-span-4 space-y-6">
-              <div className="bg-[#FFF8E7] p-6 rounded-2xl border-2 border-[#6B4226] shadow-solid-sm space-y-5">
+              <div className="surface-card space-y-5 p-6 lg:sticky lg:top-24">
                 <h3 className="font-display text-2xl text-[#6B4226] font-bold border-b border-[#C89B3C]/30 pb-4">
                   Order Summary
                 </h3>
@@ -194,7 +194,7 @@ export default function CartPage() {
 
                   {/* Available Item Coupons */}
                   {cartCouponCodes.length > 0 && !appliedCoupon && (
-                    <div className="rounded-lg bg-[#F4D35E]/20 p-2.5 border border-dashed border-[#C89B3C] text-xs">
+                    <div className="rounded-lg bg-[#F4D35E]/20 p-2.5 text-xs">
                       <p className="text-[11px] font-bold text-[#6B4226] mb-1.5 flex items-center gap-1">
                         <Tag size={12} className="text-[#E85D04]" /> Available for items in basket:
                       </p>
@@ -204,7 +204,7 @@ export default function CartPage() {
                             key={code}
                             type="button"
                             onClick={() => handleApplyCoupon(undefined, code)}
-                            className="inline-flex items-center gap-1 rounded bg-[#FFF8E7] px-2 py-1 text-xs font-bold text-[#9E1830] border border-[#C89B3C] hover:bg-[#E85D04] hover:text-white transition"
+                            className="inline-flex items-center gap-1 rounded-lg bg-[#9E1830] px-2 py-1 text-xs font-bold text-white hover:bg-[#E85D04] transition"
                           >
                             <span>Use &apos;{code}&apos;</span>
                             <span className="text-[10px] text-[#3F7D45] font-extrabold group-hover:text-white">Apply</span>
@@ -216,7 +216,7 @@ export default function CartPage() {
 
                   {/* Applied Coupon Info Box */}
                   {appliedCoupon ? (
-                    <div className="flex items-center justify-between rounded-lg bg-[#E1EDCF] px-3 py-2 border border-[#3F7D45]/40 text-xs">
+                    <div className="flex items-center justify-between rounded-lg bg-[#E1EDCF] px-3 py-2 text-xs">
                       <div className="flex items-center gap-1.5 text-[#286B45]">
                         <Tag size={14} className="text-[#286B45]" />
                         <span>Coupon <strong>{appliedCoupon.code}</strong> applied (-₹{couponDiscount})</span>
@@ -236,7 +236,7 @@ export default function CartPage() {
                         value={couponInput}
                         onChange={(e) => setCouponInput(e.target.value)}
                         placeholder="Enter coupon (e.g. 1)"
-                        className="flex-1 text-xs bg-white border border-[#C89B3C] rounded-lg px-3 py-2 text-[#292524] uppercase outline-[#E85D04]"
+                        className="flex-1 text-xs bg-white rounded-lg px-3 py-2 text-[#292524] uppercase ring-1 ring-stone-200 outline-none focus:ring-[#9E1830]"
                       />
                       <button
                         type="submit"
@@ -289,7 +289,7 @@ export default function CartPage() {
                 {/* Checkout CTA */}
                 <Link
                   href="/checkout"
-                  className="btn-saffron w-full py-4 text-center rounded-md text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 shadow-solid-sm"
+                  className="btn-primary w-full gap-2 text-xs uppercase tracking-wider max-md:sticky max-md:bottom-[calc(4.5rem+env(safe-area-inset-bottom))] max-md:z-30"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight size={15} />

@@ -89,7 +89,7 @@ export function HeroBannerSlider() {
     >
       <Leaf className="pointer-events-none absolute -left-9 bottom-0 h-48 w-36 rotate-[-24deg] text-[#287345]/25" />
       
-      <div className="relative mx-auto grid min-h-[280px] max-w-[1440px] w-full grid-cols-1 items-center gap-1 px-3 py-6 min-[360px]:px-4 sm:min-h-[300px] sm:gap-2 sm:px-10 sm:py-8 lg:min-h-[340px] lg:grid-cols-[1fr_1fr] lg:px-14 lg:py-8">
+      <div className="relative mx-auto w-full max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 grid min-h-[280px] grid-cols-1 items-center gap-1 py-6 sm:min-h-[300px] sm:gap-2 sm:py-8 lg:min-h-[340px] lg:grid-cols-[1fr_1fr]">
         
         {/* Left Column Text */}
         <div className="relative z-10 mx-auto w-full max-w-[580px] py-2 text-center lg:mx-0 lg:text-left space-y-2">
@@ -125,7 +125,7 @@ export function HeroBannerSlider() {
           <div className="pt-2">
             <Link
               href={slide.href}
-              className="inline-flex items-center gap-2 rounded-full bg-[#9E1830] hover:bg-[#F47A20] px-6 py-3 text-xs sm:text-sm font-extrabold text-white shadow-md transition hover:scale-105 active:scale-95"
+              className="btn-primary gap-2 px-6 text-xs sm:text-sm"
             >
               <span>{slide.cta}</span>
               <ArrowRight size={15} />
@@ -147,7 +147,7 @@ export function HeroBannerSlider() {
           />
 
           {/* Floating Product Badge */}
-          <div className="absolute bottom-0 left-[4%] z-20 flex items-center gap-2 rounded-2xl border border-[#F6C84C]/60 bg-white/95 p-2 shadow-lg sm:bottom-3 sm:left-[12%]">
+          <div className="absolute bottom-0 left-[4%] z-20 flex items-center gap-2 rounded-2xl bg-white/95 p-2 shadow-card sm:bottom-3 sm:left-[12%]">
             <Image
               src={slide.product}
               alt="Featured HM fragrance"
@@ -174,21 +174,21 @@ export function HeroBannerSlider() {
           <button
             onClick={() => move(-1)}
             aria-label="Previous slide"
-            className="absolute left-1 top-1/2 z-20 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-[#173B3A] shadow-md transition hover:bg-[#9E1830] hover:text-white sm:h-9 sm:w-9"
+            className="btn-icon absolute left-1 top-1/2 z-20 h-8 w-8 -translate-y-1/2 shadow-card sm:h-9 sm:w-9"
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={() => move(1)}
             aria-label="Next slide"
-            className="absolute right-1 top-1/2 z-20 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-[#173B3A] shadow-md transition hover:bg-[#9E1830] hover:text-white sm:h-9 sm:w-9"
+            className="btn-icon absolute right-1 top-1/2 z-20 h-8 w-8 -translate-y-1/2 shadow-card sm:h-9 sm:w-9"
           >
             <ChevronRight size={18} />
           </button>
         </div>
 
         {/* Carousel Indicators */}
-        <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:left-14 lg:translate-x-0">
+        <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:left-8 lg:translate-x-0">
           {activeSlides.map((item, i) => (
             <button
               key={i}

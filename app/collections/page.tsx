@@ -43,10 +43,10 @@ export default function CollectionsPage() {
       title="Curated Fragrances for Every Mindful Moment"
       subtitle="Whether you are beginning your morning with prayer, unwinding in evening meditation, or preparing for festive poojas, explore our handcrafted collections."
     >
-      <div className="mx-auto max-w-7xl space-y-14 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] space-y-14 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         
         {/* Quick Jump Navigation Pill Strip */}
-        <nav aria-label="Browse collections" className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
+        <nav aria-label="Browse collections" className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap hide-scrollbar scrollbar-none">
           {activeCollections.map((collection) => (
             <a
               key={collection.id}

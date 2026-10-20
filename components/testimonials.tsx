@@ -108,7 +108,7 @@ export function Testimonials() {
     <section className="py-12 sm:py-14 bg-[#FFF4D6] border-b border-[#F47A20]/15 relative w-full overflow-hidden">
       <Leaf className="pointer-events-none absolute left-0 bottom-0 w-44 h-44 text-[#3F7D45]/10 rotate-12" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
