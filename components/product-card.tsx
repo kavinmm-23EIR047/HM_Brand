@@ -49,8 +49,8 @@ export function ProductCard({ product }: { product: Product }) {
               className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget as HTMLImageElement;
-                if (!target.src.includes("agarbatti_cutout")) {
-                  target.src = "/images/agarbatti_cutout.jpg";
+                if (!target.src.includes("hm_glory_agarbatti")) {
+                  target.src = "/images/products/hm_glory_agarbatti.jpg";
                 }
               }}
             />
@@ -68,7 +68,7 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Badge */}
         {product.badge && (
           <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#9E1830] shadow-xs border border-[#EADBBD]/80">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#9E1830] shadow-xs border border-[#EADBBD]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#9E1830]" />
               {product.badge}
             </span>
@@ -82,56 +82,56 @@ export function ProductCard({ product }: { product: Product }) {
             toggleWishlist(product.slug);
           }}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute right-2.5 top-2.5 z-10 h-7 w-7 rounded-lg flex items-center justify-center transition border shadow-2xs ${
+          className={`absolute right-2.5 top-2.5 z-10 h-8 w-8 rounded-lg flex items-center justify-center transition border shadow-2xs ${
             wishlisted
               ? "bg-[#9E1830] text-white border-[#9E1830]"
-              : "bg-white/95 text-[#173B3A]/70 border-[#EADBBD] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830]"
+              : "bg-white/95 text-[#173B3A]/80 border-[#EADBBD] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830]"
           }`}
         >
-          <Heart size={13} fill={wishlisted ? "currentColor" : "none"} />
+          <Heart size={15} fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
       {/* Product Information */}
-      <div className="flex min-w-0 flex-1 flex-col justify-between p-3.5">
+      <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
         <div>
           {/* Rating */}
-          <div className="flex items-center gap-1.5 text-xs mb-1">
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm mb-1.5">
             <div className="flex text-[#F47A20]">
-              <Star size={11} fill="currentColor" />
+              <Star size={14} fill="currentColor" />
             </div>
-            <span className="font-bold text-[11px] text-[#173B3A]">{product.rating}</span>
-            <span className="text-stone-400 text-[10px]">({product.reviewCount})</span>
+            <span className="font-bold text-xs sm:text-sm text-[#111827]">{product.rating}</span>
+            <span className="text-[#4B5563] text-xs font-medium">({product.reviewCount})</span>
           </div>
 
-          {/* Title */}
+          {/* Title - Logo font family (Cinzel / LA LUXES SERIF) */}
           <Link href={`/product/${product.slug}`}>
-            <h3 className="line-clamp-2 break-words font-playfair text-sm sm:text-base font-bold leading-snug text-[#173B3A] transition group-hover:text-[#9E1830]">
+            <h3 className="line-clamp-2 break-words font-brand text-xs sm:text-sm font-bold uppercase tracking-wider leading-snug text-[#111827] transition group-hover:text-[#9E1830]">
               {product.name}
             </h3>
           </Link>
 
-          {/* Note / Subtitle */}
-          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#52625A] font-sans">
+          {/* Note / Subtitle - Crisp high contrast */}
+          <p className="mt-1 line-clamp-2 text-[11px] sm:text-xs leading-relaxed text-[#4B5563] font-sans font-normal">
             {product.note}
           </p>
         </div>
 
         {/* Price & Action */}
-        <div className="mt-3.5 flex min-w-0 items-center justify-between gap-2 pt-2 border-t border-[#FAF6EE]">
+        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 pt-2 border-t border-[#FAF6EE]">
           <div className="min-w-0">
             <div className="flex items-baseline gap-1.5">
               {effectivePrice > 0 ? (
-                <span className="font-playfair font-bold text-base sm:text-lg text-[#9E1830] tracking-tight">
+                <span className="font-brand font-bold text-sm sm:text-base text-[#9E1830] tracking-tight">
                   ₹{effectivePrice}
                 </span>
               ) : (
-                <span className="font-space text-xs font-bold text-[#9E1830]">
+                <span className="font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#9E1830]">
                   {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive" : "Price on Request"}
                 </span>
               )}
               {product.mrp && product.mrp !== `₹${product.price}` && (
-                <span className="font-sans text-[11px] font-medium text-stone-400 line-through">
+                <span className="font-sans text-[11px] sm:text-xs font-medium text-[#6B7280] line-through">
                   {product.mrp}
                 </span>
               )}
@@ -141,9 +141,9 @@ export function ProductCard({ product }: { product: Product }) {
           <button
             onClick={() => product.inStock && add(product)}
             disabled={!product.inStock}
-            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[#9E1830] hover:bg-[#800f24] px-3.5 py-1.5 text-xs font-bold text-white transition-all shadow-2xs active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[#9E1830] hover:bg-[#800f24] px-4 py-2 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all shadow-2xs active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
           >
-            <ShoppingBag size={12} />
+            <ShoppingBag size={14} />
             <span>{product.inStock ? "Add" : "Sold Out"}</span>
           </button>
         </div>

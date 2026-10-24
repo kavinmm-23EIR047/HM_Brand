@@ -35,17 +35,21 @@
   --sacred-cream: #FFF8E7;
   --charcoal: #292524;
 
-  /* Font variables */
-  --font-heading: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-body: 'Manrope', 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-price: 'Outfit', 'Manrope', system-ui, -apple-system, sans-serif;
-  --font-cormorant: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  /* Font variables - Official Brand Typography: LA LUXES SERIF (Cinzel) & Catchy Mager (Marcellus) */
+  --font-brand: 'Cinzel', Georgia, serif;
+  --font-heading: 'Cinzel', 'Playfair Display', Georgia, serif;
+  --font-tagline: 'Marcellus', 'Cinzel', Georgia, serif;
+  --font-playfair: 'Cinzel', 'Playfair Display', Georgia, serif;
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-cormorant: 'Cinzel', Georgia, serif;
+  --font-body: 'Manrope', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-price: 'Outfit', 'Manrope', sans-serif;
   --font-manrope: 'Manrope', 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -92,28 +96,46 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: var(--font-heading);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+}
+
+.font-brand {
+  font-family: var(--font-brand) !important;
+}
+
+.font-tagline {
+  font-family: var(--font-tagline) !important;
 }
 
 .font-playfair {
-  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
+  font-family: var(--font-heading) !important;
 }
 
 .font-heading {
-  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
+  font-family: var(--font-heading) !important;
 }
 
 .font-sans {
   font-family: var(--font-body) !important;
+}
+
+.font-space {
+  font-family: var(--font-body) !important;
+  letter-spacing: 0.12em;
 }
 
 /* Tabular, crisp price font ensuring currency glyph and numbers match seamlessly */
@@ -152,7 +174,7 @@ h1, h2, h3, h4, h5 {
   color: #ffffff;
   border: none;
   border-radius: 0.5rem;
-  font-family: var(--font-manrope);
+  font-family: var(--font-body);
   font-weight: 700;
   transition: background-color 0.2s ease;
 }
@@ -166,7 +188,7 @@ h1, h2, h3, h4, h5 {
   color: #ffffff;
   border: none;
   border-radius: 0.5rem;
-  font-family: var(--font-manrope);
+  font-family: var(--font-body);
   font-weight: 700;
   transition: background-color 0.2s ease;
 }
@@ -181,7 +203,7 @@ h1, h2, h3, h4, h5 {
   color: #ffffff;
   border: none;
   border-radius: 0.5rem;
-  font-family: var(--font-manrope);
+  font-family: var(--font-body);
   font-weight: 700;
   transition: background-color 0.2s ease;
 }
@@ -235,45 +257,120 @@ h1, h2, h3, h4, h5 {
 
 /* Floating & Ambient Micro-Animations */
 @keyframes flameFlicker {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
-  25% { transform: scale(1.06, 0.96) rotate(-2deg); opacity: 1; }
-  50% { transform: scale(0.96, 1.05) rotate(2deg); opacity: 0.9; }
-  75% { transform: scale(1.04, 0.98) rotate(-1deg); opacity: 0.98; }
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.95;
+  }
+
+  25% {
+    transform: scale(1.06, 0.96) rotate(-2deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.96, 1.05) rotate(2deg);
+    opacity: 0.9;
+  }
+
+  75% {
+    transform: scale(1.04, 0.98) rotate(-1deg);
+    opacity: 0.98;
+  }
 }
 
 @keyframes bellSway {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(4deg); }
-  75% { transform: rotate(-4deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(4deg);
+  }
+
+  75% {
+    transform: rotate(-4deg);
+  }
 }
 
 @keyframes smokeRise {
-  0% { transform: translateY(0) scaleX(1); opacity: 0.7; }
-  50% { transform: translateY(-15px) scaleX(1.15) rotate(2deg); opacity: 0.4; }
-  100% { transform: translateY(-30px) scaleX(1.3) rotate(-2deg); opacity: 0; }
+  0% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translateY(-15px) scaleX(1.15) rotate(2deg);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: translateY(-30px) scaleX(1.3) rotate(-2deg);
+    opacity: 0;
+  }
 }
 
 @keyframes gentleFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes maalaiSway1 {
-  0%, 100% { transform: rotate(0deg); }
-  30% { transform: rotate(3deg); }
-  70% { transform: rotate(-2.5deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  30% {
+    transform: rotate(3deg);
+  }
+
+  70% {
+    transform: rotate(-2.5deg);
+  }
 }
 
 @keyframes maalaiSway2 {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3.5deg); }
-  75% { transform: rotate(2deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-3.5deg);
+  }
+
+  75% {
+    transform: rotate(2deg);
+  }
 }
 
 @keyframes maalaiSway3 {
-  0%, 100% { transform: rotate(0deg); }
-  35% { transform: rotate(2deg); }
-  65% { transform: rotate(-2deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  35% {
+    transform: rotate(2deg);
+  }
+
+  65% {
+    transform: rotate(-2deg);
+  }
 }
 
 .animate-maalai-1 {
@@ -352,12 +449,15 @@ h1, h2, h3, h4, h5 {
     transform: translate3d(0, -20px, 0) rotate(0deg);
     opacity: 0;
   }
+
   15% {
     opacity: 0.85;
   }
+
   85% {
     opacity: 0.85;
   }
+
   100% {
     transform: translate3d(80px, 450px, 0) rotate(360deg);
     opacity: 0;
@@ -369,12 +469,15 @@ h1, h2, h3, h4, h5 {
     transform: translate3d(0, -20px, 0) rotate(0deg);
     opacity: 0;
   }
+
   20% {
     opacity: 0.9;
   }
+
   80% {
     opacity: 0.9;
   }
+
   100% {
     transform: translate3d(-60px, 400px, 0) rotate(-280deg);
     opacity: 0;
@@ -412,27 +515,37 @@ h1, h2, h3, h4, h5 {
 
 /* Slow, quiet movement for the footer mandalas and layered ridge line. */
 @keyframes mandala-turn {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes mandala-line-flow {
   0% {
     stroke-dashoffset: 800;
   }
+
   50% {
     stroke-dashoffset: 0;
   }
+
   100% {
     stroke-dashoffset: -800;
   }
 }
 
 @keyframes mandala-pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.18;
     filter: drop-shadow(0 0 6px rgba(246, 200, 76, 0.25));
   }
+
   50% {
     opacity: 0.32;
     filter: drop-shadow(0 0 16px rgba(246, 200, 76, 0.65));
@@ -440,10 +553,13 @@ h1, h2, h3, h4, h5 {
 }
 
 @keyframes mountain-gold-shimmer {
-  0%, 100% {
+
+  0%,
+  100% {
     stroke-opacity: 0.7;
     filter: drop-shadow(0 0 4px rgba(246, 200, 76, 0.4));
   }
+
   50% {
     stroke-opacity: 1;
     filter: drop-shadow(0 0 12px rgba(246, 200, 76, 0.85));
@@ -475,8 +591,15 @@ h1, h2, h3, h4, h5 {
 }
 
 @keyframes footer-ridge-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-.7%, 5px, 0) scale(1.01); }
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-.7%, 5px, 0) scale(1.01);
+  }
 }
 
 .footer-ridge {
@@ -484,10 +607,17 @@ h1, h2, h3, h4, h5 {
   animation: footer-ridge-drift 22s ease-in-out infinite;
 }
 
-.footer-ridge-mid { animation-duration: 28s; animation-direction: reverse; }
-.footer-ridge-front { animation-duration: 34s; }
+.footer-ridge-mid {
+  animation-duration: 28s;
+  animation-direction: reverse;
+}
+
+.footer-ridge-front {
+  animation-duration: 34s;
+}
 
 @media (prefers-reduced-motion: reduce) {
+
   .mandala-art .mandala-rotate-outer,
   .mandala-art .mandala-rotate-inner,
   .mandala-art-drawing,
@@ -497,12 +627,14 @@ h1, h2, h3, h4, h5 {
     animation: none;
   }
 }
+
 /* Scrollbar hiding utilities */
 .scrollbar-none,
 .no-scrollbar {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
 }
+
 .scrollbar-none::-webkit-scrollbar,
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;

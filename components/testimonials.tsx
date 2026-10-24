@@ -113,15 +113,15 @@ export function Testimonials() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
           <div>
-            <span className="font-space text-xs font-bold tracking-widest text-[#9E1830] uppercase block mb-1">
+            <span className="font-brand text-[11px] sm:text-xs font-bold tracking-[0.2em] text-[#9E1830] uppercase block mb-1">
               REAL PEOPLE. REAL EXPERIENCES.
             </span>
-            <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#173B3A]">
+            <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold uppercase tracking-wide text-[#111827]">
               What Our Customers Say
             </h2>
           </div>
-          <div className="flex items-center gap-1.5 text-xs font-bold text-[#F47A20] bg-white px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-[#F47A20]/20 shadow-xs self-start sm:self-auto">
-            <Star size={15} fill="currentColor" />
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#E56A20] bg-white px-4 py-2 rounded-full border border-[#E56A20]/30 shadow-xs self-start sm:self-auto">
+            <Star size={16} fill="currentColor" />
             <span>4.9 / 5 Overall Rating from 1,200+ Homes</span>
           </div>
         </div>
@@ -157,14 +157,14 @@ export function Testimonials() {
                           ))}
                         </div>
                         {rev.tag && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E1830] bg-[#FFF4D6] px-2.5 py-0.5 rounded-full">
+                          <span className="font-brand text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#9E1830] bg-[#FFF4D6] px-3 py-1 rounded-full">
                             {rev.tag}
                           </span>
                         )}
                       </div>
 
                       {/* Quote */}
-                      <p className="font-sans text-xs min-[360px]:text-sm text-[#173B3A]/85 leading-relaxed font-medium italic relative z-10">
+                      <p className="font-sans text-xs min-[360px]:text-sm text-[#374151] leading-relaxed font-medium italic relative z-10">
                         "{rev.quote}"
                       </p>
                     </div>
@@ -177,11 +177,11 @@ export function Testimonials() {
                         className="w-10 h-10 rounded-full object-cover border border-[#F47A20]/30 shrink-0"
                       />
                       <div className="min-w-0">
-                        <h4 className="font-heading font-bold text-xs min-[360px]:text-sm text-[#173B3A] flex items-center gap-1 truncate">
+                        <h4 className="font-brand font-bold text-xs min-[360px]:text-sm uppercase tracking-wide text-[#111827] flex items-center gap-1 truncate">
                           <span>{rev.name}</span>
                           <CheckCircle2 size={13} className="text-[#3F7D45] shrink-0" />
                         </h4>
-                        <span className="font-sans text-[11px] text-[#3F7D45] font-semibold block truncate">
+                        <span className="font-sans text-xs text-[#287541] font-semibold block truncate">
                           {rev.role} • {rev.location}
                         </span>
                       </div>
@@ -254,13 +254,13 @@ export function Testimonials() {
                     ))}
                   </div>
                   {rev.tag && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E1830] bg-[#FFF4D6] px-2.5 py-0.5 rounded-full">
+                    <span className="font-brand text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#9E1830] bg-[#FFF4D6] px-3 py-1 rounded-full">
                       {rev.tag}
                     </span>
                   )}
                 </div>
 
-                <p className="font-sans text-xs sm:text-sm text-[#173B3A]/85 leading-relaxed font-medium italic mb-6 relative z-10">
+                <p className="font-sans text-sm sm:text-base text-[#374151] leading-relaxed font-medium italic mb-6 relative z-10">
                   "{rev.quote}"
                 </p>
               </div>
@@ -270,14 +270,14 @@ export function Testimonials() {
                 <img
                   src={rev.avatar}
                   alt={rev.name}
-                  className="w-10 h-10 rounded-full object-cover border border-[#F47A20]/30"
+                  className="w-11 h-11 rounded-full object-cover border border-[#F47A20]/30 shrink-0"
                 />
                 <div>
-                  <h4 className="font-heading font-bold text-xs sm:text-sm text-[#173B3A] flex items-center gap-1">
+                  <h4 className="font-brand font-bold text-sm sm:text-base uppercase tracking-wide text-[#111827] flex items-center gap-1">
                     <span>{rev.name}</span>
-                    <CheckCircle2 size={13} className="text-[#3F7D45]" />
+                    <CheckCircle2 size={14} className="text-[#3F7D45]" />
                   </h4>
-                  <span className="font-sans text-[11px] text-[#3F7D45] font-semibold block">
+                  <span className="font-sans text-xs text-[#287541] font-semibold block">
                     {rev.role} • {rev.location}
                   </span>
                 </div>

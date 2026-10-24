@@ -11,11 +11,11 @@ const API = "/api/search";
 const RECENT_KEY = "hm_recent_searches";
 const popularTags = ["Bhimseni Camphor", "HM Super Series", "Cup Sambrani", "Kesar Loban", "Chandan Dhoop", "Kasturi"];
 const sacredCategories = [
-  { name: "Agarbatti", note: "Divine Fragrances", image: "/images/hm_wellness_incense_scene.png", slug: "agarbatti" },
-  { name: "Camphor", note: "Pure & Natural", image: "/images/hm_puja_products_scene.png", slug: "camphor" },
-  { name: "Sambrani", note: "Traditional Bliss", image: "/images/hm_mindful_ritual_scene.png", slug: "sambhrani-powder" },
-  { name: "Dhoop & Loban", note: "Spiritual Essence", image: "/images/hm_ayurvedic_journal_scene.png", slug: "dhoop-stick-bambooless-stick" },
-  { name: "Pooja Essentials", note: "For Every Ritual", image: "/images/hm_puja_products_scene.png", slug: "pooja-essentials" },
+  { name: "Agarbatti", note: "Divine Fragrances", image: "/images/products/hm_glory_agarbatti.jpg", slug: "agarbatti" },
+  { name: "Camphor", note: "Pure & Natural", image: "/images/products/hm_camphor_no25.jpg", slug: "camphor" },
+  { name: "Sambrani", note: "Traditional Bliss", image: "/images/products/hm_pure_loban_cup_sambrani.jpg", slug: "sambhrani-powder" },
+  { name: "Dhoop & Loban", note: "Spiritual Essence", image: "/images/products/hm_italian_mehak_dhoop.jpg", slug: "dhoop-stick-bambooless-stick" },
+  { name: "Pooja Essentials", note: "For Every Ritual", image: "/images/products/hm_indian_bakhoor_dhoop.jpg", slug: "pooja-essentials" },
   { name: "Gift Packs", note: "Thoughtful Gifting", image: "/images/special_offer_gift_transparent.png", slug: "gift-sets" },
 ];
 
@@ -83,7 +83,7 @@ export function SearchModal() {
   const categoryCards = dbCategories.length ? dbCategories.map((category: any) => ({
     name: category.name,
     note: category.description || "Explore collection",
-    image: category.imageUrl || "/images/hm_wellness_incense_scene.png",
+    image: category.imageUrl || "/images/products/hm_glory_agarbatti.jpg",
     slug: category.slug,
   })) : sacredCategories;
 

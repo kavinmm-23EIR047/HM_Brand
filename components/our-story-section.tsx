@@ -64,20 +64,20 @@ export function OurStorySection() {
             {/* Eyebrow */}
             <div className="mb-3.5 flex items-center gap-2">
               <span className="h-[2px] w-8 rounded-full bg-[#F47A20]" />
-              <span className="font-space text-[10px] sm:text-xs font-bold uppercase tracking-[0.22em] text-[#9E1830]">
+              <span className="font-brand text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#9E1830]">
                 OUR STORY &amp; HERITAGE
               </span>
             </div>
 
             {/* Main Heading */}
-            <h2 className="max-w-2xl font-heading text-2xl sm:text-4xl lg:text-[44px] font-bold leading-[1.18] tracking-tight text-[#173B3A]">
+            <h2 className="max-w-2xl font-brand text-xl sm:text-2xl lg:text-3xl font-bold leading-snug tracking-wide text-[#111827] uppercase">
               Bringing Nature,
               <br className="hidden sm:block" /> Tradition &amp; Wellbeing
               <span className="text-[#3F7D45]"> Together.</span>
             </h2>
 
             {/* Sub-narrative */}
-            <p className="mt-4 max-w-xl font-sans text-xs sm:text-sm lg:text-[15px] leading-relaxed text-[#173B3A]/80">
+            <p className="mt-3 max-w-xl font-sans text-xs sm:text-sm leading-relaxed text-[#374151] font-normal">
               At HM Agarbattis, we believe in the power of natural fragrances
               to create a calmer, happier and more positive life. Our products
               are thoughtfully crafted with pure ingredients, inspired by
@@ -92,45 +92,45 @@ export function OurStorySection() {
                 return (
                   <div
                     key={value.number}
-                    className={`group relative flex flex-col justify-between rounded-2xl bg-white border border-[#EADBBD] ${value.borderHover} p-4 sm:p-4.5 shadow-2xs hover:shadow-md hover:-translate-y-1 transition-all duration-300`}
+                    className={`group relative flex flex-col justify-between rounded-2xl bg-white border border-[#EADBBD] ${value.borderHover} p-4.5 sm:p-5 shadow-2xs hover:shadow-md hover:-translate-y-1 transition-all duration-300`}
                   >
                     {/* Top Header: Icon & Step Number */}
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <div
-                          className={`flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl ${value.iconBg} transition-transform duration-300 group-hover:scale-110`}
+                          className={`flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl ${value.iconBg} transition-transform duration-300 group-hover:scale-110`}
                           style={{ color: value.accentColor }}
                         >
-                          <Icon size={18} strokeWidth={2} />
+                          <Icon size={20} strokeWidth={2} />
                         </div>
-                        <span className="font-space text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FAF7EE] border border-[#EADBBD] text-stone-500 tabular-nums">
+                        <span className="font-brand text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] border border-[#EADBBD] text-stone-700 tabular-nums">
                           {value.number}
                         </span>
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-heading text-sm sm:text-base font-bold text-[#173B3A] group-hover:text-[#9E1830] transition-colors leading-snug">
+                      <h3 className="font-brand text-base sm:text-lg font-bold text-[#111827] uppercase tracking-wide group-hover:text-[#9E1830] transition-colors leading-snug">
                         {value.title}
                       </h3>
 
                       {/* Subtitle Pill */}
                       <div className="mt-1">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${value.badgeBg} ${value.badgeText}`}
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-md font-brand text-xs font-bold uppercase tracking-wider ${value.badgeBg} ${value.badgeText}`}
                         >
                           {value.subtitle}
                         </span>
                       </div>
 
                       {/* Description */}
-                      <p className="mt-2 font-sans text-xs text-[#173B3A]/70 leading-relaxed">
+                      <p className="mt-2.5 font-sans text-xs sm:text-sm text-[#374151] font-medium leading-relaxed">
                         {value.description}
                       </p>
                     </div>
 
                     {/* Bottom subtle accent line */}
                     <div className="mt-3 pt-2.5 border-t border-[#FAF6EE] flex items-center justify-between">
-                      <span className="text-[10px] font-semibold text-[#173B3A]/40 uppercase tracking-widest">
+                      <span className="text-xs font-semibold text-[#173B3A]/60 uppercase tracking-wider">
                         HM Purity
                       </span>
                       <span
@@ -147,7 +147,7 @@ export function OurStorySection() {
             <div className="mt-7 sm:mt-9 flex flex-wrap items-center gap-4">
               <Link
                 href="/about"
-                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[#9E1830] hover:bg-[#800F23] text-white px-6 sm:px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[#9E1830] hover:bg-[#800F23] text-white px-6 sm:px-7 py-3 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <span>Know Our Story</span>
                 <ArrowRight
@@ -186,8 +186,8 @@ export function OurStorySection() {
 
               {/* Caption pill below */}
               <div className="mt-2 text-center">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-[#EADBBD] px-3.5 py-1 font-space text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#3F7D45] shadow-2xs">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#3F7D45] animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 border border-[#EADBBD] px-4 py-1.5 font-tagline text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-[#3F7D45] shadow-xs">
+                  <span className="h-2 w-2 rounded-full bg-[#3F7D45] animate-pulse" />
                   Rooted in Tradition · Made with Care
                 </span>
               </div>

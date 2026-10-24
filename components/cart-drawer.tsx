@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { X, Plus, Minus, Trash2, ArrowRight, ShoppingBag, Sparkles, Tag } from "lucide-react";
 import { useStore } from "@/components/store";
@@ -43,9 +44,9 @@ export function CartDrawer() {
           {/* Header */}
           <div className="border-b border-antiqueGold/30 bg-turmeric/20 p-4 sm:p-6">
             <div className="flex items-center justify-between">
-              <div className="flex min-w-0 items-center gap-2">
-                <ShoppingBag className="text-saffron" size={22} />
-                <h2 className="truncate font-display text-lg text-earthBrown sm:text-2xl">Your Basket</h2>
+              <div className="flex min-w-0 items-center gap-2.5">
+                <ShoppingBag className="text-saffron" size={24} />
+                <h2 className="truncate font-brand text-lg font-bold uppercase tracking-wider text-earthBrown sm:text-xl">Your Sacred Basket</h2>
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
@@ -85,7 +86,7 @@ export function CartDrawer() {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-saffron mt-6 min-h-11 whitespace-nowrap rounded-md px-4 py-3 text-[10px] font-bold uppercase tracking-wide sm:px-6 sm:text-xs sm:tracking-wider"
+                  className="btn-saffron mt-6 min-h-12 whitespace-nowrap rounded-lg px-6 py-3 text-xs font-bold uppercase tracking-wider shadow-sm sm:text-sm"
                 >
                   Explore Sacred Essentials
                 </button>
@@ -94,16 +95,26 @@ export function CartDrawer() {
               lines.map((line) => (
                 <div
                   key={line.product.slug}
-                  className="flex items-center gap-2 rounded-xl bg-white/80 p-3 sm:gap-4 sm:p-4"
+                  className="flex items-center gap-3 rounded-xl bg-white/90 p-3.5 shadow-sm border border-antiqueGold/20 sm:gap-4 sm:p-4"
                 >
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-turmeric sm:h-16 sm:w-16">
-                    <span className="text-2xl">🪔</span>
+                  <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 rounded-lg bg-white border border-[#C89B3C]/30 overflow-hidden p-1 shadow-2xs flex items-center justify-center">
+                    {line.product.image ? (
+                      <Image
+                        src={line.product.image}
+                        alt={line.product.name}
+                        fill
+                        sizes="64px"
+                        className="object-contain"
+                      />
+                    ) : (
+                      <span className="text-2xl">🪔</span>
+                    )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-display text-lg text-earthBrown truncate">{line.product.name}</h4>
-                    <p className="text-xs text-charcoal/60">{line.product.quantity}</p>
-                    <p className="font-price text-sm font-bold text-kumkum mt-1 tabular-nums">₹{line.product.price}</p>
+                    <h4 className="font-brand text-sm font-bold text-earthBrown truncate sm:text-base">{line.product.name}</h4>
+                    <p className="text-xs text-charcoal/70">{line.product.quantity}</p>
+                    <p className="font-price text-base font-bold text-kumkum mt-1 tabular-nums">₹{line.product.price}</p>
                   </div>
 
                   <div className="flex shrink-0 flex-col items-end gap-2">
@@ -117,18 +128,18 @@ export function CartDrawer() {
                     <div className="flex items-center rounded-lg bg-white ring-1 ring-stone-200">
                       <button
                         onClick={() => setQty(line.product.slug, line.qty - 1)}
-                        className="p-1 px-2 text-earthBrown hover:bg-turmeric/30"
+                        className="p-1 px-2.5 text-earthBrown hover:bg-turmeric/30"
                         aria-label="Decrease quantity"
                       >
-                        <Minus size={13} />
+                        <Minus size={14} />
                       </button>
-                      <span className="font-price px-2 text-xs font-bold text-charcoal tabular-nums">{line.qty}</span>
+                      <span className="font-price px-2.5 text-sm font-bold text-charcoal tabular-nums">{line.qty}</span>
                       <button
                         onClick={() => setQty(line.product.slug, line.qty + 1)}
-                        className="p-1 px-2 text-earthBrown hover:bg-turmeric/30"
+                        className="p-1 px-2.5 text-earthBrown hover:bg-turmeric/30"
                         aria-label="Increase quantity"
                       >
-                        <Plus size={13} />
+                        <Plus size={14} />
                       </button>
                     </div>
                   </div>
@@ -174,43 +185,43 @@ export function CartDrawer() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-charcoal/70">Total Items</span>
+              <div className="flex items-center justify-between text-base font-medium">
+                <span className="text-charcoal/80">Total Items</span>
                 <span className="font-bold text-earthBrown">{totalItems} items</span>
               </div>
 
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-charcoal/70">Subtotal</span>
-                <span className="font-price font-semibold text-earthBrown tabular-nums">₹{subtotal}</span>
+              <div className="flex items-center justify-between text-base font-medium">
+                <span className="text-charcoal/80">Subtotal</span>
+                <span className="font-price font-bold text-earthBrown tabular-nums">₹{subtotal}</span>
               </div>
 
               {appliedCoupon && couponDiscount > 0 && (
-                <div className="flex items-center justify-between text-sm text-[#3F7D45]">
+                <div className="flex items-center justify-between text-base text-[#3F7D45] font-semibold">
                   <span>Discount</span>
                   <span className="font-price font-bold tabular-nums">-₹{couponDiscount}</span>
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-lg font-bold pt-1 border-t border-antiqueGold/20">
-                <span className="font-display text-xl text-earthBrown">Estimated Total</span>
-                <span className="font-price text-saffron tabular-nums">₹{Math.max(0, subtotal - couponDiscount)}</span>
+              <div className="flex items-center justify-between text-lg font-bold pt-2 border-t border-antiqueGold/25">
+                <span className="font-brand text-lg text-earthBrown sm:text-xl uppercase tracking-wider">Estimated Total</span>
+                <span className="font-price text-2xl font-extrabold text-[#9E1830] tabular-nums">₹{Math.max(0, subtotal - couponDiscount)}</span>
               </div>
-              <p className="text-[11px] text-charcoal/60">Taxes and shipping calculated at checkout.</p>
+              <p className="text-xs text-charcoal/70">Taxes and shipping calculated at checkout.</p>
 
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <Link
                   href="/cart"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-outline-earth flex min-h-11 items-center justify-center whitespace-nowrap rounded-md px-2 py-3 text-center text-[10px] uppercase tracking-wide sm:text-xs sm:tracking-wider"
+                  className="btn-outline-earth flex min-h-12 items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-center text-xs font-bold uppercase tracking-wider shadow-sm sm:text-sm"
                 >
                   View Basket
                 </Link>
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-saffron flex min-h-11 items-center justify-center gap-1 whitespace-nowrap rounded-md px-2 py-3 text-center text-[10px] uppercase tracking-wide sm:text-xs sm:tracking-wider"
+                  className="btn-saffron flex min-h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-3 text-center text-xs font-bold uppercase tracking-wider shadow-sm sm:text-sm"
                 >
-                  Checkout <ArrowRight size={14} />
+                  Checkout <ArrowRight size={16} />
                 </Link>
               </div>
             </div>

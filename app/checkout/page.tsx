@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShieldCheck, Lock, CreditCard, Truck, Check, ArrowLeft, ArrowRight, Sparkles, MapPin, CheckCircle2, Plus, Home, Tag } from "lucide-react";
@@ -227,7 +228,7 @@ export default function CheckoutPage() {
           currency: orderData.razorpay.currency || "INR",
           name: "HM Agarbattis",
           description: `Order #${orderId}`,
-          image: "/images/media_1790142713668.jpg",
+          image: "/images/brand_logo_gold_transparent.png",
           order_id: orderData.razorpay.orderId,
           prefill: {
             name: formData.fullName,
@@ -336,7 +337,7 @@ export default function CheckoutPage() {
       <div className="page-container py-8 sm:py-10">
         {lines.length === 0 ? (
           <div className="empty-state mx-auto max-w-xl">
-            <h2 className="font-display text-3xl text-[#6B4226] font-bold">
+            <h2 className="font-brand text-xl sm:text-2xl text-[#111827] font-bold">
               Your basket is empty
             </h2>
             <p className="text-sm text-[#292524]/70 mt-2">
@@ -386,7 +387,7 @@ export default function CheckoutPage() {
                 <div className="surface-card space-y-6 p-6 sm:p-8">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#C89B3C]/30 pb-3">
                     <div>
-                      <h3 className="font-display text-2xl text-[#6B4226] font-bold">
+                      <h3 className="font-brand text-base sm:text-lg text-[#111827] font-bold uppercase tracking-wider">
                         1. Shipping & Delivery Address
                       </h3>
                       <p className="text-xs text-[#292524]/70 mt-0.5">
@@ -637,7 +638,7 @@ export default function CheckoutPage() {
               {/* Step 2: Delivery Method */}
               {step === 2 && (
                 <div className="surface-card space-y-5 p-8">
-                  <h3 className="font-display text-2xl text-[#6B4226] font-bold">
+                  <h3 className="font-brand text-base sm:text-lg text-[#111827] font-bold uppercase tracking-wider">
                     2. Select Delivery Option
                   </h3>
 
@@ -688,7 +689,7 @@ export default function CheckoutPage() {
               {/* Step 3: Payment Method */}
               {step === 3 && (
                 <form onSubmit={handleSubmitOrder} className="surface-card space-y-6 p-8">
-                  <h3 className="font-display text-2xl text-[#6B4226] font-bold">
+                  <h3 className="font-brand text-base sm:text-lg text-[#111827] font-bold uppercase tracking-wider">
                     3. Secure Payment Method
                   </h3>
 
@@ -774,18 +775,34 @@ export default function CheckoutPage() {
             {/* Right Order Summary & Reassurance */}
             <div className="lg:col-span-5 space-y-6">
               <aside className="surface-card space-y-4 p-6">
-                <h3 className="font-display text-xl text-[#6B4226] font-bold border-b border-[#C89B3C]/30 pb-3">
+                <h3 className="font-brand text-base text-[#111827] font-bold uppercase tracking-wider border-b border-[#C89B3C]/30 pb-3">
                   Sacred Basket ({totalItems} items)
                 </h3>
 
-                <div className="space-y-3 max-h-64 overflow-y-auto pr-1 divide-y divide-[#C89B3C]/20">
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-1 divide-y divide-[#eadfc9]/50">
                   {lines.map((l) => (
-                    <div key={l.product.slug} className="pt-2 flex justify-between text-xs">
-                      <div>
-                        <span className="font-bold text-[#6B4226] block">{l.product.name}</span>
-                        <span className="text-[11px] text-[#292524]/60">Qty: {l.qty} • {l.product.quantity}</span>
+                    <div key={l.product.slug} className="pt-2.5 flex items-center gap-3 text-xs">
+                      <div className="relative w-12 h-12 bg-white rounded-lg border border-[#eadfc9] overflow-hidden shrink-0 flex items-center justify-center p-0.5">
+                        {l.product.image ? (
+                          <Image
+                            src={l.product.image}
+                            alt={l.product.name}
+                            fill
+                            sizes="48px"
+                            className="object-contain"
+                          />
+                        ) : (
+                          <span className="text-xl">🪔</span>
+                        )}
+                        <span className="absolute -top-1 -right-1 bg-[#9E1830] text-white text-[9px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center shadow-xs">
+                          {l.qty}
+                        </span>
                       </div>
-                      <span className="font-bold text-[#B23A48]">₹{l.product.price * l.qty}</span>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-bold text-[#111827] block truncate">{l.product.name}</span>
+                        <span className="text-[11px] text-[#6B7280]">{l.product.quantity}</span>
+                      </div>
+                      <span className="font-bold text-[#9E1830] text-sm tabular-nums shrink-0">₹{l.product.price * l.qty}</span>
                     </div>
                   ))}
                 </div>

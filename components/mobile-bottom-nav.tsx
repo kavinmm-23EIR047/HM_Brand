@@ -13,8 +13,8 @@ export function MobileBottomNav() {
 
   const accountHref = user ? "/account" : "/login";
   const itemClass = (active: boolean) =>
-    `flex h-12 min-w-[48px] flex-col items-center justify-center gap-0.5 text-[10px] font-bold transition-colors ${
-      active ? "text-[#9E1830]" : "text-[#173B3A]/70"
+    `flex h-12 min-w-[52px] flex-col items-center justify-center gap-1 text-xs font-bold tracking-wide transition-colors ${
+      active ? "text-[#9E1830]" : "text-[#173B3A]/85 hover:text-[#9E1830]"
     }`;
 
   return (

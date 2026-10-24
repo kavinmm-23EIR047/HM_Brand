@@ -133,22 +133,22 @@ export default async function ProductDetailsPage({
               </div>
 
               {/* Title, Subtitle & Bundle Notice */}
-              <div className="space-y-2.5">
-                <h1 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-[#173B3A]">
+              <div className="space-y-2">
+                <h1 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold leading-tight tracking-wide text-[#111827] uppercase">
                   {product.name}
                 </h1>
 
                 {/* Fragrance Note */}
-                <p className="font-serif italic text-base sm:text-lg text-[#8C6239] leading-snug">
+                <p className="font-brand text-xs sm:text-sm text-[#9E1830] font-bold tracking-wide uppercase leading-snug">
                   {product.note && !product.note.toLowerCase().includes("complete bundle") && !product.note.toLowerCase().includes("cannot be purchased")
                     ? product.note
                     : "A sacred fragrance crafted to bring divine peace, positivity and serenity into your home."}
                 </p>
 
                 {/* Complete Bundle Info Badge (Rendered once, cleanly) */}
-                <div className="inline-flex items-center gap-2 rounded-xl bg-[#FFF9EE] border border-[#F6C84C]/60 px-3.5 py-2 text-xs text-[#8C6239] shadow-2xs">
+                <div className="inline-flex items-center gap-2 rounded-xl bg-[#FFF5F5] border border-[#9E1830]/35 px-3.5 py-2 text-xs text-[#9E1830] font-bold shadow-2xs">
                   <Package size={14} className="text-[#9E1830] shrink-0" />
-                  <span className="font-medium">
+                  <span>
                     Available as a complete bundle · Individual boxes cannot be purchased separately.
                   </span>
                 </div>
@@ -162,10 +162,10 @@ export default async function ProductDetailsPage({
                     <Package size={17} />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-stone-500 block truncate">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#4B5563] block truncate">
                       Pack Size
                     </span>
-                    <span className="text-xs sm:text-sm font-bold text-[#173B3A] truncate block">
+                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] truncate block uppercase">
                       {product.quantity || "Budget Pack"}
                     </span>
                   </div>
@@ -177,10 +177,10 @@ export default async function ProductDetailsPage({
                     <Clock size={17} />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-stone-500 block truncate">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#4B5563] block truncate">
                       Duration
                     </span>
-                    <span className="text-xs sm:text-sm font-bold text-[#173B3A] truncate block">
+                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] truncate block uppercase">
                       {product.burnTime || "45–50 min/stick"}
                     </span>
                   </div>
@@ -192,10 +192,10 @@ export default async function ProductDetailsPage({
                     <Leaf size={17} />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-stone-500 block truncate">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#4B5563] block truncate">
                       Formulation
                     </span>
-                    <span className="text-xs sm:text-sm font-bold text-[#173B3A] truncate block">
+                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] truncate block uppercase">
                       100% Charcoal-Free
                     </span>
                   </div>
@@ -204,7 +204,7 @@ export default async function ProductDetailsPage({
 
               {/* Aromatic Notes Container */}
               <div className="space-y-2 pt-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#173B3A] block">
+                <span className="font-brand text-xs font-bold uppercase tracking-wider text-[#111827] block">
                   Aromatic Notes
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
@@ -214,14 +214,14 @@ export default async function ProductDetailsPage({
                   ).map((note, idx) => (
                     <span
                       key={note}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF7EE] border border-[#EADBBD] px-3.5 py-1 text-xs font-semibold text-[#8C6239] shadow-2xs hover:border-[#F6C84C] transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF7EE] border border-[#EADBBD] px-4 py-1.5 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#111827] shadow-2xs hover:border-[#F6C84C] transition-colors"
                     >
                       {idx === 0 ? (
-                        <Leaf size={12} className="text-[#8C6239]" />
+                        <Leaf size={13} className="text-[#287541]" />
                       ) : idx === 1 ? (
-                        <Droplets size={12} className="text-[#8C6239]" />
+                        <Droplets size={13} className="text-[#0284C7]" />
                       ) : (
-                        <Sparkles size={12} className="text-[#8C6239]" />
+                        <Sparkles size={13} className="text-[#D97706]" />
                       )}
                       {note}
                     </span>

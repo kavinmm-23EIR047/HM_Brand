@@ -24,26 +24,30 @@ interface CategoryItem {
   }[];
 }
 
+const UNIFIED_CIRCLE_BG = "bg-gradient-to-br from-[#9E1830] via-[#851327] to-[#660B1C]";
+const UNIFIED_ARROW_BG = "bg-[#F6C84C] text-[#173B3A]";
+const UNIFIED_TEXT_COLOR = "text-[#173B3A]";
+
 const categoryPresets: Record<string, { circleBg: string; arrowBg: string; textColor: string; art: any }> = {
-  "agarbatti": { circleBg: "bg-[#9E1830]", arrowBg: "bg-[#F47A20]", textColor: "text-[#9E1830]", art: "incense" },
-  "camphor": { circleBg: "bg-[#4C7FA8]", arrowBg: "bg-[#F47A20]", textColor: "text-[#4C7FA8]", art: "camphor" },
-  "dhoop-stick-bambooless-stick": { circleBg: "bg-[#3F7D45]", arrowBg: "bg-[#F47A20]", textColor: "text-[#3F7D45]", art: "loban" },
-  "dhoop-stick-bamboo-less-stick": { circleBg: "bg-[#3F7D45]", arrowBg: "bg-[#F47A20]", textColor: "text-[#3F7D45]", art: "loban" },
-  "incense-cone": { circleBg: "bg-[#F47A20]", arrowBg: "bg-[#9E1830]", textColor: "text-[#F47A20]", art: "loban" },
-  "incense-cones": { circleBg: "bg-[#F47A20]", arrowBg: "bg-[#9E1830]", textColor: "text-[#F47A20]", art: "loban" },
-  "chandan-cups": { circleBg: "bg-[#F6C84C]", arrowBg: "bg-[#9E1830]", textColor: "text-[#173B3A]", art: "sandalwood" },
-  "havan-cups": { circleBg: "bg-[#F6C84C]", arrowBg: "bg-[#9E1830]", textColor: "text-[#173B3A]", art: "sandalwood" },
-  "sambhrani-powder": { circleBg: "bg-[#D96B27]", arrowBg: "bg-[#9E1830]", textColor: "text-[#D96B27]", art: "sambrani" },
-  "sambrani-powder": { circleBg: "bg-[#D96B27]", arrowBg: "bg-[#9E1830]", textColor: "text-[#D96B27]", art: "sambrani" },
-  "pooja-essentials": { circleBg: "bg-[#7653A6]", arrowBg: "bg-[#F47A20]", textColor: "text-[#7653A6]", art: "diya" },
-  "gift-sets": { circleBg: "bg-[#5F8559]", arrowBg: "bg-[#F47A20]", textColor: "text-[#5F8559]", art: "gift" },
-  "family-pack": { circleBg: "bg-[#A90C35]", arrowBg: "bg-[#F47A20]", textColor: "text-[#A90C35]", art: "gift" },
+  "agarbatti": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "incense" },
+  "camphor": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "camphor" },
+  "dhoop-stick-bambooless-stick": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "dhoop-stick" },
+  "dhoop-stick-bamboo-less-stick": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "dhoop-stick" },
+  "incense-cone": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "cone" },
+  "incense-cones": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "cone" },
+  "chandan-cups": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "chandan-cup" },
+  "havan-cups": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "chandan-cup" },
+  "sambhrani-powder": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "sambrani-powder" },
+  "sambrani-powder": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "sambrani-powder" },
+  "pooja-essentials": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "diya" },
+  "gift-sets": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "gift-set" },
+  "family-pack": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "family-pack" },
   // Compatibility fallbacks
-  "agarbatti-flora": { circleBg: "bg-[#9E1830]", arrowBg: "bg-[#F47A20]", textColor: "text-[#9E1830]", art: "incense" },
-  "bhimseni-camphor": { circleBg: "bg-[#4C7FA8]", arrowBg: "bg-[#F47A20]", textColor: "text-[#4C7FA8]", art: "camphor" },
-  "sambrani": { circleBg: "bg-[#D96B27]", arrowBg: "bg-[#9E1830]", textColor: "text-[#D96B27]", art: "sambrani" },
-  "loban-dhoop": { circleBg: "bg-[#3F7D45]", arrowBg: "bg-[#F47A20]", textColor: "text-[#3F7D45]", art: "loban" },
-  "sandalwood": { circleBg: "bg-[#F6C84C]", arrowBg: "bg-[#9E1830]", textColor: "text-[#173B3A]", art: "sandalwood" },
+  "agarbatti-flora": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "incense" },
+  "bhimseni-camphor": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "camphor" },
+  "sambrani": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "sambrani-powder" },
+  "loban-dhoop": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "dhoop-stick" },
+  "sandalwood": { circleBg: UNIFIED_CIRCLE_BG, arrowBg: UNIFIED_ARROW_BG, textColor: UNIFIED_TEXT_COLOR, art: "chandan-cup" },
 };
 
 const agarbattiSubcategories = [
@@ -72,9 +76,9 @@ const fallbackCategories: CategoryItem[] = [
     slug: "agarbatti",
     subtitle: "Divine Handcrafted",
     href: "/shop?category=agarbatti",
-    circleBg: "bg-[#9E1830]",
-    arrowBg: "bg-[#F47A20]",
-    textColor: "text-[#9E1830]",
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
     art: "incense" as const,
     subCategories: agarbattiSubcategories,
   },
@@ -83,9 +87,9 @@ const fallbackCategories: CategoryItem[] = [
     slug: "camphor",
     subtitle: "99.9% Pure Pine",
     href: "/shop?category=camphor",
-    circleBg: "bg-[#4C7FA8]",
-    arrowBg: "bg-[#F47A20]",
-    textColor: "text-[#4C7FA8]",
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
     art: "camphor" as const,
   },
   {
@@ -93,49 +97,49 @@ const fallbackCategories: CategoryItem[] = [
     slug: "dhoop-stick-bambooless-stick",
     subtitle: "Pure Herbal Sticks",
     href: "/shop?category=dhoop-stick-bambooless-stick",
-    circleBg: "bg-[#3F7D45]",
-    arrowBg: "bg-[#F47A20]",
-    textColor: "text-[#3F7D45]",
-    art: "loban" as const,
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
+    art: "dhoop-stick" as const,
   },
   {
     name: "Incense Cone",
     slug: "incense-cone",
     subtitle: "Charcoal-free Cones",
     href: "/shop?category=incense-cone",
-    circleBg: "bg-[#F47A20]",
-    arrowBg: "bg-[#9E1830]",
-    textColor: "text-[#F47A20]",
-    art: "loban" as const,
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
+    art: "cone" as const,
   },
   {
     name: "Chandan Cups",
     slug: "chandan-cups",
     subtitle: "Sacred Sandalwood",
     href: "/shop?category=chandan-cups",
-    circleBg: "bg-[#F6C84C]",
-    arrowBg: "bg-[#9E1830]",
-    textColor: "text-[#173B3A]",
-    art: "sandalwood" as const,
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
+    art: "chandan-cup" as const,
   },
   {
     name: "Sambhrani Powder",
     slug: "sambhrani-powder",
     subtitle: "Pure Resin Smoke",
     href: "/shop?category=sambhrani-powder",
-    circleBg: "bg-[#D96B27]",
-    arrowBg: "bg-[#9E1830]",
-    textColor: "text-[#D96B27]",
-    art: "sambrani" as const,
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
+    art: "sambrani-powder" as const,
   },
   {
     name: "Pooja Essentials",
     slug: "pooja-essentials",
     subtitle: "Daily Temple Needs",
     href: "/shop?category=pooja-essentials",
-    circleBg: "bg-[#7653A6]",
-    arrowBg: "bg-[#F47A20]",
-    textColor: "text-[#7653A6]",
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
     art: "diya" as const,
   },
   {
@@ -143,20 +147,20 @@ const fallbackCategories: CategoryItem[] = [
     slug: "gift-sets",
     subtitle: "Festive Bundles",
     href: "/shop?category=gift-sets",
-    circleBg: "bg-[#5F8559]",
-    arrowBg: "bg-[#F47A20]",
-    textColor: "text-[#5F8559]",
-    art: "gift" as const,
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
+    art: "gift-set" as const,
   },
   {
     name: "Family Pack",
     slug: "family-pack",
     subtitle: "Economy Assortment",
     href: "/shop?category=family-pack",
-    circleBg: "bg-[#A90C35]",
-    arrowBg: "bg-[#F47A20]",
-    textColor: "text-[#A90C35]",
-    art: "gift" as const,
+    circleBg: UNIFIED_CIRCLE_BG,
+    arrowBg: UNIFIED_ARROW_BG,
+    textColor: UNIFIED_TEXT_COLOR,
+    art: "family-pack" as const,
   },
 ];
 
@@ -209,7 +213,7 @@ export function CategoryStrip() {
         {/* Section Header */}
         <div className="text-center mb-3 sm:mb-4 flex items-center justify-center gap-2">
           <span className="h-px w-8 bg-[#9E1830]/30 hidden sm:inline-block" />
-          <span className="font-space text-[10px] sm:text-[11px] font-extrabold tracking-[.2em] text-[#9E1830] uppercase">
+          <span className="font-brand text-[11px] sm:text-xs font-bold tracking-[.2em] text-[#9E1830] uppercase">
             EXPLORE SACRED CATEGORIES
           </span>
           <span className="h-px w-8 bg-[#9E1830]/30 hidden sm:inline-block" />
@@ -224,7 +228,7 @@ export function CategoryStrip() {
             return (
               <div
                 key={item.slug || idx}
-                className="relative group flex w-[86px] min-[380px]:w-[96px] shrink-0 snap-start flex-col items-center px-1 text-center sm:w-auto"
+                className="relative group flex w-[88px] min-[380px]:w-[104px] shrink-0 snap-start flex-col items-center px-1 text-center sm:w-auto"
                 onMouseEnter={() => hasSubs && setActiveDropdown(item.slug)}
                 onMouseLeave={() => hasSubs && setActiveDropdown(null)}
               >
@@ -240,27 +244,27 @@ export function CategoryStrip() {
                   className="flex flex-col items-center group-hover:scale-105 transition-transform duration-300"
                 >
                   {/* Circle with SVG Illustration & Arrow Icon */}
-                  <div className="relative mb-2 h-[64px] w-[64px] min-[360px]:h-[74px] min-[360px]:w-[74px] sm:h-[90px] sm:w-[90px]">
-                    <div className={`h-full w-full overflow-hidden rounded-full ${item.circleBg} shadow-md ring-4 ring-white transition-all duration-300 group-hover:ring-[#F6C84C]`}>
+                  <div className="relative mb-2 h-[68px] w-[68px] min-[360px]:h-[78px] min-[360px]:w-[78px] sm:h-[94px] sm:w-[94px]">
+                    <div className={`h-full w-full overflow-hidden rounded-full ${item.circleBg} shadow-md ring-4 ring-white border border-[#F6C84C]/45 transition-all duration-300 group-hover:ring-[#F6C84C] group-hover:shadow-lg`}>
                       <RitualArt kind={item.art} className="h-full w-full scale-[1.12] p-1.5" />
                     </div>
 
-                    {/* Arrow Badge / Series Indicator */}
-                    <div className={`absolute bottom-0 right-0 w-6 h-6 min-[360px]:w-7 min-[360px]:h-7 rounded-full ${item.arrowBg} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 border-2 border-white`}>
-                      {hasSubs ? <ChevronDown size={13} className="text-white" /> : <ArrowRight size={13} />}
+                    {/* Golden Arrow Badge / Series Indicator */}
+                    <div className={`absolute bottom-0 right-0 w-6 h-6 min-[360px]:w-7 min-[360px]:h-7 rounded-full ${item.arrowBg} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 border-2 border-white`}>
+                      {hasSubs ? <ChevronDown size={13} className="text-[#173B3A]" /> : <ArrowRight size={13} className="text-[#173B3A]" />}
                     </div>
                   </div>
 
                   {/* Category Title */}
-                  <div className={`font-heading text-[10px] min-[360px]:text-[11px] sm:text-xs font-bold leading-tight ${item.textColor} group-hover:underline max-w-[90px] sm:max-w-[100px] line-clamp-2`}>
+                  <div className="font-brand text-[11px] min-[360px]:text-xs sm:text-[13px] font-bold leading-snug text-[#111827] group-hover:text-[#9E1830] max-w-[100px] sm:max-w-[120px] line-clamp-2 tracking-wide uppercase">
                     {item.name}
                   </div>
 
                   {/* Subcategory Hint Badge for Agarbatti */}
                   {hasSubs && (
-                    <span className="mt-1 inline-flex items-center gap-0.5 rounded-full bg-[#9E1830] text-[8px] sm:text-[9px] font-extrabold text-[#F6C84C] px-2 py-0.5 shadow-2xs border border-[#F6C84C]/60">
+                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#9E1830] text-[10px] sm:text-xs font-bold text-[#F6C84C] px-2.5 py-0.5 shadow-xs border border-[#F6C84C]/60">
                       <span>3 Series</span>
-                      <ChevronDown size={9} />
+                      <ChevronDown size={10} />
                     </span>
                   )}
                 </Link>

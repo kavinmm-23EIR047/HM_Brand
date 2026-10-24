@@ -3,18 +3,16 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star, Plus, Heart, ShoppingBag, Sparkles, ShieldCheck } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { CategoryStrip } from "@/components/category-strip";
 import { HeroBannerSlider } from "@/components/hero-banner-slider";
 import { TrustStrip } from "@/components/trust-strip";
 import { BentoPromos } from "@/components/bento-promos";
-import { PromoBanners } from "@/components/promo-banners";
 import { DeliveryReachBanner } from "@/components/delivery-reach-banner";
 import { Testimonials } from "@/components/testimonials";
 import { OurStorySection } from "@/components/our-story-section";
-import { ProductCard } from "@/components/product-card";
 import { BestsellerShowcase } from "@/components/bestseller-showcase";
 import { useStore } from "@/components/store";
 
@@ -35,25 +33,25 @@ export default function HomePage() {
         {/* 3. VISUAL CATEGORY NAVIGATION (7 CIRCLES) */}
         <CategoryStrip />
 
-        {/* 4. BESTSELLERS PRODUCT SHOWCASE */}
+        {/* 4. BESTSELLERS PRODUCT SHOWCASE (CATEGORY TABS & DIRECT CONVERSION) */}
         <BestsellerShowcase />
 
-        {/* 5. DELIVERY REACH BANNER (100+ SOUTH INDIA DISTRICTS) */}
-        <DeliveryReachBanner />
+        {/* 5. THE HM PURITY PROMISE (CORE BRAND DIFFERENTIATOR & TRUST PILLARS) */}
+        <TrustStrip />
 
-        {/* 6. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER) */}
+        {/* 6. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER & VALUE BUNDLES) */}
         <BentoPromos />
 
-        {/* 7. DUAL PROMO BANNERS */}
-        <PromoBanners />
+        {/* 7. DELIVERY REACH BANNER (100+ SOUTH INDIA DISTRICTS FAST DISPATCH) */}
+        <DeliveryReachBanner />
 
-        {/* 8. CUSTOMER REVIEWS */}
+        {/* 9. CUSTOMER REVIEWS & VERIFIED BUYER SOCIAL PROOF */}
         <Testimonials />
 
-        {/* 9. BRAND STORY & WELLBEING */}
+        {/* 10. BRAND STORY & VEDIC WELLBEING */}
         <OurStorySection />
 
-        {/* 10. FINAL CTA BANNER ("Find Your God Within") */}
+        {/* 11. FINAL CTA BANNER ("Discover the Divine Within - Shop Sacred Collection") */}
         <section className="section-spacing bg-sandalLight px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] mx-auto relative overflow-hidden rounded-tl-[36px] rounded-br-[36px] rounded-tr-2xl rounded-bl-2xl sm:rounded-tl-[52px] sm:rounded-br-[52px] sm:rounded-tr-3xl sm:rounded-bl-3xl bg-gradient-to-r from-[#3e1b60] via-[#562d7c] to-[#351654] p-4 sm:p-8 lg:p-10">
             
@@ -72,10 +70,10 @@ export default function HomePage() {
                 </span>
 
                 <div>
-                  <span className="font-script text-2xl sm:text-4xl lg:text-5xl text-[#F6C84C] font-normal block leading-tight">
+                  <span className="font-script text-xl sm:text-2xl lg:text-3xl text-[#F6C84C] font-normal block leading-tight">
                     Discover the Divine Within
                   </span>
-                  <h2 className="mt-0.5 font-heading text-base sm:text-2xl lg:text-3xl font-extrabold text-white leading-snug">
+                  <h2 className="mt-0.5 font-heading text-sm sm:text-lg lg:text-xl font-bold text-white leading-snug">
                     Bring Sacred Fragrance &amp; Peace Into Your Everyday Life
                   </h2>
                 </div>
@@ -124,9 +122,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* 11. THE HM PURITY PROMISE / TRUST STRIP */}
-        <TrustStrip />
 
       </main>
 

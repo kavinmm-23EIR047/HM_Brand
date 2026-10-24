@@ -50,19 +50,19 @@ export function InnerPage({
                 </nav>
 
                 {/* Eyebrow Badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white/80 px-3 py-1 text-[10px] sm:text-xs font-extrabold tracking-widest text-[#9E1830] uppercase">
-                  <Sparkles size={13} className="text-[#F47A20] animate-pulse" />
+                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white/80 px-3 py-1 font-brand text-[11px] sm:text-xs font-bold tracking-[0.2em] text-[#9E1830] uppercase shadow-2xs border border-[#EADBBD]">
+                  <Sparkles size={13} className="text-[#F47A20]" />
                   <span>{eyebrow}</span>
                 </div>
 
                 {/* Page Title */}
-                <h1 className="font-heading text-3xl font-extrabold leading-tight tracking-tight text-[#173B3A] sm:text-4xl lg:text-5xl">
+                <h1 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold leading-tight tracking-wide text-[#111827] uppercase">
                   {title}
                 </h1>
 
                 {/* Subtitle / Feel-Good Copy */}
                 {subtitle && (
-                  <p className="max-w-2xl font-sans text-sm sm:text-base leading-relaxed text-[#292524]/85">
+                  <p className="max-w-2xl font-sans text-xs sm:text-sm leading-relaxed text-[#374151] font-normal">
                     {subtitle}
                   </p>
                 )}
@@ -72,8 +72,8 @@ export function InnerPage({
               <div className="hidden lg:flex shrink-0 items-center justify-center relative">
                 <div className="h-32 w-32 rounded-full bg-[#FFF4D6] p-2 flex items-center justify-center">
                   <div className="h-full w-full rounded-full bg-gradient-to-br from-[#9E1830] to-[#6A0C1E] flex flex-col items-center justify-center text-center p-3 shadow-md">
-                    <span className="font-script text-xl text-[#F6C84C]">Coimbatore</span>
-                    <span className="text-[9px] font-bold text-white uppercase tracking-widest mt-0.5">Pure Heritage</span>
+                    <span className="font-brand text-base font-bold text-[#FDE68A] uppercase tracking-wider">Coimbatore</span>
+                    <span className="font-brand text-[10px] font-bold text-white uppercase tracking-widest mt-0.5">Pure Heritage</span>
                   </div>
                 </div>
               </div>

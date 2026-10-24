@@ -44,7 +44,7 @@ export function AgarbattiStory() {
           <span className="text-xs font-bold tracking-[0.25em] text-saffron uppercase block">
             A SACRED MOMENT WITH HM AGARBATTIS
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl text-earthBrown mt-3">
+          <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold text-earthBrown mt-2 uppercase tracking-wide">
             Let Your Space Tell a Different Story
           </h2>
           <p className="text-sm text-earthBrown/80 mt-3 max-w-xl mx-auto leading-relaxed">

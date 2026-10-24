@@ -35,21 +35,85 @@ export interface Product {
   couponCode?: string;
 }
 
+const PRODUCT_PHOTOSHOOT_MAP: Record<string, string> = {
+  "glory": "/images/products/hm_glory_agarbatti.jpg",
+  "glory-budget-pack": "/images/products/hm_glory_agarbatti.jpg",
+  "super-series-glory": "/images/products/hm_glory_agarbatti.jpg",
+  "cardamom": "/images/products/hm_cardamom_agarbatti.jpg",
+  "exclusive-cardamom-sambrani": "/images/products/hm_cardamom_agarbatti.jpg",
+  "guggal": "/images/products/hm_guggal_agarbatti.jpg",
+  "super-series-guggal": "/images/products/hm_guggal_agarbatti.jpg",
+  "loban-super-budget-pack": "/images/products/hm_guggal_agarbatti.jpg",
+  "super-series-loban": "/images/products/hm_guggal_agarbatti.jpg",
+  "italian-mehak": "/images/products/hm_italian_mehak_dhoop.jpg",
+  "mehak-italian-agarbatti": "/images/products/hm_italian_mehak_dhoop.jpg",
+  "indian-bakhoor": "/images/products/hm_indian_bakhoor_dhoop.jpg",
+  "cup-sambarani": "/images/products/hm_pure_loban_cup_sambrani.jpg",
+  "cup-sambrani-15nos": "/images/products/hm_pure_loban_cup_sambrani.jpg",
+  "camphor": "/images/products/hm_camphor_no25.jpg",
+  "camphor-0896": "/images/products/hm_camphor_no25.jpg",
+  "camphor-2381": "/images/products/hm_camphor_no25.jpg",
+  "pure-camphor-rounds": "/images/products/hm_camphor_no25.jpg",
+};
+
 export function mapDbProductToProduct(p: any): Product {
   const rawImages: any[] = Array.isArray(p.images) ? p.images : [];
-  const primaryImgObj = rawImages.find((img: any) => img.isPrimary) || rawImages[0];
-  const primaryImg = primaryImgObj?.url || p.imageUrl || "/images/agarbatti_cutout.jpg";
+  const seenUrls = new Set<string>();
+  const uniqueImages: ProductImageItem[] = [];
 
-  const images: ProductImageItem[] = rawImages.length > 0
-    ? rawImages.map((img: any, idx: number) => ({
-        id: img.id,
-        url: img.url,
-        storageKey: img.storageKey,
-        altText: img.altText || p.name,
-        isPrimary: Boolean(img.isPrimary || (idx === 0 && !rawImages.some((i: any) => i.isPrimary))),
-        displayOrder: typeof img.displayOrder === 'number' ? img.displayOrder : idx,
-      }))
-    : (primaryImg ? [{ url: primaryImg, isPrimary: true, displayOrder: 0 }] : []);
+  const photoshootUrl = PRODUCT_PHOTOSHOOT_MAP[p.slug];
+  if (photoshootUrl) {
+    seenUrls.add(photoshootUrl);
+    uniqueImages.push({
+      url: photoshootUrl,
+      altText: p.name,
+      isPrimary: true,
+      displayOrder: -1,
+    });
+  }
+
+  for (let idx = 0; idx < rawImages.length; idx++) {
+    const img = rawImages[idx];
+    if (img?.url && typeof img.url === "string") {
+      const trimmed = img.url.trim();
+      if (trimmed && !seenUrls.has(trimmed)) {
+        seenUrls.add(trimmed);
+        uniqueImages.push({
+          id: img.id,
+          url: trimmed,
+          storageKey: img.storageKey,
+          altText: img.altText || p.name,
+          isPrimary: !photoshootUrl && Boolean(img.isPrimary || (uniqueImages.length === 0 && !rawImages.some((i: any) => i.isPrimary))),
+          displayOrder: typeof img.displayOrder === 'number' ? img.displayOrder : idx,
+        });
+      }
+    }
+  }
+
+  if (uniqueImages.length === 0 && p.imageUrl && typeof p.imageUrl === "string" && p.imageUrl.trim()) {
+    const trimmed = p.imageUrl.trim();
+    if (!seenUrls.has(trimmed)) {
+      seenUrls.add(trimmed);
+      uniqueImages.push({
+        url: trimmed,
+        altText: p.name,
+        isPrimary: true,
+        displayOrder: 0,
+      });
+    }
+  }
+
+  const primaryImgObj = uniqueImages.find((img) => img.isPrimary) || uniqueImages[0];
+  const primaryImg = photoshootUrl || primaryImgObj?.url || p.imageUrl || "/images/products/hm_glory_agarbatti.jpg";
+
+  const images: ProductImageItem[] = uniqueImages.length > 0 ? uniqueImages : [
+    {
+      url: primaryImg,
+      altText: p.name,
+      isPrimary: true,
+      displayOrder: 0,
+    }
+  ];
 
   const categoryRelations = (p.categories || [])
     .map((link: any) => link.category)

@@ -98,7 +98,7 @@ export function mapProductToHit(p: any): SearchHit {
   const primaryImg =
     p.images?.find((img: any) => img.isPrimary)?.url ||
     p.images?.[0]?.url ||
-    '/images/media_1790142713668.jpg';
+    '/images/products/hm_glory_agarbatti.jpg';
 
   const categoryName =
     p.categories?.[0]?.category?.name ||

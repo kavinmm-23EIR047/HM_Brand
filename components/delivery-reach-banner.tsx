@@ -174,37 +174,9 @@ export function DeliveryReachBanner() {
   return (
     <section aria-labelledby="delivery-reach-heading" className="relative w-full bg-[#FAF7EE] py-12 sm:py-16 border-y border-[#F6C84C]/35 font-sans overflow-hidden">
       
-      {/* Decorative Top-Left Corner Botanical Leaves */}
-      <div
-        className="pointer-events-none absolute -left-8 -top-8 w-44 h-44 sm:w-60 sm:h-60 opacity-60 mix-blend-multiply select-none"
-        style={{
-          maskImage: "radial-gradient(circle at 35% 35%, black 50%, transparent 95%)",
-          WebkitMaskImage: "radial-gradient(circle at 35% 35%, black 50%, transparent 95%)",
-        }}
-      >
-        <Image
-          src="/images/purity/natural-ingredients.jpg"
-          alt=""
-          fill
-          className="object-contain -rotate-45"
-        />
-      </div>
-
-      {/* Decorative Top-Right Corner Botanical Leaves */}
-      <div
-        className="pointer-events-none absolute -right-8 -top-8 w-44 h-44 sm:w-60 sm:h-60 opacity-40 mix-blend-multiply select-none"
-        style={{
-          maskImage: "radial-gradient(circle at 65% 35%, black 50%, transparent 95%)",
-          WebkitMaskImage: "radial-gradient(circle at 65% 35%, black 50%, transparent 95%)",
-        }}
-      >
-        <Image
-          src="/images/purity/natural-ingredients.jpg"
-          alt=""
-          fill
-          className="object-contain rotate-45 scale-x-[-1]"
-        />
-      </div>
+      {/* Soft Ambient Radial Corner Accents */}
+      <div className="pointer-events-none absolute -left-12 -top-12 w-52 h-52 rounded-full bg-[#3F7D45]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-12 -top-12 w-52 h-52 rounded-full bg-[#F6C84C]/15 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
         
@@ -259,7 +231,7 @@ export function DeliveryReachBanner() {
             
             {/* Eyebrow */}
             <div className="flex items-center gap-2">
-              <span className="font-space text-xs font-bold tracking-[0.25em] text-[#9E1830] uppercase">
+              <span className="font-brand text-xs sm:text-sm font-bold tracking-[0.24em] text-[#9E1830] uppercase">
                 OUR REACH
               </span>
               <span className="text-[#F47A20] text-sm">🪷</span>
@@ -269,12 +241,12 @@ export function DeliveryReachBanner() {
             <div>
               <h2
                 id="delivery-reach-heading"
-                className="font-playfair text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#173B3A] leading-tight"
+                className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold tracking-wide text-[#111827] leading-tight uppercase"
               >
                 Connecting Fragrance to{" "}
                 <span className="text-[#9E1830]">100+ Districts</span>
               </h2>
-              <p className="mt-2 font-sans text-xs sm:text-sm leading-relaxed text-[#173B3A]/80">
+              <p className="mt-2 font-sans text-xs sm:text-sm leading-relaxed text-[#374151] font-normal">
                 Delivering the divine aroma of HM BRAND across Tamil Nadu, Kerala, Andhra Pradesh,
                 Karnataka, Telangana, and Puducherry with safe, reliable and doorstep delivery.
               </p>

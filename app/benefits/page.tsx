@@ -31,11 +31,11 @@ export default function BenefitsPage() {
                 <span>{content.heroBadge || "100% CHARCOAL-FREE BOTANICAL WELLNESS"}</span>
               </span>
 
-              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#173B3A] leading-tight">
+              <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#173B3A] leading-tight">
                 {content.heroTitle || "Breathe clean, pure, and spiritually uplifting fragrance."}
               </h2>
 
-              <p className="font-sans text-sm sm:text-base text-[#292524]/85 leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-[#292524]/85 leading-relaxed">
                 {content.heroDescription || "In traditional Ayurveda, fragrance is a sacred part of mindful living. Pure resins, camphor, and herbal incense bring a gentle aroma to your space."}
               </p>
 

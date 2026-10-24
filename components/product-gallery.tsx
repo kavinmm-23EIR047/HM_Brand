@@ -18,26 +18,38 @@ export function ProductGallery({
   productName,
   badge,
 }: ProductGalleryProps) {
-  // Normalize images list with supplementary angles if only 1 image provided
-  const baseImages = images && images.length > 0
-    ? images
-    : fallbackImage
-    ? [{ url: fallbackImage, altText: productName, isPrimary: true }]
-    : [{ url: "/images/agarbatti_cutout.jpg", altText: productName, isPrimary: true }];
+  // Dynamically extract and deduplicate images strictly from props/backend (no hardcoded dummy fallbacks)
+  const rawList: Array<{ url: string; altText?: string; isPrimary?: boolean }> = [];
 
-  // Ensure at least 3 thumbnail angles for a rich visual gallery matching mockup
-  const validImages: Array<{ url: string; altText?: string; isPrimary?: boolean }> = [...baseImages];
-  if (validImages.length === 1) {
-    validImages.push({
-      url: "/images/brochure-incense-boxes.png",
-      altText: `${productName} packaging`,
-      isPrimary: false,
+  if (Array.isArray(images) && images.length > 0) {
+    images.forEach((img) => {
+      if (img?.url && typeof img.url === "string" && img.url.trim()) {
+        rawList.push({
+          url: img.url.trim(),
+          altText: img.altText || productName,
+          isPrimary: Boolean(img.isPrimary),
+        });
+      }
     });
-    validImages.push({
-      url: "/images/hm_wellness_incense_scene.png",
-      altText: `${productName} sanctuary scene`,
-      isPrimary: false,
+  }
+
+  if (rawList.length === 0 && fallbackImage && typeof fallbackImage === "string" && fallbackImage.trim()) {
+    rawList.push({
+      url: fallbackImage.trim(),
+      altText: productName,
+      isPrimary: true,
     });
+  }
+
+  // Deduplicate strictly by URL so no duplicate images appear
+  const seenUrls = new Set<string>();
+  const validImages: Array<{ url: string; altText?: string; isPrimary?: boolean }> = [];
+
+  for (const img of rawList) {
+    if (!seenUrls.has(img.url)) {
+      seenUrls.add(img.url);
+      validImages.push(img);
+    }
   }
 
   const initialIndex = Math.max(
@@ -52,13 +64,22 @@ export function ProductGallery({
     setActiveIndex(idx >= 0 ? idx : 0);
   }, [images, fallbackImage]);
 
+  // Keep activeIndex within bounds if images change
+  useEffect(() => {
+    if (activeIndex >= validImages.length) {
+      setActiveIndex(0);
+    }
+  }, [validImages.length, activeIndex]);
+
   const activeImage = validImages[activeIndex] || validImages[0];
 
   const handlePrev = () => {
+    if (validImages.length <= 1) return;
     setActiveIndex((prev) => (prev > 0 ? prev - 1 : validImages.length - 1));
   };
 
   const handleNext = () => {
+    if (validImages.length <= 1) return;
     setActiveIndex((prev) => (prev < validImages.length - 1 ? prev + 1 : 0));
   };
 
@@ -75,12 +96,14 @@ export function ProductGallery({
           </span>
         </div>
 
-        {/* Top-Right Counter Pill (e.g. 1/3) */}
-        <div className="absolute top-3.5 right-3.5 z-20">
-          <span className="inline-flex items-center rounded-full bg-black/45 backdrop-blur-md px-2.5 py-0.5 text-xs font-semibold text-white border border-white/20 shadow-xs">
-            {activeIndex + 1}/{validImages.length}
-          </span>
-        </div>
+        {/* Top-Right Counter Pill (only displayed when there are multiple images e.g. 1/2, 1/3) */}
+        {validImages.length > 1 && (
+          <div className="absolute top-3.5 right-3.5 z-20">
+            <span className="inline-flex items-center rounded-full bg-black/45 backdrop-blur-md px-2.5 py-0.5 text-xs font-semibold text-white border border-white/20 shadow-xs">
+              {activeIndex + 1}/{validImages.length}
+            </span>
+          </div>
+        )}
 
         {/* Main Image Display */}
         {activeImage?.url ? (

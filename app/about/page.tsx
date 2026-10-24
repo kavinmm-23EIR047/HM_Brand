@@ -111,7 +111,7 @@ export default function AboutPage() {
                   <span className="font-space text-xs sm:text-[13px] font-bold tracking-[0.2em] text-[#9E1830] uppercase block mb-3">
                     OUR SACRED STORY &amp; HERITAGE
                   </span>
-                  <h1 className="font-playfair text-3xl sm:text-4xl lg:text-[46px] xl:text-[52px] font-bold text-[#173B3A] leading-[1.16] tracking-tight">
+                  <h1 className="font-playfair text-xl sm:text-2xl lg:text-3xl font-bold text-[#173B3A] leading-snug tracking-tight">
                     Bringing Pure Nature, Devotion &amp; Wellbeing Into Every Home
                   </h1>
                 </div>
@@ -213,7 +213,7 @@ export default function AboutPage() {
                   <span className="font-space text-xs font-bold tracking-[0.2em] text-[#9E1830] uppercase block mb-2">
                     OUR STORY
                   </span>
-                  <h2 className="font-playfair text-2xl sm:text-3xl lg:text-4xl font-bold text-[#173B3A] leading-tight">
+                  <h2 className="font-playfair text-xl sm:text-2xl lg:text-3xl font-bold text-[#173B3A] leading-tight">
                     Crafted with Pure Devotion at the Foothills of the Western Ghats
                   </h2>
                 </div>
@@ -270,7 +270,7 @@ export default function AboutPage() {
               <span className="font-space text-xs font-bold tracking-[0.2em] text-[#9E1830] uppercase block mb-2">
                 OUR 3 SACRED PILLARS
               </span>
-              <h2 className="font-playfair text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#173B3A] leading-tight">
+              <h2 className="font-playfair text-xl sm:text-2xl lg:text-3xl font-bold text-[#173B3A] leading-tight">
                 Mindfulness, Devotion &amp; Pure Virtue
               </h2>
               <p className="mt-3 text-sm sm:text-base text-[#173B3A]/75 leading-relaxed">
@@ -336,7 +336,7 @@ export default function AboutPage() {
               <span className="font-space text-xs font-bold tracking-[0.2em] text-[#3F7D45] uppercase block mb-2">
                 HOLISTIC WELLBEING
               </span>
-              <h2 className="font-playfair text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#173B3A] leading-tight">
+              <h2 className="font-playfair text-xl sm:text-2xl lg:text-3xl font-bold text-[#173B3A] leading-tight">
                 Why Choose HM Agarbattis?
               </h2>
               <p className="mt-3 text-sm sm:text-base text-[#173B3A]/75 leading-relaxed">
@@ -397,7 +397,7 @@ export default function AboutPage() {
                   FIND YOUR GOD WITHIN
                 </span>
 
-                <h2 className="font-playfair text-2xl sm:text-3xl lg:text-4xl xl:text-[44px] font-bold text-white leading-tight">
+                <h2 className="font-playfair text-xl sm:text-2xl lg:text-3xl font-bold text-white leading-tight">
                   Elevate Your Daily Rituals With Sacred Fragrance
                 </h2>
 

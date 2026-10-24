@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Plus, Minus, Trash2, ArrowRight, ShoppingBag, Sparkles, ShieldCheck, Tag } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
@@ -58,7 +59,7 @@ export default function CartPage() {
         {lines.length === 0 ? (
           <div className="empty-state mx-auto flex max-w-2xl flex-col items-center">
             <MascotBasket size={180} />
-            <h2 className="font-display text-3xl sm:text-4xl text-[#6B4226] font-bold mt-6">
+            <h2 className="font-display text-xl sm:text-2xl text-[#6B4226] font-bold mt-5">
               Your ritual basket is waiting
             </h2>
             <p className="text-sm text-[#292524]/75 mt-3 max-w-md font-sans leading-relaxed">
@@ -102,14 +103,24 @@ export default function CartPage() {
                     className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-6"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 bg-[#F4D35E]/40 rounded-xl flex items-center justify-center text-3xl shrink-0">
-                        🪔
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-xl border border-[#eadfc9] flex items-center justify-center overflow-hidden shrink-0 shadow-2xs p-1">
+                        {line.product.image ? (
+                          <Image
+                            src={line.product.image}
+                            alt={line.product.name}
+                            fill
+                            sizes="96px"
+                            className="object-contain"
+                          />
+                        ) : (
+                          <span className="text-3xl">🪔</span>
+                        )}
                       </div>
                       <div>
                         <span className="text-[10px] font-bold text-[#E85D04] uppercase tracking-wider">
                           {line.product.category}
                         </span>
-                        <h3 className="font-display text-xl text-[#6B4226] font-bold">
+                        <h3 className="font-brand text-sm sm:text-base text-[#111827] font-bold">
                           <Link href={`/product/${line.product.slug}`} className="hover:text-[#E85D04]">
                             {line.product.name}
                           </Link>
@@ -182,7 +193,7 @@ export default function CartPage() {
             {/* Order Summary Box (Right) */}
             <div className="lg:col-span-4 space-y-6">
               <div className="surface-card space-y-5 p-6 lg:sticky lg:top-24">
-                <h3 className="font-display text-2xl text-[#6B4226] font-bold border-b border-[#C89B3C]/30 pb-4">
+                <h3 className="font-brand text-lg text-[#111827] font-bold uppercase tracking-wider border-b border-[#C89B3C]/30 pb-3">
                   Order Summary
                 </h3>
 

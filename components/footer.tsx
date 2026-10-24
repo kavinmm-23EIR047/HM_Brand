@@ -69,9 +69,9 @@ export function Footer() {
           
           {/* Logo & Philosophy */}
           <div className="lg:col-span-6 space-y-3">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="inline-block group" aria-label="HM Brand home">
-                <div className="relative h-14 w-14 sm:h-16 sm:w-16 transition-transform duration-300 group-hover:scale-105">
+            <div className="flex flex-wrap items-center gap-3">
+              <Link href="/" className="flex items-center gap-3 group" aria-label="HM Brand home">
+                <div className="relative h-14 w-14 sm:h-16 sm:w-16 transition-transform duration-300 group-hover:scale-105 shrink-0">
                   <Image
                     src="/images/brand_logo_gold_transparent.png"
                     alt="HM Brand - Smell of Purity"
@@ -81,14 +81,22 @@ export function Footer() {
                     className="object-contain drop-shadow-xl"
                   />
                 </div>
+                <div className="flex flex-col justify-center leading-tight">
+                  <span className="font-brand text-xl sm:text-2xl font-bold tracking-[0.16em] uppercase text-white">
+                    HM <span className="text-[#F6C84C]">BRAND</span>
+                  </span>
+                  <span className="font-tagline text-xs sm:text-[13px] text-[#FDE68A] tracking-[0.18em] uppercase font-bold -mt-0.5 whitespace-nowrap">
+                    Discover the Divine Within
+                  </span>
+                </div>
               </Link>
-              <span className="rounded-full bg-[#F6C84C] px-3 py-1 text-[10px] sm:text-xs font-black text-[#173B3A] shadow-xs whitespace-nowrap">
+              <span className="rounded-full bg-[#F6C84C] px-3 py-0.5 text-[10px] sm:text-xs font-bold text-[#173B3A] shadow-xs whitespace-nowrap uppercase tracking-wider">
                 🇮🇳 1ST TIME IN INDIA: 10-IN-1 PACK
               </span>
             </div>
 
             <p className="font-sans text-xs sm:text-sm text-white/90 leading-relaxed font-normal max-w-xl">
-              <span className="text-[#F6C84C] font-semibold italic block mb-0.5">
+              <span className="font-brand text-xs sm:text-sm text-[#FDE68A] font-bold block mb-1 tracking-wider uppercase">
                 &ldquo;Beyond Form, Fragrance Speaks — Listen With Your Heart.&rdquo;
               </span>
               Handcrafted in Peelamedu, Coimbatore with pure botanical resins, herbs, and flower extracts.
@@ -96,21 +104,21 @@ export function Footer() {
           </div>
 
           {/* 4 Feature Pills (Compact 2x2 Grid on Mobile & Desktop) */}
-          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-              <Leaf size={15} className="text-[#F6C84C] shrink-0" />
+          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="bg-black/35 px-3.5 py-2.5 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs sm:text-sm font-semibold backdrop-blur-xs">
+              <Leaf size={16} className="text-[#F6C84C] shrink-0" />
               <span className="text-white/95">100% Natural</span>
             </div>
-            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-              <ShieldCheck size={15} className="text-[#F6C84C] shrink-0" />
+            <div className="bg-black/35 px-3.5 py-2.5 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs sm:text-sm font-semibold backdrop-blur-xs">
+              <ShieldCheck size={16} className="text-[#F6C84C] shrink-0" />
               <span className="text-white/95">No Charcoal</span>
             </div>
-            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-              <FlaskConical size={15} className="text-[#F6C84C] shrink-0" />
+            <div className="bg-black/35 px-3.5 py-2.5 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs sm:text-sm font-semibold backdrop-blur-xs">
+              <FlaskConical size={16} className="text-[#F6C84C] shrink-0" />
               <span className="text-white/95">No Chemicals</span>
             </div>
-            <div className="bg-black/25 px-3 py-2 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs font-semibold backdrop-blur-xs">
-              <Award size={15} className="text-[#F6C84C] shrink-0" />
+            <div className="bg-black/35 px-3.5 py-2.5 rounded-xl border border-[#F6C84C]/40 flex items-center gap-2 text-xs sm:text-sm font-semibold backdrop-blur-xs">
+              <Award size={16} className="text-[#F6C84C] shrink-0" />
               <span className="text-white/95">Made in India</span>
             </div>
           </div>
@@ -121,11 +129,11 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           
           {/* COLUMN 1: Categories */}
-          <div className="space-y-3">
-            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
+          <div className="space-y-3.5">
+            <h4 className="font-brand font-bold text-sm sm:text-base text-[#F6C84C] uppercase tracking-widest flex items-center gap-1.5">
               <span>✦</span> Categories
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm font-medium text-white/90">
+            <ul className="space-y-2 text-sm sm:text-[15px] font-medium text-white/95">
               <li><Link href="/category/Agarbatti" className="hover:text-[#F6C84C] transition inline-block">Agarbatti &amp; Flora</Link></li>
               <li><Link href="/category/Camphor" className="hover:text-[#F6C84C] transition inline-block">Bhimseni Camphor</Link></li>
               <li><Link href="/category/Sambrani" className="hover:text-[#F6C84C] transition inline-block">Cup Sambrani</Link></li>
@@ -136,11 +144,11 @@ export function Footer() {
           </div>
 
           {/* COLUMN 2: Quick Links */}
-          <div className="space-y-3">
-            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
+          <div className="space-y-3.5">
+            <h4 className="font-brand font-bold text-sm sm:text-base text-[#F6C84C] uppercase tracking-widest flex items-center gap-1.5">
               <span>✦</span> Quick Links
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm font-medium text-white/90">
+            <ul className="space-y-2 text-sm sm:text-[15px] font-medium text-white/95">
               <li><Link href="/about" className="hover:text-[#F6C84C] transition inline-block">Our Story</Link></li>
               <li><Link href="/benefits" className="hover:text-[#F6C84C] transition inline-block">Natural Benefits</Link></li>
               <li><Link href="/blog" className="hover:text-[#F6C84C] transition inline-block">Blog &amp; Wellness</Link></li>
@@ -151,46 +159,46 @@ export function Footer() {
           </div>
 
           {/* COLUMN 3: Workshop & Direct Contact */}
-          <div className="col-span-2 md:col-span-1 space-y-3">
-            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
+          <div className="col-span-2 md:col-span-1 space-y-3.5">
+            <h4 className="font-brand font-bold text-sm sm:text-base text-[#F6C84C] uppercase tracking-widest flex items-center gap-1.5">
               <span>✦</span> Contact &amp; Workshop
             </h4>
-            <div className="space-y-2 text-xs text-white/90">
+            <div className="space-y-2.5 text-xs sm:text-sm text-white/95 font-medium">
               <p className="flex items-start gap-1.5 leading-snug">
-                <MapPin size={14} className="text-[#F6C84C] shrink-0 mt-0.5" />
+                <MapPin size={15} className="text-[#F6C84C] shrink-0 mt-0.5" />
                 <span>143A, Peelamedu Main Rd, Sowripalayam, Coimbatore - 641028</span>
               </p>
               <p className="flex items-center gap-1.5">
-                <Phone size={13} className="text-[#F6C84C] shrink-0" />
+                <Phone size={14} className="text-[#F6C84C] shrink-0" />
                 <a href="tel:+919345633399" className="hover:text-[#F6C84C] transition">+91 9345633399, 6382177441</a>
               </p>
               <p className="flex items-center gap-1.5">
-                <Mail size={13} className="text-[#F6C84C] shrink-0" />
+                <Mail size={14} className="text-[#F6C84C] shrink-0" />
                 <a href="mailto:jayamassociatescoimbatore@gmail.com" className="truncate hover:text-[#F6C84C] transition">jayamassociatescoimbatore@gmail.com</a>
               </p>
               <p className="flex items-center gap-1.5 pt-0.5">
-                <InstagramIcon size={13} className="text-[#F6C84C] shrink-0" />
+                <InstagramIcon size={14} className="text-[#F6C84C] shrink-0" />
                 <a href="https://instagram.com/hmagarbatti5" target="_blank" rel="noopener noreferrer" className="font-bold text-[#F6C84C] hover:underline">@hmagarbatti5</a>
               </p>
             </div>
           </div>
 
           {/* COLUMN 4: Newsletter */}
-          <div className="col-span-2 md:col-span-1 space-y-3">
-            <h4 className="font-heading font-extrabold text-xs text-[#F6C84C] uppercase tracking-wider flex items-center gap-1">
+          <div className="col-span-2 md:col-span-1 space-y-3.5">
+            <h4 className="font-brand font-bold text-sm sm:text-base text-[#F6C84C] uppercase tracking-widest flex items-center gap-1.5">
               <span>✦</span> Join Our Circle
             </h4>
-            <p className="text-xs text-white/85 leading-relaxed">
+            <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
               Receive auspicious offers, new launches &amp; wellness tips.
             </p>
-            <div className="space-y-2">
+            <div className="space-y-2 pt-1">
               <input
                 suppressHydrationWarning
                 type="email"
                 placeholder="Enter your email"
-                className="w-full text-xs text-[#173B3A] bg-[#FFF4D6] px-3 py-2 rounded-xl focus:outline-none font-medium placeholder:text-[#173B3A]/60 shadow-inner"
+                className="w-full text-xs sm:text-sm text-[#173B3A] bg-[#FFF4D6] px-3.5 py-2.5 rounded-xl focus:outline-none font-medium placeholder:text-[#173B3A]/60 shadow-inner"
               />
-              <button suppressHydrationWarning className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2 rounded-xl font-bold text-xs transition shadow-md active:scale-95">
+              <button suppressHydrationWarning className="w-full bg-[#F47A20] hover:bg-[#F6C84C] hover:text-[#173B3A] text-white py-2.5 rounded-xl font-bold text-xs sm:text-sm transition shadow-md active:scale-95 cursor-pointer">
                 Subscribe
               </button>
             </div>
@@ -199,15 +207,14 @@ export function Footer() {
         </div>
 
         {/* BOTTOM BAR */}
-        <div className="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/75 text-center sm:text-left">
+        <div className="mt-8 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-white/85 text-center sm:text-left">
           <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved. • <Link href="/admin" className="hover:text-[#F6C84C] transition underline font-semibold">Admin Console</Link></p>
-          <div className="flex items-center gap-1 font-script text-base text-[#F6C84C]">
+          <div className="flex items-center gap-1.5 font-tagline text-xs sm:text-sm font-bold tracking-[0.16em] uppercase text-[#F6C84C]">
             <span>Discover the Divine Within</span>
             <Heart size={14} className="text-[#F47A20] fill-[#F47A20] ml-1" />
           </div>
           <p>Handcrafted in Coimbatore, India 🇮🇳</p>
         </div>
-
 
       </div>
     </footer>

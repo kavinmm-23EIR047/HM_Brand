@@ -67,7 +67,7 @@ export function AddPanel({ product }: { product: Product }) {
       {/* ── PRICE & STOCK ROW ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-baseline gap-3">
-          <span className="font-playfair text-3xl sm:text-4xl font-bold tracking-tight text-[#9E1830]">
+          <span className="font-brand text-3xl sm:text-4xl font-extrabold tracking-tight text-[#9E1830]">
             ₹{effectiveUnitPrice}
           </span>
           {singleItemDiscount > 0 ? (
@@ -151,12 +151,12 @@ export function AddPanel({ product }: { product: Product }) {
 
       {/* ── ACTION BUTTONS (DESKTOP & TABLET): ADD TO CART + BUY NOW + WISHLIST ── */}
       {/* Hidden on mobile to avoid duplicates with the fixed floating bottom bar */}
-      <div className="hidden md:grid grid-cols-[1fr_1fr_48px] items-center gap-3 pt-1">
+      <div className="hidden md:grid grid-cols-[1fr_1fr_52px] items-center gap-3 pt-1">
         <button
           type="button"
           onClick={handleAdd}
           disabled={!product.inStock}
-          className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl px-3 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95 ${
+          className={`flex h-13 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm sm:text-base font-bold uppercase tracking-wider transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95 ${
             added
               ? "bg-[#287541] text-white"
               : "bg-[#9E1830] hover:bg-[#800f24] text-white"
@@ -164,11 +164,11 @@ export function AddPanel({ product }: { product: Product }) {
         >
           {added ? (
             <>
-              <Check size={16} /> Added!
+              <Check size={18} /> Added!
             </>
           ) : (
             <>
-              <ShoppingBag size={16} /> Add to Cart
+              <ShoppingBag size={18} /> Add to Cart
             </>
           )}
         </button>
@@ -177,38 +177,38 @@ export function AddPanel({ product }: { product: Product }) {
           type="button"
           onClick={handleBuyNow}
           disabled={!product.inStock}
-          className="flex h-12 w-full items-center justify-center gap-1.5 rounded-xl bg-[#173B3A] hover:bg-[#112c2b] text-white px-3 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95"
+          className="flex h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#173B3A] hover:bg-[#112c2b] text-white px-4 text-sm sm:text-base font-bold uppercase tracking-wider transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95"
         >
           <span>Buy Now</span>
-          <ArrowRight size={15} />
+          <ArrowRight size={17} />
         </button>
 
         <button
           type="button"
           onClick={() => toggleWishlist(product.slug)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all shadow-2xs cursor-pointer active:scale-95 ${
+          className={`flex h-13 w-13 shrink-0 items-center justify-center rounded-xl border transition-all shadow-2xs cursor-pointer active:scale-95 ${
             wishlisted
               ? "bg-[#9E1830] text-white border-[#9E1830]"
               : "bg-white text-[#173B3A] border-[#EADBBD] hover:border-[#9E1830] hover:text-[#9E1830]"
           }`}
         >
-          <Heart size={18} fill={wishlisted ? "currentColor" : "none"} />
+          <Heart size={20} fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
       {/* ── MICRO TRUST ROW ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 text-xs text-[#173B3A]/80 border-t border-[#EADBBD]/60">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 text-xs sm:text-[13px] font-semibold text-[#173B3A]/90 border-t border-[#EADBBD]/60">
         <span className="inline-flex items-center gap-1.5">
-          <Truck size={14} className="text-[#173B3A]" />
+          <Truck size={15} className="text-[#173B3A]" />
           Free delivery on orders
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <Lock size={14} className="text-[#9E1830]" />
+          <Lock size={15} className="text-[#9E1830]" />
           100% Secure Checkout
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <Sparkles size={14} className="text-[#9E1830]" />
+          <Sparkles size={15} className="text-[#9E1830]" />
           Pure Botanicals
         </span>
       </div>

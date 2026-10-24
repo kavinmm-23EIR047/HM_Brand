@@ -129,6 +129,48 @@ export function Navigation() {
   const pathname = usePathname();
   const { totalItems, wishlist, setIsCartOpen, setIsSearchOpen, user, dbProducts } = useStore();
 
+  // Dynamic text-revealing announcements
+  const announcements = useMemo(() => [
+    {
+      badge: "🇮🇳 1ST TIME IN INDIA",
+      highlight: "10-in-1 Aroma Family Pack",
+      text: "10 Divine Fragrances in One Pack",
+      href: "/shop",
+    },
+    {
+      badge: "✦ SMELL OF PURITY",
+      highlight: "100% Charcoal-Free Herbal Resins",
+      text: "Zero Black Soot • Pure Daily Devotion",
+      href: "/purity",
+    },
+    {
+      badge: "📦 FREE DELIVERY",
+      highlight: "Directly Dispatched From Coimbatore",
+      text: "Free Express Shipping on Orders Above ₹499",
+      href: "/shop",
+    },
+    {
+      badge: "🪔 SACRED TRADITION",
+      highlight: "Kewda, Loban, Sandalwood & Camphor",
+      text: "Authentic Vedic Temple Fragrances",
+      href: "/shop",
+    },
+  ], []);
+
+  const [activeAnnounce, setActiveAnnounce] = useState(0);
+  const [isRevealing, setIsRevealing] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsRevealing(false);
+      setTimeout(() => {
+        setActiveAnnounce((prev) => (prev + 1) % announcements.length);
+        setIsRevealing(true);
+      }, 300);
+    }, 4200);
+    return () => clearInterval(timer);
+  }, [announcements.length]);
+
   useEffect(() => {
     setOpenMega(null);
     setMobileOpen(false);
@@ -168,29 +210,35 @@ export function Navigation() {
 
   return (
     <div className="relative z-50 font-sans">
-      {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-[#800f24] via-[#9E1830] to-[#5a0919] px-2 py-1.5 text-[9px] font-semibold text-white sm:px-4 sm:text-[10px] border-b border-[#F6C84C]/25">
+      {/* Top Announcement Bar with Dynamic Text Reveal */}
+      <div className="bg-gradient-to-r from-[#800f24] via-[#9E1830] to-[#5a0919] px-2.5 py-2 text-xs font-semibold text-white sm:px-4 sm:text-[13px] border-b border-[#F6C84C]/25 overflow-hidden">
         <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] flex items-center justify-between gap-2 px-3 sm:px-6">
-          <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-            <span className="truncate font-bold">
-              <span className="mr-1 text-[#F6C84C]">🇮🇳</span>
-              <span className="text-[#F6C84C]">1st Time in India:</span> 10-in-1 Aroma Family Pack
-            </span>
-            <span className="hidden items-center gap-1.5 whitespace-nowrap text-white/95 sm:flex">
-              <span className="text-[#F6C84C]">✦</span> Smell of Purity (100% Natural)
-            </span>
-            <span className="hidden items-center gap-1.5 whitespace-nowrap text-white/90 md:flex">
-              <Truck size={12} className="text-[#F6C84C]" /> Free Shipping on ₹499+
-            </span>
+          <div className="flex min-w-0 flex-1 items-center overflow-hidden h-6">
+            <Link
+              href={announcements[activeAnnounce].href}
+              className={`flex items-center gap-2.5 sm:gap-3 transition-all duration-300 ease-out ${
+                isRevealing
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 -translate-y-2 pointer-events-none"
+              }`}
+            >
+              <span className="inline-flex items-center rounded-full bg-[#F6C84C] px-2 py-0.5 text-[10px] sm:text-[11px] font-black tracking-wider text-[#173B3A] shrink-0 uppercase shadow-2xs">
+                {announcements[activeAnnounce].badge}
+              </span>
+              <span className="truncate text-xs sm:text-[13px] font-medium text-white/95">
+                <strong className="text-[#FDE68A] font-bold mr-1.5">{announcements[activeAnnounce].highlight}:</strong>
+                <span className="hidden sm:inline text-white/90">{announcements[activeAnnounce].text}</span>
+              </span>
+            </Link>
           </div>
-          <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-white/90 sm:gap-3">
-            <Link href="/orders" className="inline-flex items-center gap-1 hover:text-[#F6C84C]">
-              <Truck size={12} />
+          <div className="flex shrink-0 items-center gap-2.5 whitespace-nowrap text-white/95 sm:gap-4 text-xs sm:text-[13px]">
+            <Link href="/orders" className="inline-flex items-center gap-1.5 hover:text-[#F6C84C] transition-colors">
+              <Truck size={14} />
               <span>Track Order</span>
             </Link>
             <span className="hidden text-white/40 sm:inline">|</span>
-            <Link href="/contact" className="hidden items-center gap-1 hover:text-[#F6C84C] sm:inline-flex">
-              <HelpCircle size={12} />
+            <Link href="/contact" className="hidden items-center gap-1.5 hover:text-[#F6C84C] sm:inline-flex transition-colors">
+              <HelpCircle size={14} />
               <span>+91 9345633399</span>
             </Link>
           </div>
@@ -202,11 +250,11 @@ export function Navigation() {
         className="sticky top-0 z-40 bg-[#FFFDF8] border-b border-[#EADBBD]/70 shadow-xs"
         onMouseLeave={() => setOpenMega(null)}
       >
-        <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] flex h-16 sm:h-[72px] items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] flex h-16 sm:h-[76px] items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 lg:px-8">
           
           {/* Left: Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0 group" aria-label="HM Brand Home">
-            <div className="relative h-10 w-10 sm:h-12 sm:w-12 shrink-0 transition-transform duration-300 group-hover:scale-105">
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 shrink-0 group" aria-label="HM Brand Home">
+            <div className="relative h-11 w-11 sm:h-13 sm:w-13 shrink-0 transition-transform duration-300 group-hover:scale-105">
               <Image
                 src="/images/brand_logo_icon_transparent.png"
                 alt="HM Brand Logo"
@@ -216,21 +264,21 @@ export function Navigation() {
               />
             </div>
             <div className="flex flex-col justify-center leading-tight">
-              <span className="font-playfair text-base sm:text-xl font-bold tracking-tight text-[#173B3A]">
+              <span className="font-brand text-lg sm:text-2xl font-bold tracking-[0.16em] uppercase text-[#111827]">
                 HM <span className="text-[#9E1830]">BRAND</span>
               </span>
-              <span className="font-script text-[11px] sm:text-xs text-[#9E1830] -mt-0.5 whitespace-nowrap">
+              <span className="font-tagline text-xs sm:text-[13px] text-[#9E1830] tracking-[0.2em] uppercase font-bold -mt-0.5 whitespace-nowrap">
                 Discover the Divine Within
               </span>
             </div>
           </Link>
 
           {/* Center: Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 h-full" aria-label="Main Navigation">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-9 h-full" aria-label="Main Navigation">
             <Link
               href="/"
-              className={`relative py-6 text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-colors ${
-                pathname === "/" ? "text-[#9E1830]" : "text-[#173B3A] hover:text-[#9E1830]"
+              className={`relative py-6 font-brand text-sm sm:text-[15px] font-bold tracking-wider uppercase transition-colors ${
+                pathname === "/" ? "text-[#9E1830]" : "text-[#111827] hover:text-[#9E1830]"
               }`}
             >
               <span>HOME</span>
@@ -246,15 +294,15 @@ export function Navigation() {
                 type="button"
                 onClick={() => setOpenMega(openMega === "shop" ? null : "shop")}
                 aria-expanded={openMega === "shop"}
-                className={`relative py-6 inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-colors ${
+                className={`relative py-6 inline-flex items-center gap-1.5 font-brand text-sm sm:text-[15px] font-bold tracking-wider uppercase transition-colors ${
                   openMega === "shop" || pathname.startsWith("/shop")
                     ? "text-[#9E1830]"
-                    : "text-[#173B3A] hover:text-[#9E1830]"
+                    : "text-[#111827] hover:text-[#9E1830]"
                 }`}
               >
                 <span>SHOP</span>
                 <ChevronDown
-                  size={14}
+                  size={15}
                   className={`transition-transform duration-300 ${openMega === "shop" ? "rotate-180" : ""}`}
                 />
                 {(openMega === "shop" || pathname.startsWith("/shop")) && (
@@ -265,20 +313,18 @@ export function Navigation() {
 
             <Link
               href="/about"
-              className={`relative py-6 text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-colors ${
-                pathname === "/about" ? "text-[#9E1830]" : "text-[#173B3A] hover:text-[#9E1830]"
+              className={`relative py-6 font-brand text-sm sm:text-[15px] font-bold tracking-wider uppercase transition-colors ${
+                pathname === "/about" ? "text-[#9E1830]" : "text-[#111827] hover:text-[#9E1830]"
               }`}
             >
               <span>ABOUT</span>
               {pathname === "/about" && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#9E1830] rounded-full" />}
             </Link>
 
-
-
             <Link
               href="/contact"
-              className={`relative py-6 text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-colors ${
-                pathname === "/contact" ? "text-[#9E1830]" : "text-[#173B3A] hover:text-[#9E1830]"
+              className={`relative py-6 font-brand text-sm sm:text-[15px] font-bold tracking-wider uppercase transition-colors ${
+                pathname === "/contact" ? "text-[#9E1830]" : "text-[#111827] hover:text-[#9E1830]"
               }`}
             >
               <span>CONTACT</span>
@@ -344,18 +390,19 @@ export function Navigation() {
               )}
             </Link>
 
-            {/* Cart Button */}
-            <button
-              type="button"
-              onClick={() => setIsCartOpen(true)}
+            {/* Full-Page Cart Link */}
+            <Link
+              href="/cart"
               aria-label="Cart"
               className="relative flex h-9 w-9 items-center justify-center rounded-full text-[#173B3A] hover:text-[#9E1830] hover:bg-[#FAF6EE] transition"
             >
               <ShoppingBag size={20} strokeWidth={1.8} />
-              <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[#9E1830] text-[9px] font-bold text-white flex items-center justify-center shadow-xs">
-                {totalItems}
-              </span>
-            </button>
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[#9E1830] text-[9px] font-bold text-white flex items-center justify-center shadow-xs">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
 
             {/* Mobile Menu Hamburger */}
             <button
@@ -598,21 +645,17 @@ export function Navigation() {
                 {/* ------------------------------------------------------------- */}
                 <div className="col-span-4 relative rounded-3xl bg-gradient-to-b from-[#EFF6E8] via-[#E8F2DF] to-[#DDECD3] p-6 lg:p-7 overflow-hidden border border-[#D1E3C4] flex flex-col justify-between">
                   
-                  {/* Temple Silhouette Watermark */}
-                  <div className="pointer-events-none absolute -right-6 -bottom-6 w-52 h-52 opacity-20 select-none">
-                    <Image
-                      src="/images/purity/made-in-india.jpg"
-                      alt=""
-                      fill
-                      className="object-contain mix-blend-multiply"
-                    />
-                  </div>
-
-                  {/* Blooming Lotus at Bottom Right */}
-                  <div className="pointer-events-none absolute -right-4 -bottom-4 w-40 h-40 opacity-90 select-none">
+                  {/* Single Clean Sacred Lotus Artwork at Bottom Right */}
+                  <div
+                    className="pointer-events-none absolute -right-2 -bottom-2 w-44 h-44 select-none opacity-95"
+                    style={{
+                      maskImage: "radial-gradient(circle at 55% 55%, black 70%, transparent 100%)",
+                      WebkitMaskImage: "radial-gradient(circle at 55% 55%, black 70%, transparent 100%)",
+                    }}
+                  >
                     <Image
                       src="/images/purity/no-chemicals.jpg"
-                      alt=""
+                      alt="Sacred lotus illustration"
                       fill
                       className="object-contain mix-blend-multiply"
                     />
@@ -709,12 +752,16 @@ export function Navigation() {
               {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-[#EADBBD]">
                 <div className="flex items-center gap-2">
-                  <div className="relative h-8 w-8 shrink-0">
+                  <div className="relative h-10 w-10 shrink-0">
                     <Image src="/images/brand_logo_icon_transparent.png" alt="" fill className="object-contain" />
                   </div>
                   <div className="flex flex-col justify-center leading-tight">
-                    <span className="font-playfair font-bold text-base text-[#173B3A]">HM BRAND</span>
-                    <span className="font-script text-[11px] text-[#9E1830] -mt-0.5">Discover the Divine Within</span>
+                    <span className="font-brand font-bold text-base tracking-[0.16em] uppercase text-[#173B3A]">
+                      HM <span className="text-[#9E1830]">BRAND</span>
+                    </span>
+                    <span className="font-tagline text-[11px] text-[#9E1830] tracking-[0.16em] uppercase font-bold mt-0.5">
+                      Discover the Divine Within
+                    </span>
                   </div>
                 </div>
                 <button

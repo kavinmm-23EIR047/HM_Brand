@@ -53,7 +53,7 @@ export default function OffersPage() {
                 <span>{content.badge || "LIMITED TIME FESTIVE PRICING"}</span>
               </span>
 
-              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
+              <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight">
                 {content.heroTitle || "A Little More Joy & Fragrance in Every Order."}
               </h2>
 

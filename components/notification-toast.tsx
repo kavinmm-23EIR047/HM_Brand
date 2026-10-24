@@ -10,9 +10,9 @@ export function NotificationToast() {
   if (!notification) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 animate-bounce">
-      <div className="bg-earthBrown text-sacredCream px-5 py-3 rounded-xl border-2 border-antiqueGold shadow-2xl flex items-center gap-3 text-sm font-semibold">
-        <Sparkles className="text-marigold shrink-0" size={18} />
+    <div className="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-out">
+      <div className="bg-[#173B3A] text-white px-5 py-3 rounded-xl border border-[#F6C84C]/40 shadow-2xl flex items-center gap-3 text-sm font-medium">
+        <Sparkles className="text-[#F6C84C] shrink-0" size={18} />
         <span>{notification}</span>
       </div>
     </div>

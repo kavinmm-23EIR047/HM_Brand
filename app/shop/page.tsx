@@ -52,7 +52,7 @@ const categoryMeta: Record<
     description:
       "Experience the divine purity of natural agarbattis, crystalline bhimseni camphor, wild sambrani cups, and authentic sacred pooja essentials.",
     bannerImage: "/images/camphor_banner.jpg",
-    image: "/images/camphor_cutout.jpg",
+    image: "/images/products/hm_camphor_no25.jpg",
     features: ["100% Natural", "Pure & Safe", "Traditional Use", "Premium Quality"],
     subcategories: [],
   },
@@ -64,7 +64,7 @@ const categoryMeta: Record<
     description:
       "Experience the divine purity of natural camphor, crafted for pooja, meditation, and spiritual well-being.",
     bannerImage: "/images/camphor_banner.jpg",
-    image: "/images/camphor_cutout.jpg",
+    image: "/images/products/hm_camphor_no25.jpg",
     features: ["100% Natural", "Pure & Safe", "Traditional Use", "Premium Quality"],
     subcategories: [
       "Regular Camphor",
@@ -83,7 +83,7 @@ const categoryMeta: Record<
     description:
       "Sacred flora incense rolled with temple resins, natural flower petals, and aromatic herbs for daily rituals.",
     bannerImage: "/images/hm_puja_products_scene.png",
-    image: "/images/agarbatti_cutout.jpg",
+    image: "/images/products/hm_glory_agarbatti.jpg",
     features: ["100% Charcoal Free", "Pure Temple Flora", "Long Lasting", "Vedic Heritage"],
     subcategories: ["Exclusive", "Super Series", "Budget Pack (12 pcs)"],
   },
@@ -95,7 +95,7 @@ const categoryMeta: Record<
     description:
       "Pure bamboo-less dhoop sticks releasing rich, tranquil aromas of sacred herbs, woods, and essential oils.",
     bannerImage: "/images/hm_wellness_incense_scene.png",
-    image: "/images/brochure-incense-boxes.png",
+    image: "/images/products/hm_italian_mehak_dhoop.jpg",
     features: ["Bamboo-less", "Dense Sacred Aroma", "Zero Harmful Smoke", "Meditation Grade"],
     subcategories: ["Indian Bakhoor", "Italian Mehak"],
   },
@@ -107,7 +107,7 @@ const categoryMeta: Record<
     description:
       "Dense, aromatic cones infused with natural essential resins and woods for focused meditation and evening puja.",
     bannerImage: "/images/hm_temple_heritage_puja_scene.png",
-    image: "/images/media_1790142713668.jpg",
+    image: "/images/products/hm_pure_loban_cup_sambrani.jpg",
     features: ["Instant Rich Smoke", "Natural Resins", "Concentrated Aroma", "Clean Burning"],
     subcategories: [],
   },
@@ -119,7 +119,7 @@ const categoryMeta: Record<
     description:
       "Ready-to-light charcoal-free cups infused with pure sambrani, loban, guggal, and sacred havan samagri.",
     bannerImage: "/images/hm_temple_heritage_puja_scene.png",
-    image: "/images/sambrani.jpg",
+    image: "/images/products/hm_pure_loban_cup_sambrani.jpg",
     features: ["Ready to Light", "Pure Sambrani", "Negative Energy Cleanser", "Havan Samagri"],
     subcategories: ["Cup Sambrani"],
   },
@@ -131,7 +131,7 @@ const categoryMeta: Record<
     description:
       "Natural Benzoin and pure tree resin powder for traditional dhoop burners, home purification, and festive pujas.",
     bannerImage: "/images/hm_puja_products_scene.png",
-    image: "/images/sambrani.jpg",
+    image: "/images/products/hm_pure_loban_cup_sambrani.jpg",
     features: ["Benzoin Resin", "Air Purifier", "Traditional Aroma", "Vastu Cleansing"],
     subcategories: ["Exclusive 4-in-1 Loban Series"],
   },
@@ -167,7 +167,7 @@ const categoryMeta: Record<
     description:
       "Economical jumbo packs of long-burning incense and sacred camphor for joint families and temple pujas.",
     bannerImage: "/images/hm_puja_products_scene.png",
-    image: "/images/hm_family_pack_mascot.jpg",
+    image: "/images/hm_flagship_mascot_transparent.png",
     features: ["Mega Value", "Multi-Fragrance", "Daily Puja Supply", "10-in-1 Assortment"],
     subcategories: ["10-in-1 Family Pack"],
   },
@@ -520,17 +520,17 @@ function ShopContent() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
             {/* Left Content */}
-            <div className="lg:col-span-7 space-y-3 sm:space-y-4">
-              <span className="inline-block font-space text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#9E1830]">
+            <div className="lg:col-span-7 space-y-2 sm:space-y-3">
+              <span className="inline-block font-tagline text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#9E1830]">
                 {activeMeta.tag}
               </span>
 
-              <h1 className="font-playfair text-2xl sm:text-4xl lg:text-[42px] font-bold leading-tight">
+              <h1 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold leading-tight uppercase tracking-wide">
                 <span className="text-[#173B3A]">{activeMeta.titlePart1}</span>{" "}
                 <span className="text-[#9E1830]">{activeMeta.titlePart2}</span>
               </h1>
 
-              <p className="text-xs sm:text-sm text-[#4A5568] leading-relaxed max-w-xl font-sans">
+              <p className="text-xs sm:text-sm text-[#173B3A]/85 leading-relaxed max-w-xl font-sans">
                 {activeMeta.description}
               </p>
 
@@ -577,7 +577,7 @@ function ShopContent() {
         {/* ─── 3. SHOP BY CATEGORY ROW ─── */}
         <section aria-label="Shop by Category" className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-playfair text-xl sm:text-2xl font-bold text-[#173B3A]">
+            <h2 className="font-brand text-lg sm:text-2xl font-bold uppercase tracking-wider text-[#173B3A]">
               Shop by Category
             </h2>
             <div className="flex items-center gap-1.5">
@@ -609,7 +609,7 @@ function ShopContent() {
             {canonicalCategories.map((catKey) => {
               const meta = categoryMeta[catKey] || {
                 label: catKey,
-                image: "/images/agarbatti_cutout.jpg",
+                image: "/images/products/hm_glory_agarbatti.jpg",
               };
               const isSelected = selectedCategory === catKey;
 
@@ -992,13 +992,13 @@ function ShopContent() {
                           className="absolute inset-0 flex items-center justify-center"
                         >
                           <img
-                            src={product.image || "/images/camphor_cutout.jpg"}
+                            src={product.image || "/images/products/hm_camphor_no25.jpg"}
                             alt={product.name}
                             className="h-full w-full object-contain mix-blend-multiply transition duration-500 group-hover:scale-105"
                             onError={(e) => {
                               const target = e.currentTarget as HTMLImageElement;
-                              if (!target.src.includes("camphor_cutout")) {
-                                target.src = "/images/camphor_cutout.jpg";
+                              if (!target.src.includes("hm_camphor_no25")) {
+                                target.src = "/images/products/hm_camphor_no25.jpg";
                               }
                             }}
                           />
@@ -1038,25 +1038,25 @@ function ShopContent() {
                       <div className="pt-3 flex flex-1 flex-col justify-between">
                         <div>
                           {/* Rating & Review Count */}
-                          <div className="flex items-center gap-1.5 text-xs mb-1">
-                            <Star size={12} className="fill-[#F47A20] text-[#F47A20]" />
-                            <span className="font-bold text-[11px] text-[#173B3A]">
+                          <div className="flex items-center gap-1.5 text-xs mb-1.5">
+                            <Star size={13} className="fill-[#F47A20] text-[#F47A20]" />
+                            <span className="font-bold text-xs text-[#111827]">
                               {product.rating || 4.9}
                             </span>
-                            <span className="text-stone-400 text-[10px]">
+                            <span className="text-[#4B5563] text-xs font-medium">
                               ({product.reviewCount || 128})
                             </span>
                           </div>
 
                           {/* Product Title */}
                           <Link href={`/product/${product.slug}`}>
-                            <h4 className="font-heading text-sm font-bold text-[#173B3A] line-clamp-1 group-hover:text-[#9E1830] transition-colors">
+                            <h4 className="font-brand text-base sm:text-lg font-bold uppercase tracking-wider text-[#111827] line-clamp-1 group-hover:text-[#9E1830] transition-colors">
                               {product.name}
                             </h4>
                           </Link>
 
                           {/* Subtitle / Note */}
-                          <p className="text-[11px] text-stone-500 line-clamp-1 mt-0.5">
+                          <p className="text-xs sm:text-[13px] text-[#374151] font-medium line-clamp-1 mt-1">
                             {product.subCategory || product.note || "Pure & Natural Camphor"}
                           </p>
                         </div>
@@ -1064,11 +1064,11 @@ function ShopContent() {
                         {/* Price & Add Button */}
                         <div className="mt-3.5 flex items-center justify-between gap-1.5 pt-2 border-t border-stone-100">
                           <div className="flex items-baseline gap-1">
-                            <span className="font-price font-extrabold text-base sm:text-lg text-[#173B3A]">
+                            <span className="font-brand font-extrabold text-base sm:text-lg text-[#9E1830]">
                               ₹{product.price}
                             </span>
                             {product.mrp && product.mrp !== `₹${product.price}` && (
-                              <span className="text-[11px] text-stone-400 line-through">
+                              <span className="text-xs text-[#6B7280] line-through font-medium">
                                 {product.mrp}
                               </span>
                             )}
@@ -1078,9 +1078,9 @@ function ShopContent() {
                             type="button"
                             onClick={() => product.inStock && add(product)}
                             disabled={!product.inStock}
-                            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#9E1830] hover:bg-[#801224] text-white px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#9E1830] hover:bg-[#801224] text-white px-4 py-2 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider shadow-2xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
-                            <ShoppingBag size={12} />
+                            <ShoppingBag size={13} />
                             <span>{product.inStock ? "Add" : "Sold"}</span>
                           </button>
                         </div>
@@ -1108,7 +1108,7 @@ function ShopContent() {
                           className="absolute inset-0 flex items-center justify-center"
                         >
                           <img
-                            src={product.image || "/images/camphor_cutout.jpg"}
+                            src={product.image || "/images/products/hm_camphor_no25.jpg"}
                             alt={product.name}
                             className="h-full w-full object-contain mix-blend-multiply"
                           />
@@ -1123,22 +1123,22 @@ function ShopContent() {
                       </div>
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0 space-y-1 text-center sm:text-left">
+                      <div className="flex-1 min-w-0 space-y-1.5 text-center sm:text-left">
                         <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs">
-                          <Star size={12} className="fill-[#F47A20] text-[#F47A20]" />
-                          <span className="font-bold text-[11px] text-[#173B3A]">
+                          <Star size={13} className="fill-[#F47A20] text-[#F47A20]" />
+                          <span className="font-bold text-xs text-[#111827]">
                             {product.rating || 4.9}
                           </span>
-                          <span className="text-stone-400 text-[10px]">
+                          <span className="text-[#4B5563] text-xs font-medium">
                             ({product.reviewCount || 128})
                           </span>
                         </div>
                         <Link href={`/product/${product.slug}`}>
-                          <h4 className="font-heading text-base font-bold text-[#173B3A] hover:text-[#9E1830] transition-colors">
+                          <h4 className="font-brand text-base sm:text-lg font-bold uppercase tracking-wider text-[#111827] hover:text-[#9E1830] transition-colors">
                             {product.name}
                           </h4>
                         </Link>
-                        <p className="text-xs text-stone-500 line-clamp-2 max-w-xl">
+                        <p className="text-xs sm:text-sm text-[#374151] font-medium line-clamp-2 max-w-xl">
                           {product.description || product.note}
                         </p>
                       </div>
@@ -1146,11 +1146,11 @@ function ShopContent() {
                       {/* Price & Action */}
                       <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 shrink-0">
                         <div className="text-right">
-                          <div className="font-price font-extrabold text-lg text-[#173B3A]">
+                          <div className="font-brand font-extrabold text-lg sm:text-xl text-[#9E1830]">
                             ₹{product.price}
                           </div>
                           {product.mrp && product.mrp !== `₹${product.price}` && (
-                            <div className="text-xs text-stone-400 line-through">
+                            <div className="text-xs text-[#6B7280] line-through font-medium">
                               {product.mrp}
                             </div>
                           )}

@@ -37,7 +37,7 @@ function hitToProduct(hit: any): Product {
       "Place stick in agarbatti holder.",
       "Light tip until flame appears, then gently blow out.",
     ],
-    image: hit.image || "/images/media_1790142713668.jpg",
+    image: hit.image || "/images/products/hm_glory_agarbatti.jpg",
     badge: hit.couponCode ? `COUPON: ${hit.couponCode}` : (hit.isFeatured ? "Featured" : undefined),
     rating: hit.rating || 4.9,
     reviewCount: hit.reviewCount || 28,

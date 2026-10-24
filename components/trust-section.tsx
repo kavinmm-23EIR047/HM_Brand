@@ -38,7 +38,7 @@ export function TrustSection() {
           <span className="text-xs font-bold tracking-[0.2em] text-earthBrown uppercase block">
             THE HM AGARBATTIS PROMISE
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl text-earthBrown mt-2">
+          <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl text-earthBrown font-bold mt-2 uppercase tracking-wide">
             Made With Care. Chosen With Purpose.
           </h2>
         </div>

@@ -448,8 +448,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { product, qty }];
     });
-    showNotification(`Added "${product.name}" to your sacred basket`);
-    setIsCartOpen(true);
+    showNotification(`Added "${product.name}" to your basket`);
   };
 
   const remove = (slug: string) => {

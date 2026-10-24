@@ -1,206 +1,208 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, ShieldCheck } from "lucide-react";
-import { Leaf } from "./illustrations";
-
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore } from "./store";
 
-const slides = [
-  {
-    badge: "🇮🇳 1ST TIME IN INDIA",
-    eyebrow: "SMELL OF PURITY • HM BRAND",
-    script: "Beyond Form,",
-    heading: "Fragrance Speaks",
-    quote: "உருவத்திற்கு அப்பால், வாசனை பேசுகிறது; உங்கள் இதயத்தால் கேளுங்கள்.",
-    copy: "Introducing India's First 10-in-1 Aroma Family Pack. 10 divine botanical fragrances crafted for daily prayers and mindful living.",
-    cta: "Explore 10-in-1 Pack",
-    href: "/shop",
-    image: "/images/mascot_1.png",
-    product: "/images/camphor_cutout.jpg",
-    side: "Listen With Your Heart",
-  },
-  {
-    badge: "100% BOTANICAL RESINS",
-    eyebrow: "PURE, NATURAL & CHARCOAL-FREE",
-    script: "A Little Calm,",
-    heading: "Everyday Rituals",
-    quote: "Pure Bhimseni Camphor, Cup Sambrani & Flora Agarbattis crafted for sacred peace.",
-    copy: "Bring a softer, more mindful feeling to your home with sacred fragrances inspired by the pure goodness of nature.",
-    cta: "Shop Camphor & Sambrani",
-    href: "/category/Camphor",
-    image: "/images/mascot_3.png",
-    product: "/images/camphor_cutout.jpg",
-    side: "Artisan Handcrafted 🇮🇳",
-  },
-  {
-    badge: "SACRED TEMPLE HERITAGE",
-    eyebrow: "INDULGE WITH NEW FRAGRANCE",
-    script: "Find Your God",
-    heading: "Within Your Soul",
-    quote: "Ancient Agamic formulations for daily prayer, meditation & festive moments.",
-    copy: "From morning Brahma Muhurta prayers to peaceful evenings, discover sacred aromas that elevate your home with divine peace.",
-    cta: "Shop Pooja Essentials",
-    href: "/collections",
-    image: "/images/mascot_4.png",
-    product: "/images/agarbatti_cutout.jpg",
-    side: "Smell of Purity",
-  },
-];
+interface SlideItem {
+  id?: string;
+  title?: string;
+  desktopImage: string;
+  mobileImage?: string;
+  href: string;
+}
 
 export function HeroBannerSlider() {
   const { dbBanners } = useStore();
 
-  const activeSlides = dbBanners && dbBanners.length > 0
-    ? dbBanners.map((b) => ({
-        badge: "HM SPECIAL",
-        eyebrow: b.subtitle || "NATURAL FRAGRANCES FOR A CALMER, HAPPIER YOU",
-        script: "Good Scents",
-        heading: b.title,
-        quote: "",
-        copy: b.subtitle || "Handcrafted agarbattis & divine essentials made with pure ingredients.",
-        cta: b.ctaText || "Explore Collection",
+  const activeSlides: SlideItem[] =
+    dbBanners && dbBanners.length > 0
+      ? dbBanners.map((b: any) => ({
+        id: b.id,
+        title: b.title || "HM Brand Sacred Fragrances",
+        desktopImage: b.desktopImage || b.image,
+        mobileImage: b.mobileImage,
         href: b.ctaLink || "/shop",
-        image: b.desktopImage || "/images/mascot_1.png",
-        product: "/images/camphor_cutout.jpg",
-        side: "A Piece of Peace, Everyday",
       }))
-    : slides;
+      : [];
 
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  useEffect(() => {
-    if (paused) return;
-    const timer = setInterval(() => setCurrent((n) => (n + 1) % activeSlides.length), 4000);
-    return () => clearInterval(timer);
-  }, [paused, activeSlides.length]);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
-  const slide = activeSlides[current] || activeSlides[0];
-  const move = (by: number) => setCurrent((n) => (n + by + activeSlides.length) % activeSlides.length);
+  const total = activeSlides.length;
+
+  const nextSlide = useCallback(() => {
+    if (total <= 1) return;
+    setCurrent((prev) => (prev + 1) % total);
+  }, [total]);
+
+  const prevSlide = useCallback(() => {
+    if (total <= 1) return;
+    setCurrent((prev) => (prev - 1 + total) % total);
+  }, [total]);
+
+  // Keep the current index valid when banners change.
+  useEffect(() => {
+    if (current >= total) {
+      setCurrent(0);
+    }
+  }, [current, total]);
+
+  // Autoplay
+  useEffect(() => {
+    if (paused || total <= 1) return;
+
+    const interval = setInterval(nextSlide, 5000);
+
+    return () => clearInterval(interval);
+  }, [paused, total, nextSlide]);
+
+  // Mobile swipe support
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (
+      touchStartX.current === null ||
+      touchEndX.current === null
+    ) {
+      return;
+    }
+
+    const distance = touchStartX.current - touchEndX.current;
+
+    if (distance > 50) nextSlide();
+    else if (distance < -50) prevSlide();
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
+  if (total === 0) return null;
 
   return (
     <section
-      className="home-hero relative w-full overflow-hidden"
+      aria-label="Promotional Hero Banners"
+      className="relative w-full py-0 sm:py-2 lg:py-3 select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
-      <Leaf className="pointer-events-none absolute -left-9 bottom-0 h-48 w-36 rotate-[-24deg] text-[#287345]/25" />
-      
-      <div className="relative mx-auto w-full max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 grid min-h-[280px] grid-cols-1 items-center gap-1 py-6 sm:min-h-[300px] sm:gap-2 sm:py-8 lg:min-h-[340px] lg:grid-cols-[1fr_1fr]">
-        
-        {/* Left Column Text */}
-        <div className="relative z-10 mx-auto w-full max-w-[580px] py-2 text-center lg:mx-0 lg:text-left space-y-2">
-          
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
-            <span className="rounded-full bg-[#F6C84C] px-3 py-1 text-[10px] font-black tracking-wider text-[#173B3A] shadow-xs uppercase">
-              {slide.badge || "HM SPECIAL"}
-            </span>
-            <span className="text-[9px] sm:text-[10px] font-extrabold tracking-widest text-[#9E1830] uppercase">
-              {slide.eyebrow}
-            </span>
+      {/* Full-width hero container */}
+      <div className="w-full px-0 sm:px-4 lg:px-6 xl:px-8">
+        <div className="group relative w-full overflow-hidden bg-[#FFFDF8] sm:rounded-2xl lg:rounded-3xl sm:border sm:border-[#EADBBD] shadow-sm">
+
+          {/* Carousel track */}
+          <div
+            className="flex w-full items-stretch transition-transform duration-700 ease-in-out motion-reduce:transition-none"
+            style={{
+              transform: `translateX(-${current * 100}%)`,
+            }}
+          >
+            {activeSlides.map((slide, index) => {
+              const content = (
+                <div className="relative flex w-full items-center justify-center">
+                  {/* Desktop / tablet banner */}
+                  <img
+                    src={slide.desktopImage}
+                    alt={slide.title || "HM Brand Banner"}
+                    draggable={false}
+                    fetchPriority={index === 0 ? "high" : "auto"}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    className={`block h-auto w-full max-w-none object-contain ${slide.mobileImage
+                        ? "hidden sm:block"
+                        : "block"
+                      }`}
+                  />
+
+                  {/* Mobile banner */}
+                  {slide.mobileImage && (
+                    <img
+                      src={slide.mobileImage}
+                      alt={slide.title || "HM Brand Banner"}
+                      draggable={false}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      className="block h-auto w-full max-w-none object-contain sm:hidden"
+                    />
+                  )}
+                </div>
+              );
+
+              return (
+                <div
+                  key={slide.id || index}
+                  className="w-full min-w-0 flex-[0_0_100%]"
+                >
+                  {slide.href ? (
+                    <Link
+                      href={slide.href}
+                      aria-label={slide.title || "Explore collection"}
+                      className="block w-full"
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    content
+                  )}
+                </div>
+              );
+            })}
           </div>
 
-          <div>
-            <p className="font-script text-[38px] sm:text-5xl lg:text-[56px] leading-[0.95] text-[#9E1830]">
-              {slide.script}
-            </p>
-            <h1 className="mt-0.5 text-[30px] sm:text-4xl lg:text-[50px] font-extrabold leading-[1.05] tracking-tight text-[#173B3A] font-heading">
-              {slide.heading}
-            </h1>
-          </div>
+          {/* Navigation arrows */}
+          {total > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={prevSlide}
+                aria-label="Previous banner"
+                className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-black/70 sm:left-4 sm:h-11 sm:w-11 lg:left-6"
+              >
+                <ChevronLeft size={23} strokeWidth={2.5} />
+              </button>
 
-          {slide.quote && (
-            <p className="font-sans text-[11px] sm:text-xs text-[#9E1830] font-semibold italic">
-              &ldquo;{slide.quote}&rdquo;
-            </p>
+              <button
+                type="button"
+                onClick={nextSlide}
+                aria-label="Next banner"
+                className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-black/70 sm:right-4 sm:h-11 sm:w-11 lg:right-6"
+              >
+                <ChevronRight size={23} strokeWidth={2.5} />
+              </button>
+            </>
           )}
 
-          <p className="mx-auto mt-2 max-w-[490px] text-xs sm:text-[13px] leading-relaxed text-[#292524]/85 lg:mx-0 font-sans">
-            {slide.copy}
-          </p>
-
-          <div className="pt-2">
-            <Link
-              href={slide.href}
-              className="btn-primary gap-2 px-6 text-xs sm:text-sm"
-            >
-              <span>{slide.cta}</span>
-              <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Right Column Mascot & Product Preview */}
-        <div className="relative flex min-h-[180px] w-full items-center justify-center sm:min-h-[240px] lg:min-h-[320px]">
-          <div className="absolute inset-x-8 bottom-2 h-28 rounded-[50%] bg-[#f3ca72]/35 blur-2xl" />
-          
-          <Image
-            src={slide.image}
-            alt="HM Agarbattis divine mascot"
-            width={340}
-            height={340}
-            priority
-            className="relative z-10 h-[180px] w-[180px] max-w-full object-contain sm:h-[280px] sm:w-[280px] lg:h-[330px] lg:w-[330px] drop-shadow-lg"
-          />
-
-          {/* Floating Product Badge */}
-          <div className="absolute bottom-0 left-[4%] z-20 flex items-center gap-2 rounded-2xl bg-white/95 p-2 shadow-card sm:bottom-3 sm:left-[12%]">
-            <Image
-              src={slide.product}
-              alt="Featured HM fragrance"
-              width={56}
-              height={56}
-              className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
-            />
-            <div>
-              <p className="text-[9px] font-extrabold uppercase tracking-wider text-[#9E1830]">
-                Smell of Purity
-              </p>
-              <p className="text-[11px] font-extrabold text-[#173B3A]">
-                100% Botanical
-              </p>
+          {/* Bottom slide indicators */}
+          {total > 1 && (
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/35 px-3 py-2 shadow-lg backdrop-blur-sm sm:bottom-5">
+              {activeSlides.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setCurrent(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  aria-current={current === i ? "true" : undefined}
+                  className={`h-2 rounded-full transition-all duration-300 ${current === i
+                      ? "w-6 bg-[#F6C84C]"
+                      : "w-2 bg-white/70 hover:bg-white"
+                    }`}
+                />
+              ))}
             </div>
-          </div>
-
-          {/* Side Script Accent */}
-          <div className="absolute right-[4%] top-1/2 hidden -translate-y-1/2 rotate-6 text-center font-script text-2xl sm:text-3xl leading-none text-[#9E1830] sm:block">
-            {slide.side}
-          </div>
-
-          {/* Navigation Arrows */}
-          <button
-            onClick={() => move(-1)}
-            aria-label="Previous slide"
-            className="btn-icon absolute left-1 top-1/2 z-20 h-8 w-8 -translate-y-1/2 shadow-card sm:h-9 sm:w-9"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={() => move(1)}
-            aria-label="Next slide"
-            className="btn-icon absolute right-1 top-1/2 z-20 h-8 w-8 -translate-y-1/2 shadow-card sm:h-9 sm:w-9"
-          >
-            <ChevronRight size={18} />
-          </button>
+          )}
         </div>
-
-        {/* Carousel Indicators */}
-        <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:left-8 lg:translate-x-0">
-          {activeSlides.map((item, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={`h-2 rounded-full transition-all ${
-                current === i ? "w-8 bg-[#9E1830]" : "w-2 bg-[#173B3A]/25"
-              }`}
-            />
-          ))}
-        </div>
-
       </div>
     </section>
   );

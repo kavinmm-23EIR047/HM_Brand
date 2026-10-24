@@ -20,15 +20,15 @@ export default function BlogPage() {
       <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] space-y-12 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {featured && <section className="rounded-3xl bg-gradient-to-br from-[#FFF4D6] via-[#FFF8E7] to-[#FCEECC] p-6 sm:p-10 border-2 border-[#F6C84C]/60 shadow-lg">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#9E1830]/30 bg-[#9E1830]/10 px-3 py-1 text-[11px] font-extrabold tracking-widest text-[#9E1830] uppercase"><Sparkles size={12} />{featured.label || "FEATURED ARTICLE"}</span>
-          <h2 className="mt-4 max-w-3xl font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#173B3A] leading-tight">{featured.title}</h2>
-          <p className="mt-3 max-w-3xl text-sm sm:text-base text-[#292524]/85 leading-relaxed">{featured.excerpt}</p>
-          <div className="mt-4 flex items-center gap-2 text-xs font-bold text-[#6B4226]"><Clock size={14} className="text-[#F47A20]" />{featured.readingTime || "5 min read"}{featured.author ? <span> · By {featured.author}</span> : null}</div>
+          <h2 className="mt-3 max-w-3xl font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#173B3A] leading-tight">{featured.title}</h2>
+          <p className="mt-2.5 max-w-3xl text-xs sm:text-sm text-[#292524]/85 leading-relaxed">{featured.excerpt}</p>
+          <div className="mt-3 flex items-center gap-2 text-xs font-bold text-[#6B4226]"><Clock size={13} className="text-[#F47A20]" />{featured.readingTime || "5 min read"}{featured.author ? <span> · By {featured.author}</span> : null}</div>
         </section>}
 
-        <section className="space-y-6">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#9E1830]">EXPLORE THE JOURNAL</span>
-            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#173B3A]">Ritual Wisdom, Guides &amp; Health Insights</h2>
+        <section className="space-y-5">
+          <div className="text-center max-w-2xl mx-auto space-y-1.5">
+            <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-[#9E1830]">EXPLORE THE JOURNAL</span>
+            <h2 className="font-heading text-lg sm:text-xl lg:text-2xl font-extrabold text-[#173B3A]">Ritual Wisdom, Guides &amp; Health Insights</h2>
           </div>
           {posts.length ? <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {posts.map((post) => <article key={post.id} id={post.slug} className="rounded-3xl border-2 border-[#F6C84C]/50 bg-white p-6 sm:p-8 shadow-sm hover:shadow-md transition flex flex-col justify-between gap-5">
