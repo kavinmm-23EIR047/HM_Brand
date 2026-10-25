@@ -1,0 +1,785 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Change these tokens to theme every page and shared component at once. */
+  --brand-primary: #9E1830;
+  --brand-primary-hover: #800F23;
+  --brand-primary-deep-hover: #870B2B;
+  --brand-primary-deep: #A90C35;
+  --brand-primary-mid: #801224;
+  --brand-primary-rich: #700B1E;
+  --brand-primary-mid-rich: #8E132A;
+  --brand-primary-darkest: #600818;
+  --brand-red-shadow: #3F0510;
+  --brand-red-black: #5A0919;
+  --brand-primary-alt: #851227;
+  --brand-orange: #F47A20;
+  --brand-orange-deep: #E56A20;
+  --brand-saffron-dark: #E85D04;
+  --brand-accent: #F6C84C;
+  --brand-accent-soft: #FDE68A;
+  --brand-turmeric: #F4D35E;
+  --brand-green: #3F7D45;
+  --brand-green-dark: #287541;
+  --brand-green-deep: #2F855A;
+  --brand-ink: #173B3A;
+  --brand-heading: #111827;
+  --brand-charcoal: #292524;
+  --brand-slate: #374151;
+  --brand-gray: #4B5563;
+  --brand-brown: #6B4226;
+  --brand-gold: #C89B3C;
+  --brand-surface: #FFF8E7;
+  --brand-surface-warm: #FFF4D6;
+  --brand-surface-soft: #FAF6EE;
+  --brand-surface-alt: #FAF7EE;
+  --brand-surface-bright: #FFFDF8;
+  --brand-border: #EADBBD;
+  --brand-muted: #556058;
+  --brand-danger: #991B1B;
+  --brand-amber: #B45309;
+  --brand-amber-bright: #D97706;
+  --brand-yellow-alt: #F5C84C;
+  --brand-yellow-bright: #FCD34D;
+  --brand-forest: #14532D;
+  --brand-forest-dark: #1E3A2B;
+  --brand-border-alt: #E8D7B3;
+  --brand-surface-cream: #FFF9EE;
+  --brand-surface-promo: #FFF4E5;
+  --brand-light-green: #DDECCB;
+  --brand-blue: #4C7FA8;
+  --brand-violet: #7653A6;
+  --brand-positive: #10B981;
+  --brand-positive-soft: #E6F4EA;
+  --brand-positive-dark: #137333;
+
+  /* RGB companions let Tailwind apply opacity modifiers to the theme colors. */
+  --brand-primary-rgb: 158 24 48;
+  --brand-primary-hover-rgb: 128 15 35;
+  --brand-primary-deep-hover-rgb: 135 11 43;
+  --brand-primary-deep-rgb: 169 12 53;
+  --brand-primary-mid-rgb: 128 18 36;
+  --brand-primary-rich-rgb: 112 11 30;
+  --brand-primary-mid-rich-rgb: 142 19 42;
+  --brand-primary-darkest-rgb: 96 8 24;
+  --brand-red-shadow-rgb: 63 5 16;
+  --brand-red-black-rgb: 90 9 25;
+  --brand-primary-alt-rgb: 133 18 39;
+  --brand-orange-rgb: 244 122 32;
+  --brand-orange-deep-rgb: 229 106 32;
+  --brand-saffron-dark-rgb: 232 93 4;
+  --brand-accent-rgb: 246 200 76;
+  --brand-accent-soft-rgb: 253 230 138;
+  --brand-turmeric-rgb: 244 211 94;
+  --brand-green-rgb: 63 125 69;
+  --brand-green-dark-rgb: 40 117 65;
+  --brand-green-deep-rgb: 47 133 90;
+  --brand-ink-rgb: 23 59 58;
+  --brand-heading-rgb: 17 24 39;
+  --brand-charcoal-rgb: 41 37 36;
+  --brand-slate-rgb: 55 65 81;
+  --brand-gray-rgb: 75 85 99;
+  --brand-brown-rgb: 107 66 38;
+  --brand-gold-rgb: 200 155 60;
+  --brand-surface-rgb: 255 248 231;
+  --brand-surface-warm-rgb: 255 244 214;
+  --brand-surface-soft-rgb: 250 246 238;
+  --brand-surface-alt-rgb: 250 247 238;
+  --brand-surface-bright-rgb: 255 253 248;
+  --brand-border-rgb: 234 219 189;
+  --brand-muted-rgb: 85 96 88;
+  --brand-danger-rgb: 153 27 27;
+  --brand-amber-rgb: 180 83 9;
+  --brand-amber-bright-rgb: 217 119 6;
+  --brand-yellow-alt-rgb: 245 200 76;
+  --brand-yellow-bright-rgb: 252 211 77;
+  --brand-forest-rgb: 20 83 45;
+  --brand-forest-dark-rgb: 30 58 43;
+  --brand-border-alt-rgb: 232 215 179;
+  --brand-surface-cream-rgb: 255 249 238;
+  --brand-surface-promo-rgb: 255 244 229;
+  --brand-positive-rgb: 16 185 129;
+  --brand-positive-soft-rgb: 230 244 234;
+  --brand-positive-dark-rgb: 19 115 51;
+
+  --brand-light-green-rgb: 221 236 203;
+  --brand-blue-rgb: 76 127 168;
+  --brand-violet-rgb: 118 83 166;
+
+  /* Legacy color aliases kept for existing CSS and Tailwind classes. */
+  --saffron: var(--brand-orange);
+  --temple-orange: var(--brand-orange);
+  --marigold: var(--brand-accent);
+  --turmeric: var(--brand-turmeric);
+  --kumkum: var(--brand-primary);
+  --vermilion: var(--brand-primary-deep);
+  --deep-red: var(--brand-primary-hover);
+  --plum: #6D214F;
+  --purple: #7B2CBF;
+  --tulsi: var(--brand-green);
+  --sacred-green: var(--brand-green);
+  --leaf: var(--brand-green);
+  --peacock: #168AAD;
+  --temple-teal: #2A9D8F;
+  --deep-peacock: #155D6B;
+  --sandalwood: var(--brand-brown);
+  --earth-brown: var(--brand-brown);
+  --antique-gold: var(--brand-gold);
+  --sacred-cream: var(--brand-surface);
+  --charcoal: var(--brand-charcoal);
+
+  /* Shared typefaces. Tailwind font utilities below read these same tokens. */
+  --font-brand: 'Cinzel', Georgia, serif;
+  --font-heading: 'Cinzel', Georgia, serif;
+  --font-tagline: 'Marcellus', Georgia, serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-price: 'Outfit', 'Manrope', sans-serif;
+  --font-ui: 'Space Grotesk', 'Manrope', sans-serif;
+  --font-script: 'Caveat', cursive;
+  --font-playfair: var(--font-heading);
+  --font-serif: var(--font-heading);
+  --font-cormorant: var(--font-heading);
+  --font-manrope: var(--font-body);
+
+  /* Tailwind text-size utilities use these page-wide size controls. */
+  --type-xs: 0.8125rem;
+  --type-sm: 0.9375rem;
+  --type-base: 1rem;
+  --type-lg: 1.125rem;
+  --type-xl: 1.25rem;
+  --type-2xl: 1.5rem;
+  --type-3xl: 1.875rem;
+  --type-4xl: 2.25rem;
+  --type-5xl: 3rem;
+  --type-6xl: 3.75rem;
+  --type-7xl: 4.5rem;
+  --type-8xl: 6rem;
+  --type-9xl: 8rem;
+  --type-ui-9: 0.625rem;
+  --type-ui-10: 0.6875rem;
+  --type-ui-11: 0.75rem;
+  --type-ui-13: 0.875rem;
+  --type-ui-15: 1rem;
+  --type-ui-26: 1.625rem;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--sacred-cream);
+  color: var(--charcoal);
+  min-width: 240px;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background-color: var(--sacred-cream);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  font-size: var(--type-base);
+  line-height: 1.5;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide scrollbar utility for clean mobile horizontal scrolling */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.font-brand {
+  font-family: var(--font-brand) !important;
+}
+
+.font-tagline {
+  font-family: var(--font-tagline) !important;
+}
+
+.font-playfair {
+  font-family: var(--font-heading) !important;
+}
+
+.font-heading {
+  font-family: var(--font-heading) !important;
+}
+
+.font-sans {
+  font-family: var(--font-body) !important;
+}
+
+.font-space {
+  font-family: var(--font-ui) !important;
+  letter-spacing: 0.12em;
+}
+
+/* Tabular, crisp price font ensuring currency glyph and numbers match seamlessly */
+.font-price {
+  font-family: var(--font-price) !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  background-image: linear-gradient(135deg, var(--saffron) 0%, var(--kumkum) 100%);
+}
+
+/* Indian Handcrafted Outline and Border Motifs */
+.divine-border {
+  border: 1.5px solid var(--antique-gold);
+}
+
+.divine-border-earth {
+  border: 1.5px solid var(--earth-brown);
+}
+
+.divine-divider {
+  height: 2px;
+  background-color: var(--antique-gold);
+  opacity: 0.4;
+}
+
+/* Solid CTA Button Styles (STRICTLY NO GRADIENTS) */
+.btn-saffron {
+  background-color: var(--brand-orange);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  transition: background-color 0.2s ease;
+}
+
+.btn-saffron:hover {
+  background-color: var(--brand-primary);
+}
+
+.btn-outline-earth {
+  background-color: var(--brand-ink);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  transition: background-color 0.2s ease;
+}
+
+.btn-outline-earth:hover {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+.btn-gold {
+  background-color: var(--brand-gold);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  transition: background-color 0.2s ease;
+}
+
+.btn-gold:hover {
+  background-color: var(--brand-primary);
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto w-full max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-spacing {
+    @apply py-8 sm:py-10 lg:py-12;
+  }
+
+  .surface-card {
+    @apply rounded-2xl bg-white shadow-card;
+  }
+
+  .surface-muted {
+    @apply rounded-2xl bg-sandalLight;
+  }
+
+  .btn-primary {
+    @apply inline-flex h-11 items-center justify-center rounded-lg bg-brand-primary px-5 text-sm font-bold text-white transition-colors hover:bg-brand-hover sm:h-12;
+  }
+
+  .btn-secondary {
+    @apply inline-flex h-11 items-center justify-center rounded-lg bg-darkText px-5 text-sm font-bold text-white transition-colors hover:bg-brand-primary sm:h-12;
+  }
+
+  .btn-icon {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-darkText transition-colors hover:bg-brand-primary hover:text-white;
+  }
+
+  .empty-state {
+    @apply rounded-2xl bg-sandalLight px-6 py-12 text-center sm:px-10 sm:py-14;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-[#F4E8C8];
+  }
+}
+
+/* Handcrafted Indian Decorative Accent */
+.paper-pattern {
+  background-color: var(--sacred-cream);
+}
+
+/* Floating & Ambient Micro-Animations */
+@keyframes flameFlicker {
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.95;
+  }
+
+  25% {
+    transform: scale(1.06, 0.96) rotate(-2deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.96, 1.05) rotate(2deg);
+    opacity: 0.9;
+  }
+
+  75% {
+    transform: scale(1.04, 0.98) rotate(-1deg);
+    opacity: 0.98;
+  }
+}
+
+@keyframes bellSway {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(4deg);
+  }
+
+  75% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translateY(-15px) scaleX(1.15) rotate(2deg);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: translateY(-30px) scaleX(1.3) rotate(-2deg);
+    opacity: 0;
+  }
+}
+
+@keyframes gentleFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes maalaiSway1 {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  30% {
+    transform: rotate(3deg);
+  }
+
+  70% {
+    transform: rotate(-2.5deg);
+  }
+}
+
+@keyframes maalaiSway2 {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-3.5deg);
+  }
+
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes maalaiSway3 {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  35% {
+    transform: rotate(2deg);
+  }
+
+  65% {
+    transform: rotate(-2deg);
+  }
+}
+
+.animate-maalai-1 {
+  animation: maalaiSway1 4.8s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.animate-maalai-2 {
+  animation: maalaiSway2 4.2s ease-in-out infinite 0.4s;
+  transform-origin: top center;
+}
+
+.animate-maalai-3 {
+  animation: maalaiSway3 5.4s ease-in-out infinite 0.8s;
+  transform-origin: top center;
+}
+
+.animate-flame {
+  animation: flameFlicker 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.animate-bell {
+  animation: bellSway 3.5s ease-in-out infinite;
+  transform-origin: center top;
+}
+
+.animate-smoke {
+  animation: smokeRise 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sacred-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sandalwood);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--earth-brown);
+}
+
+/* 3D Perspective & Crayonism Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Floating Petals Micro-Animation */
+@keyframes floatPetalSlow {
+  0% {
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.85;
+  }
+
+  85% {
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translate3d(80px, 450px, 0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes floatPetalFast {
+  0% {
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.9;
+  }
+
+  80% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translate3d(-60px, 400px, 0) rotate(-280deg);
+    opacity: 0;
+  }
+}
+
+.animate-petal-1 {
+  animation: floatPetalSlow 10s ease-in-out infinite;
+}
+
+.animate-petal-2 {
+  animation: floatPetalFast 8s ease-in-out infinite 2s;
+}
+
+.animate-petal-3 {
+  animation: floatPetalSlow 12s ease-in-out infinite 4s;
+}
+
+.animate-petal-4 {
+  animation: floatPetalFast 9s ease-in-out infinite 6s;
+}
+
+/* Subtle Crayonism Textured Shadows */
+.shadow-crayon-card {
+  box-shadow: 0 20px 40px -15px rgb(var(--brand-brown-rgb) / 0.25), 0 0 0 1px rgb(var(--brand-gold-rgb) / 0.2);
+}
+
+.shadow-crayon-card-active {
+  box-shadow: 0 25px 50px -12px rgb(var(--brand-brown-rgb) / 0.35), 0 0 0 2px rgb(255 255 255 / 0.9), 0 4px 15px rgb(var(--brand-saffron-dark-rgb) / 0.15);
+}
+
+.shadow-pill-red {
+  box-shadow: 0 8px 20px -4px rgb(var(--brand-primary-rgb) / 0.45);
+}
+
+/* Slow, quiet movement for the footer mandalas and layered ridge line. */
+@keyframes mandala-turn {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mandala-line-flow {
+  0% {
+    stroke-dashoffset: 800;
+  }
+
+  50% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -800;
+  }
+}
+
+@keyframes mandala-pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.18;
+    filter: drop-shadow(0 0 6px rgb(var(--brand-accent-rgb) / 0.25));
+  }
+
+  50% {
+    opacity: 0.32;
+    filter: drop-shadow(0 0 16px rgb(var(--brand-accent-rgb) / 0.65));
+  }
+}
+
+@keyframes mountain-gold-shimmer {
+
+  0%,
+  100% {
+    stroke-opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgb(var(--brand-accent-rgb) / 0.4));
+  }
+
+  50% {
+    stroke-opacity: 1;
+    filter: drop-shadow(0 0 12px rgb(var(--brand-accent-rgb) / 0.85));
+  }
+}
+
+.mandala-art .mandala-rotate-outer,
+.mandala-art .mandala-rotate-inner {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: mandala-turn var(--mandala-speed, 180s) linear infinite;
+}
+
+.mandala-art .mandala-rotate-inner {
+  animation-direction: reverse;
+}
+
+.mandala-art-drawing {
+  animation: mandala-pulse-glow 8s ease-in-out infinite;
+}
+
+.mandala-stroke-draw {
+  stroke-dasharray: 20 10;
+  animation: mandala-line-flow 40s linear infinite;
+}
+
+.mountain-gold-trim {
+  animation: mountain-gold-shimmer 6s ease-in-out infinite;
+}
+
+@keyframes footer-ridge-drift {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-.7%, 5px, 0) scale(1.01);
+  }
+}
+
+.footer-ridge {
+  transform-origin: center bottom;
+  animation: footer-ridge-drift 22s ease-in-out infinite;
+}
+
+.footer-ridge-mid {
+  animation-duration: 28s;
+  animation-direction: reverse;
+}
+
+.footer-ridge-front {
+  animation-duration: 34s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .mandala-art .mandala-rotate-outer,
+  .mandala-art .mandala-rotate-inner,
+  .mandala-art-drawing,
+  .mandala-stroke-draw,
+  .mountain-gold-trim,
+  .footer-ridge {
+    animation: none;
+  }
+}
+
+/* Scrollbar hiding utilities */
+.scrollbar-none,
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.scrollbar-none::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+@keyframes admin-panel-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.admin-slide-in {
+  animation: admin-panel-slide-in 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-slide-in {
+    animation: none;
+  }
+}
