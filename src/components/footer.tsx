@@ -173,17 +173,21 @@ export function Footer() {
               <p className="text-xs text-white/80 leading-relaxed mb-3">
                 Receive auspicious offers, new launches &amp; wellness tips.
               </p>
-              <div className="space-y-2">
+              <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2">
                 <input
                   suppressHydrationWarning
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full text-xs text-brand-ink bg-brand-surface-warm px-3 py-2.5 focus:outline-none font-medium placeholder:text-brand-ink/60"
+                  className="flex-1 min-w-0 text-xs text-brand-ink bg-brand-surface-warm px-3 py-2.5 focus:outline-none font-medium placeholder:text-brand-ink/60"
                 />
-                <button suppressHydrationWarning className="w-full bg-brand-orange hover:bg-brand-accent hover:text-brand-ink text-white py-2.5 font-bold text-xs uppercase tracking-wider transition active:scale-95 cursor-pointer">
+                <button
+                  type="submit"
+                  suppressHydrationWarning
+                  className="bg-brand-orange hover:bg-brand-accent hover:text-brand-ink text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider transition active:scale-95 cursor-pointer shrink-0 whitespace-nowrap"
+                >
                   Subscribe
                 </button>
-              </div>
+              </form>
             </AccordionSection>
           </div>
 

@@ -156,6 +156,16 @@ export function mapProductToHit(p: any): SearchHit {
   };
 }
 
+// In-memory cache for ultra-fast product search (<1ms)
+let cachedProducts: any[] | null = null;
+let lastCacheTime = 0;
+const CACHE_TTL_MS = 60 * 1000; // 60 seconds
+
+export function invalidateSearchCache(): void {
+  cachedProducts = null;
+  lastCacheTime = 0;
+}
+
 export async function searchProducts(options: {
   q?: string;
   type?: 'autocomplete' | 'full';
@@ -185,41 +195,53 @@ export async function searchProducts(options: {
   const queryLower = query.toLowerCase();
   const queryTokens = queryLower.split(/\s+/).filter(Boolean);
 
-  // Fetch active products with categories and images from PostgreSQL
-  const whereClause: any = {
-    deletedAt: null,
-    isActive: true,
-  };
+  // Use in-memory cache to avoid slow DB queries on every keystroke
+  const now = Date.now();
+  if (!cachedProducts || now - lastCacheTime > CACHE_TTL_MS) {
+    cachedProducts = await prisma.product.findMany({
+      where: {
+        deletedAt: null,
+        isActive: true,
+      },
+      include: {
+        images: { orderBy: { displayOrder: 'asc' } },
+        categories: { include: { category: true } },
+      },
+    });
+    lastCacheTime = now;
+  }
+
+  let products = cachedProducts || [];
 
   if (options.category && options.category !== 'all') {
-    whereClause.categories = {
-      some: {
-        category: {
-          OR: [
-            { slug: options.category },
-            { name: { equals: options.category, mode: 'insensitive' } },
-          ],
-        },
-      },
-    };
+    const catLower = options.category.toLowerCase();
+    products = products.filter((p) =>
+      p.categories?.some((c: any) => {
+        const cSlug = c.category?.slug?.toLowerCase();
+        const cName = c.category?.name?.toLowerCase();
+        return cSlug === catLower || cName === catLower;
+      })
+    );
   }
 
   if (options.minPrice !== undefined || options.maxPrice !== undefined) {
-    whereClause.price = {};
-    if (options.minPrice !== undefined) whereClause.price.gte = options.minPrice;
-    if (options.maxPrice !== undefined) whereClause.price.lte = options.maxPrice;
+    products = products.filter((p) => {
+      const price = Number(p.price) || 0;
+      if (options.minPrice !== undefined && price < options.minPrice) return false;
+      if (options.maxPrice !== undefined && price > options.maxPrice) return false;
+      return true;
+    });
   }
-
-  const products = await prisma.product.findMany({
-    where: whereClause,
-    include: {
-      images: { orderBy: { displayOrder: 'asc' } },
-      categories: { include: { category: true } },
-    },
-  });
 
   const scored: Array<{ hit: SearchHit; score: number }> = [];
   const suggestionsSet = new Set<string>();
+
+  // Phonetic equivalent for Indian spiritual products (C <-> K, e.g., Camphor/Karppor, Cardamom)
+  const altQuery = queryLower.startsWith('c')
+    ? 'k' + queryLower.slice(1)
+    : queryLower.startsWith('k')
+    ? 'c' + queryLower.slice(1)
+    : '';
 
   for (const p of products) {
     const hit = mapProductToHit(p);
@@ -233,60 +255,70 @@ export async function searchProducts(options: {
     let score = 0;
     const nameWords = nameLower.split(/\s+/);
 
-    // Check full query match
+    // 1. Direct name matches (highest ranking on top)
     if (nameLower === queryLower) {
-      score += 150;
+      score += 800;
     } else if (nameLower.startsWith(queryLower)) {
-      score += 100;
-    } else if (nameLower.includes(queryLower)) {
-      score += 80;
-    } else if (catCombined.includes(queryLower)) {
-      score += 65;
-    } else if (tagsCombined.includes(queryLower)) {
-      score += 50;
-    } else if (descLower.includes(queryLower) || shortDescLower.includes(queryLower)) {
+      score += 500;
+    }
+
+    // 2. Word in name starts with query (e.g., "Cup", "Camphor", "Cones")
+    if (nameWords.some((w) => w.startsWith(queryLower))) {
+      score += 350;
+    }
+
+    // 3. Category starts with query
+    if (catNamesLower.some((c) => c.startsWith(queryLower) || c.split(/\s+/).some((w) => w.startsWith(queryLower)))) {
+      score += 260;
+    }
+
+    // 4. Phonetic C/K equivalence (e.g., query "car" matches "Karppor dani machine")
+    if (altQuery) {
+      if (nameLower.startsWith(altQuery)) score += 300;
+      else if (nameWords.some((w) => w.startsWith(altQuery))) score += 240;
+      else if (nameLower.includes(altQuery)) score += 100;
+    }
+
+    // 5. Substring matches
+    if (nameLower.includes(queryLower)) {
+      score += 150;
+    }
+    if (catCombined.includes(queryLower)) {
+      score += 90;
+    }
+    if (tagsCombined.includes(queryLower)) {
+      score += 70;
+    }
+    if (descLower.includes(queryLower) || shortDescLower.includes(queryLower)) {
       score += 30;
     }
 
-    // Check token-level and typo-tolerant matches
+    // 6. Token-level and typo-tolerant matches
     for (const q of queryTokens) {
-      // 1. Exact token match in name
-      if (nameWords.includes(q)) {
-        score += 50;
-      } else if (nameLower.includes(q)) {
-        score += 35;
-      }
+      if (nameWords.includes(q)) score += 50;
+      else if (nameLower.includes(q)) score += 35;
 
-      // 2. Token match in categories
-      if (catCombined.includes(q)) {
-        score += 40;
-      }
+      if (catCombined.includes(q)) score += 40;
+      if (tagsCombined.includes(q)) score += 35;
 
-      // 3. Token match in tags & spiritual synonyms
-      if (tagsCombined.includes(q)) {
-        score += 35;
-      }
       const syns = SYNONYMS[q] || [];
       for (const syn of syns) {
         if (nameLower.includes(syn) || catCombined.includes(syn) || tagsCombined.includes(syn)) {
-          score += 40;
+          score += 45;
         }
       }
 
-      // 4. Token match in description
-      if (descLower.includes(q) || shortDescLower.includes(q)) {
-        score += 20;
-      }
-
-      // 5. Typo-tolerance (Levenshtein distance) on word tokens
-      const targetWords = [...nameWords, ...catNamesLower.flatMap((c) => c.split(/\s+/))];
-      for (const tw of targetWords) {
-        if (tw.length < 3) continue;
-        const maxDist = q.length <= 4 ? 1 : q.length <= 7 ? 2 : 3;
-        const dist = levenshteinDistance(q, tw);
-        if (dist > 0 && dist <= maxDist) {
-          const sim = 1 - dist / Math.max(q.length, tw.length);
-          score += Math.round(sim * 45); // up to ~40 points for 1-char typo
+      // Typo-tolerance for queries 3+ chars
+      if (q.length >= 3) {
+        const targetWords = [...nameWords, ...catNamesLower.flatMap((c) => c.split(/\s+/))];
+        for (const tw of targetWords) {
+          if (tw.length < 3) continue;
+          const maxDist = q.length <= 4 ? 1 : q.length <= 7 ? 2 : 3;
+          const dist = levenshteinDistance(q, tw);
+          if (dist > 0 && dist <= maxDist) {
+            const sim = 1 - dist / Math.max(q.length, tw.length);
+            score += Math.round(sim * 60);
+          }
         }
       }
     }
@@ -298,12 +330,30 @@ export async function searchProducts(options: {
     }
   }
 
-  // Sort by score DESC, then isFeatured DESC, then displayOrder ASC
+  // Sort by score DESC (best matches first / on top), then isFeatured DESC, then name ASC
   scored.sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
     if (b.hit.isFeatured !== a.hit.isFeatured) return b.hit.isFeatured ? 1 : -1;
     return a.hit.name.localeCompare(b.hit.name);
   });
+
+  // If hits are low (< 4), append similar products from matching categories
+  if (scored.length > 0 && scored.length < limit) {
+    const existingIds = new Set(scored.map((s) => s.hit.id));
+    const matchingCategories = new Set(scored.flatMap((s) => s.hit.categories.map((c) => c.toLowerCase())));
+
+    for (const p of products) {
+      if (scored.length >= limit) break;
+      const hit = mapProductToHit(p);
+      if (existingIds.has(hit.id)) continue;
+
+      const sharesCategory = hit.categories.some((c) => matchingCategories.has(c.toLowerCase()));
+      if (sharesCategory || hit.isFeatured) {
+        scored.push({ hit, score: sharesCategory ? 15 : 5 });
+        existingIds.add(hit.id);
+      }
+    }
+  }
 
   const totalHits = scored.length;
   const paginatedHits = scored.slice(offset, offset + limit).map((s) => s.hit);
@@ -316,6 +366,6 @@ export async function searchProducts(options: {
     hits: paginatedHits,
     suggestions,
     processingTimeMs: Date.now() - startTime,
-    source: 'postgres',
+    source: 'postgres-cache',
   };
 }

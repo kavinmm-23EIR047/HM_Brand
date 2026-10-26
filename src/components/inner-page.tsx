@@ -70,10 +70,14 @@ export function InnerPage({
 
               {/* Decorative Golden Sunburst Medallion (Desktop) */}
               <div className="hidden lg:flex shrink-0 items-center justify-center relative">
-                <div className="h-32 w-32 rounded-full bg-brand-surface-warm p-2 flex items-center justify-center">
-                  <div className="h-full w-full rounded-full bg-gradient-to-br from-brand-primary to-[#6A0C1E] flex flex-col items-center justify-center text-center p-3 shadow-md">
-                    <span className="font-brand text-base font-bold text-brand-accent-soft uppercase tracking-wider">Coimbatore</span>
-                    <span className="font-brand text-ui-10 font-bold text-white uppercase tracking-widest mt-0.5">Pure Heritage</span>
+                <div className="h-36 w-36 rounded-full bg-brand-surface-warm p-2 flex items-center justify-center shadow-sm border border-brand-accent/30">
+                  <div className="h-full w-full rounded-full bg-gradient-to-br from-brand-primary to-[#6A0C1E] flex flex-col items-center justify-center text-center px-2 py-3 shadow-md border border-brand-accent/25 overflow-hidden">
+                    <span className="font-brand text-ui-11 sm:text-xs font-bold text-brand-accent-soft uppercase tracking-wider leading-tight whitespace-nowrap">
+                      Coimbatore
+                    </span>
+                    <span className="font-brand text-ui-9 sm:text-ui-10 font-bold text-white uppercase tracking-widest mt-1 leading-tight">
+                      Pure<br />Heritage
+                    </span>
                   </div>
                 </div>
               </div>

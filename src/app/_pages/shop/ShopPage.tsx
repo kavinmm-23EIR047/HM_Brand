@@ -417,15 +417,18 @@ function ShopContent() {
         // Price slider
         if (maxPriceSlider !== null && p.price > maxPriceSlider) return false;
 
-        // Search query
+        // Search query with Indian phonetic support (c <-> k)
         if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase();
+          const q = searchQuery.toLowerCase().trim();
+          const altQ = q.startsWith("c") ? "k" + q.slice(1) : q.startsWith("k") ? "c" + q.slice(1) : "";
           const pName = (p.name || "").toLowerCase();
           const pDesc = (p.description || "").toLowerCase();
           const pNote = (p.note || "").toLowerCase();
           const pCat = (p.category || "").toLowerCase();
           const pCategoryLabels = (p.categoryLabels || []).join(" ").toLowerCase();
-          if (!pName.includes(q) && !pDesc.includes(q) && !pNote.includes(q) && !pCat.includes(q) && !pCategoryLabels.includes(q)) {
+          const matchDirect = pName.includes(q) || pDesc.includes(q) || pNote.includes(q) || pCat.includes(q) || pCategoryLabels.includes(q);
+          const matchAlt = altQ && (pName.includes(altQ) || pDesc.includes(altQ) || pCat.includes(altQ) || pCategoryLabels.includes(altQ));
+          if (!matchDirect && !matchAlt) {
             return false;
           }
         }
@@ -433,6 +436,19 @@ function ShopContent() {
         return true;
       })
       .sort((a, b) => {
+        if (searchQuery.trim() && sortBy === "featured") {
+          const q = searchQuery.toLowerCase().trim();
+          const aName = (a.name || "").toLowerCase();
+          const bName = (b.name || "").toLowerCase();
+          const aStarts = aName.startsWith(q);
+          const bStarts = bName.startsWith(q);
+          if (aStarts && !bStarts) return -1;
+          if (!aStarts && bStarts) return 1;
+          const aWordStarts = aName.split(/\s+/).some((w: string) => w.startsWith(q));
+          const bWordStarts = bName.split(/\s+/).some((w: string) => w.startsWith(q));
+          if (aWordStarts && !bWordStarts) return -1;
+          if (!aWordStarts && bWordStarts) return 1;
+        }
         if (sortBy === "price-low") return a.price - b.price;
         if (sortBy === "price-high") return b.price - a.price;
         if (sortBy === "rating") return b.rating - a.rating;

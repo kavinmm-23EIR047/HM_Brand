@@ -295,7 +295,7 @@ export function TrustStrip() {
               </p>
             </div>
             <div className="shrink-0">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent-soft/50 bg-white/15 backdrop-blur-xs px-5 py-2.5 font-brand text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-white shadow-xs hover:bg-white/20 transition-colors whitespace-nowrap">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-accent-soft bg-brand-accent hover:bg-brand-accent-soft text-brand-primary-darkest px-5 py-2.5 font-brand text-xs sm:text-sm font-extrabold uppercase tracking-[0.16em] shadow-md transition-all whitespace-nowrap select-none">
                 <span>Coimbatore Vedic Heritage</span>
               </span>
             </div>

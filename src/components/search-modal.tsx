@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Clock3, Loader2, Search, Sparkles, X } from "lucide-react";
@@ -21,27 +21,154 @@ type SearchHit = {
   image?: string;
 };
 
+// Fast client-side ranking & smart matching for instant 0ms response
+function getInstantMatches(products: any[], q: string): { hits: SearchHit[]; suggestions: string[] } {
+  const queryLower = q.trim().toLowerCase();
+  if (!queryLower || !Array.isArray(products) || products.length === 0) {
+    return { hits: [], suggestions: [] };
+  }
+
+  // Indian phonetic equivalent (C <-> K, e.g., "car" <-> "kar", "camphor" <-> "karpoor")
+  const altQuery = queryLower.startsWith("c")
+    ? "k" + queryLower.slice(1)
+    : queryLower.startsWith("k")
+    ? "c" + queryLower.slice(1)
+    : "";
+
+  const scored: Array<{ hit: SearchHit; score: number }> = [];
+  const suggestionsSet = new Set<string>();
+
+  for (const p of products) {
+    const nameLower = (p.name || "").toLowerCase();
+    const descLower = (p.description || "").toLowerCase();
+    const shortDescLower = (p.shortDescription || "").toLowerCase();
+    const catLower = (p.category || "").toLowerCase();
+    const catLabels = (p.categoryLabels || []).join(" ").toLowerCase();
+    const nameWords = nameLower.split(/\s+/);
+
+    let score = 0;
+
+    // 1. Direct name match (highest priority on top)
+    if (nameLower === queryLower) {
+      score += 800;
+    } else if (nameLower.startsWith(queryLower)) {
+      score += 500;
+    }
+
+    // 2. Word in name starts with query (e.g., "Cup", "Camphor", "Cones")
+    if (nameWords.some((w: string) => w.startsWith(queryLower))) {
+      score += 350;
+    }
+
+    // 3. Category starts with query
+    if (catLower.startsWith(queryLower) || catLabels.split(/\s+/).some((w: string) => w.startsWith(queryLower))) {
+      score += 260;
+    }
+
+    // 4. Phonetic C/K equivalence (e.g., query "car" matches "Karppor dani machine")
+    if (altQuery) {
+      if (nameLower.startsWith(altQuery)) score += 300;
+      else if (nameWords.some((w: string) => w.startsWith(altQuery))) score += 240;
+      else if (nameLower.includes(altQuery)) score += 100;
+    }
+
+    // 5. Substring matches
+    if (nameLower.includes(queryLower)) {
+      score += 150;
+    }
+    if (catLower.includes(queryLower) || catLabels.includes(queryLower)) {
+      score += 90;
+    }
+    if (descLower.includes(queryLower) || shortDescLower.includes(queryLower)) {
+      score += 30;
+    }
+
+    if (score > 0) {
+      scored.push({
+        hit: {
+          id: p.id,
+          slug: p.slug,
+          name: p.name,
+          category: p.category,
+          categories: p.categoryLabels || (p.category ? [p.category] : []),
+          shortDescription: p.shortDescription || p.description,
+          price: p.price,
+          mrp: p.mrp,
+          image: p.image,
+        },
+        score,
+      });
+      suggestionsSet.add(p.name);
+      if (p.category) suggestionsSet.add(p.category);
+    }
+  }
+
+  // Sort: highest score on top
+  scored.sort((a, b) => b.score - a.score);
+
+  // If hits are low (< 4), append similar products from matching categories
+  if (scored.length > 0 && scored.length < 8) {
+    const existingSlugs = new Set(scored.map((s) => s.hit.slug));
+    const matchingCategories = new Set(scored.map((s) => (s.hit.category || "").toLowerCase()));
+
+    for (const p of products) {
+      if (scored.length >= 8) break;
+      if (existingSlugs.has(p.slug)) continue;
+
+      const catMatches = matchingCategories.has((p.category || "").toLowerCase());
+      if (catMatches || p.featured) {
+        scored.push({
+          hit: {
+            id: p.id,
+            slug: p.slug,
+            name: p.name,
+            category: p.category,
+            categories: p.categoryLabels || (p.category ? [p.category] : []),
+            shortDescription: p.shortDescription || p.description,
+            price: p.price,
+            mrp: p.mrp,
+            image: p.image,
+          },
+          score: catMatches ? 15 : 5,
+        });
+        existingSlugs.add(p.slug);
+      }
+    }
+  }
+
+  return {
+    hits: scored.slice(0, 8).map((s) => s.hit),
+    suggestions: Array.from(suggestionsSet).slice(0, 6),
+  };
+}
+
 export function SearchModal() {
   const router = useRouter();
   const { isSearchOpen, setIsSearchOpen, dbProducts } = useStore();
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [hits, setHits] = useState<SearchHit[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [backendHits, setBackendHits] = useState<SearchHit[]>([]);
+  const [backendSuggestions, setBackendSuggestions] = useState<string[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
 
+  // Instant in-memory search calculation (0ms latency)
+  const instantResult = useMemo(() => {
+    return getInstantMatches(dbProducts, query);
+  }, [dbProducts, query]);
+
+  // Fast debounce (120ms) for background server enhancement
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedQuery(query.trim()), 250);
+    const timer = window.setTimeout(() => setDebouncedQuery(query.trim()), 120);
     return () => window.clearTimeout(timer);
   }, [query]);
 
   useEffect(() => {
     if (!debouncedQuery) {
-      setHits([]);
-      setSuggestions([]);
+      setBackendHits([]);
+      setBackendSuggestions([]);
       setLoading(false);
       return;
     }
@@ -53,14 +180,14 @@ export function SearchModal() {
         const data = await response.json();
         if (!response.ok || !data.success) throw new Error(data.error || "Search is unavailable");
         if (active) {
-          setHits(Array.isArray(data.hits) ? data.hits : []);
-          setSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
+          setBackendHits(Array.isArray(data.hits) ? data.hits : []);
+          setBackendSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
         }
       })
       .catch(() => {
         if (active) {
-          setHits([]);
-          setSuggestions([]);
+          setBackendHits([]);
+          setBackendSuggestions([]);
         }
       })
       .finally(() => {
@@ -72,12 +199,21 @@ export function SearchModal() {
     };
   }, [debouncedQuery]);
 
+  // Use backend results when available for current query; otherwise use instant client results immediately
+  const hits = (debouncedQuery === query.trim() && backendHits.length > 0)
+    ? backendHits
+    : instantResult.hits;
+
+  const suggestions = backendSuggestions.length > 0
+    ? backendSuggestions
+    : instantResult.suggestions;
+
   useEffect(() => {
     if (!isSearchOpen) {
       setQuery("");
       setDebouncedQuery("");
-      setHits([]);
-      setSuggestions([]);
+      setBackendHits([]);
+      setBackendSuggestions([]);
       return;
     }
 
@@ -256,7 +392,7 @@ export function SearchModal() {
                   <p className="py-12 text-center text-sm text-brand-muted">Search our live product catalogue by name or category.</p>
                 )}
               </div>
-            ) : loading || debouncedQuery !== query.trim() ? (
+            ) : hits.length === 0 && (loading || debouncedQuery !== query.trim()) ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <Loader2 className="mb-3 h-8 w-8 animate-spin text-brand-primary" />
                 <p className="text-sm font-semibold text-brand-muted">Searching the live catalogue...</p>
