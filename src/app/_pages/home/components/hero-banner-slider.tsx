@@ -20,7 +20,7 @@ interface SlideItem {
 }
 
 export function HeroBannerSlider() {
-  const { dbBanners } = useStore();
+  const { dbBanners, isBannersLoading } = useStore();
 
   const activeSlides: SlideItem[] =
     dbBanners && dbBanners.length > 0
@@ -94,7 +94,16 @@ export function HeroBannerSlider() {
     touchEndX.current = null;
   };
 
-  if (total === 0) return null;
+  if (total === 0) {
+    if (!isBannersLoading) return null;
+    return (
+      <section aria-label="Loading promotional banner" aria-busy="true" className="w-full py-0 sm:py-2 lg:py-3">
+        <div className="w-full px-0 sm:px-4 lg:px-6 xl:px-8">
+          <div className="aspect-[16/9] w-full animate-pulse bg-brand-border/40 sm:aspect-[16/5] sm:rounded-2xl lg:rounded-3xl" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

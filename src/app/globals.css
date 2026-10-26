@@ -783,3 +783,10 @@ h5 {
     animation: none;
   }
 }
+
+/* ── Instagram-style toast progress bar ── */
+@keyframes hm-toast-progress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+

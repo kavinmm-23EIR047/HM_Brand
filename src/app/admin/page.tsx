@@ -4,7 +4,7 @@ import React, { Suspense, useState, useEffect, useCallback, useMemo } from "reac
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket, Layers, FileText as ArticleIcon, Gift, Heart,
+  Package, FolderTree, Image as ImageIcon, ShoppingBag, Ticket, Layers, FileText as ArticleIcon, Gift, Heart, Home,
   Plus, Trash2, Edit2, TrendingUp, Lock, ArrowRight, CheckCircle,
   AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
   Filter, ArrowUpDown, RotateCcw, Upload, Truck, User, Copy, MapPin,
@@ -1682,11 +1682,11 @@ function AdminWorkspace() {
   /* ACCESS GUARD */
   if (!user || user.role !== "ADMIN") {
     return (
-      <div className="grid min-h-dvh place-items-center bg-[#F3F6F8] px-4 py-10">
-        <section className="w-full max-w-md space-y-5 rounded-3xl border border-[#DDE5E9] bg-white p-7 text-center shadow-xl sm:p-9">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#FCE7ED] text-[#A7193D]"><Lock size={25} /></div>
-          <div className="space-y-2"><h1 className="font-brand text-2xl font-bold text-[#173B42]">Administrator access only</h1><p className="text-sm leading-6 text-[#526873]">Sign in with an administrator account to open the management workspace.</p></div>
-          <Link href="/login" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#A7193D] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#86132F]">Admin sign in <ArrowRight size={16} /></Link>
+      <div className="grid min-h-dvh place-items-center bg-brand-surface-soft px-4 py-10">
+        <section className="w-full max-w-md space-y-5 rounded-3xl border border-brand-border bg-white p-7 text-center shadow-xl sm:p-9">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-brand-primary/10 text-brand-primary"><Lock size={25} /></div>
+          <div className="space-y-2"><h1 className="font-brand text-2xl font-bold text-brand-ink">Administrator access only</h1><p className="text-sm leading-6 text-brand-muted">Sign in with an administrator account to open the management workspace.</p></div>
+          <Link href="/login" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-3 text-sm font-bold text-white transition hover:bg-brand-hover">Admin sign in <ArrowRight size={16} /></Link>
         </section>
       </div>
     );
@@ -1709,32 +1709,32 @@ function AdminWorkspace() {
   const recentDashboardOrders = Array.isArray(metrics?.recentOrders) ? [...metrics.recentOrders].reverse() : [];
   const maxRecentRevenue = Math.max(1, ...recentDashboardOrders.map((order: any) => Number(order.totalAmount) || 0));
   const recentOrderStatusGroups = [
-    { label: "Pending", color: "bg-[#D97706]", count: recentDashboardOrders.filter((order: any) => ["PENDING", "PROCESSING"].includes(String(order.status).toUpperCase())).length },
-    { label: "Confirmed", color: "bg-[#2563EB]", count: recentDashboardOrders.filter((order: any) => ["CONFIRMED", "READY_TO_SHIP"].includes(String(order.status).toUpperCase())).length },
-    { label: "Shipped", color: "bg-[#0F766E]", count: recentDashboardOrders.filter((order: any) => ["SHIPPED", "DISPATCHED", "DELIVERED"].includes(String(order.status).toUpperCase())).length },
-    { label: "Returned", color: "bg-[#A7193D]", count: recentDashboardOrders.filter((order: any) => ["RETURNED", "CANCELLED"].includes(String(order.status).toUpperCase())).length },
+    { label: "Pending", color: "bg-brand-amber", count: recentDashboardOrders.filter((order: any) => ["PENDING", "PROCESSING"].includes(String(order.status).toUpperCase())).length },
+    { label: "Confirmed", color: "bg-brand-accent", count: recentDashboardOrders.filter((order: any) => ["CONFIRMED", "READY_TO_SHIP"].includes(String(order.status).toUpperCase())).length },
+    { label: "Shipped", color: "bg-brand-green-dark", count: recentDashboardOrders.filter((order: any) => ["SHIPPED", "DISPATCHED", "DELIVERED"].includes(String(order.status).toUpperCase())).length },
+    { label: "Returned", color: "bg-brand-primary", count: recentDashboardOrders.filter((order: any) => ["RETURNED", "CANCELLED"].includes(String(order.status).toUpperCase())).length },
   ];
 
   return (
-    <div className="-mb-[calc(4.5rem+env(safe-area-inset-bottom))] min-h-dvh w-full overflow-x-hidden bg-[#F3F6F8] md:mb-0">
+    <div className="-mb-[calc(4.5rem+env(safe-area-inset-bottom))] min-h-dvh w-full overflow-x-hidden bg-brand-surface-soft md:mb-0">
       {loading && (
-        <div className="fixed inset-0 z-[120] overflow-y-auto bg-[#F3F6F8]/90 py-4 backdrop-blur-sm" aria-label="Loading admin data">
+        <div className="fixed inset-0 z-[120] overflow-y-auto bg-brand-surface-soft/90 py-4 backdrop-blur-sm" aria-label="Loading admin data">
           <AdminPageContentSkeleton />
         </div>
       )}
-      {mobileNavOpen && <button type="button" aria-label="Close admin navigation" onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-[60] bg-[#0C2022]/55 backdrop-blur-[2px] lg:hidden" />}
+      {mobileNavOpen && <button type="button" aria-label="Close admin navigation" onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-[60] bg-brand-ink/55 backdrop-blur-[2px] lg:hidden" />}
       <div className="grid min-h-dvh w-full grid-cols-1 lg:grid-cols-[248px_minmax(0,1fr)] xl:grid-cols-[264px_minmax(0,1fr)]">
-          <aside className={`fixed inset-y-0 left-0 z-[70] flex h-dvh w-[min(84vw,300px)] flex-col overflow-y-auto rounded-r-3xl bg-[#123B3A] p-3.5 text-white shadow-2xl shadow-[#0C2022]/25 transition-transform duration-300 ease-out lg:sticky lg:top-0 lg:z-auto lg:h-dvh lg:w-auto lg:translate-x-0 lg:rounded-none lg:shadow-none ${mobileNavOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          <aside className={`fixed inset-y-0 left-0 z-[70] flex h-dvh w-[min(84vw,300px)] flex-col overflow-y-auto rounded-r-3xl bg-brand-ink p-3.5 text-white shadow-2xl shadow-brand-ink/25 transition-transform duration-300 ease-out lg:sticky lg:top-0 lg:z-auto lg:h-dvh lg:w-auto lg:translate-x-0 lg:rounded-none lg:shadow-none ${mobileNavOpen ? "translate-x-0" : "-translate-x-full"}`}>
             <div className="mb-5 flex items-center justify-between px-3 pt-2 lg:hidden">
-              <div className="flex items-center gap-3"><div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#F3C967] text-[#123B3A]"><Layers size={20} /></div><div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3C967]">HM Brand</p><p className="mt-0.5 text-sm font-bold">Admin workspace</p></div></div>
+              <div className="flex items-center gap-3"><div className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-accent text-brand-ink"><Layers size={20} /></div><div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent">HM Brand</p><p className="mt-0.5 text-sm font-bold">Admin workspace</p></div></div>
               <button type="button" onClick={() => setMobileNavOpen(false)} aria-label="Close navigation" className="grid h-10 w-10 place-items-center rounded-xl text-white/80 hover:bg-white/10 hover:text-white"><X size={20} /></button>
             </div>
             <div className="hidden items-center gap-3 px-3 pb-5 pt-5 lg:flex">
-              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#F3C967] text-[#123B3A]">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-accent text-brand-ink">
                 <Layers size={20} />
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3C967]">HM Brand</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent">HM Brand</p>
                 <p className="mt-0.5 truncate text-sm font-bold">Store workspace</p>
               </div>
             </div>
@@ -1746,11 +1746,11 @@ function AdminWorkspace() {
                   type="button"
                   onClick={() => navigateToSection(id)}
                   aria-current={activeTab === id ? "page" : undefined}
-                  className={`group flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-left text-xs font-semibold transition-all duration-200 lg:w-full ${activeTab === id ? "bg-[#A7193D] text-white shadow-lg shadow-black/15" : "text-white/75 hover:bg-white/10 hover:text-white"}`}
+                  className={`group flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-left text-xs font-semibold transition-all duration-200 lg:w-full ${activeTab === id ? "bg-brand-primary text-white shadow-lg shadow-black/15" : "text-white/75 hover:bg-white/10 hover:text-white"}`}
                 >
-                  <Icon size={17} className={activeTab === id ? "text-[#FFE19A]" : "text-white/65 group-hover:text-white"} />
+                  <Icon size={17} className={activeTab === id ? "text-brand-accent-soft" : "text-white/65 group-hover:text-white"} />
                   <span className="whitespace-nowrap">{label}</span>
-                  {activeTab === id && <span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-[#FFE19A] lg:block" />}
+                  {activeTab === id && <span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-brand-accent-soft lg:block" />}
                 </button>
               ))}
             </nav>
@@ -1763,22 +1763,26 @@ function AdminWorkspace() {
           </aside>
 
           <main className="min-w-0 px-3 py-4 sm:px-5 sm:py-6 lg:px-7 lg:py-7">
-            <div className="w-full space-y-5">
-            <header className="flex flex-col gap-4 rounded-3xl border border-[#DDE5E9] bg-white px-4 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-5">
-              <div>
-                <div className="mb-1 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A7193D]">
-                  <span>Admin workspace</span><span className="text-[#AEBBC2]">/</span><span className="text-[#667982]">{activeTabLabel}</span>
+            <div className="mx-auto w-full max-w-[1600px] space-y-5">
+            <header className="flex flex-col gap-4 rounded-3xl border border-brand-border bg-white px-4 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-5">
+              <div className="min-w-0">
+                <div className="mb-1 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-primary">
+                  <span>Admin workspace</span><span className="text-brand-muted/50">/</span><span className="text-brand-muted">{activeTabLabel}</span>
                 </div>
-                <div className="flex items-center gap-3"><button type="button" onClick={() => setMobileNavOpen(true)} aria-label="Open admin navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#DDE5E9] bg-white text-[#173B42] shadow-sm transition hover:border-[#A7193D]/40 hover:text-[#A7193D] lg:hidden"><Menu size={19} /></button><h1 className="font-brand text-2xl font-bold text-[#173B42] sm:text-3xl">{activeTab === "overview" ? `Welcome back, ${user.fullName.split(" ")[0]}` : activeTabLabel}</h1></div>
-                <p className="mt-1 text-sm text-[#637680]">{activeTab === "overview" ? "Here is the latest activity across your store." : `Manage your store ${activeTabLabel.toLowerCase()} and keep everything up to date.`}</p>
+                <div className="flex min-w-0 items-center gap-3"><button type="button" onClick={() => setMobileNavOpen(true)} aria-label="Open admin navigation" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-brand-border bg-white text-brand-ink shadow-sm transition hover:border-brand-primary/40 hover:text-brand-primary lg:hidden"><Menu size={19} /></button><h1 className="min-w-0 truncate font-brand text-2xl font-bold text-brand-ink sm:text-3xl">{activeTab === "overview" ? `Welcome back, ${user.fullName.split(" ")[0]}` : activeTabLabel}</h1></div>
+                <p className="mt-1 text-sm text-brand-muted">{activeTab === "overview" ? "Here is the latest activity across your store." : `Manage your store ${activeTabLabel.toLowerCase()} and keep everything up to date.`}</p>
               </div>
-              <div className="flex items-center gap-2 self-start sm:self-auto">
-                <button type="button" onClick={fetchTab} className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#DDE5E9] bg-white px-3 text-xs font-bold text-[#173B42] transition hover:border-[#A7193D]/40 hover:bg-[#F8FAFB] lg:hidden" title="Refresh current section">
+              <div className="flex flex-wrap items-center gap-2 self-start sm:shrink-0 sm:self-auto">
+                <Link href="/" className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-brand-primary px-3 text-xs font-bold text-white transition hover:bg-brand-hover sm:px-4">
+                  <Home size={15} />
+                  <span>Storefront</span>
+                </Link>
+                <button type="button" onClick={fetchTab} className="inline-flex h-10 items-center gap-2 rounded-xl border border-brand-border bg-white px-3 text-xs font-bold text-brand-ink transition hover:border-brand-primary/40 hover:bg-brand-surface-soft lg:hidden" title="Refresh current section">
                   <RefreshCw size={15} className={loading ? "animate-spin" : ""} /> Refresh
                 </button>
-                <div className="flex items-center gap-2.5 rounded-xl bg-[#F3F6F8] px-3 py-2">
-                  <div className="grid h-8 w-8 place-items-center rounded-full bg-[#173B42] text-xs font-bold text-white">{user.fullName.slice(0, 1).toUpperCase()}</div>
-                  <div className="hidden sm:block"><p className="max-w-36 truncate text-xs font-bold text-[#173B42]">{user.fullName}</p><p className="text-[10px] font-semibold text-[#75868D]">Administrator</p></div>
+                <div className="flex min-w-0 items-center gap-2.5 rounded-xl bg-brand-surface-soft px-3 py-2">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-ink text-xs font-bold text-white">{user.fullName.slice(0, 1).toUpperCase()}</div>
+                  <div className="hidden sm:block"><p className="max-w-36 truncate text-xs font-bold text-brand-ink">{user.fullName}</p><p className="text-[10px] font-semibold text-brand-muted">Administrator</p></div>
                 </div>
               </div>
             </header>
@@ -1792,70 +1796,70 @@ function AdminWorkspace() {
           {activeTab === "overview" && (
             <div className="space-y-6">
               <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-                <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#A7193D]">Store snapshot</p><h2 className="mt-1 font-brand text-2xl font-bold text-[#173B42]">Performance overview</h2></div>
-                <p className="text-xs text-[#71828A]">Live totals from your connected store data</p>
+                <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-primary">Store snapshot</p><h2 className="mt-1 font-brand text-2xl font-bold text-brand-ink">Performance overview</h2></div>
+                <p className="text-xs text-brand-muted">Live totals from your connected store data</p>
               </div>
-              <div className="grid grid-cols-2 gap-3 xl:grid-cols-5 xl:gap-4">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
                 {[
-                  { label: "Paid revenue", value: `₹${Number(metrics?.totalRevenue || 0).toLocaleString("en-IN")}`, note: "Completed payments", icon: TrendingUp, color: "text-[#0F766E]", iconBg: "bg-[#DDF4EE]" },
-                  { label: "Products", value: metrics?.totalProducts ?? products.length, note: "Catalog items", icon: Package, color: "text-[#2563EB]", iconBg: "bg-[#E8F0FF]" },
-                  { label: "Categories", value: metrics?.totalCategories ?? categories.length, note: "Store taxonomy", icon: FolderTree, color: "text-[#A16207]", iconBg: "bg-[#FFF2D4]" },
-                  { label: "Orders", value: metrics?.totalOrders ?? 0, note: "All time", icon: ShoppingBag, color: "text-[#A7193D]", iconBg: "bg-[#FCE7ED]" },
-                  { label: "Customers", value: metrics?.totalUsers ?? 0, note: "Registered accounts", icon: User, color: "text-[#7C3AED]", iconBg: "bg-[#F1EAFE]" },
+                  { label: "Paid revenue", value: `₹${Number(metrics?.totalRevenue || 0).toLocaleString("en-IN")}`, note: "Completed payments", icon: TrendingUp, color: "text-brand-green-dark", iconBg: "bg-brand-positive-soft" },
+                  { label: "Products", value: metrics?.totalProducts ?? products.length, note: "Catalog items", icon: Package, color: "text-brand-primary", iconBg: "bg-brand-primary/10" },
+                  { label: "Categories", value: metrics?.totalCategories ?? categories.length, note: "Store taxonomy", icon: FolderTree, color: "text-brand-amber", iconBg: "bg-brand-surface-warm" },
+                  { label: "Orders", value: metrics?.totalOrders ?? 0, note: "All time", icon: ShoppingBag, color: "text-brand-primary", iconBg: "bg-brand-primary/10" },
+                  { label: "Customers", value: metrics?.totalUsers ?? 0, note: "Registered accounts", icon: User, color: "text-brand-ink", iconBg: "bg-brand-surface-soft" },
                 ].map((m) => {
                   const Icon = m.icon;
-                  return <div key={m.label} className="rounded-2xl border border-[#DDE5E9] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-5">
-                    <div className="flex items-start justify-between gap-2"><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#70818A]">{m.label}</span><span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${m.iconBg} ${m.color}`}><Icon size={17} /></span></div>
+                  return <div key={m.label} className="rounded-2xl border border-brand-border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-5">
+                    <div className="flex items-start justify-between gap-2"><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-muted">{m.label}</span><span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${m.iconBg} ${m.color}`}><Icon size={17} /></span></div>
                     <span className={`mt-3 block break-words text-2xl font-extrabold tracking-tight ${m.color}`}>{m.value}</span>
-                    <span className="mt-1 block text-[11px] font-medium text-[#819098]">{m.note}</span>
+                    <span className="mt-1 block text-[11px] font-medium text-brand-muted">{m.note}</span>
                   </div>
                 })}
               </div>
 
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.85fr)]">
-                <section className="rounded-2xl border border-[#DDE5E9] bg-white p-5 sm:p-6">
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.85fr)]">
+                <section className="rounded-2xl border border-brand-border bg-white p-5 sm:p-6">
                   <div className="mb-5 flex items-start justify-between gap-3">
-                    <div><h3 className="text-sm font-extrabold text-[#173B42]">Recent order value</h3><p className="mt-1 text-xs text-[#71828A]">Revenue from the latest orders received</p></div>
-                    <span className="rounded-lg bg-[#E8F0FF] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#2563EB]">Last {recentDashboardOrders.length}</span>
+                    <div><h3 className="text-sm font-extrabold text-brand-ink">Recent order value</h3><p className="mt-1 text-xs text-brand-muted">Revenue from the latest orders received</p></div>
+                    <span className="rounded-lg bg-brand-surface-soft px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-brand-primary">Last {recentDashboardOrders.length}</span>
                   </div>
                   {recentDashboardOrders.length > 0 ? (
-                    <div className="flex h-52 items-end gap-3 border-b border-l border-[#E6ECEF] px-3 pb-0 pt-4 sm:gap-5">
+                    <div className="flex h-52 items-end gap-3 border-b border-l border-brand-border px-3 pb-0 pt-4 sm:gap-5">
                       {recentDashboardOrders.map((order: any, index: number) => {
                         const amount = Number(order.totalAmount) || 0;
                         const height = Math.max(8, (amount / maxRecentRevenue) * 100);
                         const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : `Order ${index + 1}`;
                         return <div key={order.id || order.orderNumber || index} className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-2">
-                          <span className="text-[10px] font-bold text-[#526873]">₹{amount.toLocaleString("en-IN")}</span>
-                          <div className="relative flex w-full flex-1 items-end justify-center"><div title={`${order.orderNumber || "Order"}: ₹${amount.toLocaleString("en-IN")}`} className="w-full max-w-12 rounded-t-xl bg-gradient-to-t from-[#0F766E] to-[#45B39D] transition-all duration-300 group-hover:from-[#A7193D] group-hover:to-[#E36B81]" style={{ height: `${height}%` }} /></div>
-                          <span className="pb-2 text-[10px] font-semibold text-[#819098]">{date}</span>
+                          <span className="text-[10px] font-bold text-brand-ink">₹{amount.toLocaleString("en-IN")}</span>
+                          <div className="relative flex w-full flex-1 items-end justify-center"><div title={`${order.orderNumber || "Order"}: ₹${amount.toLocaleString("en-IN")}`} className="w-full max-w-12 rounded-t-xl bg-gradient-to-t from-brand-green-dark to-brand-green-deep transition-all duration-300 group-hover:from-brand-primary group-hover:to-brand-primary-deep" style={{ height: `${height}%` }} /></div>
+                          <span className="pb-2 text-[10px] font-semibold text-brand-muted">{date}</span>
                         </div>;
                       })}
                     </div>
-                  ) : <div className="grid h-52 place-items-center rounded-xl bg-[#F6F8F9] text-center text-xs text-[#71828A]">Recent orders will appear here when your store receives them.</div>}
+                  ) : <div className="grid h-52 place-items-center rounded-xl bg-brand-surface-soft text-center text-xs text-brand-muted">Recent orders will appear here when your store receives them.</div>}
                 </section>
 
-                <section className="rounded-2xl border border-[#DDE5E9] bg-white p-5 sm:p-6">
-                  <div className="mb-5"><h3 className="text-sm font-extrabold text-[#173B42]">Order pipeline</h3><p className="mt-1 text-xs text-[#71828A]">Status mix in the latest orders</p></div>
+                <section className="rounded-2xl border border-brand-border bg-white p-5 sm:p-6">
+                  <div className="mb-5"><h3 className="text-sm font-extrabold text-brand-ink">Order pipeline</h3><p className="mt-1 text-xs text-brand-muted">Status mix in the latest orders</p></div>
                   {recentDashboardOrders.length > 0 ? <>
-                    <div className="mb-5 flex h-3 overflow-hidden rounded-full bg-[#EDF1F3]" aria-label="Recent order status distribution">
+                    <div className="mb-5 flex h-3 overflow-hidden rounded-full bg-brand-surface-soft" aria-label="Recent order status distribution">
                       {recentOrderStatusGroups.map((group) => group.count > 0 && <span key={group.label} className={`${group.color} transition-all`} style={{ width: `${(group.count / recentDashboardOrders.length) * 100}%` }} title={`${group.label}: ${group.count}`} />)}
                     </div>
                     <div className="space-y-3">
-                      {recentOrderStatusGroups.map((group) => <div key={group.label} className="flex items-center justify-between text-xs"><span className="flex items-center gap-2.5 text-[#526873]"><span className={`h-2.5 w-2.5 rounded-full ${group.color}`} />{group.label}</span><span className="font-bold tabular-nums text-[#173B42]">{group.count}</span></div>)}
+                      {recentOrderStatusGroups.map((group) => <div key={group.label} className="flex items-center justify-between text-xs"><span className="flex items-center gap-2.5 text-brand-muted"><span className={`h-2.5 w-2.5 rounded-full ${group.color}`} />{group.label}</span><span className="font-bold tabular-nums text-brand-ink">{group.count}</span></div>)}
                     </div>
-                  </> : <div className="grid h-36 place-items-center rounded-xl bg-[#F6F8F9] text-center text-xs text-[#71828A]">No order status data yet.</div>}
-                  <button type="button" onClick={() => navigateToSection("orders")} className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-[#A7193D] transition hover:text-[#7E102E]">Open order management <ArrowUpRight size={14} /></button>
+                  </> : <div className="grid h-36 place-items-center rounded-xl bg-brand-surface-soft text-center text-xs text-brand-muted">No order status data yet.</div>}
+                  <button type="button" onClick={() => navigateToSection("orders")} className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-brand-primary transition hover:text-brand-hover">Open order management <ArrowUpRight size={14} /></button>
                 </section>
               </div>
 
-              <section className="rounded-2xl border border-[#DDE5E9] bg-white p-5 sm:p-6">
-                <div className="mb-4 flex items-center justify-between gap-3"><div><h3 className="text-sm font-extrabold text-[#173B42]">Latest orders</h3><p className="mt-1 text-xs text-[#71828A]">Most recent orders from the backend</p></div><button type="button" onClick={() => navigateToSection("orders")} className="text-xs font-bold text-[#A7193D] hover:underline">View all</button></div>
-                {recentDashboardOrders.length ? <div className="divide-y divide-[#EDF1F3]">
+              <section className="rounded-2xl border border-brand-border bg-white p-5 sm:p-6">
+                <div className="mb-4 flex items-center justify-between gap-3"><div><h3 className="text-sm font-extrabold text-brand-ink">Latest orders</h3><p className="mt-1 text-xs text-brand-muted">Most recent orders from the backend</p></div><button type="button" onClick={() => navigateToSection("orders")} className="text-xs font-bold text-brand-primary hover:underline">View all</button></div>
+                {recentDashboardOrders.length ? <div className="divide-y divide-brand-border">
                   {[...recentDashboardOrders].reverse().map((order: any) => <div key={order.id || order.orderNumber} className="flex flex-col gap-2 py-3 first:pt-0 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0"><p className="truncate text-xs font-bold text-[#173B42]">{order.orderNumber || "Order"}</p><p className="mt-0.5 text-[11px] text-[#819098]">{order.customerEmail || order.customerName || "Customer"} · {order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "Date unavailable"}</p></div>
-                    <div className="flex items-center justify-between gap-4 sm:justify-end"><span className="text-xs font-extrabold text-[#173B42]">₹{(Number(order.totalAmount) || 0).toLocaleString("en-IN")}</span><span className="rounded-full bg-[#F3F6F8] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#526873]">{String(order.status || "Pending").replace(/_/g, " ")}</span></div>
+                    <div className="min-w-0"><p className="truncate text-xs font-bold text-brand-ink">{order.orderNumber || "Order"}</p><p className="mt-0.5 text-[11px] text-brand-muted">{order.customerEmail || order.customerName || "Customer"} · {order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "Date unavailable"}</p></div>
+                    <div className="flex items-center justify-between gap-4 sm:justify-end"><span className="text-xs font-extrabold text-brand-ink">₹{(Number(order.totalAmount) || 0).toLocaleString("en-IN")}</span><span className="rounded-full bg-brand-surface-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-brand-muted">{String(order.status || "Pending").replace(/_/g, " ")}</span></div>
                   </div>)}
-                </div> : <p className="rounded-xl bg-[#F6F8F9] p-5 text-center text-xs text-[#71828A]">No orders have been placed yet.</p>}
+                </div> : <p className="rounded-xl bg-brand-surface-soft p-5 text-center text-xs text-brand-muted">No orders have been placed yet.</p>}
               </section>
               </div>
           )}
@@ -3267,7 +3271,7 @@ function AdminWorkspace() {
 
 export default function AdminPage() {
   return (
-    <Suspense fallback={<div className="grid min-h-screen place-items-center bg-[#F3F6F8] text-sm font-semibold text-[#173B42]">Loading admin workspace…</div>}>
+    <Suspense fallback={<div className="grid min-h-screen place-items-center bg-brand-surface-soft text-sm font-semibold text-brand-ink">Loading admin workspace…</div>}>
       <AdminWorkspace />
     </Suspense>
   );

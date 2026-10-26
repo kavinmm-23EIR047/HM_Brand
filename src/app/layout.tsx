@@ -45,7 +45,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="bg-sandalLight text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0"
+        className="bg-sandalLight text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden"
         suppressHydrationWarning
       >
         <StoreProvider>

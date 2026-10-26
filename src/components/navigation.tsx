@@ -20,6 +20,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { useStore } from "@/components/store";
+import { CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 
 type MegaMenu = "shop" | null;
 
@@ -224,7 +225,7 @@ export function Navigation() {
             <span className="hidden text-white/40 sm:inline">|</span>
             <Link href="/contact" className="hidden items-center gap-1.5 hover:text-brand-accent sm:inline-flex transition-colors">
               <HelpCircle size={14} />
-              <span>+91 9345633399</span>
+              <span>{CONTACT_PHONE_DISPLAY}</span>
             </Link>
           </div>
         </div>
@@ -335,10 +336,11 @@ export function Navigation() {
             {user?.role === "ADMIN" && (
               <Link
                 href="/admin"
-                className="hidden xl:inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-brand-primary text-white text-xs font-bold hover:bg-brand-hover transition"
+                aria-label="Admin dashboard"
+                className="inline-flex h-10 w-10 items-center justify-center gap-1.5 rounded-full bg-brand-primary px-2 text-xs font-bold text-white transition hover:bg-brand-hover sm:w-auto sm:px-3"
               >
                 <ShieldCheck size={14} />
-                <span>Admin</span>
+                <span className="hidden sm:inline">Admin</span>
               </Link>
             )}
 

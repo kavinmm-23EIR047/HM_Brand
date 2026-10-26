@@ -1,24 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, Mail, MapPin, Sparkles, Send, Clock, CheckCircle2, ShieldCheck } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, ArrowUpRight, Clock } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
-import { MascotNamaste } from "@/components/mascot-art";
-import { AuspiciousSeal } from "@/components/divine-motifs";
+import {
+  CONTACT_ADDRESS,
+  CONTACT_MAPS_URL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_TEL,
+  CONTACT_WHATSAPP_DISPLAY,
+  CONTACT_WHATSAPP_NUMBER,
+} from "@/lib/contact-info";
 
-function InstagramIcon({ size = 18, className = "" }: { size?: number; className?: string }) {
+function InstagramIcon() {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
@@ -27,196 +23,96 @@ function InstagramIcon({ size = 18, className = "" }: { size?: number; className
 }
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [form, setForm] = useState({ name: "", phone: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
+  const sendWhatsAppQuery = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const message = [
+      "Hello HM Brand, I have an enquiry.",
+      form.name.trim() && `Name: ${form.name.trim()}`,
+      form.phone.trim() && `My phone: ${form.phone.trim()}`,
+      `Query: ${form.message.trim()}`,
+    ].filter(Boolean).join("\n");
+    window.open(`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   };
 
   return (
     <InnerPage
-      eyebrow="CONNECT WITH HM BRAND"
-      title="We Are Here For Your Sacred Moments"
-      subtitle="Have a question about our traditional botanical fragrances, 10-in-1 Aroma Family Pack, bulk festive orders, or distribution? Reach out directly to our Coimbatore team."
+      eyebrow="CONTACT HM BRAND"
+      title="How Can We Help You?"
+      subtitle="Contact our Coimbatore team about products, orders, bulk enquiries, or anything else you need help with."
     >
-      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
-          
-          {/* Left: Official Contact & Workshop Information */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white p-7 sm:p-8 rounded-3xl border-2 border-brand-accent/50 shadow-md space-y-6">
-              
-              <div className="flex items-center gap-3 border-b border-brand-accent/30 pb-4">
-                <div className="w-12 h-12 rounded-2xl bg-brand-primary text-brand-accent flex items-center justify-center text-2xl shadow-xs font-bold font-heading">
-                  HM
-                </div>
-                <div>
-                  <h3 className="font-heading text-2xl text-brand-ink font-extrabold">HM Brand</h3>
-                  <p className="text-xs text-brand-primary font-bold tracking-wide">Smell of Purity • Coimbatore</p>
-                </div>
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-7">
+          <section className="space-y-4">
+            <div className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:p-6">
+              <div className="mb-5">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">Visit or call</p>
+                <h2 className="mt-1 font-heading text-2xl font-bold text-brand-ink">HM Brand, Coimbatore</h2>
               </div>
-
-              {/* Sacred Tagline Box */}
-              <div className="rounded-2xl bg-brand-surface-warm p-4 border border-brand-accent/60 space-y-1">
-                <p className="text-xs font-bold italic text-brand-primary leading-relaxed">
-                  &ldquo;Beyond Form, Fragrance Speaks — Listen With Your Heart.&rdquo;
-                </p>
-                <p className="text-ui-11 text-brand-ink font-semibold">
-                  &ldquo;உருவத்திற்கு அப்பால், வாசனை பேசுகிறது; உங்கள் இதயத்தால் கேளுங்கள்.&rdquo;
-                </p>
-              </div>
-
-              {/* Contact Data */}
-              <div className="space-y-4 text-xs sm:text-sm text-brand-charcoal/85 font-medium">
-                
-                <div className="flex items-start gap-3">
-                  <MapPin className="text-brand-primary shrink-0 mt-1" size={18} />
-                  <div>
-                    <strong className="text-brand-ink block font-bold">Sanctum Workshop &amp; Store:</strong>
-                    <span>143A, Peelamedu Main Road, Sowripalayam, Coimbatore - 641028, Tamil Nadu, India</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Phone className="text-brand-primary shrink-0" size={18} />
-                  <div>
-                    <strong className="text-brand-ink block font-bold">Phone / WhatsApp Support:</strong>
-                    <span>+91 9345633399 · +91 6382177441</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Mail className="text-brand-primary shrink-0" size={18} />
-                  <div>
-                    <strong className="text-brand-ink block font-bold">Official Email:</strong>
-                    <span>jayamassociatescoimbatore@gmail.com</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <InstagramIcon className="text-brand-primary shrink-0" size={18} />
-                  <div>
-                    <strong className="text-brand-ink block font-bold">Official Instagram:</strong>
-                    <span className="font-bold text-brand-primary">@hmagarbatti5</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Clock className="text-brand-primary shrink-0" size={18} />
-                  <div>
-                    <strong className="text-brand-ink block font-bold">Customer Service Hours:</strong>
-                    <span>Monday to Saturday: 9:00 AM – 8:00 PM IST</span>
-                  </div>
-                </div>
-
-              </div>
-
-              <div className="pt-4 border-t border-brand-accent/30 flex items-center justify-between">
-                <span className="text-xs font-bold text-brand-green-dark flex items-center gap-1.5">
-                  <ShieldCheck size={16} /> Pan-India Express Delivery
-                </span>
-                <span className="text-ui-10 font-black uppercase tracking-wider text-brand-primary bg-brand-surface-warm px-2.5 py-1 rounded-full border border-brand-accent/50">
-                  100% Genuine
-                </span>
+              <div className="space-y-4">
+                <a href={CONTACT_MAPS_URL} target="_blank" rel="noreferrer" className="group flex items-start gap-3 rounded-xl border border-brand-border/80 bg-brand-surface/40 p-3.5 transition hover:border-brand-primary/40">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-primary/10 text-brand-primary"><MapPin size={19} /></span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-bold text-brand-ink">Address</span>
+                    <span className="mt-1 block text-sm leading-6 text-brand-charcoal/75">{CONTACT_ADDRESS}</span>
+                    <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-brand-primary">Get directions <ArrowUpRight size={13} /></span>
+                  </span>
+                </a>
+                <a href={`tel:${CONTACT_PHONE_TEL}`} className="flex items-center gap-3 rounded-xl border border-brand-border/80 bg-brand-surface/40 p-3.5 transition hover:border-brand-primary/40">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-primary/10 text-brand-primary"><Phone size={18} /></span>
+                  <span><span className="block text-sm font-bold text-brand-ink">Call us</span><span className="mt-1 block text-sm text-brand-charcoal/75">{CONTACT_PHONE_DISPLAY}</span></span>
+                </a>
               </div>
             </div>
-          </div>
 
-          {/* Right: Interactive Contact Form */}
-          <div className="lg:col-span-7 bg-white p-7 sm:p-10 rounded-3xl border-2 border-brand-accent/50 shadow-md space-y-6">
-            <div>
-              <span className="text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block">
-                SEND A MESSAGE
-              </span>
-              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-brand-ink mt-1">
-                How Can We Serve You?
-              </h2>
+            <div className="rounded-2xl border border-[#b7e4c7] bg-[#f2fbf5] p-5 sm:p-6">
+              <div className="flex items-start gap-3">
+                <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#25D366]/15 text-[#168943]"><MessageCircle size={22} /></span>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#168943]">Help desk</p>
+                  <h2 className="mt-1 font-heading text-xl font-bold text-brand-ink">Need a quick answer?</h2>
+                  <p className="mt-1 text-sm leading-6 text-brand-charcoal/75">Chat directly with our help desk on WhatsApp. No website form or backend is used.</p>
+                  <a href={`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello HM Brand, I need help with an enquiry.")}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#168943] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#117438]">
+                    <MessageCircle size={17} /> WhatsApp {CONTACT_WHATSAPP_DISPLAY}
+                  </a>
+                </div>
+              </div>
             </div>
 
-            {submitted ? (
-              <div className="bg-brand-surface-warm p-8 rounded-2xl border border-brand-accent/60 text-center space-y-4">
-                <CheckCircle2 className="mx-auto text-brand-green-dark" size={48} />
-                <h3 className="font-heading text-2xl text-brand-ink font-bold">
-                  Message Received With Gratitude!
-                </h3>
-                <p className="text-sm text-brand-charcoal/80 max-w-md mx-auto font-sans">
-                  Our Coimbatore team will contact you shortly via email or phone.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setSubmitted(false)}
-                  className="rounded-full bg-brand-primary px-6 py-2.5 text-xs font-bold text-white hover:bg-brand-orange transition shadow-md"
-                >
-                  Send Another Message
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-brand-ink mb-1.5">Your Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Ramesh Kumar"
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full rounded-xl border border-brand-accent/60 bg-brand-surface/50 px-4 py-2.5 text-xs font-medium text-brand-ink outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 shadow-2xs"
-                    />
-                  </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <a href="mailto:jayamassociatescoimbatore@gmail.com" className="flex items-center gap-3 rounded-xl border border-brand-border bg-white p-4 text-sm text-brand-charcoal/80 transition hover:border-brand-primary/40">
+                <Mail size={18} className="shrink-0 text-brand-primary" /><span className="min-w-0"><strong className="block text-brand-ink">Email</strong><span className="break-all text-xs">jayamassociatescoimbatore@gmail.com</span></span>
+              </a>
+              <a href="https://instagram.com/hmagarbatti5" target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl border border-brand-border bg-white p-4 text-sm text-brand-charcoal/80 transition hover:border-brand-primary/40">
+                <span className="shrink-0 text-brand-primary"><InstagramIcon /></span><span><strong className="block text-brand-ink">Instagram</strong><span className="text-xs">@hmagarbatti5</span></span>
+              </a>
+            </div>
+            <p className="flex items-center gap-2 px-1 text-xs text-brand-charcoal/65"><Clock size={14} /> Monday–Saturday, 9:00 AM–8:00 PM IST</p>
+          </section>
 
-                  <div>
-                    <label className="block text-xs font-bold text-brand-ink mb-1.5">Phone / WhatsApp *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="+91 98765 43210"
-                      value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      className="w-full rounded-xl border border-brand-accent/60 bg-brand-surface/50 px-4 py-2.5 text-xs font-medium text-brand-ink outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 shadow-2xs"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-brand-ink mb-1.5">Email Address</label>
-                  <input
-                    type="email"
-                    placeholder="yourname@gmail.com"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="w-full rounded-xl border border-brand-accent/60 bg-brand-surface/50 px-4 py-2.5 text-xs font-medium text-brand-ink outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 shadow-2xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-brand-ink mb-1.5">Your Query or Requirements *</label>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Tell us about the fragrances, pooja sets, or bulk festive orders you need..."
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="w-full rounded-xl border border-brand-accent/60 bg-brand-surface/50 px-4 py-2.5 text-xs font-medium text-brand-ink outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 shadow-2xs"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary hover:bg-brand-orange text-white px-8 py-3.5 font-bold text-xs sm:text-sm uppercase tracking-wider transition shadow-md hover:scale-105 active:scale-95 cursor-pointer"
-                >
-                  <Send size={15} />
-                  <span>Send Sacred Message</span>
-                </button>
-              </form>
-            )}
-
-          </div>
-
+          <section className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:p-7">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">Send an enquiry</p>
+            <h2 className="mt-1 font-heading text-2xl font-bold text-brand-ink">Message our help desk</h2>
+            <p className="mt-2 text-sm leading-6 text-brand-charcoal/70">Fill this in and we’ll prepare your message in WhatsApp. You can review and send it there.</p>
+            <form onSubmit={sendWhatsAppQuery} className="mt-6 space-y-4">
+              <label className="block text-sm font-semibold text-brand-ink">Your name <span className="font-normal text-brand-charcoal/55">(optional)</span>
+                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} type="text" autoComplete="name" placeholder="Your name" className="mt-1.5 min-h-11 w-full rounded-xl border border-brand-border bg-brand-surface/30 px-3.5 text-sm outline-none transition placeholder:text-brand-charcoal/45 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10" />
+              </label>
+              <label className="block text-sm font-semibold text-brand-ink">Your phone <span className="font-normal text-brand-charcoal/55">(optional)</span>
+                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} type="tel" autoComplete="tel" placeholder="Your phone number" className="mt-1.5 min-h-11 w-full rounded-xl border border-brand-border bg-brand-surface/30 px-3.5 text-sm outline-none transition placeholder:text-brand-charcoal/45 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10" />
+              </label>
+              <label className="block text-sm font-semibold text-brand-ink">How can we help? *
+                <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required rows={5} placeholder="Write your question or order enquiry..." className="mt-1.5 w-full resize-y rounded-xl border border-brand-border bg-brand-surface/30 px-3.5 py-3 text-sm leading-6 outline-none transition placeholder:text-brand-charcoal/45 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10" />
+              </label>
+              <button type="submit" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-primary/90 sm:w-auto">
+                <MessageCircle size={17} /> Continue in WhatsApp
+              </button>
+              <p className="text-xs leading-5 text-brand-charcoal/60">Your message opens in WhatsApp addressed to {CONTACT_WHATSAPP_DISPLAY}. It is not submitted to this website.</p>
+            </form>
+          </section>
         </div>
-      </div>
+      </main>
     </InnerPage>
   );
 }

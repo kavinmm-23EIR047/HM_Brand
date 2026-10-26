@@ -64,7 +64,6 @@ export function BentoPromos() {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 30vw"
                     className="object-contain object-center drop-shadow-2xl"
-                    priority
                   />
                 </div>
 

@@ -1,11 +1,56 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, Heart, ShoppingBag, Tag, Truck, Lock, Sparkles } from "lucide-react";
+import { Plus, Minus, Heart, ShoppingBag, Truck, Lock, Sparkles } from "lucide-react";
 import { useStore } from "@/components/store";
 import type { Product } from "@/lib/products";
+
+function QuantitySelector({
+  quantity,
+  onChange,
+  disabled = false,
+  compact = false,
+}: {
+  quantity: number;
+  onChange: (quantity: number) => void;
+  disabled?: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <div className={`flex items-center ${compact ? "gap-1.5" : "gap-3"}`}>
+      {!compact && <span className="text-xs font-bold uppercase tracking-wider text-[#173B3A]">Quantity:</span>}
+      {compact && <span className="sr-only">Quantity</span>}
+      <div className={`inline-flex items-center rounded-xl border border-[#EADBBD] bg-white p-1 shadow-2xs ${compact ? "h-9" : "h-10"}`}>
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(1, quantity - 1))}
+          disabled={disabled || quantity <= 1}
+          className={`flex items-center justify-center rounded-lg text-[#173B3A] transition hover:bg-[#FAF7EE] hover:text-[#9E1830] active:scale-90 disabled:cursor-not-allowed disabled:opacity-40 ${compact ? "h-7 w-7" : "h-8 w-8"}`}
+          aria-label="Decrease quantity"
+        >
+          <Minus size={14} />
+        </button>
+        <span
+          aria-live="polite"
+          aria-label="Selected quantity"
+          className={`select-none text-center font-sans font-bold tabular-nums text-[#173B3A] ${compact ? "min-w-6 px-1.5 text-sm" : "min-w-[36px] px-4 text-sm sm:text-base"}`}
+        >
+          {quantity}
+        </span>
+        <button
+          type="button"
+          onClick={() => onChange(quantity + 1)}
+          disabled={disabled}
+          className={`flex items-center justify-center rounded-lg text-[#173B3A] transition hover:bg-[#FAF7EE] hover:text-[#9E1830] active:scale-90 disabled:cursor-not-allowed disabled:opacity-40 ${compact ? "h-7 w-7" : "h-8 w-8"}`}
+          aria-label="Increase quantity"
+        >
+          <Plus size={14} />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function AddPanel({ product }: { product: Product }) {
   const router = useRouter();
@@ -25,9 +70,7 @@ export function AddPanel({ product }: { product: Product }) {
       singleItemDiscount = Math.min(product.price, appliedCoupon.discountAmount);
     }
   }
-
   const effectiveUnitPrice = Math.max(0, product.price - singleItemDiscount);
-  const totalSavings = singleItemDiscount * qty;
 
   const mrpNum = product.mrp ? parseFloat(product.mrp.replace(/[^0-9.]/g, "")) : 0;
   const discountPercent = mrpNum > product.price
@@ -48,12 +91,13 @@ export function AddPanel({ product }: { product: Product }) {
   };
 
   const handleAdd = () => {
+    if (!product.inStock) return;
     add(product, qty);
     router.push("/cart");
   };
 
   return (
-    <div className="rounded-2xl border border-brand-border bg-brand-surface-alt/60 p-4 sm:p-5.5 space-y-4 sm:space-y-5 shadow-2xs">
+    <div className="rounded-2xl border border-brand-border bg-brand-surface-alt/60 p-3 sm:p-5.5 space-y-3 sm:space-y-5 shadow-2xs">
       {/* ── PRICE & STOCK ROW ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-baseline gap-3">
@@ -112,30 +156,11 @@ export function AddPanel({ product }: { product: Product }) {
       )}
 
       {/* ── QUANTITY SELECTOR ROW ── */}
-      <div className="flex items-center gap-3">
-        <span className="text-xs font-bold text-[#173B3A] uppercase tracking-wider">
-          Quantity:
-        </span>
-        <div className="inline-flex items-center h-10 rounded-xl bg-white border border-[#EADBBD] shadow-2xs p-1">
-          <button
-            type="button"
-            onClick={() => setQty(Math.max(1, qty - 1))}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#173B3A] hover:bg-[#FAF7EE] hover:text-[#9E1830] transition active:scale-90 cursor-pointer"
-            aria-label="Decrease quantity"
-          >
-            <Minus size={14} />
-          </button>
-          <span className="font-sans px-4 text-sm sm:text-base font-bold text-[#173B3A] tabular-nums min-w-[36px] text-center select-none">
-            {qty}
-          </span>
-          <button
-            type="button"
-            onClick={() => setQty(qty + 1)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#173B3A] hover:bg-[#FAF7EE] hover:text-[#9E1830] transition active:scale-90 cursor-pointer"
-            aria-label="Increase quantity"
-          >
-            <Plus size={14} />
-          </button>
+      <div className="hidden md:flex items-center justify-between gap-4">
+        <QuantitySelector quantity={qty} onChange={setQty} disabled={!product.inStock} />
+        <div className="text-right">
+          <span className="block text-[10px] font-bold uppercase tracking-wider text-[#556058]">Total for {qty}</span>
+          <span className="font-brand text-lg font-extrabold text-[#9E1830]">₹{(effectiveUnitPrice * qty).toLocaleString("en-IN")}</span>
         </div>
       </div>
 
@@ -166,7 +191,7 @@ export function AddPanel({ product }: { product: Product }) {
       </div>
 
       {/* ── MICRO TRUST ROW ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 text-xs sm:text-[13px] font-semibold text-[#173B3A]/90 border-t border-[#EADBBD]/60">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-2.5 text-xs font-semibold text-[#173B3A]/90 border-t border-[#EADBBD]/60">
         <span className="inline-flex items-center gap-1.5">
           <Truck size={15} className="text-[#173B3A]" />
           Free delivery on orders
@@ -181,30 +206,23 @@ export function AddPanel({ product }: { product: Product }) {
         </span>
       </div>
 
-      {/* ── MOBILE FLOATING ACTION BAR (CLEAN, PROPERLY PLACED BUTTONS ONLY) ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-md border-t border-[#EADBBD] px-4 py-3 shadow-[0_-8px_25px_rgba(0,0,0,0.12)] pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-        <div className="flex items-center gap-2.5 max-w-md mx-auto w-full">
+      {/* ── MOBILE FLOATING ACTION BAR ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#EADBBD] bg-white/95 px-3 py-2 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+        <div className="mx-auto flex w-full max-w-md items-center gap-2">
+          {/* Cart Quantity Controller [ - 1 + ] */}
+          <QuantitySelector quantity={qty} onChange={setQty} disabled={!product.inStock} compact />
+
+          {/* Full-width Add to Cart button with icon */}
           <button
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-primary px-3 text-xs font-brand font-bold uppercase tracking-wider text-white shadow-xs transition-all active:scale-95 disabled:opacity-50"
+            className="flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-primary px-2.5 text-[11px] font-brand font-bold uppercase tracking-wide text-white shadow-xs transition-all hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:px-3 sm:text-xs"
           >
-            <ShoppingBag size={16} />
-            <span>Add to Cart</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => toggleWishlist(product.slug)}
-            aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-colors shadow-2xs active:scale-95 ${
-              wishlisted
-                ? "bg-[#9E1830] text-white border-[#9E1830]"
-                : "bg-white text-[#173B3A] border-[#EADBBD]"
-            }`}
-          >
-            <Heart size={18} fill={wishlisted ? "currentColor" : "none"} />
+            <span className="shrink-0 font-price text-sm font-extrabold tracking-normal">₹{(effectiveUnitPrice * qty).toLocaleString("en-IN")}</span>
+            <span className="h-5 w-px shrink-0 bg-white/35" aria-hidden="true" />
+            <ShoppingBag size={14} strokeWidth={2.2} className="shrink-0" />
+            <span className="truncate">{product.inStock ? "Add to Cart" : "Out of Stock"}</span>
           </button>
         </div>
       </div>

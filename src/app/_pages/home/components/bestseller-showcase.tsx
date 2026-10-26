@@ -142,7 +142,7 @@ function getBadgeInfo(product: Product) {
 
 export function BestsellerShowcase() {
   const router = useRouter();
-  const { dbProducts, add, toggleWishlist, isInWishlist } = useStore();
+  const { dbProducts, add, toggleWishlist, isInWishlist, isInitialDataLoading } = useStore();
   const [activeTab, setActiveTab] = useState("all");
   const sliderRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -217,7 +217,30 @@ export function BestsellerShowcase() {
     setActiveSlide(slide);
   };
 
-  if (!dbProducts || dbProducts.length === 0) return null;
+  if (!dbProducts || dbProducts.length === 0) {
+    if (!isInitialDataLoading) return null;
+    return (
+      <section aria-label="Loading popular products" aria-busy="true" className="w-full border-y border-brand-accent/35 bg-brand-surface-alt py-8 sm:py-12">
+        <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
+          <div className="space-y-2">
+            <div className="h-3 w-32 animate-pulse rounded bg-brand-border/50" />
+            <div className="h-7 w-3/4 max-w-lg animate-pulse rounded bg-brand-border/50" />
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="overflow-hidden rounded-2xl border border-brand-border/70 bg-white p-2.5">
+                <div className="aspect-square animate-pulse rounded-xl bg-brand-border/40" />
+                <div className="space-y-2 p-2 pt-3">
+                  <div className="h-4 w-4/5 animate-pulse rounded bg-brand-border/40" />
+                  <div className="h-3 w-3/5 animate-pulse rounded bg-brand-border/40" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative w-full overflow-hidden bg-brand-surface-alt py-12 sm:py-16 border-y border-brand-accent/35 font-sans">
@@ -294,30 +317,32 @@ export function BestsellerShowcase() {
             </div>
 
             {/* Action Buttons: View All + Carousel Nav Arrows (Clean Header Placement) */}
-            <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5 sm:gap-3">
+            <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:ml-auto sm:w-auto sm:justify-end sm:gap-3">
               <Link
                 href="/shop"
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand-orange-deep hover:bg-[#C85610] px-3 sm:px-6 py-2.5 sm:py-3 font-brand text-[10px] min-[400px]:text-xs sm:text-sm font-bold uppercase tracking-wide sm:tracking-wider text-white shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap"
+                className="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand-orange-deep px-4 py-2 font-brand text-[11px] font-bold uppercase tracking-wide text-white shadow-sm transition-all duration-300 hover:bg-[#C85610] hover:scale-105 active:scale-95 whitespace-nowrap sm:min-h-11 sm:px-6 sm:py-3 sm:text-sm sm:tracking-wider"
               >
                 <span>View All Products</span>
                 <ArrowRight size={14} />
               </Link>
-              <button
-                type="button"
-                onClick={() => moveSlider("previous")}
-                aria-label="Previous products"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:bg-brand-primary hover:text-white"
-              >
-                <ChevronLeft size={19} />
-              </button>
-              <button
-                type="button"
-                onClick={() => moveSlider("next")}
-                aria-label="Next products"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:bg-brand-primary hover:text-white"
-              >
-                <ChevronRight size={19} />
-              </button>
+              <div className="flex shrink-0 items-center gap-4 sm:gap-5">
+                <button
+                  type="button"
+                  onClick={() => moveSlider("previous")}
+                  aria-label="Previous products"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:bg-brand-primary hover:text-white sm:h-11 sm:w-11"
+                >
+                  <ChevronLeft size={19} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveSlider("next")}
+                  aria-label="Next products"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:bg-brand-primary hover:text-white sm:h-11 sm:w-11"
+                >
+                  <ChevronRight size={19} />
+                </button>
+              </div>
             </div>
 
           </div>
@@ -327,8 +352,12 @@ export function BestsellerShowcase() {
         {/* ========================================================================= */}
         {/* 2. CATEGORY FILTER TABS ROW                                              */}
         {/* ========================================================================= */}
-        <div className="mb-8 w-full">
-          <div className="hide-scrollbar flex w-full snap-x snap-mandatory flex-nowrap items-center gap-2 overflow-x-auto pb-2 sm:gap-2.5">
+        <div className="mb-6 w-full sm:mb-8">
+          <div
+            role="group"
+            aria-label="Product categories. Swipe horizontally to see all categories."
+            className="scrollbar-none flex w-full snap-x snap-mandatory items-center gap-1.5 overflow-x-auto scroll-smooth px-1 py-1 sm:gap-2"
+          >
             {FILTER_TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -336,13 +365,14 @@ export function BestsellerShowcase() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex min-h-11 shrink-0 snap-start items-center justify-center gap-2 rounded-full px-3 sm:px-5 py-2 sm:py-2.5 font-brand text-[11px] min-[400px]:text-xs sm:text-sm font-bold uppercase tracking-wide sm:tracking-wider leading-tight transition-all duration-300 shadow-2xs cursor-pointer text-center ${
+                  aria-pressed={isActive}
+                  className={`inline-flex h-9 shrink-0 snap-start items-center justify-center gap-1.5 rounded-full px-3 sm:h-10 sm:gap-2 sm:px-4 font-brand text-[10px] min-[420px]:text-[11px] sm:text-xs font-bold uppercase tracking-wide leading-tight transition-colors duration-200 shadow-2xs cursor-pointer whitespace-nowrap ${
                     isActive
-                      ? "bg-brand-primary text-white shadow-sm scale-105"
+                      ? "bg-brand-primary text-white shadow-sm"
                       : "bg-white text-brand-heading border border-brand-border hover:border-brand-primary hover:text-brand-primary"
                   }`}
                 >
-                  <TabIcon id={tab.id} className="h-4 w-4 shrink-0" />
+                  <TabIcon id={tab.id} className="h-3.5 w-3.5 shrink-0" />
                   <span>{tab.label}</span>
                 </button>
               );

@@ -444,7 +444,6 @@ export function DeliveryReachBanner() {
                   alt="Scenic South India Western Ghats landscape with delivery truck and temple"
                   fill
                   className="object-cover object-bottom"
-                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/40 pointer-events-none" />
               </div>
@@ -457,7 +456,6 @@ export function DeliveryReachBanner() {
                   fill
                   sizes="(max-width: 1024px) 100vw, 500px"
                   className="object-contain"
-                  priority
                 />
               </div>
 

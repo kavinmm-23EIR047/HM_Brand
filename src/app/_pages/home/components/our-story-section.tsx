@@ -1,10 +1,82 @@
 "use client";
 
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, Heart, Sparkles, ShieldCheck } from "lucide-react";
+import { ArrowRight, Leaf, Heart, Sparkles, ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react";
 
 export function OurStorySection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const activeIdxRef = useRef(0);
+  const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    activeIdxRef.current = activeIdx;
+  }, [activeIdx]);
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
+  }, []);
+
+  const pauseTemporarily = useCallback((ms = 4000) => {
+    setIsPaused(true);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, ms);
+  }, []);
+
+  const scrollTo = useCallback((idx: number) => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const card = container.children[idx] as HTMLElement | undefined;
+    if (card) {
+      const cardRect = card.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const delta =
+        cardRect.left + cardRect.width / 2 - (containerRect.left + containerRect.width / 2);
+      container.scrollBy({ left: delta, behavior: "smooth" });
+    }
+    setActiveIdx(idx);
+  }, []);
+
+  const onScroll = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = Array.from(container.children) as HTMLElement[];
+    const containerRect = container.getBoundingClientRect();
+    const containerCenter = containerRect.left + containerRect.width / 2;
+    let closestIdx = 0;
+    let closestDist = Infinity;
+    cards.forEach((card, idx) => {
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
+      const dist = Math.abs(containerCenter - cardCenter);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIdx = idx;
+      }
+    });
+    setActiveIdx(closestIdx);
+  }, []);
+
+  // Autoslide effect for mobile/tablet slider
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      if (typeof window !== "undefined" && window.innerWidth >= 640) return;
+      const next = (activeIdxRef.current + 1) % 3; // 3 values
+      scrollTo(next);
+    }, 3800);
+
+    return () => clearInterval(interval);
+  }, [isPaused, scrollTo]);
+
   const values = [
     {
       number: "01",
@@ -84,63 +156,141 @@ export function OurStorySection() {
               India&apos;s rich traditions and a modern mindful lifestyle.
             </p>
 
-            {/* THREE VALUES — HORIZONTAL SCROLL ON MOBILE, 3-COL GRID ON TABLET/DESKTOP */}
-            <div className="mt-6 sm:mt-8 flex overflow-x-auto sm:grid sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-4.5 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory no-scrollbar">
-              {values.map((value) => {
-                const Icon = value.icon;
+            {/* THREE VALUES — CENTERED SLIDER ON MOBILE, 3-COL GRID ON TABLET/DESKTOP */}
+            <div className="mt-6 sm:mt-8">
+              <div
+                ref={scrollRef}
+                onScroll={onScroll}
+                onMouseEnter={() => {
+                  if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                    setIsPaused(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                    setIsPaused(false);
+                  }
+                }}
+                onTouchStart={() => pauseTemporarily(5000)}
+                onTouchEnd={() => pauseTemporarily(4000)}
+                className="relative flex overflow-x-auto sm:grid sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-4.5 pb-2 snap-x snap-mandatory no-scrollbar px-[calc((100%-min(82vw,300px))/2)] sm:px-0"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {values.map((value, idx) => {
+                  const Icon = value.icon;
+                  const isActive = idx === activeIdx;
 
-                return (
-                  <div
-                    key={value.number}
-                    className={`group relative flex flex-col justify-between rounded-2xl bg-white border border-[#EADBBD] hover:border-[#9E1830]/50 p-4 sm:p-5 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 w-[270px] sm:w-auto shrink-0 snap-center`}
-                  >
-                    {/* Top Header: Icon & Step Number */}
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <div
-                          className={`flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl ${value.iconBg} transition-transform duration-300 group-hover:scale-110 shadow-2xs`}
-                          style={{ color: value.accentColor }}
-                        >
-                          <Icon size={20} strokeWidth={2.2} />
+                  return (
+                    <div
+                      key={value.number}
+                      onClick={() => {
+                        pauseTemporarily(4000);
+                        scrollTo(idx);
+                      }}
+                      className={`group relative flex flex-col justify-between rounded-2xl bg-white p-4 sm:p-5 transition-all duration-300 w-[min(82vw,300px)] sm:w-auto shrink-0 snap-center cursor-pointer sm:cursor-default ${
+                        isActive
+                          ? "border-[#9E1830] shadow-md ring-1 ring-[#9E1830]/20"
+                          : "border-[#EADBBD] hover:border-[#9E1830]/50 hover:shadow-md"
+                      }`}
+                    >
+                      {/* Top Header: Icon & Step Number */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <div
+                            className={`flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl ${value.iconBg} transition-transform duration-300 group-hover:scale-110 shadow-2xs`}
+                            style={{ color: value.accentColor }}
+                          >
+                            <Icon size={20} strokeWidth={2.2} />
+                          </div>
+                          <span className="font-serif text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#FFF9EC] border border-[#EADBBD] text-[#8C6D37] tabular-nums">
+                            {value.number}
+                          </span>
                         </div>
-                        <span className="font-serif text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#FFF9EC] border border-[#EADBBD] text-[#8C6D37] tabular-nums">
-                          {value.number}
-                        </span>
+
+                        {/* Title */}
+                        <h3 className="font-serif text-base sm:text-lg font-bold text-[#173B3A] uppercase tracking-wide group-hover:text-[#9E1830] transition-colors leading-tight">
+                          {value.title}
+                        </h3>
+
+                        {/* Subtitle Pill */}
+                        <div className="mt-1.5">
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-extrabold uppercase tracking-wider ${value.badgeBg} ${value.badgeText} shadow-2xs`}
+                          >
+                            {value.subtitle}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <p className="mt-2.5 text-xs sm:text-sm text-[#4A4036] font-normal leading-relaxed">
+                          {value.description}
+                        </p>
                       </div>
 
-                      {/* Title */}
-                      <h3 className="font-serif text-base sm:text-lg font-bold text-[#173B3A] uppercase tracking-wide group-hover:text-[#9E1830] transition-colors leading-tight">
-                        {value.title}
-                      </h3>
-
-                      {/* Subtitle Pill */}
-                      <div className="mt-1.5">
+                      {/* Bottom subtle accent line */}
+                      <div className="mt-4 pt-2.5 border-t border-[#F2EADB] flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-[#173B3A]/70 uppercase tracking-wider">
+                          HM Purity
+                        </span>
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-extrabold uppercase tracking-wider ${value.badgeBg} ${value.badgeText} shadow-2xs`}
-                        >
-                          {value.subtitle}
-                        </span>
+                          className="h-2 w-2 rounded-full transition-transform group-hover:scale-125"
+                          style={{ backgroundColor: value.accentColor }}
+                        />
                       </div>
-
-                      {/* Description */}
-                      <p className="mt-2.5 text-xs sm:text-sm text-[#4A4036] font-normal leading-relaxed">
-                        {value.description}
-                      </p>
                     </div>
+                  );
+                })}
+              </div>
 
-                    {/* Bottom subtle accent line */}
-                    <div className="mt-4 pt-2.5 border-t border-[#F2EADB] flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-[#173B3A]/70 uppercase tracking-wider">
-                        HM Purity
-                      </span>
-                      <span
-                        className="h-2 w-2 rounded-full transition-transform group-hover:scale-125"
-                        style={{ backgroundColor: value.accentColor }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+              {/* MOBILE ONLY: Navigations & Paginations */}
+              <div className="mt-4 flex sm:hidden items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    pauseTemporarily(4000);
+                    scrollTo((activeIdx - 1 + values.length) % values.length);
+                  }}
+                  aria-label="Previous value"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-xs transition hover:bg-brand-primary/5 active:scale-95"
+                >
+                  <ChevronLeft size={16} strokeWidth={2.5} />
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {values.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => {
+                        pauseTemporarily(4000);
+                        scrollTo(i);
+                      }}
+                      aria-label={`Go to slide ${i + 1}`}
+                      aria-current={i === activeIdx ? "true" : undefined}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        i === activeIdx
+                          ? "w-6 bg-brand-primary"
+                          : "w-2 bg-brand-border hover:bg-brand-slate/40"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    pauseTemporarily(4000);
+                    scrollTo((activeIdx + 1) % values.length);
+                  }}
+                  aria-label="Next value"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-xs transition hover:bg-brand-primary/5 active:scale-95"
+                >
+                  <ChevronRight size={16} strokeWidth={2.5} />
+                </button>
+              </div>
             </div>
 
             {/* CTA Action Row */}
@@ -180,14 +330,13 @@ export function OurStorySection() {
                   fill
                   sizes="(max-width: 640px) 280px, (max-width: 1024px) 360px, 420px"
                   className="object-contain drop-shadow-xl transition-transform duration-500 hover:scale-[1.03]"
-                  priority
                 />
               </div>
 
               {/* Caption pill below */}
-              <div className="mt-2 text-center">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 border border-brand-border px-4 py-1.5 font-tagline text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-brand-green shadow-xs">
-                  <span className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+              <div className="mt-3 flex justify-center px-1 text-center">
+                <span className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-brand-border bg-white/95 px-3 py-2 font-tagline text-[9px] font-bold uppercase leading-none tracking-[0.08em] text-brand-green shadow-xs whitespace-nowrap sm:px-4 sm:text-xs sm:tracking-[0.12em]">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-green" />
                   Rooted in Tradition · Made with Care
                 </span>
               </div>

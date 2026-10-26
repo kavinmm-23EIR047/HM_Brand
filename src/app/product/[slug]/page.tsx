@@ -110,7 +110,7 @@ export default async function ProductDetailsPage({
       subtitle={product.note}
       showHero={false}
     >
-      <div className="max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 pb-24 md:pb-8 space-y-8 sm:space-y-12">
+      <div className="max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1480px] mx-auto px-3.5 sm:px-6 lg:px-8 py-3 sm:py-8 pb-28 md:pb-8 space-y-5 sm:space-y-12">
 
         {/* ─── 1. BREADCRUMB ─── */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-ui-13 font-medium text-stone-500">
@@ -127,7 +127,7 @@ export default async function ProductDetailsPage({
         </nav>
 
         {/* ─── 2. PRODUCT HERO: DUAL-COLUMN RESPONSIVE LAYOUT ─── */}
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="grid grid-cols-1 items-start gap-4 sm:gap-8 lg:grid-cols-12 lg:gap-12">
 
           {/* ── LEFT: PRODUCT GALLERY & 4 FEATURE TILES (Sticky on desktop) ── */}
           <div className="w-full lg:col-span-5 lg:sticky lg:top-24 self-start">
@@ -141,10 +141,10 @@ export default async function ProductDetailsPage({
 
           {/* ── RIGHT: PRODUCT DETAILS PROPER CONTAINER ── */}
           <div className="min-w-0 lg:col-span-7">
-            <div className="rounded-3xl border border-[#EADBBD] bg-white p-5 sm:p-7 lg:p-8 shadow-sm space-y-5 sm:space-y-6">
+            <div className="rounded-2xl sm:rounded-3xl border border-[#EADBBD] bg-white p-3 sm:p-7 lg:p-8 shadow-sm space-y-3 sm:space-y-6">
 
               {/* Category Pill & Real Backend Reviews / Authentic Trust Row */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#FAF6EE]">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-[#FAF6EE]">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#9E1830]/25 bg-[#FFF5F5] px-3.5 py-1 text-xs font-bold text-[#9E1830] shadow-2xs">
                   <Sparkles size={12} className="text-[#9E1830]" />
                   {product.category}
@@ -173,13 +173,13 @@ export default async function ProductDetailsPage({
               </div>
 
               {/* Title, Devotional Subtitle & Conditional Bundle Notice */}
-              <div className="space-y-2.5">
-                <h1 className="font-brand text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-wide text-[#173B3A] uppercase">
+              <div className="space-y-1.5 sm:space-y-2.5">
+                <h1 className="font-brand text-3xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-wide text-[#173B3A] uppercase">
                   {product.name}
                 </h1>
 
                 {/* Devotional Subtitle / Fragrance Note */}
-                <p className="font-sans text-xs sm:text-sm text-[#5C534E] leading-relaxed font-normal">
+                <p className="font-sans text-sm text-[#5C534E] leading-relaxed font-normal">
                   {product.note && !product.note.toLowerCase().includes("complete bundle") && !product.note.toLowerCase().includes("cannot be purchased")
                     ? product.note
                     : "A sacred fragrance crafted to bring divine peace, positivity and serenity into your home."}
@@ -201,47 +201,47 @@ export default async function ProductDetailsPage({
               </div>
 
               {/* 3 Specification Tiles with Ample Space and No Word Truncation */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5 pt-1">
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-3.5 pt-0.5 sm:pt-1">
                 {/* Pack Size */}
-                <div className="rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-3 sm:p-3.5 flex items-center gap-3 shadow-2xs hover:border-[#9E1830]/40 transition-colors">
-                  <div className="h-10 w-10 shrink-0 rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
-                    <Package size={18} />
+                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2 sm:p-3.5 flex flex-col sm:flex-row items-center sm:gap-3 text-center sm:text-left shadow-2xs hover:border-[#9E1830]/40 transition-colors">
+                  <div className="mb-1 sm:mb-0 h-7 w-7 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
+                    <Package size={15} className="sm:hidden" /><Package size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B7280] block">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
                       Pack Size
                     </span>
-                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
+                    <span className="font-brand text-[11px] sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
                       {product.quantity || "Standard Pack"}
                     </span>
                   </div>
                 </div>
 
                 {/* Duration */}
-                <div className="rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-3 sm:p-3.5 flex items-center gap-3 shadow-2xs hover:border-[#9E1830]/40 transition-colors">
-                  <div className="h-10 w-10 shrink-0 rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
-                    <Clock size={18} />
+                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2 sm:p-3.5 flex flex-col sm:flex-row items-center sm:gap-3 text-center sm:text-left shadow-2xs hover:border-[#9E1830]/40 transition-colors">
+                  <div className="mb-1 sm:mb-0 h-7 w-7 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
+                    <Clock size={15} className="sm:hidden" /><Clock size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B7280] block">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
                       Duration
                     </span>
-                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
+                    <span className="font-brand text-[11px] sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
                       {product.burnTime || (product.category.toLowerCase().includes("camphor") ? "Residue-Free Clean" : "45–50 min/stick")}
                     </span>
                   </div>
                 </div>
 
                 {/* Formulation */}
-                <div className="rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-3 sm:p-3.5 flex items-center gap-3 shadow-2xs hover:border-[#287541]/40 transition-colors">
-                  <div className="h-10 w-10 shrink-0 rounded-xl bg-[#EAF5EC] text-[#287541] flex items-center justify-center">
-                    <Leaf size={18} />
+                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2 sm:p-3.5 flex flex-col sm:flex-row items-center sm:gap-3 text-center sm:text-left shadow-2xs hover:border-[#287541]/40 transition-colors">
+                  <div className="mb-1 sm:mb-0 h-7 w-7 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#EAF5EC] text-[#287541] flex items-center justify-center">
+                    <Leaf size={15} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B7280] block">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
                       Formulation
                     </span>
-                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
+                    <span className="font-brand text-[11px] sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
                       {product.category.toLowerCase().includes("camphor") ? "100% Pure Camphor" : "100% Charcoal-Free"}
                     </span>
                   </div>
@@ -249,27 +249,28 @@ export default async function ProductDetailsPage({
               </div>
 
               {/* Aromatic Notes Container */}
-              <div className="space-y-2 pt-1">
-                <span className="font-brand text-xs font-bold uppercase tracking-wider text-[#111827] block">
+              <div className="space-y-1.5 sm:space-y-2 pt-0.5 sm:pt-1">
+                <span className="font-brand text-[13px] sm:text-sm font-bold uppercase tracking-wider text-[#111827] block">
                   Aromatic Notes
                 </span>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
                   {(product.fragranceNotes && product.fragranceNotes.length > 0
                     ? product.fragranceNotes
                     : ["Natural Resins", "Essential Oils", "Botanicals"]
-                  ).map((note, idx) => (
+                  ).slice(0, 3).map((note, idx) => (
                     <span
                       key={note}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF7EE] border border-[#EADBBD] px-4 py-1.5 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#111827] shadow-2xs hover:border-[#F6C84C] transition-colors"
+                      title={note}
+                      className="inline-flex min-w-0 w-full sm:w-auto items-center justify-center gap-1 rounded-full bg-[#FAF7EE] border border-[#EADBBD] px-1.5 py-1.5 sm:gap-1.5 sm:px-4 font-brand text-[10px] min-[390px]:text-[11px] sm:text-sm font-bold uppercase tracking-tight sm:tracking-wider leading-tight text-center text-[#111827] shadow-2xs hover:border-[#F6C84C] transition-colors"
                     >
                       {idx === 0 ? (
-                        <Leaf size={13} className="text-[#287541]" />
+                        <Leaf size={11} className="shrink-0 text-[#287541] sm:h-[13px] sm:w-[13px]" />
                       ) : idx === 1 ? (
-                        <Droplets size={13} className="text-[#0284C7]" />
+                        <Droplets size={11} className="shrink-0 text-[#0284C7] sm:h-[13px] sm:w-[13px]" />
                       ) : (
-                        <Sparkles size={13} className="text-[#D97706]" />
+                        <Sparkles size={11} className="shrink-0 text-[#D97706] sm:h-[13px] sm:w-[13px]" />
                       )}
-                      {note}
+                      <span className="line-clamp-2 min-w-0 sm:line-clamp-none">{note}</span>
                     </span>
                   ))}
                 </div>
@@ -283,9 +284,9 @@ export default async function ProductDetailsPage({
         </div>
 
         {/* PRODUCT USE GUIDE */}
-        <section className="relative overflow-hidden rounded-3xl border border-brand-border bg-brand-surface-bright p-6 shadow-xs sm:p-9">
-          <div className="grid grid-cols-1 items-center gap-6 sm:gap-8 lg:grid-cols-12">
-            <div className="space-y-3 lg:col-span-4">
+        <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-brand-border bg-brand-surface-bright p-4 sm:p-9 shadow-xs">
+          <div className="grid grid-cols-1 items-center gap-4 sm:gap-8 lg:grid-cols-12">
+            <div className="space-y-2 sm:space-y-3 lg:col-span-4">
               <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-brand-primary">
                 <Sparkles size={13} /> HOW TO USE
               </span>
@@ -296,7 +297,7 @@ export default async function ProductDetailsPage({
                 Follow the steps recommended for {product.name} and enjoy its fragrance safely.
               </p>
             </div>
-            <div className="hidden overflow-hidden rounded-2xl border border-brand-border bg-white p-2 shadow-sm md:block lg:col-span-8">
+            <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-brand-border bg-white p-1.5 sm:p-2 shadow-sm lg:col-span-8">
               <Image
                 src={usageImage}
                 alt={`How to use ${product.name}: step-by-step product instructions`}
@@ -306,14 +307,14 @@ export default async function ProductDetailsPage({
                 className="h-auto w-full object-contain"
               />
             </div>
-            <ol className="space-y-3 md:hidden">
+            <ol className="space-y-2 md:hidden">
               {(product.howToUse?.length ? product.howToUse : [
                 "Place the product in a stable, heat-safe holder.",
                 "Light it carefully and allow the fragrance to spread.",
                 "Keep away from children, pets, and flammable materials.",
               ]).slice(0, 4).map((step, index) => (
-                <li key={`${index}-${step}`} className="flex items-start gap-3 rounded-2xl border border-brand-border/70 bg-white p-4">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-primary text-xs font-bold text-white">
+                <li key={`${index}-${step}`} className="flex items-start gap-2.5 rounded-xl border border-brand-border/70 bg-white p-3">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-primary text-[11px] font-bold text-white">
                     {index + 1}
                   </span>
                   <span className="pt-0.5 text-sm leading-relaxed text-brand-charcoal">{step}</span>
@@ -324,10 +325,10 @@ export default async function ProductDetailsPage({
         </section>
 
         {/* ─── 4. DUAL CARDS: BOTANICAL BENEFITS & NATURAL CARE ─── */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <section className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-2">
           
           {/* Left Card: Sacred Botanical Benefits (Mint Gradient + Leaf Motif) */}
-          <div className="rounded-3xl border border-brand-positive-soft bg-gradient-to-br from-brand-surface-soft via-brand-positive-soft to-brand-positive-soft p-6 sm:p-8 relative overflow-hidden shadow-2xs space-y-5">
+          <div className="rounded-2xl sm:rounded-3xl border border-brand-positive-soft bg-gradient-to-br from-brand-surface-soft via-brand-positive-soft to-brand-positive-soft p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
             <div>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-green-dark uppercase mb-1">
                 <Leaf size={13} />
@@ -339,10 +340,10 @@ export default async function ProductDetailsPage({
             </div>
 
             {/* 3 Benefit Badges */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
-              <div className="space-y-2">
-                <div className="h-9 w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
-                  <Leaf size={18} />
+            <div className="grid grid-cols-3 gap-2 sm:gap-3.5 pt-1 sm:pt-2">
+              <div className="space-y-1 sm:space-y-2">
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
+                  <Leaf size={15} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
                 </div>
                 <strong className="text-xs font-bold text-brand-ink block leading-tight">
                   100% natural ingredients
@@ -352,9 +353,9 @@ export default async function ProductDetailsPage({
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <div className="h-9 w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
-                  <ShieldCheck size={18} />
+              <div className="space-y-1 sm:space-y-2">
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
+                  <ShieldCheck size={15} className="sm:hidden" /><ShieldCheck size={18} className="hidden sm:block" />
                 </div>
                 <strong className="text-xs font-bold text-brand-ink block leading-tight">
                   Zero harmful chemicals
@@ -364,9 +365,9 @@ export default async function ProductDetailsPage({
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <div className="h-9 w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
-                  <Sparkles size={18} />
+              <div className="space-y-1 sm:space-y-2">
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
+                  <Sparkles size={15} className="sm:hidden" /><Sparkles size={18} className="hidden sm:block" />
                 </div>
                 <strong className="text-xs font-bold text-brand-ink block leading-tight">
                   Uplifts clarity and divine ambience
@@ -379,7 +380,7 @@ export default async function ProductDetailsPage({
           </div>
 
           {/* Right Card: Preserving Maximum Fragrance (Peach Gradient + Lotus Motif) */}
-          <div className="rounded-3xl border border-brand-surface-warm bg-gradient-to-br from-brand-surface-cream via-brand-surface-cream to-brand-surface-promo p-6 sm:p-8 relative overflow-hidden shadow-2xs space-y-5">
+          <div className="rounded-2xl sm:rounded-3xl border border-brand-surface-warm bg-gradient-to-br from-brand-surface-cream via-brand-surface-cream to-brand-surface-promo p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
             <div>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-primary uppercase mb-1">
                 <Sparkles size={13} />
@@ -391,10 +392,10 @@ export default async function ProductDetailsPage({
             </div>
 
             {/* 3 Care Badges */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
-              <div className="space-y-2">
-                <div className="h-9 w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
-                  <Sun size={18} />
+            <div className="grid grid-cols-3 gap-2 sm:gap-3.5 pt-1 sm:pt-2">
+              <div className="space-y-1 sm:space-y-2">
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
+                  <Sun size={15} className="sm:hidden" /><Sun size={18} className="hidden sm:block" />
                 </div>
                 <strong className="text-xs font-bold text-brand-ink block leading-tight">
                   Keep in shade
@@ -404,9 +405,9 @@ export default async function ProductDetailsPage({
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <div className="h-9 w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
-                  <Droplets size={18} />
+              <div className="space-y-1 sm:space-y-2">
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
+                  <Droplets size={15} className="sm:hidden" /><Droplets size={18} className="hidden sm:block" />
                 </div>
                 <strong className="text-xs font-bold text-brand-ink block leading-tight">
                   Resist humidity
@@ -416,9 +417,9 @@ export default async function ProductDetailsPage({
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <div className="h-9 w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
-                  <Lock size={18} />
+              <div className="space-y-1 sm:space-y-2">
+                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
+                  <Lock size={15} className="sm:hidden" /><Lock size={18} className="hidden sm:block" />
                 </div>
                 <strong className="text-xs font-bold text-brand-ink block leading-tight">
                   Preserve freshness

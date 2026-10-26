@@ -49,6 +49,7 @@ interface StoreContextType {
   dbProducts: Product[];
   dbCategories: any[];
   dbBanners: any[];
+  isBannersLoading: boolean;
   isInitialDataLoading: boolean;
   refreshDbData: () => Promise<void>;
 
@@ -114,42 +115,71 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [dbProducts, setDbProducts] = useState<Product[]>([]);
   const [dbCategories, setDbCategories] = useState<any[]>([]);
   const [dbBanners, setDbBanners] = useState<any[]>([]);
+  const [isBannersLoading, setIsBannersLoading] = useState(true);
   const [isInitialDataLoading, setIsInitialDataLoading] = useState(true);
   const initialDataResolved = useRef(false);
   const initialDataRetryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bannerRetryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bannerRequestInFlight = useRef(false);
+  const bannerRequestResolved = useRef(false);
+  const bannerRequestAttempts = useRef(0);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const refreshBanners = async () => {
+    if (bannerRequestInFlight.current || bannerRequestResolved.current) return;
+    bannerRequestInFlight.current = true;
+    bannerRequestAttempts.current += 1;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/banners`, { signal: AbortSignal.timeout(10000) });
+      const json = res.ok ? await res.json().catch(() => null) : null;
+      if (json?.success && Array.isArray(json.data)) {
+        setDbBanners(json.data);
+        bannerRequestResolved.current = true;
+        setIsBannersLoading(false);
+      } else {
+        throw new Error("Banner response was unavailable.");
+      }
+    } catch (error) {
+      console.error("Failed to load banners", error);
+    } finally {
+      bannerRequestInFlight.current = false;
+      if (!bannerRequestResolved.current) {
+        if (bannerRequestAttempts.current < 3) {
+          bannerRetryTimer.current = setTimeout(() => void refreshBanners(), 5000);
+        } else {
+          setIsBannersLoading(false);
+        }
+      }
+    }
+  };
+
   const refreshDbData = async () => {
     let requiredDataLoaded = false;
     try {
-      const [prodResult, catResult, bannerResult] = await Promise.allSettled([
-        fetch(`${API_BASE_URL}/products?limit=50`),
-        fetch(`${API_BASE_URL}/categories`),
-        fetch(`${API_BASE_URL}/banners`),
+      const [prodResult, catResult] = await Promise.allSettled([
+        fetch(`${API_BASE_URL}/products?limit=50`, { signal: AbortSignal.timeout(10000) }),
+        fetch(`${API_BASE_URL}/categories`, { signal: AbortSignal.timeout(10000) }),
       ]);
       const responseFrom = (result: PromiseSettledResult<Response>) =>
         result.status === "fulfilled" && result.value.ok ? result.value : null;
-      const [prodRes, catRes, banRes] = [prodResult, catResult, bannerResult].map(responseFrom);
+      const [prodRes, catRes] = [prodResult, catResult].map(responseFrom);
       const parseResponse = (response: Response | null) => response?.json().catch(() => null) ?? Promise.resolve(null);
-      const [prodJson, catJson, banJson] = await Promise.all([
+      const [prodJson, catJson] = await Promise.all([
         parseResponse(prodRes),
         parseResponse(catRes),
-        parseResponse(banRes),
       ]);
 
-      if (prodJson.success && Array.isArray(prodJson.data)) {
+      if (prodJson?.success && Array.isArray(prodJson.data)) {
         const mapped = prodJson.data.map((item: any) => mapDbProductToProduct(item));
         setDbProducts(mapped);
       }
-      if (catJson.success && Array.isArray(catJson.data)) {
+      if (catJson?.success && Array.isArray(catJson.data)) {
         setDbCategories(catJson.data);
-      }
-      if (banJson.success && Array.isArray(banJson.data)) {
-        setDbBanners(banJson.data);
       }
       requiredDataLoaded = Boolean(
         prodJson?.success && Array.isArray(prodJson.data) &&
@@ -197,8 +227,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
     setMounted(true);
     void refreshDbData();
+    void refreshBanners();
     return () => {
       if (initialDataRetryTimer.current) clearTimeout(initialDataRetryTimer.current);
+      if (bannerRetryTimer.current) clearTimeout(bannerRetryTimer.current);
     };
   }, []);
 
@@ -539,7 +571,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         })
           .then((r) => r.json())
           .then((d) => {
-            if (d.success && Array.isArray(d.data)) {
+            if (d?.success && Array.isArray(d?.data)) {
               const slugs = d.data.map((item: any) => item.product?.slug).filter(Boolean);
               setWishlist(slugs);
             } else {
@@ -665,6 +697,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         dbProducts,
         dbCategories,
         dbBanners,
+        isBannersLoading,
         isInitialDataLoading,
         refreshDbData,
         isCartOpen,

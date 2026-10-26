@@ -84,9 +84,9 @@ export function ProductGallery({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-2.5 sm:gap-4 w-full">
       {/* ── 1. MAIN ATMOSPHERIC PRODUCT IMAGE ── */}
-      <div className="relative w-full aspect-[4/3.8] sm:aspect-[4/3.8] lg:aspect-[4/4] overflow-hidden rounded-3xl border border-brand-border bg-brand-surface-soft shadow-sm group">
+      <div className="relative w-full aspect-[4/3] sm:aspect-[4/3.8] lg:aspect-[4/4] overflow-hidden rounded-2xl sm:rounded-3xl border border-brand-border bg-brand-surface-soft shadow-sm group">
         
         {/* Top-Left Badge (Only if badge provided from backend) */}
         {badge && (
@@ -151,7 +151,7 @@ export function ProductGallery({
 
       {/* ── 2. THUMBNAILS ROW ── */}
       {validImages.length > 1 && (
-        <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-0.5 sm:pb-1 scrollbar-none">
           {validImages.map((img, idx) => {
             const isSelected = idx === activeIndex;
             return (
@@ -160,7 +160,7 @@ export function ProductGallery({
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 aria-label={`View image ${idx + 1}`}
-                className={`relative h-16 w-16 sm:h-20 sm:w-20 aspect-square shrink-0 overflow-hidden rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs ${
+                className={`relative h-14 w-14 sm:h-20 sm:w-20 aspect-square shrink-0 overflow-hidden rounded-xl sm:rounded-2xl bg-white border transition-all cursor-pointer shadow-2xs ${
                   isSelected
                     ? "border-2 border-[#9E1830] ring-2 ring-[#9E1830]/25 shadow-sm scale-105"
                     : "border-[#EADBBD] opacity-80 hover:opacity-100 hover:border-[#9E1830]/60"
@@ -178,44 +178,44 @@ export function ProductGallery({
       )}
 
       {/* ── 3. 4 FEATURE CARDS (CHARCOAL-FREE, HANDCRAFTED, PURE BOTANICALS, SAFE & NATURAL) ── */}
-      {/* Responsive: 2x2 grid on mobile screens, 4-column row on tablet & desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-1">
+      {/* Compact 4-column trust row keeps the mobile product overview short. */}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-3 pt-0.5 sm:pt-1">
         {/* Charcoal-Free */}
-        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
-          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
-            <Leaf size={14} />
+        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
+            <Leaf size={12} />
           </div>
-          <span className="text-[11px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
             Charcoal-Free
           </span>
         </div>
 
         {/* Handcrafted */}
-        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#F47A20] transition-colors">
-          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#F47A20]/10 text-[#F47A20] flex items-center justify-center">
-            <Sparkles size={14} />
+        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#F47A20] transition-colors">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#F47A20]/10 text-[#F47A20] flex items-center justify-center">
+            <Sparkles size={12} />
           </div>
-          <span className="text-[11px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
             Handcrafted
           </span>
         </div>
 
         {/* Pure Botanicals */}
-        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#9E1830] transition-colors">
-          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#9E1830]/10 text-[#9E1830] flex items-center justify-center">
+        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#9E1830] transition-colors">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#9E1830]/10 text-[#9E1830] flex items-center justify-center">
             <Lotus className="w-4 h-3.5 sm:w-5 sm:h-4" />
           </div>
-          <span className="text-[11px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
             Pure Botanicals
           </span>
         </div>
 
         {/* Safe & Natural */}
-        <div className="rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
-          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
-            <ShieldCheck size={14} />
+        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
+            <ShieldCheck size={12} />
           </div>
-          <span className="text-[11px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
             Safe &amp; Natural
           </span>
         </div>
