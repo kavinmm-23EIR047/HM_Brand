@@ -25,10 +25,33 @@ const FILTER_TABS = [
   { id: "dhoop", label: "Dhoop Stick" },
   { id: "cone", label: "Incense Cones" },
   { id: "havan", label: "Havan Cups" },
+  { id: "sambrani", label: "Sambrani Powder" },
   { id: "pooja", label: "Pooja Essentials" },
   { id: "gift", label: "Gift Sets" },
   { id: "family", label: "Family Pack" },
 ];
+
+const TAB_CATEGORY_KEYWORDS: Record<string, string[]> = {
+  agarbatti: ["agarbatti"],
+  camphor: ["camphor"],
+  dhoop: ["dhoop"],
+  cone: ["incense cone", "cone"],
+  havan: ["havan cup", "chandan cup"],
+  sambrani: ["sambrani powder", "sambhrani powder"],
+  pooja: ["pooja essential"],
+  gift: ["gift set"],
+  family: ["family pack"],
+};
+
+function productMatchesTab(product: any, tabId: string): boolean {
+  if (tabId === "all") return true;
+  const keywords = TAB_CATEGORY_KEYWORDS[tabId] || [tabId.toLowerCase()];
+  const labels = [product.category, ...(Array.isArray(product.categoryLabels) ? product.categoryLabels : [])]
+    .filter(Boolean)
+    .map((label: string) => label.toLowerCase());
+
+  return labels.some((label) => keywords.some((kw) => label.includes(kw)));
+}
 
 function TabIcon({ id, className = "h-3.5 w-3.5" }: { id: string; className?: string }) {
   switch (id) {
@@ -72,6 +95,13 @@ function TabIcon({ id, className = "h-3.5 w-3.5" }: { id: string; className?: st
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
           <path d="M6 9h12l-2 9H8L6 9z" />
           <path d="M10 5l2-2 2 2" />
+        </svg>
+      );
+    case "sambrani":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          <path d="M5 13h14l-1.5 6h-11L5 13z" />
+          <path d="M8 13l4-4 4 4" />
         </svg>
       );
     case "pooja":
@@ -160,19 +190,15 @@ export function BestsellerShowcase() {
     setActiveSlide(nextSlide);
   };
 
+  const visibleTabs = useMemo(() => {
+    if (!dbProducts || dbProducts.length === 0) return FILTER_TABS;
+    return FILTER_TABS.filter((tab) => tab.id === "all" || dbProducts.some((product) => productMatchesTab(product, tab.id)));
+  }, [dbProducts]);
+
   // Filter products by selected tab
   const filteredProducts = useMemo(() => {
     if (!dbProducts || dbProducts.length === 0) return [];
-    if (activeTab === "all") return dbProducts;
-
-    return dbProducts.filter((p) => {
-      const pCat = (p.category || "").toLowerCase();
-      const pLabels = (p.categoryLabels || []).map((l) => l.toLowerCase());
-      const pName = (p.name || "").toLowerCase();
-      const target = activeTab.toLowerCase();
-
-      return pCat.includes(target) || pLabels.some((l) => l.includes(target)) || pName.includes(target);
-    });
+    return dbProducts.filter((product) => productMatchesTab(product, activeTab));
   }, [dbProducts, activeTab]);
 
   const displayedProducts = filteredProducts.slice(0, 8);
@@ -358,7 +384,7 @@ export function BestsellerShowcase() {
             aria-label="Product categories. Swipe horizontally to see all categories."
             className="scrollbar-none flex w-full snap-x snap-mandatory items-center gap-1.5 overflow-x-auto scroll-smooth px-1 py-1 sm:gap-2"
           >
-            {FILTER_TABS.map((tab) => {
+            {visibleTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
                 <button
@@ -485,11 +511,20 @@ export function BestsellerShowcase() {
                     {/* Bottom Price & Add to Cart Row */}
                     <div className="mt-3 pt-2.5 border-t border-brand-surface-soft flex items-center justify-between gap-2">
                       <div>
-                        <span className="font-brand text-xl sm:text-2xl font-extrabold text-brand-primary block leading-none">
-                          ₹{product.price}
-                        </span>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="font-brand text-xl sm:text-2xl font-extrabold text-brand-primary block leading-none">
+                            ₹{product.price}
+                          </span>
+                          {product.mrp && product.mrp !== `₹${product.price}` && (
+                            <span className="font-sans text-xs text-brand-gray line-through font-medium">
+                              {product.mrp}
+                            </span>
+                          )}
+                        </div>
                         <span className="font-sans text-xs text-brand-gray font-medium block mt-1">
-                          ({product.quantity || "50 sticks"})
+                          {product.bundleQuantity && product.bundleQuantity > 1
+                            ? `${product.bundleQuantity}-Box Bundle (₹${Math.round(product.price / product.bundleQuantity)}/box)`
+                            : `(${product.quantity || "Standard Pack"})`}
                         </span>
                       </div>
 

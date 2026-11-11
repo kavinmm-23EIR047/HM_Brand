@@ -443,6 +443,7 @@ export function DeliveryReachBanner() {
                   src="/images/delivery_reach_scenic_bg.jpg"
                   alt="Scenic South India Western Ghats landscape with delivery truck and temple"
                   fill
+                  sizes="(max-width: 1280px) 100vw, 1280px"
                   className="object-cover object-bottom"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/40 pointer-events-none" />

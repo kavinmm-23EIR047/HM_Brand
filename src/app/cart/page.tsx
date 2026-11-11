@@ -129,10 +129,19 @@ export default function CartPage() {
                             {line.product.name}
                           </Link>
                         </h3>
-                        <p className="text-xs text-brand-charcoal/60">{line.product.quantity}</p>
+                        <p className="text-xs text-brand-charcoal/60">
+                          {line.product.quantity}
+                          {line.product.bundleQuantity && line.product.bundleQuantity > 1
+                            ? ` (${line.qty * line.product.bundleQuantity} boxes in ${line.qty} ${line.qty === 1 ? "bundle" : "bundles"})`
+                            : ""}
+                        </p>
                         <p className="text-sm font-bold text-brand-danger mt-1">
                           ₹{line.product.price}{" "}
-                          <span className="text-xs font-normal text-brand-charcoal/50">each</span>
+                          <span className="text-xs font-normal text-brand-charcoal/50">
+                            {line.product.bundleQuantity && line.product.bundleQuantity > 1
+                              ? `per ${line.product.bundleQuantity}-box bundle`
+                              : "each"}
+                          </span>
                         </p>
                       </div>
                     </div>

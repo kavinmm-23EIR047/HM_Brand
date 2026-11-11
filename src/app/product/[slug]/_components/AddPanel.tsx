@@ -72,6 +72,7 @@ export function AddPanel({ product }: { product: Product }) {
   }
   const effectiveUnitPrice = Math.max(0, product.price - singleItemDiscount);
 
+  const isBundle = Boolean(product.bundleQuantity && product.bundleQuantity > 1);
   const mrpNum = product.mrp ? parseFloat(product.mrp.replace(/[^0-9.]/g, "")) : 0;
   const discountPercent = mrpNum > product.price
     ? Math.round(((mrpNum - product.price) / mrpNum) * 100)
@@ -100,7 +101,7 @@ export function AddPanel({ product }: { product: Product }) {
     <div className="rounded-2xl border border-brand-border bg-brand-surface-alt/60 p-3 sm:p-5.5 space-y-3 sm:space-y-5 shadow-2xs">
       {/* ── PRICE & STOCK ROW ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-baseline gap-3">
+        <div className="flex flex-wrap items-baseline gap-2.5 sm:gap-3">
           <span className="font-brand text-3xl sm:text-4xl font-extrabold tracking-tight text-[#9E1830]">
             ₹{effectiveUnitPrice}
           </span>
@@ -116,6 +117,16 @@ export function AddPanel({ product }: { product: Product }) {
           {discountPercent > 0 && (
             <span className="font-space text-xs font-bold text-[#287541] bg-[#EAF5EC] border border-[#287541]/25 px-2.5 py-0.5 rounded-full">
               {discountPercent}% OFF
+            </span>
+          )}
+          {isBundle && product.bundleQuantity && (
+            <span className="font-sans text-xs font-semibold text-[#6B4226] bg-[#FFF9EE] border border-[#EADBBD] px-2.5 py-0.5 rounded-full">
+              {product.bundleQuantity}-Box Bundle · ₹{Math.round(effectiveUnitPrice / product.bundleQuantity)}/box
+            </span>
+          )}
+          {!isBundle && product.pricingNote && (
+            <span className="font-sans text-xs font-semibold text-[#6B4226] bg-[#FFF9EE] border border-[#EADBBD] px-2.5 py-0.5 rounded-full">
+              {product.pricingNote}
             </span>
           )}
         </div>
@@ -159,7 +170,11 @@ export function AddPanel({ product }: { product: Product }) {
       <div className="hidden md:flex items-center justify-between gap-4">
         <QuantitySelector quantity={qty} onChange={setQty} disabled={!product.inStock} />
         <div className="text-right">
-          <span className="block text-[10px] font-bold uppercase tracking-wider text-[#556058]">Total for {qty}</span>
+          <span className="block text-[10px] font-bold uppercase tracking-wider text-[#556058]">
+            {isBundle && product.bundleQuantity
+              ? `Total for ${qty} ${qty === 1 ? "bundle" : "bundles"} (${qty * product.bundleQuantity} boxes)`
+              : `Total for ${qty}`}
+          </span>
           <span className="font-brand text-lg font-extrabold text-[#9E1830]">₹{(effectiveUnitPrice * qty).toLocaleString("en-IN")}</span>
         </div>
       </div>
@@ -173,7 +188,7 @@ export function AddPanel({ product }: { product: Product }) {
           disabled={!product.inStock}
           className="flex h-[52px] w-full items-center justify-center gap-2.5 rounded-2xl bg-brand-primary px-5 text-sm font-brand font-bold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-brand-hover hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <ShoppingBag size={19} /> Add to Cart
+          <ShoppingBag size={19} /> {isBundle ? "Add Bundle to Cart" : "Add to Cart"}
         </button>
 
         <button
@@ -222,7 +237,7 @@ export function AddPanel({ product }: { product: Product }) {
             <span className="shrink-0 font-price text-sm font-extrabold tracking-normal">₹{(effectiveUnitPrice * qty).toLocaleString("en-IN")}</span>
             <span className="h-5 w-px shrink-0 bg-white/35" aria-hidden="true" />
             <ShoppingBag size={14} strokeWidth={2.2} className="shrink-0" />
-            <span className="truncate">{product.inStock ? "Add to Cart" : "Out of Stock"}</span>
+            <span className="truncate">{product.inStock ? (isBundle ? "Add Bundle" : "Add to Cart") : "Out of Stock"}</span>
           </button>
         </div>
       </div>

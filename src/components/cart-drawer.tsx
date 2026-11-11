@@ -113,8 +113,18 @@ export function CartDrawer() {
 
                   <div className="flex-1 min-w-0">
                     <h4 className="font-brand text-sm font-bold text-earthBrown truncate sm:text-base">{line.product.name}</h4>
-                    <p className="text-xs text-charcoal/70">{line.product.quantity}</p>
-                    <p className="font-price text-base font-bold text-kumkum mt-1 tabular-nums">₹{line.product.price}</p>
+                    <p className="text-xs text-charcoal/70">
+                      {line.product.quantity}
+                      {line.product.bundleQuantity && line.product.bundleQuantity > 1
+                        ? ` · ${line.qty * line.product.bundleQuantity} boxes total`
+                        : ""}
+                    </p>
+                    <p className="font-price text-base font-bold text-kumkum mt-1 tabular-nums">
+                      ₹{line.product.price}
+                      {line.product.bundleQuantity && line.product.bundleQuantity > 1 ? (
+                        <span className="text-[11px] font-sans font-medium text-charcoal/60 ml-1">/ {line.product.bundleQuantity}-box bundle</span>
+                      ) : null}
+                    </p>
                   </div>
 
                   <div className="flex shrink-0 flex-col items-end gap-2">

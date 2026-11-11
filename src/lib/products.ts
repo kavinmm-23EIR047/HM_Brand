@@ -7,6 +7,18 @@ export interface ProductImageItem {
   displayOrder?: number;
 }
 
+export interface ParsedProductDescription {
+  tagline?: string;
+  paragraphs: string[];
+  burningTime?: string;
+  dimensions?: string;
+  countSpec?: string;
+  ingredients?: string;
+  whatsInside: string[];
+  whyChoose: string[];
+  pricingNote?: string;
+}
+
 export interface Product {
   id?: string;
   slug: string;
@@ -16,12 +28,20 @@ export interface Product {
   subCategory?: string;
   subcategoryId?: string | null;
   note: string;
+  tagline?: string;
   description: string;
+  descriptionParagraphs?: string[];
   mrp: string;
   price: number;
+  unitPrice?: number | null;
   bundleQuantity?: number | null;
   quantity: string;
   burnTime?: string;
+  dimensions?: string;
+  ingredients?: string;
+  whatsInside?: string[];
+  whyChoose?: string[];
+  pricingNote?: string;
   fragranceNotes?: string[];
   benefits: string[];
   howToUse: string[];
@@ -33,6 +53,281 @@ export interface Product {
   inStock: boolean;
   featured?: boolean;
   couponCode?: string;
+}
+
+function summarizeAtWordBoundary(text: string, maxLength = 115): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) return "";
+  const firstSentenceMatch = clean.match(/^(.+?[.!?])(\s|$)/);
+  if (firstSentenceMatch && firstSentenceMatch[1].length <= maxLength) {
+    return firstSentenceMatch[1];
+  }
+  if (clean.length <= maxLength) return clean;
+  const sliced = clean.slice(0, maxLength);
+  const lastSpace = sliced.lastIndexOf(" ");
+  return (lastSpace > 40 ? sliced.slice(0, lastSpace) : sliced) + "…";
+}
+
+export function parseProductDescription(rawDescription?: string | null): ParsedProductDescription {
+  if (!rawDescription || !rawDescription.trim()) {
+    return { paragraphs: [], whatsInside: [], whyChoose: [] };
+  }
+
+  const lines = rawDescription.split(/\r?\n/);
+  const proseBlocks: string[][] = [[]];
+  const whatsInside: string[] = [];
+  const whyChoose: string[] = [];
+
+  let mode: "prose" | "whatsInside" | "whyChoose" = "prose";
+  let burningTime: string | undefined;
+  let size: string | undefined;
+  let length: string | undefined;
+  let thickness: string | undefined;
+  let countSpec: string | undefined;
+  let ingredients: string | undefined;
+  let pricingNote: string | undefined;
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+    if (!trimmed) {
+      if (proseBlocks[proseBlocks.length - 1].length > 0) {
+        proseBlocks.push([]);
+      }
+      continue;
+    }
+
+    if (/^What'?s Inside:?\s*$/i.test(trimmed)) {
+      mode = "whatsInside";
+      continue;
+    }
+    if (/^Why Choose:?\s*$/i.test(trimmed)) {
+      mode = "whyChoose";
+      continue;
+    }
+
+    const matchKeyVal = (regex: RegExp) => trimmed.match(regex)?.[1]?.trim();
+
+    const bt = matchKeyVal(/^Burning Time:\s*(.+)$/i);
+    if (bt) { burningTime = bt; mode = "prose"; continue; }
+
+    const sz = matchKeyVal(/^Size:\s*(.+)$/i);
+    if (sz) { size = sz; mode = "prose"; continue; }
+
+    const len = matchKeyVal(/^Length:\s*(.+)$/i);
+    if (len) { length = len; mode = "prose"; continue; }
+
+    const thk = matchKeyVal(/^Thickness:\s*(.+)$/i);
+    if (thk) { thickness = thk; mode = "prose"; continue; }
+
+    const cnt = matchKeyVal(/^Count:\s*(.+)$/i);
+    if (cnt) { countSpec = cnt; mode = "prose"; continue; }
+
+    const ing = matchKeyVal(/^Ingredients:\s*(.+)$/i);
+    if (ing) { ingredients = ing; mode = "prose"; continue; }
+
+    const pr = matchKeyVal(/^Pricing:\s*(.+)$/i);
+    if (pr) { pricingNote = pr; mode = "prose"; continue; }
+
+    const bulletMatch = trimmed.match(/^(?:-|•)\s+(.+)$/);
+    if (bulletMatch && mode === "whatsInside") {
+      whatsInside.push(bulletMatch[1].trim());
+      continue;
+    }
+    if (bulletMatch && mode === "whyChoose") {
+      whyChoose.push(bulletMatch[1].trim());
+      continue;
+    }
+
+    mode = "prose";
+    proseBlocks[proseBlocks.length - 1].push(trimmed);
+  }
+
+  const rawParagraphs = proseBlocks
+    .map((block) => block.join(" ").trim())
+    .filter(Boolean);
+
+  let tagline: string | undefined;
+  let paragraphs = rawParagraphs;
+
+  if (
+    rawParagraphs.length >= 2 &&
+    rawParagraphs[0].length <= 100 &&
+    rawParagraphs[1].length > rawParagraphs[0].length
+  ) {
+    tagline = rawParagraphs[0];
+    paragraphs = rawParagraphs.slice(1);
+  }
+
+  const dimensions = size
+    || (length && thickness ? `${length} · ${thickness} Thick` : length || thickness || undefined);
+
+  return {
+    tagline,
+    paragraphs,
+    burningTime,
+    dimensions,
+    countSpec,
+    ingredients,
+    whatsInside,
+    whyChoose,
+    pricingNote,
+  };
+}
+
+type ProductKind =
+  | "electric-diffuser"
+  | "homam-kit"
+  | "havan-cup"
+  | "camphor"
+  | "dhoop"
+  | "agarbatti";
+
+export interface ProductKindConfig {
+  packLabel: string;
+  durationLabel: string;
+  fallbackDuration: string;
+  fallbackSpecLabel: string;
+  fallbackSpecValue: string;
+  fragranceNotes: string[];
+  benefits: string[];
+  howToUse: string[];
+}
+
+const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
+  "electric-diffuser": {
+    packLabel: "Product Type",
+    durationLabel: "Operation",
+    fallbackDuration: "Electric camphor burner",
+    fallbackSpecLabel: "Ideal For",
+    fallbackSpecValue: "Camphor & Resins",
+    fragranceNotes: ["Pure Camphor", "Loban & Resins", "Sambrani"],
+    benefits: [
+      "Smoke-controlled flameless aroma diffusion",
+      "Even gentle heating preserves pure camphor scent",
+      "Convenient daily pooja and home fragrance diffuser",
+    ],
+    howToUse: [
+      "Place pure camphor or sambrani resin in the top bowl.",
+      "Plug in and switch on to gently diffuse the sacred aroma.",
+    ],
+  },
+  "homam-kit": {
+    packLabel: "Pack Size",
+    durationLabel: "Kit Format",
+    fallbackDuration: "Complete ritual kit",
+    fallbackSpecLabel: "Contents",
+    fallbackSpecValue: "6 Homam Essentials",
+    fragranceNotes: ["20-Herb Homam", "Cow Dung", "Sacred Resins"],
+    benefits: [
+      "All 6 traditional homam essentials packed together",
+      "Ready-to-use mud pot, herbs, slokam card & manual",
+      "Convenient preparation for home rituals and ceremonies",
+    ],
+    howToUse: [
+      "Follow the included instruction manual and slokam card.",
+      "Arrange the dried cow dung, coconut shells, and 20-herb powder in the mud pot.",
+    ],
+  },
+  "havan-cup": {
+    packLabel: "Pack Size",
+    durationLabel: "Usage",
+    fallbackDuration: "Traditional ritual cup",
+    fallbackSpecLabel: "Formulation",
+    fallbackSpecValue: "Pure Sambrani Resin",
+    fragranceNotes: ["Pure Sambrani", "Warm Resins", "Temple Wood"],
+    benefits: [
+      "Rich, soothing sambrani resin aroma",
+      "Ready-to-light traditional havan cup format",
+      "Enhances spiritual ambience for pooja and meditation",
+    ],
+    howToUse: [
+      "Place the sambrani cup on a heat-safe plate or holder.",
+      "Light the outer rim until it glows evenly and releases fragrant smoke.",
+    ],
+  },
+  camphor: {
+    packLabel: "Pack Size",
+    durationLabel: "Burning Time",
+    fallbackDuration: "Residue-free clean burning",
+    fallbackSpecLabel: "Formulation",
+    fallbackSpecValue: "100% Pure Camphor",
+    fragranceNotes: ["Pure Camphor", "Cool Camphoric", "Divine White Resins"],
+    benefits: [
+      "100% pure residue-free burning camphor",
+      "Purifies indoor atmosphere and vastu energy",
+      "Ideal for daily aarti, puja, and diffusers",
+    ],
+    howToUse: [
+      "Place on a camphor burner, aarti plate, or electric diffuser.",
+      "Light with a flame or switch on your diffuser for sacred purifying aroma.",
+    ],
+  },
+  dhoop: {
+    packLabel: "Pack Size",
+    durationLabel: "Burning Time",
+    fallbackDuration: "Approximately 35 mins per stick",
+    fallbackSpecLabel: "Formulation",
+    fallbackSpecValue: "100% Bamboo-Less Dhoop",
+    fragranceNotes: ["Sacred Resins", "Rare Woods", "Herbal Extracts"],
+    benefits: [
+      "100% natural bamboo-less formulation",
+      "Dense, long-lasting sacred aroma",
+      "Purifies negative energies and calms the mind",
+    ],
+    howToUse: [
+      "Place bamboo-less dhoop stick on a heat-resistant stand or holder.",
+      "Light tip until flame appears, then gently blow out to release fragrant smoke.",
+    ],
+  },
+  agarbatti: {
+    packLabel: "Pack Size",
+    durationLabel: "Burning Time",
+    fallbackDuration: "50 minutes",
+    fallbackSpecLabel: "Formulation",
+    fallbackSpecValue: "100% Charcoal-Free",
+    fragranceNotes: ["Natural Resins", "Essential Oils", "Botanicals"],
+    benefits: [
+      "100% natural organic ingredients",
+      "Zero harmful charcoal or synthetic toxins",
+      "Uplifts daily rituals and home ambiance",
+    ],
+    howToUse: [
+      "Place stick in agarbatti holder.",
+      "Light tip until flame appears, then gently blow out.",
+    ],
+  },
+};
+
+/** Resolve spec tiles and default ritual notes uniformly from product metadata. */
+export function getProductSpecConfig(product: {
+  slug?: string;
+  name?: string;
+  category?: string;
+}): ProductKindConfig {
+  const categoryLower = (product.category || "").toLowerCase();
+  const slugAndName = `${product.slug || ""} ${product.name || ""}`.toLowerCase();
+
+  if (slugAndName.includes("dani") || slugAndName.includes("machine")) {
+    return PRODUCT_KIND_CONFIG["electric-diffuser"];
+  }
+  if (slugAndName.includes("homam") || categoryLower.includes("pooja")) {
+    return PRODUCT_KIND_CONFIG["homam-kit"];
+  }
+  if (
+    categoryLower.includes("havan") ||
+    categoryLower.includes("sambrani") ||
+    slugAndName.includes("sambrani") ||
+    slugAndName.includes("sambarani")
+  ) {
+    return PRODUCT_KIND_CONFIG["havan-cup"];
+  }
+  if (categoryLower.includes("camphor")) {
+    return PRODUCT_KIND_CONFIG.camphor;
+  }
+  if (categoryLower.includes("dhoop")) {
+    return PRODUCT_KIND_CONFIG.dhoop;
+  }
+  return PRODUCT_KIND_CONFIG.agarbatti;
 }
 
 export function mapDbProductToProduct(p: any): Product {
@@ -84,14 +379,20 @@ export function mapDbProductToProduct(p: any): Product {
   
   // shortDescription doubles as "unit" label (e.g. "50 GMS · Camphor")
   const shortDesc = p.shortDescription || "";
-  const quantityPart = p.quantity != null ? String(p.quantity) : shortDesc.split("·")[0]?.trim() || "";
+  const parsed = parseProductDescription(p.description);
+  const quantityPart =
+    p.quantity != null
+      ? String(p.quantity)
+      : shortDesc.split("·")[0]?.trim() || parsed.countSpec || "";
 
   const notePart = shortDesc.includes("·")
     ? shortDesc.split("·").slice(1).join("·").trim()
-    : (p.description ? p.description.slice(0, 90) : "");
+    : parsed.paragraphs[0] || "";
 
   const numMrp = typeof p.mrp === 'number' ? p.mrp : parseFloat(p.mrp || 0);
   const numPrice = typeof p.price === 'number' ? p.price : parseFloat(p.price || 0);
+  const numUnitPrice = typeof p.unitPrice === 'number' ? p.unitPrice : null;
+  const bundleQty = typeof p.bundleQuantity === 'number' ? p.bundleQuantity : null;
 
   const dbRating = typeof p.rating === "number"
     ? p.rating
@@ -109,6 +410,13 @@ export function mapDbProductToProduct(p: any): Product {
     ? p.reviews.length
     : 0;
 
+  const summarySource = parsed.tagline || parsed.paragraphs[0] || notePart;
+  const specConfig = getProductSpecConfig({
+    slug: p.slug,
+    name: p.name,
+    category: categoryName,
+  });
+
   return {
     id: p.id,
     slug: p.slug,
@@ -117,56 +425,37 @@ export function mapDbProductToProduct(p: any): Product {
     categoryLabels,
     subCategory: p.subcategory?.name || p.subCategory || "",
     subcategoryId: p.subcategoryId || p.subcategory?.id || null,
-    note: p.description ? p.description.slice(0, 100) : notePart,
+    note: summarySource ? summarizeAtWordBoundary(summarySource, 115) : "",
+    tagline: parsed.tagline,
     description: p.description || p.name,
+    descriptionParagraphs: parsed.paragraphs.length > 0
+      ? parsed.paragraphs
+      : p.description
+      ? [p.description]
+      : [],
     mrp: numMrp > 0 ? `₹${numMrp}` : "",
     price: !isNaN(numPrice) && numPrice > 0 ? numPrice : 0,
-    bundleQuantity: typeof p.bundleQuantity === 'number' ? p.bundleQuantity : null,
+    unitPrice: numUnitPrice,
+    bundleQuantity: bundleQty,
     quantity: quantityPart,
-    burnTime: categoryName.toLowerCase().includes("camphor")
-      ? "Residue-free clean burning"
-      : categoryName.toLowerCase().includes("dhoop")
-      ? "35-40 mins per stick"
-      : "45-50 mins per stick",
-    fragranceNotes: categoryName.toLowerCase().includes("camphor")
-      ? ["Pure Camphor", "Cool Camphoric", "Divine White Resins"]
-      : categoryName.toLowerCase().includes("dhoop")
-      ? ["Sacred Resins", "Rare Woods", "Herbal Extracts"]
-      : ["Natural Resins", "Essential Oils", "Botanicals"],
-    benefits: categoryName.toLowerCase().includes("camphor")
-      ? [
-          "100% pure residue-free burning camphor",
-          "Purifies indoor atmosphere and vastu energy",
-          "Ideal for daily aarti, puja, and diffusers"
-        ]
-      : categoryName.toLowerCase().includes("dhoop")
-      ? [
-          "100% natural bamboo-less formulation",
-          "Dense, long-lasting sacred aroma",
-          "Purifies negative energies and calms the mind"
-        ]
-      : [
-          "100% natural organic ingredients",
-          "Zero harmful charcoal or synthetic toxins",
-          "Uplifts daily rituals and home ambiance"
-        ],
-    howToUse: categoryName.toLowerCase().includes("camphor")
-      ? [
-          "Place on a camphor burner, aarti plate, or electric diffuser.",
-          "Light with a flame or switch on your diffuser for sacred purifying aroma."
-        ]
-      : categoryName.toLowerCase().includes("dhoop")
-      ? [
-          "Place bamboo-less dhoop stick on a heat-resistant stand or holder.",
-          "Light tip until flame appears, then gently blow out to release fragrant smoke."
-        ]
-      : [
-          "Place stick in agarbatti holder.",
-          "Light tip until flame appears, then gently blow out."
-        ],
+    burnTime: parsed.burningTime || specConfig.fallbackDuration,
+    dimensions: parsed.dimensions,
+    ingredients: parsed.ingredients,
+    whatsInside: parsed.whatsInside.length > 0 ? parsed.whatsInside : undefined,
+    whyChoose: parsed.whyChoose.length > 0 ? parsed.whyChoose : undefined,
+    pricingNote: parsed.pricingNote,
+    fragranceNotes: specConfig.fragranceNotes,
+    benefits: specConfig.benefits,
+    howToUse: specConfig.howToUse,
     image: primaryImg,
     images,
-    badge: p.couponCode ? `COUPON: ${p.couponCode}` : (p.isFeatured ? "Featured" : undefined),
+    badge: p.couponCode
+      ? `COUPON: ${p.couponCode}`
+      : bundleQty && bundleQty > 1
+      ? `${bundleQty}-Box Bundle`
+      : p.isFeatured
+      ? "Featured"
+      : undefined,
     rating: dbRating,
     reviewCount: dbReviewCount,
     inStock: typeof p.stockQuantity === "number" ? p.stockQuantity > 0 : Boolean(p.inStock),
@@ -193,7 +482,7 @@ export const categories = [
 export const subCategoriesMap: Record<string, string[]> = {
   "Agarbatti": [
     "Exclusive",
-    "Budget Pack (12 pcs)",
+    "Budget Pack",
     "Super Series"
   ]
 };
@@ -203,32 +492,44 @@ export interface CatalogCategory {
   children?: CatalogCategory[];
 }
 
-// Brochure taxonomy only. Product records remain managed separately in the admin panel.
+// Official HM Brand product taxonomy matching PostgreSQL & Website Document.
 export const categoryTree: CatalogCategory[] = [
   {
     name: "Agarbatti",
     children: [
       { name: "Exclusive", children: [
-        { name: "Cardamom" },
-        { name: "Kasturi" },
-        { name: "Karpoor Loban" },
-        { name: "Kesar Loban" },
-        { name: "Pancha Rudhra" },
+        { name: "Pancharudhra" },
         { name: "Real Stone" },
+        { name: "Cardamom" },
+        { name: "Kesar Loban" },
+        { name: "Karpoor Loban" },
+        { name: "Kasturi" },
+        { name: "Amora" },
+        { name: "Javadu" },
+        { name: "Champa" },
+        { name: "Megadhooth" },
         { name: "Fancy Flora" },
       ] },
-      { name: "Budget Pack (12 pcs)" },
+      { name: "Budget Pack", children: [
+        { name: "Jasmine" },
+        { name: "Kewda" },
+        { name: "Champa" },
+        { name: "Glory" },
+        { name: "Sandalwood" },
+        { name: "Pineapple" },
+        { name: "Rose" },
+        { name: "Ecstasy" },
+        { name: "Fantasy" },
+        { name: "Loban" },
+        { name: "Lavender" },
+      ] },
       { name: "Super Series", children: [
         { name: "Rose" },
-        { name: "Pineapple" },
-        { name: "Sandal" },
         { name: "Glory" },
-        { name: "Fantasy" },
-        { name: "Jasmine" },
         { name: "Lavender" },
-        { name: "Ecstasy" },
-        { name: "Kewda" },
+        { name: "Sandalwood" },
         { name: "Loban" },
+        { name: "Guggal" },
       ] },
     ],
   },

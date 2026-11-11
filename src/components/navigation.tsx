@@ -245,6 +245,7 @@ export function Navigation() {
                 src="/images/brand_logo_icon_transparent.png"
                 alt="HM Brand Logo"
                 fill
+                sizes="(max-width: 640px) 40px, 52px"
                 priority
                 className="object-contain"
               />

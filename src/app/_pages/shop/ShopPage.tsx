@@ -1003,6 +1003,11 @@ function ShopContent() {
 
                             {/* Subtitle / Note */}
                             {(product.subCategory || product.note) && <p title={product.subCategory || product.note} className="mt-1 min-h-10 line-clamp-2 text-xs font-medium leading-relaxed text-brand-slate sm:min-h-[44px] sm:text-ui-13">{product.subCategory || product.note}</p>}
+                            {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
+                              <p className="mt-1 text-[11px] font-semibold text-[#9E1830]">
+                                {product.bundleQuantity}-Box Bundle · ₹{Math.round(product.price / (product.bundleQuantity || 1))}/box
+                              </p>
+                            )}
                           </div>
 
                           {/* Price & Add Button */}
@@ -1076,8 +1081,13 @@ function ShopContent() {
                             </h4>
                           </Link>
                           <p className="mt-0.5 line-clamp-2 text-[11px] sm:text-xs text-brand-slate font-medium leading-snug">
-                            {product.description || product.note}
+                            {product.note || product.subCategory}
                           </p>
+                          {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
+                            <p className="mt-0.5 text-[11px] font-semibold text-[#9E1830]">
+                              {product.bundleQuantity}-Box Bundle · ₹{Math.round(product.price / (product.bundleQuantity || 1))}/box
+                            </p>
+                          )}
                           </div>
 
                         {/* Price & Action */}

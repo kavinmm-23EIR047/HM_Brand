@@ -124,6 +124,11 @@ export function ProductCard({ product }: { product: Product }) {
           <p className="mt-1 text-ui-11 sm:text-xs leading-relaxed text-brand-gray font-sans font-normal">
             {product.note}
           </p>
+          {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
+            <p className="mt-1 text-[11px] font-semibold text-[#9E1830]">
+              {product.bundleQuantity}-Box Bundle · ₹{Math.round(effectivePrice / (product.bundleQuantity || 1))}/box
+            </p>
+          )}
         </div>
 
         {/* Price & Action */}

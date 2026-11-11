@@ -162,7 +162,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     let requiredDataLoaded = false;
     try {
       const [prodResult, catResult] = await Promise.allSettled([
-        fetch(`${API_BASE_URL}/products?limit=50`, { signal: AbortSignal.timeout(10000) }),
+        fetch(`${API_BASE_URL}/products?limit=100`, { signal: AbortSignal.timeout(10000) }),
         fetch(`${API_BASE_URL}/categories`, { signal: AbortSignal.timeout(10000) }),
       ]);
       const responseFrom = (result: PromiseSettledResult<Response>) =>

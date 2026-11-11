@@ -91,7 +91,7 @@ function getInstantMatches(products: any[], q: string): { hits: SearchHit[]; sug
           name: p.name,
           category: p.category,
           categories: p.categoryLabels || (p.category ? [p.category] : []),
-          shortDescription: p.shortDescription || p.description,
+          shortDescription: p.shortDescription || p.quantity || p.note,
           price: p.price,
           mrp: p.mrp,
           image: p.image,
@@ -124,7 +124,7 @@ function getInstantMatches(products: any[], q: string): { hits: SearchHit[]; sug
             name: p.name,
             category: p.category,
             categories: p.categoryLabels || (p.category ? [p.category] : []),
-            shortDescription: p.shortDescription || p.description,
+            shortDescription: p.shortDescription || p.quantity || p.note,
             price: p.price,
             mrp: p.mrp,
             image: p.image,
@@ -431,7 +431,14 @@ export function SearchModal() {
                         </div>
                         <div className="shrink-0 text-right">
                           <span className="font-price text-sm font-bold text-brand-primary">₹{product.price ?? 0}</span>
-                          {product.mrp && product.price && product.mrp > product.price && <span className="font-price block text-xs text-brand-muted line-through">₹{product.mrp}</span>}
+                          {(() => {
+                            const mrpNum = typeof product.mrp === "number"
+                              ? product.mrp
+                              : parseFloat(String(product.mrp || "").replace(/[^0-9.]/g, ""));
+                            return Number.isFinite(mrpNum) && product.price && mrpNum > product.price ? (
+                              <span className="font-price block text-xs text-brand-muted line-through">₹{mrpNum}</span>
+                            ) : null;
+                          })()}
                         </div>
                       </Link>
                     ))}

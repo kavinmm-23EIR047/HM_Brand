@@ -814,7 +814,12 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <span className="font-bold text-brand-heading block truncate">{l.product.name}</span>
-                        <span className="text-ui-11 text-brand-gray">{l.product.quantity}</span>
+                        <span className="text-ui-11 text-brand-gray">
+                          {l.product.quantity}
+                          {l.product.bundleQuantity && l.product.bundleQuantity > 1
+                            ? ` · ${l.qty * l.product.bundleQuantity} boxes total`
+                            : ""}
+                        </span>
                       </div>
                       <span className="font-bold text-brand-primary text-sm tabular-nums shrink-0">₹{l.product.price * l.qty}</span>
                     </div>

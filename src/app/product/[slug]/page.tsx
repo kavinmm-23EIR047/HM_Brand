@@ -11,6 +11,8 @@ import {
   ArrowRight,
   Package,
   Clock,
+  Ruler,
+  CheckCircle2,
   Leaf,
   Sun,
   Droplets,
@@ -22,7 +24,7 @@ import { ProductGallery } from "./_components/ProductGallery";
 import { RelatedProductsSlider } from "./_components/RelatedProductsSlider";
 import { AddPanel } from "./_components/AddPanel";
 import { Lotus } from "@/components/illustrations/Lotus";
-import { mapDbProductToProduct, type Product } from "@/lib/products";
+import { getProductSpecConfig, mapDbProductToProduct, type Product } from "@/lib/products";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
@@ -148,6 +150,7 @@ export default async function ProductDetailsPage({
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#9E1830]/25 bg-[#FFF5F5] px-3.5 py-1 text-xs font-bold text-[#9E1830] shadow-2xs">
                   <Sparkles size={12} className="text-[#9E1830]" />
                   {product.category}
+                  {product.subCategory ? ` · ${product.subCategory}` : ""}
                 </span>
 
                 {Boolean(product.rating && product.reviewCount && product.reviewCount > 0) ? (
@@ -172,81 +175,159 @@ export default async function ProductDetailsPage({
                 )}
               </div>
 
-              {/* Title, Devotional Subtitle & Conditional Bundle Notice */}
-              <div className="space-y-1.5 sm:space-y-2.5">
+              {/* Title, Full Product Description & Conditional Bundle Notice */}
+              <div className="space-y-2.5 sm:space-y-3">
                 <h1 className="font-brand text-3xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-wide text-[#173B3A] uppercase">
                   {product.name}
                 </h1>
 
-                {/* Devotional Subtitle / Fragrance Note */}
-                <p className="font-sans text-sm text-[#5C534E] leading-relaxed font-normal">
-                  {product.note && !product.note.toLowerCase().includes("complete bundle") && !product.note.toLowerCase().includes("cannot be purchased")
-                    ? product.note
-                    : "A sacred fragrance crafted to bring divine peace, positivity and serenity into your home."}
-                </p>
+                {product.tagline && (
+                  <p className="font-playfair text-base sm:text-lg font-semibold text-[#6B4226] italic">
+                    {product.tagline}
+                  </p>
+                )}
 
-                {/* Complete Bundle Info Badge (Rendered ONLY if product is actually a bundle) */}
-                {Boolean(
-                  (product.bundleQuantity && product.bundleQuantity > 1) ||
-                  product.name.toLowerCase().includes("bundle") ||
-                  product.note.toLowerCase().includes("bundle pack")
-                ) && (
-                  <div className="inline-flex items-center gap-2 rounded-xl bg-[#FFF5F5] border border-[#9E1830]/30 px-3.5 py-2 text-xs text-[#9E1830] font-semibold shadow-2xs">
-                    <Package size={14} className="text-[#9E1830] shrink-0" />
+                <div className="space-y-2 font-sans text-sm sm:text-[15px] text-[#4A433E] leading-relaxed font-normal">
+                  {(product.descriptionParagraphs && product.descriptionParagraphs.length > 0
+                    ? product.descriptionParagraphs
+                    : product.description
+                      ? [product.description]
+                      : ["A sacred fragrance crafted to bring divine peace, positivity and serenity into your home."]
+                  ).map((para, idx) => (
+                    <p key={idx}>{para}</p>
+                  ))}
+                </div>
+
+                {/* Complete Bundle Info Badge (Rendered ONLY when bundleQuantity > 1) */}
+                {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
+                  <div className="inline-flex items-start sm:items-center gap-2 rounded-xl bg-[#FFF5F5] border border-[#9E1830]/30 px-3.5 py-2 text-xs text-[#9E1830] font-semibold shadow-2xs">
+                    <Package size={14} className="text-[#9E1830] shrink-0 mt-0.5 sm:mt-0" />
                     <span>
-                      Available as a complete bundle {product.bundleQuantity ? `(${product.bundleQuantity} units)` : ""} · Individual boxes cannot be purchased separately.
+                      Sold exclusively as a {product.bundleQuantity}-box bundle
+                      {product.unitPrice
+                        ? ` (₹${Math.round(product.price / (product.bundleQuantity || 1))}/box bundle rate · ₹${product.unitPrice} MRP/box)`
+                        : ""}. Individual boxes are not sold separately.
                     </span>
                   </div>
                 )}
               </div>
 
-              {/* 3 Specification Tiles with Ample Space and No Word Truncation */}
-              <div className="grid grid-cols-3 gap-1.5 sm:gap-3.5 pt-0.5 sm:pt-1">
-                {/* Pack Size */}
-                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2 sm:p-3.5 flex flex-col sm:flex-row items-center sm:gap-3 text-center sm:text-left shadow-2xs hover:border-[#9E1830]/40 transition-colors">
-                  <div className="mb-1 sm:mb-0 h-7 w-7 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
-                    <Package size={15} className="sm:hidden" /><Package size={18} className="hidden sm:block" />
+              {/* Specification Tiles */}
+              {(() => {
+                const specConfig = getProductSpecConfig(product);
+
+                return (
+              <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-2 sm:gap-3.5 pt-0.5 sm:pt-1">
+                {/* Pack Size / Count */}
+                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2.5 sm:p-3.5 flex flex-row min-[420px]:flex-col sm:flex-row items-center gap-2.5 min-[420px]:gap-1.5 sm:gap-3 text-left min-[420px]:text-center sm:text-left shadow-2xs hover:border-[#9E1830]/40 transition-colors">
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
+                    <Package size={16} className="sm:hidden" /><Package size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
-                      Pack Size
+                      {specConfig.packLabel}
                     </span>
-                    <span className="font-brand text-[11px] sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
+                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
                       {product.quantity || "Standard Pack"}
                     </span>
                   </div>
                 </div>
 
                 {/* Duration */}
-                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2 sm:p-3.5 flex flex-col sm:flex-row items-center sm:gap-3 text-center sm:text-left shadow-2xs hover:border-[#9E1830]/40 transition-colors">
-                  <div className="mb-1 sm:mb-0 h-7 w-7 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
-                    <Clock size={15} className="sm:hidden" /><Clock size={18} className="hidden sm:block" />
+                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2.5 sm:p-3.5 flex flex-row min-[420px]:flex-col sm:flex-row items-center gap-2.5 min-[420px]:gap-1.5 sm:gap-3 text-left min-[420px]:text-center sm:text-left shadow-2xs hover:border-[#9E1830]/40 transition-colors">
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#FFF5F5] text-[#9E1830] flex items-center justify-center">
+                    <Clock size={16} className="sm:hidden" /><Clock size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
-                      Duration
+                      {specConfig.durationLabel}
                     </span>
-                    <span className="font-brand text-[11px] sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
-                      {product.burnTime || (product.category.toLowerCase().includes("camphor") ? "Residue-Free Clean" : "45–50 min/stick")}
+                    <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
+                      {product.burnTime || specConfig.fallbackDuration}
                     </span>
                   </div>
                 </div>
 
-                {/* Formulation */}
-                <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2 sm:p-3.5 flex flex-col sm:flex-row items-center sm:gap-3 text-center sm:text-left shadow-2xs hover:border-[#287541]/40 transition-colors">
-                  <div className="mb-1 sm:mb-0 h-7 w-7 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#EAF5EC] text-[#287541] flex items-center justify-center">
-                    <Leaf size={15} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
+                {/* Size / Dimensions or Formulation */}
+                {product.dimensions ? (
+                  <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2.5 sm:p-3.5 flex flex-row min-[420px]:flex-col sm:flex-row items-center gap-2.5 min-[420px]:gap-1.5 sm:gap-3 text-left min-[420px]:text-center sm:text-left shadow-2xs hover:border-[#287541]/40 transition-colors">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#EAF5EC] text-[#287541] flex items-center justify-center">
+                      <Ruler size={16} className="sm:hidden" /><Ruler size={18} className="hidden sm:block" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
+                        Size
+                      </span>
+                      <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
+                        {product.dimensions}
+                      </span>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
-                      Formulation
-                    </span>
-                    <span className="font-brand text-[11px] sm:text-sm font-bold text-[#111827] uppercase leading-tight line-clamp-2 block">
-                      {product.category.toLowerCase().includes("camphor") ? "100% Pure Camphor" : "100% Charcoal-Free"}
-                    </span>
+                ) : (
+                  <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-[#FAF7EE]/70 p-2.5 sm:p-3.5 flex flex-row min-[420px]:flex-col sm:flex-row items-center gap-2.5 min-[420px]:gap-1.5 sm:gap-3 text-left min-[420px]:text-center sm:text-left shadow-2xs hover:border-[#287541]/40 transition-colors">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg sm:rounded-xl bg-[#EAF5EC] text-[#287541] flex items-center justify-center">
+                      <Leaf size={16} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
+                        {specConfig.fallbackSpecLabel}
+                      </span>
+                      <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
+                        {specConfig.fallbackSpecValue}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
+                );
+              })()}
+
+              {/* Exact Ingredients */}
+              {product.ingredients && (
+                <div className="rounded-xl border border-[#EADBBD]/80 bg-[#FAF7EE]/60 px-3.5 py-2.5 text-xs sm:text-sm text-[#3F3A36] leading-relaxed">
+                  <span className="font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#173B3A] mr-2">
+                    Ingredients:
+                  </span>
+                  <span>{product.ingredients}</span>
+                </div>
+              )}
+
+              {/* What's Inside / Why Choose (Multi-item Kits & Family Packs) */}
+              {((product.whatsInside && product.whatsInside.length > 0) || (product.whyChoose && product.whyChoose.length > 0)) && (
+                <div className="space-y-3">
+                  {product.whatsInside && product.whatsInside.length > 0 && (
+                    <div className="rounded-xl border border-[#EADBBD] bg-[#FAF7EE]/60 p-3.5 space-y-2">
+                      <h2 className="font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#173B3A]">
+                        What&apos;s Inside
+                      </h2>
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-[#4A433E]">
+                        {product.whatsInside.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <CheckCircle2 size={14} className="shrink-0 text-[#287541] mt-0.5" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {product.whyChoose && product.whyChoose.length > 0 && (
+                    <div className="rounded-xl border border-[#EADBBD] bg-[#FFF9EE]/60 p-3.5 space-y-2">
+                      <h2 className="font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#9E1830]">
+                        Why Choose
+                      </h2>
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-[#4A433E]">
+                        {product.whyChoose.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <Sparkles size={14} className="shrink-0 text-[#F47A20] mt-0.5" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Aromatic Notes Container */}
               <div className="space-y-1.5 sm:space-y-2 pt-0.5 sm:pt-1">

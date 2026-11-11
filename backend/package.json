@@ -10,6 +10,7 @@
     "prisma:generate": "node ./node_modules/prisma/build/index.js generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:seed:catalog": "ts-node prisma/seed-catalog.ts",
     "prisma:categories": "ts-node prisma/import-categories.ts",
     "prisma:brochure-products": "ts-node prisma/import-brochure-products.ts"
   },

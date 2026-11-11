@@ -54,19 +54,54 @@ const agarbattiSubcategories = [
   {
     name: "Exclusive",
     slug: "exclusive",
-    desc: "Signature fragrance collection",
+    desc: "MRP ₹125 · Signature collection · 50–65 sticks",
     icon: "sparkles" as const,
-    children: ["Cardamom", "Kasturi", "Karpoor Loban", "Kesar Loban", "Pancha Rudhra", "Real Stone", "Fancy Flora"]
-      .map((name) => ({ name, slug: name.toLowerCase().replaceAll(" ", "-") })),
+    children: [
+      { name: "Pancharudhra", slug: "pancha-rudhra" },
+      { name: "Real Stone", slug: "real-stone" },
+      { name: "Cardamom", slug: "cardamom" },
+      { name: "Kesar Loban", slug: "kesar-loban" },
+      { name: "Karpoor Loban", slug: "karpoor-loban" },
+      { name: "Kasturi", slug: "kasturi" },
+      { name: "Amora", slug: "amora" },
+      { name: "Javadu", slug: "javadu" },
+      { name: "Champa", slug: "champa" },
+      { name: "Megadhooth", slug: "megadhooth" },
+      { name: "Fancy Flora", slug: "fancy-flora" },
+    ],
   },
-  { name: "Budget Pack (12 pcs)", slug: "budget-pack-12-pcs", desc: "Brochure entry: ₹12 · 16 NOS", icon: "package" as const },
+  {
+    name: "Budget Pack",
+    slug: "budget-pack",
+    desc: "₹12 MRP/box · 12 sticks/box · 12-Box Bundle (₹120)",
+    icon: "package" as const,
+    children: [
+      { name: "Jasmine", slug: "jasmine-budget-pack" },
+      { name: "Kewda", slug: "kewda-budget-pack" },
+      { name: "Champa", slug: "champa-budget-pack" },
+      { name: "Glory", slug: "glory-budget-pack" },
+      { name: "Sandalwood", slug: "sandal-wood-budget-pack" },
+      { name: "Pineapple", slug: "pineapple-budget-pack" },
+      { name: "Rose", slug: "rose-budget-pack" },
+      { name: "Ecstasy", slug: "ecstasy-budget-pack" },
+      { name: "Fantasy", slug: "fantasy-budget-pack" },
+      { name: "Loban", slug: "loban-super-budget-pack" },
+      { name: "Lavender", slug: "lavender-budget-pack" },
+    ],
+  },
   {
     name: "Super Series",
     slug: "super-series",
-    desc: "Ten brochure fragrances",
+    desc: "MRP ₹75 · 100gms · 6 signature fragrances",
     icon: "zap" as const,
-    children: ["Rose", "Pineapple", "Sandal", "Glory", "Fantasy", "Jasmine", "Lavender", "Ecstasy", "Kewda", "Loban"]
-      .map((name) => ({ name, slug: name.toLowerCase().replaceAll(" ", "-") })),
+    children: [
+      { name: "Rose", slug: "rose" },
+      { name: "Glory", slug: "glory" },
+      { name: "Lavender", slug: "lavender" },
+      { name: "Sandalwood", slug: "sandal-wood" },
+      { name: "Loban", slug: "loban" },
+      { name: "Guggal", slug: "guggal" },
+    ],
   },
 ];
 
@@ -85,7 +120,7 @@ const fallbackCategories: CategoryItem[] = [
   {
     name: "Camphor",
     slug: "camphor",
-    subtitle: "99.9% Pure Pine",
+    subtitle: "HM & Bhimseni Camphor",
     href: "/shop?category=camphor",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
@@ -93,40 +128,40 @@ const fallbackCategories: CategoryItem[] = [
     art: "camphor" as const,
   },
   {
-    name: "Dhoop Stick / Bambooless",
-    slug: "dhoop-stick-bambooless-stick",
-    subtitle: "Pure Herbal Sticks",
-    href: "/shop?category=dhoop-stick-bambooless-stick",
+    name: "Dhoop Stick",
+    slug: "dhoop-stick",
+    subtitle: "4-inch · 5.5 mm Thick",
+    href: "/shop?category=dhoop-stick",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
     textColor: UNIFIED_TEXT_COLOR,
     art: "dhoop-stick" as const,
   },
   {
-    name: "Incense Cone",
-    slug: "incense-cone",
+    name: "Incense Cones",
+    slug: "incense-cones",
     subtitle: "Charcoal-free Cones",
-    href: "/shop?category=incense-cone",
+    href: "/shop?category=incense-cones",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
     textColor: UNIFIED_TEXT_COLOR,
     art: "cone" as const,
   },
   {
-    name: "Chandan Cups",
-    slug: "chandan-cups",
-    subtitle: "Sacred Sandalwood",
-    href: "/shop?category=chandan-cups",
+    name: "Havan Cups",
+    slug: "havan-cups",
+    subtitle: "Sacred Ritual Cups",
+    href: "/shop?category=havan-cups",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
     textColor: UNIFIED_TEXT_COLOR,
     art: "chandan-cup" as const,
   },
   {
-    name: "Sambhrani Powder",
-    slug: "sambhrani-powder",
+    name: "Sambrani Powder",
+    slug: "sambrani-powder",
     subtitle: "Pure Resin Smoke",
-    href: "/shop?category=sambhrani-powder",
+    href: "/shop?category=sambrani-powder",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
     textColor: UNIFIED_TEXT_COLOR,
@@ -378,7 +413,7 @@ export function CategoryStrip() {
                               </span>
                               <div className="min-w-0 flex-1">
                                 <Link
-                                  href={`/shop?category=${encodeURIComponent(sub.name)}`}
+                                  href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
                                   onClick={() => setActiveDropdown(null)}
                                   className="text-xs font-extrabold text-brand-ink transition hover:text-brand-primary"
                                 >
@@ -387,7 +422,7 @@ export function CategoryStrip() {
                                 <p className="mt-0.5 text-ui-10 leading-relaxed text-[#75827B]">{sub.desc}</p>
                               </div>
                               <Link
-                                href={`/shop?category=${encodeURIComponent(sub.name)}`}
+                                href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
                                 onClick={() => setActiveDropdown(null)}
                                 aria-label={`Browse ${sub.name}`}
                                 className="mt-1 text-brand-primary transition hover:translate-x-0.5"
@@ -400,7 +435,7 @@ export function CategoryStrip() {
                                 {sub.children.map((child) => (
                                   <Link
                                     key={child.slug}
-                                    href={`/shop?category=${encodeURIComponent(child.name)}`}
+                                    href={`/product/${child.slug}`}
                                     onClick={() => setActiveDropdown(null)}
                                     className="rounded-full border border-[#E8D8B2] bg-white px-2.5 py-1 text-ui-10 font-semibold text-[#455A50] transition hover:border-brand-primary hover:bg-brand-primary hover:text-white"
                                   >

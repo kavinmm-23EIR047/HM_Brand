@@ -85,7 +85,10 @@ export class ProductsRepository {
         orderBy,
         include: {
           images: { orderBy: { displayOrder: 'asc' } },
-          categories: { include: { category: true } },
+          categories: {
+            orderBy: [{ createdAt: 'asc' }, { categoryId: 'asc' }],
+            include: { category: true },
+          },
           subcategory: true,
           collections: { include: { collection: true } },
         },
@@ -101,7 +104,10 @@ export class ProductsRepository {
       where: { slug },
       include: {
         images: { orderBy: { displayOrder: 'asc' } },
-        categories: { include: { category: true } },
+        categories: {
+          orderBy: [{ createdAt: 'asc' }, { categoryId: 'asc' }],
+          include: { category: true },
+        },
         subcategory: true,
         collections: { include: { collection: true } },
         festivals: { include: { festival: true } },
@@ -114,7 +120,10 @@ export class ProductsRepository {
       where: { id },
       include: {
         images: { orderBy: { displayOrder: 'asc' } },
-        categories: { include: { category: true } },
+        categories: {
+          orderBy: [{ createdAt: 'asc' }, { categoryId: 'asc' }],
+          include: { category: true },
+        },
         subcategory: true,
       },
     });
