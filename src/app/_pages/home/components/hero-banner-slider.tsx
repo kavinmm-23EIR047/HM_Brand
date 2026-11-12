@@ -97,10 +97,8 @@ export function HeroBannerSlider() {
   if (total === 0) {
     if (!isBannersLoading) return null;
     return (
-      <section aria-label="Loading promotional banner" aria-busy="true" className="w-full py-0 sm:py-2 lg:py-3">
-        <div className="w-full px-0 sm:px-4 lg:px-6 xl:px-8">
-          <div className="aspect-[16/9] w-full animate-pulse bg-brand-border/40 sm:aspect-[16/5] sm:rounded-2xl lg:rounded-3xl" />
-        </div>
+      <section aria-label="Loading promotional banner" aria-busy="true" className="w-full bg-brand-surface-soft">
+        <div className="w-full h-[220px] sm:h-[380px] lg:h-[520px] animate-pulse bg-brand-border/40" />
       </section>
     );
   }
@@ -108,16 +106,15 @@ export function HeroBannerSlider() {
   return (
     <section
       aria-label="Promotional Hero Banners"
-      className="relative w-full py-0 sm:py-2 lg:py-3 select-none"
+      className="relative w-full overflow-hidden border-b border-brand-border bg-brand-surface-bright select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Full-width hero container */}
-      <div className="w-full px-0 sm:px-4 lg:px-6 xl:px-8">
-        <div className="group relative w-full overflow-hidden bg-brand-surface-bright sm:rounded-2xl lg:rounded-3xl sm:border sm:border-brand-border shadow-sm">
+      {/* Full-width edge-to-edge hero slider */}
+      <div className="group relative w-full overflow-hidden">
 
           {/* Carousel track */}
           <div
@@ -128,7 +125,7 @@ export function HeroBannerSlider() {
           >
             {activeSlides.map((slide, index) => {
               const content = (
-                <div className="relative flex w-full items-center justify-center">
+                <div className="relative w-full">
                   {/* Desktop / tablet banner */}
                   <img
                     src={slide.desktopImage}
@@ -136,7 +133,7 @@ export function HeroBannerSlider() {
                     draggable={false}
                     fetchPriority={index === 0 ? "high" : "auto"}
                     loading={index === 0 ? "eager" : "lazy"}
-                    className={`block h-auto w-full max-w-none object-contain ${slide.mobileImage
+                    className={`block w-full h-auto max-w-none ${slide.mobileImage
                         ? "hidden sm:block"
                         : "block"
                       }`}
@@ -149,7 +146,7 @@ export function HeroBannerSlider() {
                       alt={slide.title || "HM Brand Banner"}
                       draggable={false}
                       loading={index === 0 ? "eager" : "lazy"}
-                      className="block h-auto w-full max-w-none object-contain sm:hidden"
+                      className="block w-full h-auto max-w-none sm:hidden"
                     />
                   )}
                 </div>
@@ -183,25 +180,25 @@ export function HeroBannerSlider() {
                 type="button"
                 onClick={prevSlide}
                 aria-label="Previous banner"
-                className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-black/70 sm:left-4 sm:h-11 sm:w-11 lg:left-6"
+                className="absolute left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-brand-ink/85 text-white shadow-md transition hover:scale-105 hover:bg-brand-primary sm:left-4 sm:h-11 sm:w-11 lg:left-6"
               >
-                <ChevronLeft size={23} strokeWidth={2.5} />
+                <ChevronLeft size={22} strokeWidth={2.4} />
               </button>
 
               <button
                 type="button"
                 onClick={nextSlide}
                 aria-label="Next banner"
-                className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-black/70 sm:right-4 sm:h-11 sm:w-11 lg:right-6"
+                className="absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-brand-ink/85 text-white shadow-md transition hover:scale-105 hover:bg-brand-primary sm:right-4 sm:h-11 sm:w-11 lg:right-6"
               >
-                <ChevronRight size={23} strokeWidth={2.5} />
+                <ChevronRight size={22} strokeWidth={2.4} />
               </button>
             </>
           )}
 
           {/* Bottom slide indicators */}
           {total > 1 && (
-            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/35 px-3 py-2 shadow-lg backdrop-blur-sm sm:bottom-5">
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/20 bg-brand-ink/80 px-3 py-1.5 shadow-md sm:bottom-5">
               {activeSlides.map((_, i) => (
                 <button
                   key={i}
@@ -217,7 +214,6 @@ export function HeroBannerSlider() {
               ))}
             </div>
           )}
-        </div>
       </div>
     </section>
   );

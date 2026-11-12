@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { EditorialStarSvg } from "@/components/sacred-icons";
 
 export function TempleGopuram({ className = "" }: { className?: string }) {
   return (
@@ -189,7 +190,11 @@ export function AuspiciousSeal({ className = "" }: { className?: string }) {
   return (
     <div className={`relative inline-flex items-center justify-center p-3 border-2 border-dashed border-brand-gold rounded-full bg-brand-surface text-brand-brown ${className}`}>
       <div className="w-24 h-24 rounded-full border-2 border-brand-brown flex flex-col items-center justify-center text-center p-2 bg-brand-turmeric/30">
-        <span className="text-xs font-bold tracking-widest text-[#B23A48]">★ PURE ★</span>
+        <span className="inline-flex items-center gap-1 text-xs font-bold tracking-widest text-[#B23A48]">
+          <EditorialStarSvg className="h-2.5 w-2.5" />
+          <span>PURE</span>
+          <EditorialStarSvg className="h-2.5 w-2.5" />
+        </span>
         <span className="font-display font-bold text-sm text-brand-brown leading-tight">HM BRAND</span>
         <span className="text-ui-9 uppercase tracking-wider font-semibold text-brand-charcoal/80 mt-0.5">EST. COIMBATORE</span>
       </div>

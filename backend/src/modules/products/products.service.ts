@@ -2,6 +2,7 @@ import { productsRepository, ProductsRepository, ProductFilters } from './produc
 import { generateSlug } from '../../shared/utils/slug.util';
 import { NotFoundError, ConflictError } from '../../shared/errors/custom.error';
 import { mediaService } from '../media/media.service';
+import { invalidateSearchCache } from './products.search';
 
 export class ProductsService {
   constructor(private repo: ProductsRepository = productsRepository) {}
@@ -101,6 +102,7 @@ export class ProductsService {
       sku,
       slug,
     });
+    invalidateSearchCache();
     return created;
   }
 
@@ -136,6 +138,7 @@ export class ProductsService {
       ...(couponCode !== undefined ? { couponCode } : {}),
       slug,
     });
+    invalidateSearchCache();
     return updated;
   }
 
@@ -145,6 +148,7 @@ export class ProductsService {
       throw new NotFoundError('Product not found');
     }
     const res = await this.repo.addImage(productId, imageData);
+    invalidateSearchCache();
     return res;
   }
 
@@ -161,7 +165,9 @@ export class ProductsService {
     if (!targetImage) {
       throw new NotFoundError('Product image not found on this product');
     }
-    return this.repo.setPrimaryImage(productId, imageId);
+    const res = await this.repo.setPrimaryImage(productId, imageId);
+    invalidateSearchCache();
+    return res;
   }
 
   async deleteProduct(id: string) {
@@ -170,6 +176,7 @@ export class ProductsService {
       throw new NotFoundError('Product not found');
     }
     const res = await this.repo.delete(id);
+    invalidateSearchCache();
     return res;
   }
 }

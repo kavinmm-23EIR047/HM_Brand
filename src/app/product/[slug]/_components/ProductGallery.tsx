@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star, ShieldCheck, Sparkles, Leaf } from "lucide-react";
 import { Lotus } from "@/components/illustrations/Lotus";
+import { SacredDiyaSvg } from "@/components/sacred-icons";
 import type { ProductImageItem } from "@/lib/products";
 
 interface ProductGalleryProps {
@@ -118,8 +119,8 @@ export function ProductGallery({
             />
           </div>
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-[#173B3A]/40">
-            <span className="text-6xl mb-2">🪔</span>
+          <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-[#173B3A]/60">
+            <SacredDiyaSvg className="h-16 w-16 mb-3" />
             <span className="font-playfair text-xl font-bold text-[#173B3A]">
               {productName}
             </span>
@@ -133,7 +134,7 @@ export function ProductGallery({
               type="button"
               onClick={handlePrev}
               aria-label="Previous image"
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/95 border border-[#EADBBD] text-[#173B3A] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830] shadow-md transition-all active:scale-95 cursor-pointer"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white border border-[#EADBBD] text-[#173B3A] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830] shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <ChevronLeft size={18} />
             </button>
@@ -141,7 +142,7 @@ export function ProductGallery({
               type="button"
               onClick={handleNext}
               aria-label="Next image"
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/95 border border-[#EADBBD] text-[#173B3A] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830] shadow-md transition-all active:scale-95 cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white border border-[#EADBBD] text-[#173B3A] hover:bg-[#9E1830] hover:text-white hover:border-[#9E1830] shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <ChevronRight size={18} />
             </button>
@@ -179,43 +180,43 @@ export function ProductGallery({
 
       {/* ── 3. 4 FEATURE CARDS (CHARCOAL-FREE, HANDCRAFTED, PURE BOTANICALS, SAFE & NATURAL) ── */}
       {/* Compact 4-column trust row keeps the mobile product overview short. */}
-      <div className="grid grid-cols-4 gap-1.5 sm:gap-3 pt-0.5 sm:pt-1">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-0.5 sm:pt-1">
         {/* Charcoal-Free */}
-        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
-            <Leaf size={12} />
+        <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
+            <Leaf size={13} />
           </div>
-          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-xs font-bold text-[#173B3A] leading-tight block">
             Charcoal-Free
           </span>
         </div>
 
         {/* Handcrafted */}
-        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#F47A20] transition-colors">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#F47A20]/10 text-[#F47A20] flex items-center justify-center">
-            <Sparkles size={12} />
+        <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#F47A20] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#F47A20]/10 text-[#F47A20] flex items-center justify-center">
+            <Sparkles size={13} />
           </div>
-          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-xs font-bold text-[#173B3A] leading-tight block">
             Handcrafted
           </span>
         </div>
 
         {/* Pure Botanicals */}
-        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#9E1830] transition-colors">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#9E1830]/10 text-[#9E1830] flex items-center justify-center">
+        <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#9E1830] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#9E1830]/10 text-[#9E1830] flex items-center justify-center">
             <Lotus className="w-4 h-3.5 sm:w-5 sm:h-4" />
           </div>
-          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-xs font-bold text-[#173B3A] leading-tight block">
             Pure Botanicals
           </span>
         </div>
 
         {/* Safe & Natural */}
-        <div className="min-w-0 rounded-lg sm:rounded-2xl border border-[#EADBBD] bg-white p-1.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1 sm:gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
-            <ShieldCheck size={12} />
+        <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
+          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
+            <ShieldCheck size={13} />
           </div>
-          <span className="text-[9px] sm:text-xs font-bold text-[#173B3A] leading-tight block">
+          <span className="text-xs font-bold text-[#173B3A] leading-tight block">
             Safe &amp; Natural
           </span>
         </div>

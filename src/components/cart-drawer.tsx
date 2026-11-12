@@ -7,6 +7,7 @@ import { X, Plus, Minus, Trash2, ArrowRight, ShoppingBag, Sparkles, Tag } from "
 import { useStore } from "@/components/store";
 import { MascotBasket } from "@/components/mascot-art";
 import { SHIPPING_CONFIG } from "@/lib/shipping";
+import { SacredDiyaSvg } from "@/components/sacred-icons";
 
 export function CartDrawer() {
   const {
@@ -62,7 +63,7 @@ export function CartDrawer() {
               <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs font-semibold text-earthBrown">
                 <span className="flex items-center gap-1.5">
                   <Sparkles size={14} className="text-saffron" />
-                  {amountLeft > 0 ? `Add ₹${amountLeft} more for FREE Delivery` : "🎉 You unlocked FREE Delivery!"}
+                  {amountLeft > 0 ? `Add ₹${amountLeft} more for FREE Delivery` : "You unlocked FREE Delivery!"}
                 </span>
                 <span>{progressPercent}%</span>
               </div>
@@ -107,7 +108,7 @@ export function CartDrawer() {
                         className="object-contain"
                       />
                     ) : (
-                      <span className="text-2xl">🪔</span>
+                      <SacredDiyaSvg className="h-8 w-8" />
                     )}
                   </div>
 

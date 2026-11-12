@@ -7,10 +7,12 @@ import {
   Truck,
   Leaf,
   CheckCircle,
+  Lightbulb,
   Search,
   X,
   ArrowRight,
 } from "lucide-react";
+import { SacredLotusSvg } from "@/components/sacred-icons";
 
 interface StateCoverage {
   id: string;
@@ -422,22 +424,18 @@ export function DeliveryReachBanner() {
     : [];
 
   return (
-    <section aria-labelledby="delivery-reach-heading" className="relative w-full bg-brand-surface-alt py-12 sm:py-16 border-y border-brand-accent/35 font-sans overflow-hidden">
-      
-      {/* Soft Ambient Radial Corner Accents */}
-      <div className="pointer-events-none absolute -left-12 -top-12 w-52 h-52 rounded-full bg-brand-green/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-12 -top-12 w-52 h-52 rounded-full bg-brand-accent/15 blur-3xl" />
+    <section aria-labelledby="delivery-reach-heading" className="relative w-full bg-white py-12 sm:py-16 border-b border-brand-border font-sans overflow-hidden">
 
-      <div className="relative z-10 mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+      <div className="page-container relative z-10">
         
         {/* Unified Editorial 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Organic Scenic Landscape with South India Map */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-[500px] aspect-[1/1.1] rounded-3xl overflow-hidden shadow-xl border-2 border-brand-accent/60 bg-gradient-to-b from-brand-surface-bright via-[#FFF9ED] to-[#FFF3DC] group">
+            <div className="relative w-full max-w-[500px] aspect-[1/1.1] rounded-2xl sm:rounded-3xl overflow-hidden shadow-card border border-brand-border bg-brand-surface-soft group">
               
-              {/* Scenic Landscape Backdrop with Road, Truck, Incense, and Temple */}
+              {/* Scenic Landscape Backdrop */}
               <div className="absolute inset-0">
                 <Image
                   src="/images/delivery_reach_scenic_bg.jpg"
@@ -446,11 +444,10 @@ export function DeliveryReachBanner() {
                   sizes="(max-width: 1280px) 100vw, 1280px"
                   className="object-cover object-bottom"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/40 pointer-events-none" />
               </div>
 
               {/* South India Map Layered Above */}
-              <div className="relative z-10 w-full h-[90%] p-2 drop-shadow-2xl transition-transform duration-700 group-hover:scale-[1.03]">
+              <div className="relative z-10 w-full h-[90%] p-2 transition-transform duration-700 group-hover:scale-[1.03]">
                 <Image
                   src="/images/South India Delivery Network Map.png"
                   alt="HM BRAND South India Delivery Network Map covering 100+ districts across Tamil Nadu, Kerala, Andhra Pradesh, Karnataka, Telangana and Puducherry"
@@ -460,16 +457,16 @@ export function DeliveryReachBanner() {
                 />
               </div>
 
-              {/* Bottom Subtle Bar on Map Card */}
-              <div className="absolute bottom-2 left-3 right-3 z-20 flex items-center justify-between gap-2 rounded-xl border border-white/80 bg-white/95 px-3 py-1.5 text-xs shadow-md backdrop-blur-xs">
-                <div className="flex items-center gap-1.5 text-ui-11 font-bold text-brand-ink">
+              {/* Bottom Bar on Map Card */}
+              <div className="absolute bottom-2.5 left-3 right-3 z-20 flex items-center justify-between gap-2 rounded-xl border border-brand-border bg-white px-3 py-2 text-xs shadow-sm">
+                <div className="flex items-center gap-1.5 font-bold text-brand-ink">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-primary text-white">
                     <Truck size={11} />
                   </span>
                   <span>100+ Districts Connected</span>
                 </div>
-                <span className="text-ui-10 font-bold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-full">
-                  Direct from Coimbatore
+                <span className="text-ui-11 font-bold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-full">
+                  Direct dispatch
                 </span>
               </div>
             </div>
@@ -480,10 +477,10 @@ export function DeliveryReachBanner() {
             
             {/* Eyebrow */}
             <div className="flex items-center gap-2">
-              <span className="font-brand text-xs sm:text-sm font-bold tracking-[0.24em] text-brand-primary uppercase">
+              <span className="font-brand text-xs sm:text-sm font-bold tracking-[0.22em] text-brand-primary uppercase">
                 OUR REACH
               </span>
-              <span className="text-brand-orange text-sm">🪷</span>
+              <SacredLotusSvg className="h-4 w-4" />
             </div>
 
             {/* Title & Description */}
@@ -501,34 +498,34 @@ export function DeliveryReachBanner() {
               </p>
             </div>
 
-            {/* Two Trust Badges - 2-Column Horizontal Grid on Mobile & Desktop */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3.5 pt-1">
+            {/* Two Trust Badges */}
+            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2.5 sm:gap-3.5 pt-1">
               
               {/* Badge 1: 100+ Districts Connected */}
-              <div className="flex items-center gap-2 sm:gap-2.5 rounded-2xl border border-emerald-600/30 bg-[#F0FDF4] p-2 sm:p-2.5 shadow-xs">
-                <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-emerald-700/15 text-emerald-800 shrink-0">
+              <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-600/25 bg-[#F0FDF4] p-3 shadow-2xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-700/15 text-emerald-800 shrink-0">
                   <Truck size={16} className="stroke-[2.2]" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="block truncate text-[11px] sm:text-xs font-extrabold text-emerald-950 leading-tight">
+                  <span className="block truncate text-xs font-extrabold text-emerald-950 leading-tight">
                     100+ Districts
                   </span>
-                  <span className="block text-[10px] sm:text-ui-11 font-medium text-emerald-800/90 leading-tight truncate mt-0.5">
+                  <span className="block text-ui-11 font-medium text-emerald-800/90 leading-tight truncate mt-0.5">
                     Doorstep Delivery
                   </span>
                 </div>
               </div>
 
               {/* Badge 2: Direct from Coimbatore */}
-              <div className="flex items-center gap-2 sm:gap-2.5 rounded-2xl border border-amber-600/30 bg-[#FFFBEB] p-2 sm:p-2.5 shadow-xs">
-                <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-amber-700/15 text-amber-800 shrink-0">
+              <div className="flex items-center gap-2.5 rounded-2xl border border-amber-600/25 bg-[#FFFBEB] p-3 shadow-2xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-700/15 text-amber-800 shrink-0">
                   <Leaf size={16} className="stroke-[2.2]" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="block truncate text-[11px] sm:text-xs font-extrabold text-amber-950 leading-tight">
+                  <span className="block truncate text-xs font-extrabold text-amber-950 leading-tight">
                     Direct Coimbatore
                   </span>
-                  <span className="block text-[10px] sm:text-ui-11 font-medium text-amber-800/90 leading-tight truncate mt-0.5">
+                  <span className="block text-ui-11 font-medium text-amber-800/90 leading-tight truncate mt-0.5">
                     Fresh Dispatch
                   </span>
                 </div>
@@ -536,26 +533,26 @@ export function DeliveryReachBanner() {
 
             </div>
 
-            {/* Tip Box Bar - High-Contrast Visible Colors */}
-            <div className="rounded-xl sm:rounded-full bg-[#FFF8E7] px-3.5 py-2 text-[11px] sm:text-xs text-[#4A3B32] border border-[#D4AF37]/50 flex items-center gap-2 shadow-2xs">
-              <span className="text-sm shrink-0 leading-none">💡</span>
+            {/* Tip Box Bar */}
+            <div className="rounded-xl sm:rounded-full bg-brand-surface px-3.5 py-2.5 text-xs text-[#4A3B32] border border-brand-border flex items-center gap-2">
+              <Lightbulb size={15} className="text-brand-orange shrink-0" />
               <p className="leading-snug">
-                <strong className="text-[#9E1830] font-bold">Tip:</strong> Tap any state card below to inspect full district reach &amp; transit timelines.
+                <strong className="text-brand-primary font-bold">Tip:</strong> Tap any state card below to inspect full district reach &amp; transit timelines.
               </p>
             </div>
 
-            {/* State Selection Header - High-Contrast Deep Ink & Crimson */}
+            {/* State Selection Header */}
             <div className="flex items-center justify-between gap-2 pt-1">
-              <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#173B3A] leading-tight">
+              <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-brand-ink leading-tight">
                 SELECT YOUR STATE TO VIEW DISTRICT REACH
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#9E1830] text-white text-[10px] sm:text-xs font-bold tracking-wide shadow-xs shrink-0 whitespace-nowrap">
+              <span className="px-2.5 py-1 rounded-full bg-brand-primary text-white text-ui-11 sm:text-xs font-bold tracking-wide shrink-0 whitespace-nowrap">
                 6 States &amp; UTs
               </span>
             </div>
 
-            {/* 6 Interactive State Cards - Balanced 2-Column Grid on Mobile & Desktop */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+            {/* 6 Interactive State Cards */}
+            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2.5 sm:gap-3">
               {SOUTH_INDIA_STATES.map((state) => (
                 <button
                   key={state.id}
@@ -564,29 +561,29 @@ export function DeliveryReachBanner() {
                     setSelectedState(state);
                     setDistrictSearch("");
                   }}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-[#DECDB3] bg-white hover:bg-[#FFFDF9] p-2.5 sm:p-3 text-left shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-[#9E1830] hover:shadow-md active:scale-[0.98] cursor-pointer"
+                  className="group relative flex flex-col justify-between rounded-2xl border border-brand-border bg-brand-surface-bright hover:bg-white p-3 sm:p-3.5 text-left shadow-2xs transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-primary hover:shadow-md active:scale-[0.98] cursor-pointer"
                 >
                   {/* Top Row: Landmark Icon on Left, Arrow CTA on Right */}
                   <div className="flex items-center justify-between w-full">
-                    <div className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl bg-[#FFF9EC] border border-[#EADBBD] shadow-2xs group-hover:scale-105 transition-transform p-1">
+                    <div className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl bg-white border border-brand-border shadow-2xs group-hover:scale-105 transition-transform p-1">
                       <StateLandmarkIcon stateId={state.id} className="h-7 w-7 sm:h-8 sm:w-8" />
                     </div>
 
-                    <span className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-full bg-[#9E1830] text-white shadow-xs transition-transform group-hover:translate-x-0.5 group-hover:scale-110">
-                      <ArrowRight size={12} />
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-primary text-white transition-transform group-hover:translate-x-0.5 group-hover:scale-110">
+                      <ArrowRight size={13} />
                     </span>
                   </div>
 
-                  {/* Bottom Content: Full Width Title & Details */}
-                  <div className="mt-2 min-w-0 w-full">
-                    <h3 className="font-playfair text-xs sm:text-sm font-bold text-[#173B3A] group-hover:text-[#9E1830] transition leading-tight truncate">
+                  {/* Bottom Content */}
+                  <div className="mt-2.5 min-w-0 w-full">
+                    <h3 className="font-playfair text-sm font-bold text-brand-ink group-hover:text-brand-primary transition leading-tight truncate">
                       {state.name}
                     </h3>
-                    <p className="text-[10px] sm:text-[11px] font-semibold text-[#5D4A3E] mt-0.5 truncate">
+                    <p className="text-xs font-semibold text-[#5D4A3E] mt-0.5 truncate">
                       {state.districtsCount} Districts
                     </p>
-                    <span className="text-[9px] sm:text-[10px] text-[#0F5132] font-bold flex items-center gap-1 mt-0.5 truncate">
-                      <Truck size={10} className="shrink-0 text-emerald-700" />
+                    <span className="text-ui-11 text-[#0F5132] font-bold flex items-center gap-1 mt-0.5 truncate">
+                      <Truck size={11} className="shrink-0 text-emerald-700" />
                       <span className="truncate">{state.dispatchTime.replace("express courier", "express").replace("express shipping", "express").replace("direct delivery", "direct").replace("tracked delivery", "tracked").replace("from dispatch", "")}</span>
                     </span>
                   </div>

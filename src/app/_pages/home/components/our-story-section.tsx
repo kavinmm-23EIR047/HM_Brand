@@ -117,18 +117,9 @@ export function OurStorySection() {
   ];
 
   return (
-    <section className="relative my-6 w-full overflow-hidden bg-brand-surface-alt pt-10 pb-7 sm:my-12 sm:py-18 lg:py-22 border-y border-brand-border/70 font-sans">
-      {/* Soft decorative background glows */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-24 top-10 h-80 w-80 rounded-full bg-brand-border/40 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-20 bottom-10 h-72 w-72 rounded-full bg-brand-primary/5 blur-3xl"
-      />
+    <section className="relative w-full overflow-hidden bg-white py-12 sm:py-16 lg:py-20 border-b border-brand-border font-sans">
 
-      <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+      <div className="page-container relative">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-16">
           
           {/* LEFT: STORY CONTENT */}
@@ -190,7 +181,7 @@ export function OurStorySection() {
                         pauseTemporarily(4000);
                         scrollTo(idx);
                       }}
-                      className={`group relative flex flex-col justify-between rounded-2xl bg-white p-4 sm:p-5 transition-all duration-300 w-[min(82vw,300px)] sm:w-auto shrink-0 snap-center cursor-pointer sm:cursor-default ${
+                      className={`group relative flex flex-col justify-between rounded-2xl border bg-brand-surface-bright p-4 sm:p-5 transition-all duration-300 w-[min(82vw,300px)] sm:w-auto shrink-0 snap-center cursor-pointer sm:cursor-default ${
                         isActive
                           ? "border-[#9E1830] shadow-md ring-1 ring-[#9E1830]/20"
                           : "border-[#EADBBD] hover:border-[#9E1830]/50 hover:shadow-md"
@@ -254,7 +245,7 @@ export function OurStorySection() {
                     scrollTo((activeIdx - 1 + values.length) % values.length);
                   }}
                   aria-label="Previous value"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-xs transition hover:bg-brand-primary/5 active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs transition hover:bg-brand-primary/5 active:scale-95"
                 >
                   <ChevronLeft size={16} strokeWidth={2.5} />
                 </button>
@@ -286,7 +277,7 @@ export function OurStorySection() {
                     scrollTo((activeIdx + 1) % values.length);
                   }}
                   aria-label="Next value"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-xs transition hover:bg-brand-primary/5 active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs transition hover:bg-brand-primary/5 active:scale-95"
                 >
                   <ChevronRight size={16} strokeWidth={2.5} />
                 </button>
@@ -313,14 +304,14 @@ export function OurStorySection() {
             </div>
           </div>
 
-          {/* RIGHT: ILLUSTRATION WITH ELEGANT PEDESTAL FRAME */}
+          {/* RIGHT: ILLUSTRATION WITH SOLID EDITORIAL PEDESTAL FRAME */}
           <div className="order-1 flex min-w-0 justify-center lg:order-2 lg:col-span-5">
             <div className="relative w-full max-w-[290px] sm:max-w-[360px] lg:max-w-[420px]">
               
-              {/* Soft ambient golden-green glow behind the sacred flame mascot */}
+              {/* Solid soft circular pedestal */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-[12%] rounded-full bg-gradient-to-tr from-brand-accent/25 to-[#DDECCB]/50 blur-2xl"
+                className="pointer-events-none absolute inset-[10%] rounded-full border border-brand-border bg-brand-surface-soft"
               />
 
               <div className="relative aspect-square w-full">
@@ -329,13 +320,13 @@ export function OurStorySection() {
                   alt="HM Agarbattis sacred flame mascot meditating on a lotus flower with diya and temple bell"
                   fill
                   sizes="(max-width: 640px) 280px, (max-width: 1024px) 360px, 420px"
-                  className="object-contain drop-shadow-xl transition-transform duration-500 hover:scale-[1.03]"
+                  className="object-contain transition-transform duration-500 hover:scale-[1.03]"
                 />
               </div>
 
               {/* Caption pill below */}
               <div className="mt-3 flex justify-center px-1 text-center">
-                <span className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-brand-border bg-white/95 px-3 py-2 font-tagline text-[9px] font-bold uppercase leading-none tracking-[0.08em] text-brand-green shadow-xs whitespace-nowrap sm:px-4 sm:text-xs sm:tracking-[0.12em]">
+                <span className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-brand-border bg-white px-3.5 py-2 font-tagline text-ui-11 font-bold uppercase leading-none tracking-[0.08em] text-brand-green shadow-2xs whitespace-nowrap sm:px-4 sm:text-xs sm:tracking-[0.12em]">
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-green" />
                   Rooted in Tradition · Made with Care
                 </span>

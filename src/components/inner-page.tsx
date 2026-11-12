@@ -25,10 +25,10 @@ export function InnerPage({
       <div>
         <Navigation />
 
-        {/* Premium Temple Heritage Page Banner */}
+        {/* Solid Editorial Heritage Page Banner */}
         {showHero && (
-          <section className="relative overflow-hidden bg-gradient-to-r from-brand-surface-warm via-brand-surface to-brand-surface-warm py-8 sm:py-10">
-            {/* Ambient Background Glow & Rotating Golden Mandala */}
+          <section className="relative overflow-hidden border-b border-brand-border bg-brand-surface-warm py-8 sm:py-10">
+            {/* Ambient Rotating Mandala */}
             <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96 opacity-15">
               <MandalaMotif speed={90} strokeColor="var(--brand-orange)" strokeWidth={1.5} counterRotate={true} />
             </div>
@@ -50,7 +50,7 @@ export function InnerPage({
                 </nav>
 
                 {/* Eyebrow Badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white/80 px-3 py-1 font-brand text-ui-11 sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase shadow-2xs border border-brand-border">
+                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1 font-brand text-xs font-bold tracking-[0.2em] text-brand-primary uppercase shadow-2xs border border-brand-border">
                   <Sparkles size={13} className="text-brand-orange" />
                   <span>{eyebrow}</span>
                 </div>
@@ -68,14 +68,14 @@ export function InnerPage({
                 )}
               </div>
 
-              {/* Decorative Golden Sunburst Medallion (Desktop) */}
+              {/* Solid Seal Medallion (Desktop) */}
               <div className="hidden lg:flex shrink-0 items-center justify-center relative">
-                <div className="h-36 w-36 rounded-full bg-brand-surface-warm p-2 flex items-center justify-center shadow-sm border border-brand-accent/30">
-                  <div className="h-full w-full rounded-full bg-gradient-to-br from-brand-primary to-[#6A0C1E] flex flex-col items-center justify-center text-center px-2 py-3 shadow-md border border-brand-accent/25 overflow-hidden">
-                    <span className="font-brand text-ui-11 sm:text-xs font-bold text-brand-accent-soft uppercase tracking-wider leading-tight whitespace-nowrap">
+                <div className="h-36 w-36 rounded-full bg-white p-2 flex items-center justify-center shadow-sm border border-brand-border">
+                  <div className="h-full w-full rounded-full bg-brand-primary flex flex-col items-center justify-center text-center px-2 py-3 border border-brand-accent/40 overflow-hidden">
+                    <span className="font-brand text-xs font-bold text-brand-accent-soft uppercase tracking-wider leading-tight whitespace-nowrap">
                       Coimbatore
                     </span>
-                    <span className="font-brand text-ui-9 sm:text-ui-10 font-bold text-white uppercase tracking-widest mt-1 leading-tight">
+                    <span className="font-brand text-ui-11 font-bold text-white uppercase tracking-widest mt-1 leading-tight">
                       Pure<br />Heritage
                     </span>
                   </div>
@@ -87,7 +87,7 @@ export function InnerPage({
         )}
 
         {/* Main Content Body */}
-        <main>{children}</main>
+        <main className="pb-20 md:pb-0">{children}</main>
       </div>
 
       <Footer />

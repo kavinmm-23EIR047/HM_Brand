@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Minus, Heart, ShoppingBag, Truck, Lock, Sparkles } from "lucide-react";
+import { Plus, Minus, Heart, ShoppingBag, Truck, Lock, Sparkles, Check } from "lucide-react";
 import { useStore } from "@/components/store";
 import type { Product } from "@/lib/products";
 
@@ -159,9 +159,16 @@ export function AddPanel({ product }: { product: Product }) {
           <button
             type="button"
             onClick={handleToggleCoupon}
-            className="font-bold text-xs text-[#9E1830] hover:text-[#7A1225] transition underline underline-offset-2 cursor-pointer"
+            className="inline-flex items-center gap-1 font-bold text-xs text-[#9E1830] hover:text-[#7A1225] transition underline underline-offset-2 cursor-pointer"
           >
-            {isThisCouponApplied ? "✓ Applied" : "Apply"}
+            {isThisCouponApplied ? (
+              <>
+                <Check size={12} strokeWidth={2.5} />
+                <span>Applied</span>
+              </>
+            ) : (
+              "Apply"
+            )}
           </button>
         </div>
       )}
@@ -232,7 +239,7 @@ export function AddPanel({ product }: { product: Product }) {
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className="flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-primary px-2.5 text-[11px] font-brand font-bold uppercase tracking-wide text-white shadow-xs transition-all hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:px-3 sm:text-xs"
+            className="flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-primary px-3 text-xs font-brand font-bold uppercase tracking-wide text-white shadow-xs transition-all hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2"
           >
             <span className="shrink-0 font-price text-sm font-extrabold tracking-normal">₹{(effectiveUnitPrice * qty).toLocaleString("en-IN")}</span>
             <span className="h-5 w-px shrink-0 bg-white/35" aria-hidden="true" />

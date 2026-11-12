@@ -24,7 +24,7 @@ interface CategoryItem {
   }[];
 }
 
-const UNIFIED_CIRCLE_BG = "bg-gradient-to-br from-brand-primary via-[#851327] to-[#660B1C]";
+const UNIFIED_CIRCLE_BG = "bg-brand-primary";
 const UNIFIED_ARROW_BG = "bg-brand-accent text-brand-ink";
 const UNIFIED_TEXT_COLOR = "text-brand-ink";
 
@@ -221,15 +221,22 @@ export function CategoryStrip() {
   const [slideCount, setSlideCount] = useState(1);
   const [autoplayPaused, setAutoplayPaused] = useState(false);
 
-  // Close dropdown on outside click
+  // Close dropdown on outside click or Escape
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setActiveDropdown(null);
       }
     }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setActiveDropdown(null);
+    }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
   // Strict canonical 9 categories (eliminates any old legacy database categories)
@@ -290,12 +297,19 @@ export function CategoryStrip() {
     return () => window.clearInterval(timer);
   }, [autoplayPaused, slideCount, categories.length]);
 
+  const activeSubCategoryOwner = categories.find(
+    (c) => c.slug === activeDropdown && c.subCategories && c.subCategories.length > 0
+  );
+
   return (
     <section
-      className="relative z-30 w-full overflow-visible border-b border-brand-accent/30 bg-[#fffaf0] py-4 sm:py-6"
+      className="relative z-30 w-full overflow-visible border-y border-brand-border bg-white py-5 sm:py-7"
       ref={containerRef}
       onMouseEnter={() => setAutoplayPaused(true)}
-      onMouseLeave={() => setAutoplayPaused(false)}
+      onMouseLeave={() => {
+        setAutoplayPaused(false);
+        setActiveDropdown(null);
+      }}
       onFocusCapture={() => setAutoplayPaused(true)}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setAutoplayPaused(false);
@@ -303,12 +317,12 @@ export function CategoryStrip() {
       onTouchStart={() => setAutoplayPaused(true)}
       onTouchEnd={() => setAutoplayPaused(false)}
     >
-      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-3 sm:px-6 lg:px-8">
+      <div className="page-container">
         
         {/* Section Header */}
         <div className="mb-3 flex items-center justify-between gap-2 sm:mb-4">
           <span className="hidden h-px w-8 bg-brand-primary/30 sm:inline-block" />
-          <span className="flex-1 text-center font-brand text-ui-11 font-bold tracking-[.15em] text-brand-primary uppercase sm:text-xs sm:tracking-[.2em]">
+          <span className="flex-1 text-center font-brand text-xs font-bold tracking-[.15em] text-brand-primary uppercase sm:tracking-[.2em]">
             EXPLORE SACRED CATEGORIES
           </span>
           <span className="hidden h-px w-8 bg-brand-primary/30 sm:inline-block" />
@@ -323,146 +337,155 @@ export function CategoryStrip() {
         </div>
 
         {/* 9 Category Circles Container */}
-        <div
-          ref={sliderRef}
-          role="region"
-          aria-label="Shop by category"
-          onScroll={() => {
-            const slider = sliderRef.current;
-            if (slider) setActiveSlide(Math.min(slideCount - 1, Math.round(slider.scrollLeft / slider.clientWidth)));
-          }}
-          className="scrollbar-none flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth pb-2 pt-1 sm:gap-4 lg:gap-5"
-        >
-          {categories.map((item, idx) => {
-            const hasSubs = Boolean(item.subCategories && item.subCategories.length > 0);
-            const isDropdownOpen = activeDropdown === item.slug;
+        <div className="relative">
+          <div
+            ref={sliderRef}
+            role="region"
+            aria-label="Shop by category"
+            onScroll={() => {
+              const slider = sliderRef.current;
+              if (slider) setActiveSlide(Math.min(slideCount - 1, Math.round(slider.scrollLeft / slider.clientWidth)));
+            }}
+            className="scrollbar-none flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth pb-2 pt-1 sm:gap-4 lg:gap-5"
+          >
+            {categories.map((item, idx) => {
+              const hasSubs = Boolean(item.subCategories && item.subCategories.length > 0);
+              const isDropdownOpen = activeDropdown === item.slug;
 
-            return (
-              <div
-                key={item.slug || idx}
-                className="group relative flex w-[calc((100%_-_1rem)_/_3)] shrink-0 snap-start flex-col items-center px-0.5 text-center min-[640px]:w-[calc((100%_-_3rem)_/_4)] lg:w-[calc((100%_-_5rem)_/_6)]"
-                onMouseEnter={() => hasSubs && setActiveDropdown(item.slug)}
-                onMouseLeave={() => hasSubs && setActiveDropdown(null)}
-              >
-                {/* Main Action Link */}
-                <Link
-                  href={item.href}
-                  onClick={() => {
-                    if (window.innerWidth < 768) setActiveDropdown(null);
+              return (
+                <div
+                  key={item.slug || idx}
+                  className="group relative flex w-[calc((100%_-_1rem)_/_3)] shrink-0 snap-start flex-col items-center px-0.5 text-center min-[640px]:w-[calc((100%_-_3rem)_/_4)] lg:w-[calc((100%_-_5rem)_/_6)]"
+                  onMouseEnter={() => {
+                    if (hasSubs && typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+                      setActiveDropdown(item.slug);
+                    }
                   }}
-                  className="flex min-h-[112px] w-full flex-col items-center justify-start rounded-2xl px-1.5 py-2 transition-colors duration-300 hover:bg-white/70 sm:min-h-0 sm:rounded-none sm:px-0 sm:py-0 sm:hover:bg-transparent"
                 >
-                  {/* Circle with SVG Illustration & Arrow Icon */}
-                  <div className="relative mb-2 h-[58px] w-[58px] min-[360px]:h-[66px] min-[360px]:w-[66px] sm:h-[94px] sm:w-[94px]">
-                    <div className={`h-full w-full overflow-hidden rounded-full ${item.circleBg} shadow-md ring-4 ring-white border border-brand-accent/45 transition-all duration-300 group-hover:ring-brand-accent group-hover:shadow-lg`}>
-                      <RitualArt kind={item.art} className="h-full w-full scale-[1.12] p-1.5" />
+                  {/* Main Action Link */}
+                  <Link
+                    href={item.href}
+                    onClick={() => setActiveDropdown(null)}
+                    className="flex min-h-[104px] w-full flex-col items-center justify-start rounded-2xl px-1.5 py-1.5 transition-colors duration-300 hover:bg-brand-surface-soft sm:min-h-0 sm:rounded-none sm:px-0 sm:py-0 sm:hover:bg-transparent"
+                  >
+                    {/* Circle with SVG Illustration & Arrow Icon */}
+                    <div className="relative mb-2 h-[60px] w-[60px] min-[360px]:h-[68px] min-[360px]:w-[68px] sm:h-[94px] sm:w-[94px]">
+                      <div className={`h-full w-full overflow-hidden rounded-full ${item.circleBg} shadow-sm ring-4 ring-white border border-brand-accent/45 transition-all duration-300 group-hover:ring-brand-accent group-hover:shadow-md`}>
+                        <RitualArt kind={item.art} className="h-full w-full scale-[1.12] p-1.5" />
+                      </div>
+
+                      <div className={`absolute bottom-0 right-0 w-6 h-6 min-[360px]:w-7 min-[360px]:h-7 rounded-full ${item.arrowBg} flex items-center justify-center shadow-sm transition-transform duration-300 border-2 border-white sm:group-hover:scale-110`}>
+                        {hasSubs ? <ChevronDown size={13} className="text-brand-ink" /> : <ArrowRight size={13} className="text-brand-ink" />}
+                      </div>
                     </div>
 
-                    {/* Golden Arrow Badge / Series Indicator */}
-                    <div className={`absolute bottom-0 right-0 w-6 h-6 min-[360px]:w-7 min-[360px]:h-7 rounded-full ${item.arrowBg} flex items-center justify-center shadow-md transition-transform duration-300 border-2 border-white sm:group-hover:scale-110`}>
-                      {hasSubs ? <ChevronDown size={13} className="text-brand-ink" /> : <ArrowRight size={13} className="text-brand-ink" />}
+                    {/* Category Title */}
+                    <div className="max-w-full break-words font-brand text-ui-11 sm:text-ui-13 font-bold leading-snug text-brand-heading sm:group-hover:text-brand-primary sm:max-w-[128px] tracking-wide uppercase">
+                      {item.name}
                     </div>
-                  </div>
+                  </Link>
 
-                  {/* Category Title */}
-                  <div className="max-w-full break-words font-brand text-[11px] min-[360px]:text-xs sm:text-ui-13 font-bold leading-snug text-brand-heading sm:group-hover:text-brand-primary sm:max-w-[120px] tracking-wide uppercase">
-                    {item.name}
-                  </div>
-
-                  {/* Subcategory Hint Badge for Agarbatti */}
+                  {/* Accessible Click/Tap Toggle Button for Subcategories (Never Clipped!) */}
                   {hasSubs && (
-                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-brand-primary text-ui-10 sm:text-xs font-bold text-brand-accent px-2.5 py-0.5 shadow-xs border border-brand-accent/60">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setActiveDropdown(isDropdownOpen ? null : item.slug);
+                      }}
+                      aria-expanded={isDropdownOpen}
+                      className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-primary text-ui-11 font-bold text-brand-accent px-2.5 py-0.5 shadow-2xs border border-brand-accent/50 hover:bg-brand-hover transition"
+                    >
                       <span>3 Series</span>
-                      <ChevronDown size={10} />
-                    </span>
+                      <ChevronDown size={11} className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+                    </button>
                   )}
-                </Link>
+                </div>
+              );
+            })}
+          </div>
 
-                {/* Interactive Dropdown / Flyout Menu for Subcategories */}
-                {hasSubs && isDropdownOpen && (
-                  <div className={`absolute top-full z-50 w-[min(580px,calc(100vw-1.5rem))] pt-3 text-left animate-in fade-in slide-in-from-top-1 duration-150 ${
-                    idx > 4 ? "right-0" : "left-0"
-                  }`}>
-                    <div className="overflow-hidden rounded-3xl border border-[#E8D8B2] bg-white shadow-[0_20px_55px_rgba(36,44,35,0.2)]">
-                      <div className="flex items-start justify-between gap-4 bg-gradient-to-r from-brand-surface to-white px-5 py-4 sm:px-6">
-                        <div>
-                          <p className="flex items-center gap-2 text-ui-10 font-extrabold tracking-[.16em] text-brand-primary uppercase">
-                            <Sparkles size={14} className="text-brand-orange" /> Agarbatti collections
-                          </p>
-                          <p className="mt-1 text-xs text-[#68756D]">Choose a series, then pick a fragrance.</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setActiveDropdown(null)}
-                          aria-label="Close Agarbatti categories"
-                          className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#60716A] transition hover:bg-[#F4E9D4] hover:text-brand-primary"
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
+          {/* Interactive Non-Clipped Flyout Panel Positioned Outside overflow-x-auto */}
+          {activeSubCategoryOwner && (
+            <div className="absolute left-0 top-full z-50 w-full max-w-[600px] pt-2.5 text-left animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-brand-border bg-white shadow-[0_20px_50px_rgba(23,59,58,0.18)]">
+                <div className="flex items-start justify-between gap-4 border-b border-brand-border bg-brand-surface-soft px-5 py-4 sm:px-6">
+                  <div>
+                    <p className="flex items-center gap-2 text-xs font-extrabold tracking-[.14em] text-brand-primary uppercase">
+                      <Sparkles size={14} className="text-brand-orange" /> {activeSubCategoryOwner.name} Collections
+                    </p>
+                    <p className="mt-1 text-xs text-[#68756D]">Choose a series, then pick a fragrance.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveDropdown(null)}
+                    aria-label="Close Agarbatti categories"
+                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-brand-border bg-white text-brand-ink transition hover:border-brand-primary hover:text-brand-primary"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
 
-                      <div className="grid grid-cols-1 gap-3 px-4 pb-4 sm:grid-cols-2 sm:px-5">
-                        {item.subCategories?.map((sub) => (
-                          <section
-                            key={sub.slug}
-                            className={`rounded-2xl border border-[#EDE5D5] bg-[#FFFEFB] p-3.5 ${!sub.children ? "sm:col-span-2 sm:order-last" : ""}`}
+                <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5">
+                  {activeSubCategoryOwner.subCategories?.map((sub) => (
+                    <section
+                      key={sub.slug}
+                      className={`rounded-2xl border border-brand-border/80 bg-brand-surface-bright p-3.5 ${!sub.children ? "sm:col-span-2 sm:order-last" : ""}`}
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-brand-surface-warm text-brand-primary">
+                          {sub.icon === "sparkles" ? <Sparkles size={16} /> : sub.icon === "package" ? <Package size={16} /> : <Zap size={16} />}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <Link
+                            href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
+                            onClick={() => setActiveDropdown(null)}
+                            className="text-xs font-extrabold text-brand-ink transition hover:text-brand-primary"
                           >
-                            <div className="flex items-start gap-2.5">
-                              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-brand-surface-warm text-brand-primary">
-                                {sub.icon === "sparkles" ? <Sparkles size={16} /> : sub.icon === "package" ? <Package size={16} /> : <Zap size={16} />}
-                              </span>
-                              <div className="min-w-0 flex-1">
-                                <Link
-                                  href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
-                                  onClick={() => setActiveDropdown(null)}
-                                  className="text-xs font-extrabold text-brand-ink transition hover:text-brand-primary"
-                                >
-                                  {sub.name}
-                                </Link>
-                                <p className="mt-0.5 text-ui-10 leading-relaxed text-[#75827B]">{sub.desc}</p>
-                              </div>
-                              <Link
-                                href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
-                                onClick={() => setActiveDropdown(null)}
-                                aria-label={`Browse ${sub.name}`}
-                                className="mt-1 text-brand-primary transition hover:translate-x-0.5"
-                              >
-                                <ArrowRight size={14} />
-                              </Link>
-                            </div>
-                            {sub.children && (
-                              <div className="mt-3 flex flex-wrap gap-1.5">
-                                {sub.children.map((child) => (
-                                  <Link
-                                    key={child.slug}
-                                    href={`/product/${child.slug}`}
-                                    onClick={() => setActiveDropdown(null)}
-                                    className="rounded-full border border-[#E8D8B2] bg-white px-2.5 py-1 text-ui-10 font-semibold text-[#455A50] transition hover:border-brand-primary hover:bg-brand-primary hover:text-white"
-                                  >
-                                    {child.name}
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </section>
-                        ))}
-                      </div>
-
-                      <div className="border-t border-[#F1E7D5] bg-[#FFFCF5] px-4 py-3 sm:px-5">
+                            {sub.name}
+                          </Link>
+                          <p className="mt-0.5 text-ui-11 leading-relaxed text-[#5F6D66]">{sub.desc}</p>
+                        </div>
                         <Link
-                          href="/shop?category=agarbatti"
+                          href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
                           onClick={() => setActiveDropdown(null)}
-                          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#7E1027]"
+                          aria-label={`Browse ${sub.name}`}
+                          className="mt-1 text-brand-primary transition hover:translate-x-0.5"
                         >
-                          View all Agarbatti <ArrowRight size={14} />
+                          <ArrowRight size={14} />
                         </Link>
                       </div>
-                    </div>
-                  </div>
-                )}
+                      {sub.children && (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {sub.children.map((child) => (
+                            <Link
+                              key={child.slug}
+                              href={`/product/${child.slug}`}
+                              onClick={() => setActiveDropdown(null)}
+                              className="rounded-full border border-brand-border bg-white px-2.5 py-1 text-ui-11 font-semibold text-brand-ink transition hover:border-brand-primary hover:bg-brand-primary hover:text-white"
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </section>
+                  ))}
+                </div>
+
+                <div className="border-t border-brand-border bg-brand-surface-soft px-4 py-3 sm:px-5">
+                  <Link
+                    href="/shop?category=agarbatti"
+                    onClick={() => setActiveDropdown(null)}
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-xs font-bold text-white transition hover:bg-brand-hover"
+                  >
+                    View all {activeSubCategoryOwner.name} <ArrowRight size={14} />
+                  </Link>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          )}
         </div>
 
         {slideCount > 1 && (

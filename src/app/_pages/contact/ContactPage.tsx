@@ -42,7 +42,7 @@ export default function ContactPage() {
       title="How Can We Help You?"
       subtitle="Contact our Coimbatore team about products, orders, bulk enquiries, or anything else you need help with."
     >
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <main className="page-container py-8 sm:py-12">
         <div className="grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-7">
           <section className="space-y-4">
             <div className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:p-6">

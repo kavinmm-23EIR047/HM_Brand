@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShieldCheck, Lock, CreditCard, Truck, Check, ArrowLeft, ArrowRight, Sparkles, MapPin, CheckCircle2, Plus, Home, Tag } from "lucide-react";
+import { ShieldCheck, Lock, CreditCard, Truck, Check, ArrowLeft, ArrowRight, Sparkles, MapPin, CheckCircle2, Plus, Home, Phone, Tag } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore, UserAddress } from "@/components/store";
 import { SHIPPING_CONFIG } from "@/lib/shipping";
 import { CheckoutPageSkeleton } from "@/components/loading-skeletons";
+import { SacredDiyaSvg } from "@/components/sacred-icons";
 
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
@@ -383,7 +384,7 @@ export default function CheckoutPage() {
                           : "bg-brand-surface border border-brand-brown/30 text-brand-brown"
                       }`}
                     >
-                      {step > s.n ? "✓" : s.n}
+                      {step > s.n ? <Check size={14} strokeWidth={3} /> : s.n}
                     </span>
                     <span
                       className={`text-xs font-bold uppercase tracking-wider ${
@@ -461,14 +462,22 @@ export default function CheckoutPage() {
                                 <p className="text-ui-11 text-brand-charcoal/80 line-clamp-2 leading-relaxed">
                                   {addr.street}, {addr.city}, {addr.state} - {addr.postalCode}
                                 </p>
-                                <p className="text-ui-10 text-brand-charcoal/60">
-                                  📞 {addr.phone}
+                                <p className="inline-flex items-center gap-1.5 text-ui-10 text-brand-charcoal/70">
+                                  <Phone size={11} className="shrink-0 text-brand-brown" />
+                                  <span>{addr.phone}</span>
                                 </p>
                               </div>
 
                               <div className="mt-2 pt-2 border-t border-brand-gold/20 flex items-center justify-between">
-                                <span className={`text-ui-10 font-bold ${isSelected ? "text-brand-saffron-dark" : "text-brand-brown/60"}`}>
-                                  {isSelected ? "✓ Deliver Here" : "Deliver to this address"}
+                                <span className={`inline-flex items-center gap-1 text-ui-10 font-bold ${isSelected ? "text-brand-saffron-dark" : "text-brand-brown/60"}`}>
+                                  {isSelected ? (
+                                    <>
+                                      <Check size={12} strokeWidth={2.5} />
+                                      <span>Deliver Here</span>
+                                    </>
+                                  ) : (
+                                    "Deliver to this address"
+                                  )}
                                 </span>
                               </div>
                             </button>
@@ -806,7 +815,7 @@ export default function CheckoutPage() {
                             className="object-contain"
                           />
                         ) : (
-                          <span className="text-xl">🪔</span>
+                          <SacredDiyaSvg className="h-7 w-7" />
                         )}
                         <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-ui-9 font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center shadow-xs">
                           {l.qty}

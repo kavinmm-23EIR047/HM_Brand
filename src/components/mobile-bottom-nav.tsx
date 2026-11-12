@@ -39,7 +39,7 @@ export function MobileBottomNav() {
     };
   }, [pathname]);
 
-  if (pathname?.startsWith("/admin") || pathname === "/login") return null;
+  if (pathname?.startsWith("/admin") || pathname === "/login" || pathname?.startsWith("/product/")) return null;
 
   const itemClass = (active: boolean) =>
     `flex h-12 min-w-[52px] flex-col items-center justify-center gap-1 text-xs font-bold tracking-wide transition-colors ${

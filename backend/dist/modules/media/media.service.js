@@ -9,6 +9,7 @@ const cloudinary_1 = require("../../shared/cloudinary");
 const custom_error_1 = require("../../shared/errors/custom.error");
 const slug_util_1 = require("../../shared/utils/slug.util");
 const image_optimizer_1 = require("../../shared/image-optimizer");
+const products_search_1 = require("../products/products.search");
 exports.mediaTypes = ['PRODUCT', 'CATEGORY', 'BANNER', 'HOMEPAGE', 'COLLECTION', 'FESTIVAL', 'OTHER'];
 function safeSlug(value, label) {
     const slug = (0, slug_util_1.generateSlug)(value);
@@ -53,7 +54,8 @@ class MediaService {
                     image.storageKey.endsWith(`/${productSlug}-${suffix}.webp`)))) {
                 suffix += 1;
             }
-            const existingFilename = requestedImage?.storageKey?.split('/').pop();
+            const rawExistingName = requestedImage?.storageKey?.split('/').pop()?.replace(/\.[a-z0-9]+$/i, '');
+            const existingFilename = rawExistingName ? (0, slug_util_1.generateSlug)(rawExistingName).slice(0, 120) : '';
             filename = requestedImage
                 ? (existingFilename || (primary && !hasBaseSlug ? productSlug : `${productSlug}-${suffix}`))
                 : (primary && !hasBaseSlug && product.images.length === 0
@@ -146,6 +148,8 @@ class MediaService {
         const uploaded = await (0, cloudinary_1.uploadImage)(optimized.buffer, { folder, publicId: filename });
         try {
             const record = await applyUpload(uploaded.secureUrl, uploaded.publicId);
+            if (type === 'PRODUCT')
+                (0, products_search_1.invalidateSearchCache)();
             return {
                 ...uploaded,
                 format: optimized.format,
@@ -181,6 +185,7 @@ class MediaService {
                 });
             }
         }
+        (0, products_search_1.invalidateSearchCache)();
     }
     async delete(typeValue, entityId, data) {
         const type = asType(typeValue);

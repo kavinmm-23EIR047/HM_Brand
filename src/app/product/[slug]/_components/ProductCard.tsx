@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, ShoppingBag, Star, Tag } from "lucide-react";
 import { useStore } from "@/components/store";
-import type { Product } from "@/lib/products";
+import { hasProductRating, type Product } from "@/lib/products";
+import { SacredDiyaSvg } from "@/components/sacred-icons";
 
 export function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
@@ -40,15 +41,15 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs hover:border-2 hover:border-brand-accent hover:shadow-lg transition-all duration-300">
-      {/* Top Image & Badge Container - Full Width Edge-to-Edge */}
-      <div className="relative aspect-square w-full overflow-hidden bg-brand-surface-alt border-b border-brand-border/70 flex items-center justify-center">
-        <Link href={`/product/${product.slug}`} className="absolute inset-0 flex items-center justify-center">
+    <article className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs hover:border-brand-primary hover:shadow-md transition-all duration-300">
+      {/* Top Image & Badge Container - Full Width Uncropped */}
+      <div className="relative aspect-square w-full overflow-hidden bg-brand-surface-soft border-b border-brand-border/70 flex items-center justify-center p-2.5 sm:p-3.5">
+        <Link href={`/product/${product.slug}`} className="flex h-full w-full items-center justify-center">
           {product.image ? (
             <img
               src={product.image}
               alt={product.name}
-              className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+              className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]"
               onError={(e) => {
                 const target = e.currentTarget as HTMLImageElement;
                 if (!target.src.includes("hm_glory_agarbatti")) {
@@ -57,9 +58,9 @@ export function ProductCard({ product }: { product: Product }) {
               }}
             />
           ) : (
-            <div className="text-center text-brand-ink select-none p-4">
-              <span className="text-4xl block transition transform group-hover:scale-110">🪔</span>
-              <p className="mt-2 font-space text-ui-10 font-bold tracking-widest text-brand-primary uppercase">
+            <div className="flex flex-col items-center text-center text-brand-ink select-none p-4">
+              <SacredDiyaSvg className="h-11 w-11 transition transform group-hover:scale-110" />
+              <p className="mt-2.5 font-space text-ui-11 font-bold tracking-widest text-brand-primary uppercase">
                 HM AGARBATTIS
               </p>
               <p className="text-xs font-semibold text-brand-ink mt-0.5">{product.subCategory || product.category}</p>
@@ -70,7 +71,7 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Badge */}
         {product.badge && (
           <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-ui-11 sm:text-xs font-bold uppercase tracking-wider text-brand-primary shadow-xs border border-brand-border">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-ui-11 sm:text-xs font-bold uppercase tracking-wider text-brand-primary shadow-xs border border-brand-border">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-primary" />
               {product.badge}
             </span>
@@ -84,10 +85,10 @@ export function ProductCard({ product }: { product: Product }) {
             toggleWishlist(product.slug);
           }}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute right-2.5 top-2.5 z-10 h-8 w-8 rounded-lg flex items-center justify-center transition border shadow-2xs ${
+          className={`absolute right-2.5 top-2.5 z-10 h-9 w-9 rounded-full flex items-center justify-center transition border shadow-2xs ${
             wishlisted
               ? "bg-brand-primary text-white border-brand-primary"
-              : "bg-white/95 text-brand-ink/80 border-brand-border hover:bg-brand-primary hover:text-white hover:border-brand-primary"
+              : "bg-white text-brand-ink/80 border-brand-border hover:bg-brand-primary hover:text-white hover:border-brand-primary"
           }`}
         >
           <Heart size={15} fill={wishlisted ? "currentColor" : "none"} />
@@ -95,10 +96,10 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Product Information */}
-      <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
+      <div className="flex min-w-0 flex-1 flex-col justify-between p-3.5 sm:p-4">
         <div>
           {/* Rating (Render only if real backend rating & reviews exist) */}
-          {Boolean(product.rating && product.reviewCount && product.reviewCount > 0) ? (
+          {hasProductRating(product) ? (
             <div className="flex items-center gap-1.5 text-xs sm:text-sm mb-1.5">
               <div className="flex text-[#F47A20]">
                 <Star size={13} fill="currentColor" />
@@ -107,7 +108,7 @@ export function ProductCard({ product }: { product: Product }) {
               <span className="text-[#4B5563] text-xs font-medium">({product.reviewCount})</span>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 text-[11px] text-[#287541] font-semibold mb-1.5">
+            <div className="flex items-center gap-1.5 text-xs text-[#287541] font-semibold mb-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-[#287541]" />
               <span>Pure Sacred Purity</span>
             </div>
@@ -121,7 +122,7 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
 
           {/* Note / Subtitle - Crisp high contrast */}
-          <p className="mt-1 text-ui-11 sm:text-xs leading-relaxed text-brand-gray font-sans font-normal">
+          <p className="mt-1 text-xs leading-relaxed text-brand-gray font-sans font-normal">
             {product.note}
           </p>
           {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (

@@ -5,6 +5,7 @@ const products_repository_1 = require("./products.repository");
 const slug_util_1 = require("../../shared/utils/slug.util");
 const custom_error_1 = require("../../shared/errors/custom.error");
 const media_service_1 = require("../media/media.service");
+const products_search_1 = require("./products.search");
 class ProductsService {
     repo;
     constructor(repo = products_repository_1.productsRepository) {
@@ -70,6 +71,7 @@ class ProductsService {
             sku,
             slug,
         });
+        (0, products_search_1.invalidateSearchCache)();
         return created;
     }
     async updateProduct(id, data) {
@@ -100,6 +102,7 @@ class ProductsService {
             ...(couponCode !== undefined ? { couponCode } : {}),
             slug,
         });
+        (0, products_search_1.invalidateSearchCache)();
         return updated;
     }
     async addProductImage(productId, imageData) {
@@ -108,6 +111,7 @@ class ProductsService {
             throw new custom_error_1.NotFoundError('Product not found');
         }
         const res = await this.repo.addImage(productId, imageData);
+        (0, products_search_1.invalidateSearchCache)();
         return res;
     }
     async removeProductImage(imageId) {
@@ -122,7 +126,9 @@ class ProductsService {
         if (!targetImage) {
             throw new custom_error_1.NotFoundError('Product image not found on this product');
         }
-        return this.repo.setPrimaryImage(productId, imageId);
+        const res = await this.repo.setPrimaryImage(productId, imageId);
+        (0, products_search_1.invalidateSearchCache)();
+        return res;
     }
     async deleteProduct(id) {
         const product = await this.repo.findById(id);
@@ -130,6 +136,7 @@ class ProductsService {
             throw new custom_error_1.NotFoundError('Product not found');
         }
         const res = await this.repo.delete(id);
+        (0, products_search_1.invalidateSearchCache)();
         return res;
     }
 }

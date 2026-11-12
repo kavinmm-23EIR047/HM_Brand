@@ -24,13 +24,13 @@ import { ProductGallery } from "./_components/ProductGallery";
 import { RelatedProductsSlider } from "./_components/RelatedProductsSlider";
 import { AddPanel } from "./_components/AddPanel";
 import { Lotus } from "@/components/illustrations/Lotus";
-import { getProductSpecConfig, mapDbProductToProduct, type Product } from "@/lib/products";
+import { getProductSpecConfig, hasProductRating, mapDbProductToProduct, type Product } from "@/lib/products";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 async function getProduct(slug: string): Promise<Product | null> {
   try {
-    const res = await fetch(`${API}/products/${slug}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API}/products/${slug}`, { cache: "no-store" });
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) return mapDbProductToProduct(json.data);
@@ -44,7 +44,7 @@ async function getProduct(slug: string): Promise<Product | null> {
 async function getRelatedProducts(product: Product): Promise<Product[]> {
   try {
     const catQuery = encodeURIComponent(product.category.toLowerCase().replace(/\s+&\s+/g, "-").replace(/\s+/g, "-"));
-    const res = await fetch(`${API}/products?category=${catQuery}&limit=8`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API}/products?category=${catQuery}&limit=8`, { cache: "no-store" });
     if (res.ok) {
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
@@ -112,7 +112,7 @@ export default async function ProductDetailsPage({
       subtitle={product.note}
       showHero={false}
     >
-      <div className="max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1480px] mx-auto px-3.5 sm:px-6 lg:px-8 py-3 sm:py-8 pb-28 md:pb-8 space-y-5 sm:space-y-12">
+      <div className="page-container py-4 sm:py-8 pb-28 md:pb-8 space-y-6 sm:space-y-12">
 
         {/* ─── 1. BREADCRUMB ─── */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-ui-13 font-medium text-stone-500">
@@ -153,7 +153,7 @@ export default async function ProductDetailsPage({
                   {product.subCategory ? ` · ${product.subCategory}` : ""}
                 </span>
 
-                {Boolean(product.rating && product.reviewCount && product.reviewCount > 0) ? (
+                {hasProductRating(product) ? (
                   <div className="flex items-center gap-2 text-xs">
                     <div className="flex text-[#D97706]">
                       {Array.from({ length: 5 }).map((_, i) => (
@@ -334,7 +334,7 @@ export default async function ProductDetailsPage({
                 <span className="font-brand text-[13px] sm:text-sm font-bold uppercase tracking-wider text-[#111827] block">
                   Aromatic Notes
                 </span>
-                <div className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {(product.fragranceNotes && product.fragranceNotes.length > 0
                     ? product.fragranceNotes
                     : ["Natural Resins", "Essential Oils", "Botanicals"]
@@ -342,7 +342,7 @@ export default async function ProductDetailsPage({
                     <span
                       key={note}
                       title={note}
-                      className="inline-flex min-w-0 w-full sm:w-auto items-center justify-center gap-1 rounded-full bg-[#FAF7EE] border border-[#EADBBD] px-1.5 py-1.5 sm:gap-1.5 sm:px-4 font-brand text-[10px] min-[390px]:text-[11px] sm:text-sm font-bold uppercase tracking-tight sm:tracking-wider leading-tight text-center text-[#111827] shadow-2xs hover:border-[#F6C84C] transition-colors"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#FAF7EE] border border-[#EADBBD] px-3.5 py-1.5 sm:px-4 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider leading-tight text-center text-[#111827] shadow-2xs hover:border-[#F6C84C] transition-colors"
                     >
                       {idx === 0 ? (
                         <Leaf size={11} className="shrink-0 text-[#287541] sm:h-[13px] sm:w-[13px]" />
@@ -408,8 +408,8 @@ export default async function ProductDetailsPage({
         {/* ─── 4. DUAL CARDS: BOTANICAL BENEFITS & NATURAL CARE ─── */}
         <section className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-2">
           
-          {/* Left Card: Sacred Botanical Benefits (Mint Gradient + Leaf Motif) */}
-          <div className="rounded-2xl sm:rounded-3xl border border-brand-positive-soft bg-gradient-to-br from-brand-surface-soft via-brand-positive-soft to-brand-positive-soft p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
+          {/* Left Card: Sacred Botanical Benefits (Mint Surface) */}
+          <div className="rounded-2xl sm:rounded-3xl border border-brand-positive-soft bg-[#F2F8F3] p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
             <div>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-green-dark uppercase mb-1">
                 <Leaf size={13} />
@@ -421,7 +421,7 @@ export default async function ProductDetailsPage({
             </div>
 
             {/* 3 Benefit Badges */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-3.5 pt-1 sm:pt-2">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 sm:gap-4 pt-1 sm:pt-2">
               <div className="space-y-1 sm:space-y-2">
                 <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
                   <Leaf size={15} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
@@ -460,8 +460,8 @@ export default async function ProductDetailsPage({
             </div>
           </div>
 
-          {/* Right Card: Preserving Maximum Fragrance (Peach Gradient + Lotus Motif) */}
-          <div className="rounded-2xl sm:rounded-3xl border border-brand-surface-warm bg-gradient-to-br from-brand-surface-cream via-brand-surface-cream to-brand-surface-promo p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
+          {/* Right Card: Preserving Maximum Fragrance (Warm Cream Surface) */}
+          <div className="rounded-2xl sm:rounded-3xl border border-brand-surface-warm bg-[#FFFBF4] p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
             <div>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-primary uppercase mb-1">
                 <Sparkles size={13} />
@@ -473,7 +473,7 @@ export default async function ProductDetailsPage({
             </div>
 
             {/* 3 Care Badges */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-3.5 pt-1 sm:pt-2">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 sm:gap-4 pt-1 sm:pt-2">
               <div className="space-y-1 sm:space-y-2">
                 <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
                   <Sun size={15} className="sm:hidden" /><Sun size={18} className="hidden sm:block" />

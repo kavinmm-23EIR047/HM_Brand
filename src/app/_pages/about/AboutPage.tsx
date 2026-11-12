@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, Leaf, Heart, Sparkles, CheckCircle2 } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import { PureHeartCuppedSvg, SacredBotanicalSvg, SacredLotusSvg } from "@/components/sacred-icons";
 
 export default function AboutPage() {
   const pillarsSliderRef = useRef<HTMLDivElement>(null);
@@ -130,21 +131,16 @@ export default function AboutPage() {
   }, [activePillar, canSlidePillars, pausePillarAutoplay, pillars.length]);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] text-brand-ink flex flex-col justify-between w-full max-w-full overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-[#FAF7F0] text-brand-ink flex flex-col justify-between w-full max-w-full overflow-x-clip font-sans">
       <Navigation />
 
-      <main className="w-full max-w-full overflow-x-hidden">
+      <main className="w-full max-w-full overflow-x-clip">
         {/* ========================================================================= */}
         {/* SECTION 1: HERO SECTION                                                   */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-brand-surface-soft pt-8 sm:pt-14 pb-16 sm:pb-24 overflow-hidden">
-          {/* Subtle Ambient Glow */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-24 right-1/4 h-96 w-96 rounded-full bg-brand-surface-warm blur-3xl opacity-60"
-          />
+        <section className="relative w-full bg-brand-surface-soft pt-8 sm:pt-14 pb-16 sm:pb-24 border-b border-brand-border overflow-hidden">
 
-          <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+          <div className="page-container relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               
               {/* Left Column: Headline, Narrative & Trust Pills */}
@@ -174,16 +170,16 @@ export default function AboutPage() {
 
                 {/* 3 Pills Below CTA */}
                 <div className="pt-2 flex flex-wrap items-center gap-2 sm:gap-3">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-brand-green/25 px-3 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
-                    <span className="text-brand-green">🍃</span>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-green/30 px-3 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
+                    <SacredBotanicalSvg className="h-4 w-4 text-brand-green" />
                     <span>Natural Ingredients</span>
                   </div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-brand-primary/25 px-3 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
-                    <span className="text-brand-primary">🪷</span>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-primary/30 px-3 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
+                    <SacredLotusSvg className="h-4 w-4" />
                     <span>Traditional Craftsmanship</span>
                   </div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-brand-orange/25 px-3 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
-                    <span className="text-brand-orange">🤍</span>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-orange/30 px-3 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
+                    <PureHeartCuppedSvg className="h-4 w-4 text-brand-orange" />
                     <span>Wellbeing for Every Home</span>
                   </div>
                 </div>
@@ -191,7 +187,7 @@ export default function AboutPage() {
 
               {/* Right Column: Hero Altar Imagery with Floating Script */}
               <div className="lg:col-span-6 xl:col-span-5 relative flex justify-center items-center">
-                <div className="relative w-full max-w-[480px] aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border-4 border-white/80 bg-white group">
+                <div className="relative w-full max-w-[480px] aspect-[4/3] rounded-3xl overflow-hidden shadow-card border-2 border-brand-border ring-4 ring-white bg-white group">
                   <Image
                     src="/images/about/hero-incense.jpg"
                     alt="Sacred South Indian puja altar with burning incense sticks releasing delicate fragrant smoke, blooming pink lotus and glowing brass diya"
@@ -200,9 +196,6 @@ export default function AboutPage() {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 480px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-
-                  {/* Gentle Gradient Vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                 </div>
 
                 {/* Floating Handwritten Script Note */}
@@ -232,13 +225,13 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 2: OUR STORY (WESTERN GHATS HERITAGE)                             */}
         {/* ========================================================================= */}
-        <section id="story" className="relative w-full bg-[#F5F8F2] py-14 sm:py-20 lg:py-24 overflow-hidden scroll-mt-20">
-          <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+        <section id="story" className="relative w-full bg-[#F5F8F2] py-14 sm:py-20 lg:py-24 border-b border-brand-border overflow-hidden scroll-mt-20">
+          <div className="page-container relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
               
               {/* Left Column: Spiritual Painting Illustration */}
               <div className="lg:col-span-6 relative flex justify-center">
-                <div className="relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border-4 border-white bg-white group">
+                <div className="relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-card border-2 border-brand-border ring-4 ring-white bg-white group">
                   <Image
                     src="/images/about/western-ghats-heritage.jpg"
                     alt="Serene Indian woman in white saree meditating in front of ancient South Indian temple tower at the foothills of Western Ghats in golden sunrise mist"
@@ -271,15 +264,15 @@ export default function AboutPage() {
                 {/* 3 Badges */}
                 <div className="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-ink border border-brand-green/30 shadow-2xs">
-                    <span>🍃</span>
+                    <SacredBotanicalSvg className="h-4 w-4 text-brand-green" />
                     <span>Coimbatore Heritage</span>
                   </div>
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-ink border border-brand-primary/30 shadow-2xs">
-                    <span>🪷</span>
+                    <SacredLotusSvg className="h-4 w-4" />
                     <span>100% Charcoal-Free</span>
                   </div>
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-ink border border-brand-orange/30 shadow-2xs">
-                    <span>🤍</span>
+                    <PureHeartCuppedSvg className="h-4 w-4 text-brand-orange" />
                     <span>Pure Botanical Resins</span>
                   </div>
                 </div>
@@ -304,8 +297,8 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 3: OUR 3 SACRED PILLARS                                           */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-brand-surface-bright py-16 sm:py-24 overflow-hidden">
-          <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+        <section className="relative w-full bg-brand-surface-bright py-16 sm:py-24 overflow-hidden scroll-mt-20" id="pillars">
+          <div className="page-container relative">
             
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
@@ -345,20 +338,20 @@ export default function AboutPage() {
               {pillars.map((pillar, index) => (
                 <div
                   key={pillar.number}
-                  className="group relative flex min-h-[205px] w-[min(72vw,320px)] shrink-0 snap-start flex-col items-start rounded-2xl border border-brand-border bg-white p-4 text-left shadow-sm sm:w-[min(62vw,360px)] md:min-h-0 md:w-auto md:shrink md:snap-none md:items-center md:rounded-none md:border-0 md:bg-transparent md:p-0 md:text-center md:shadow-none"
+                  className="group relative flex min-h-[220px] w-[min(78vw,320px)] shrink-0 snap-start flex-col items-start rounded-2xl border border-brand-border bg-white p-5 sm:p-6 text-left shadow-2xs transition hover:border-brand-primary/50 hover:shadow-card sm:w-[min(62vw,360px)] md:min-h-0 md:w-auto md:shrink md:snap-none md:items-center md:text-center"
                 >
                   <div className="mb-3 flex w-full items-center justify-between">
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${index === 0 ? "bg-brand-green/10 text-brand-green" : index === 1 ? "bg-brand-primary/10 text-brand-primary" : "bg-brand-orange/10 text-brand-orange"}`}>
+                    <span className={`flex h-10 w-10 items-center justify-center rounded-xl border border-brand-border/60 ${index === 0 ? "bg-brand-green/10 text-brand-green" : index === 1 ? "bg-brand-primary/10 text-brand-primary" : "bg-brand-orange/10 text-brand-orange"}`}>
                       {index === 0 ? <Leaf size={19} /> : index === 1 ? <Heart size={19} /> : <Sparkles size={19} />}
                     </span>
-                    <span className="rounded-full border border-brand-accent/50 bg-brand-surface-warm px-2.5 py-1 font-space text-[10px] font-bold text-brand-amber">{pillar.number}</span>
+                    <span className="rounded-full border border-brand-border bg-brand-surface-warm px-3 py-1 font-space text-ui-11 font-bold text-brand-amber">{pillar.number}</span>
                   </div>
                   <h3 className="font-playfair text-lg font-bold leading-snug text-brand-ink md:text-xl">{pillar.title}</h3>
-                  <span className="mt-1.5 mb-2 inline-flex rounded-md bg-brand-primary/5 px-2 py-1 font-space text-[10px] font-bold tracking-wide text-brand-primary uppercase">{pillar.badge}</span>
-                  <p className="max-w-xs text-xs leading-relaxed text-brand-ink/75 md:text-sm">{pillar.desc}</p>
-                  <div className="mt-auto flex w-full items-center justify-between border-t border-brand-border/60 pt-2.5 font-space text-[9px] font-semibold tracking-wider text-brand-muted md:mt-4">
+                  <span className="mt-2 mb-2.5 inline-flex rounded-md border border-brand-primary/15 bg-brand-surface-soft px-2.5 py-1 font-space text-ui-11 font-bold tracking-wide text-brand-primary uppercase">{pillar.badge}</span>
+                  <p className="max-w-xs text-xs leading-relaxed text-brand-ink/80 md:text-sm">{pillar.desc}</p>
+                  <div className="mt-auto flex w-full items-center justify-between border-t border-brand-border pt-3 font-space text-ui-11 font-semibold tracking-wider text-brand-muted md:mt-5">
                     <span>HM PURITY</span>
-                    <span className={`h-1.5 w-1.5 rounded-full ${index === 1 ? "bg-brand-primary" : "bg-brand-green"}`} />
+                    <span className={`h-2 w-2 rounded-full ${index === 1 ? "bg-brand-primary" : "bg-brand-green"}`} />
                   </div>
                 </div>
               ))}
@@ -385,8 +378,8 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 4: HOLISTIC WELLBEING — WHY CHOOSE HM AGARBATTIS?                 */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-brand-surface-soft py-16 sm:py-24 border-t border-brand-accent/25 overflow-hidden">
-          <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+        <section className="relative w-full bg-brand-surface-soft py-16 sm:py-24 border-y border-brand-border overflow-hidden">
+          <div className="page-container relative">
             
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
@@ -401,16 +394,16 @@ export default function AboutPage() {
               </p>
             </div>
 
-            {/* 4 Reasons Editorial Grid with Subtle Separators */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 divide-y sm:divide-y-0 lg:divide-x divide-[var(--brand-accent)]/35">
+            {/* 4 Reasons Bordered Editorial Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
               {reasons.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col items-center text-center px-4 pt-6 sm:pt-0 group"
+                  className="flex flex-col items-center text-center rounded-2xl border border-brand-border bg-white p-6 shadow-2xs transition hover:border-brand-primary/50 hover:shadow-card group"
                 >
                   {/* Icon Circle */}
                   <div
-                    className={`h-16 w-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 shadow-2xs ${item.bg}`}
+                    className={`h-16 w-16 rounded-full border border-brand-border flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105 shadow-2xs ${item.bg}`}
                   >
                     {item.icon}
                   </div>
@@ -434,18 +427,8 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 5: ELEVATE YOUR DAILY RITUALS (BOTTOM CTA BANNER)                 */}
         {/* ========================================================================= */}
-        <section className="relative w-full overflow-hidden bg-gradient-to-r from-brand-rich-red via-brand-mid-rich to-brand-darkest text-white py-12 sm:py-16 lg:py-20">
-          {/* Subtle Organic Background Curve */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-white/5 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand-accent/10 blur-3xl"
-          />
-
-          <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+        <section className="relative w-full overflow-hidden bg-brand-primary text-white py-12 sm:py-16 lg:py-20">
+          <div className="page-container relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               
               {/* Left Column: CTA Heading, Copy & Action */}
@@ -483,7 +466,6 @@ export default function AboutPage() {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
 

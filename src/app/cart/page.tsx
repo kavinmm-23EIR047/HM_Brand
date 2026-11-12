@@ -9,6 +9,7 @@ import { MascotBasket } from "@/components/mascot-art";
 import { useStore } from "@/components/store";
 import { SHIPPING_CONFIG } from "@/lib/shipping";
 import { CartPageSkeleton } from "@/components/loading-skeletons";
+import { SacredDiyaSvg } from "@/components/sacred-icons";
 
 export default function CartPage() {
   const {
@@ -88,7 +89,7 @@ export default function CartPage() {
                   <span>
                     {amountLeft > 0
                       ? `Add ₹${amountLeft} more to unlock FREE Delivery!`
-                      : "🎉 Congratulations! You have unlocked FREE Delivery across India."}
+                      : "Congratulations! You have unlocked FREE Delivery across India."}
                   </span>
                 </div>
                 <div className="w-full sm:w-36 h-2 bg-brand-gold/20 rounded-full overflow-hidden">
@@ -117,7 +118,7 @@ export default function CartPage() {
                             className="object-contain"
                           />
                         ) : (
-                          <span className="text-3xl">🪔</span>
+                          <SacredDiyaSvg className="h-9 w-9" />
                         )}
                       </div>
                       <div>
@@ -190,13 +191,13 @@ export default function CartPage() {
               <div className="flex items-center justify-between gap-2 pt-2">
                 <Link
                   href="/shop"
-                  className="inline-flex min-w-0 items-center gap-1 whitespace-nowrap text-ui-10 font-bold uppercase tracking-normal text-brand-brown hover:text-brand-saffron-dark sm:text-xs sm:tracking-wider"
+                  className="inline-flex min-w-0 items-center gap-1 whitespace-nowrap text-xs font-bold uppercase tracking-wide text-brand-brown hover:text-brand-saffron-dark"
                 >
                   ← Continue Shopping
                 </Link>
                 <button
                   onClick={clear}
-                  className="whitespace-nowrap text-ui-10 font-semibold text-brand-danger hover:underline sm:text-xs"
+                  className="whitespace-nowrap text-xs font-semibold text-brand-danger hover:underline"
                 >
                   Clear Entire Basket
                 </button>

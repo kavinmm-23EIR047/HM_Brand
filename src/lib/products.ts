@@ -330,6 +330,31 @@ export function getProductSpecConfig(product: {
   return PRODUCT_KIND_CONFIG.agarbatti;
 }
 
+/** Return true only when real backend rating and review count exist. */
+export function hasProductRating(product: {
+  rating?: number | null;
+  reviewCount?: number | null;
+}): boolean {
+  return (
+    typeof product.rating === "number" &&
+    Number.isFinite(product.rating) &&
+    product.rating > 0 &&
+    typeof product.reviewCount === "number" &&
+    Number.isFinite(product.reviewCount) &&
+    product.reviewCount > 0
+  );
+}
+
+const MEDIA_ORIGIN = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1").replace(/\/api\/v\d+\/?$/i, "");
+
+export function normalizeProductImageUrl(rawUrl?: string | null): string {
+  if (!rawUrl || typeof rawUrl !== "string") return "";
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("/uploads/")) return `${MEDIA_ORIGIN}${trimmed}`;
+  return trimmed;
+}
+
 export function mapDbProductToProduct(p: any): Product {
   const rawImages: any[] = Array.isArray(p.images) ? p.images : [];
   const seenUrls = new Set<string>();
@@ -337,37 +362,33 @@ export function mapDbProductToProduct(p: any): Product {
 
   for (let idx = 0; idx < rawImages.length; idx++) {
     const img = rawImages[idx];
-    if (img?.url && typeof img.url === "string") {
-      const trimmed = img.url.trim();
-      if (trimmed && !seenUrls.has(trimmed)) {
-        seenUrls.add(trimmed);
-        uniqueImages.push({
-          id: img.id,
-          url: trimmed,
-          storageKey: img.storageKey,
-          altText: img.altText || p.name,
-          isPrimary: Boolean(img.isPrimary || (uniqueImages.length === 0 && !rawImages.some((i: any) => i.isPrimary))),
-          displayOrder: typeof img.displayOrder === 'number' ? img.displayOrder : idx,
-        });
-      }
-    }
-  }
-
-  if (uniqueImages.length === 0 && p.imageUrl && typeof p.imageUrl === "string" && p.imageUrl.trim()) {
-    const trimmed = p.imageUrl.trim();
-    if (!seenUrls.has(trimmed)) {
+    const trimmed = normalizeProductImageUrl(img?.url);
+    if (trimmed && !seenUrls.has(trimmed)) {
       seenUrls.add(trimmed);
       uniqueImages.push({
+        id: img.id,
         url: trimmed,
-        altText: p.name,
-        isPrimary: true,
-        displayOrder: 0,
+        storageKey: img.storageKey,
+        altText: img.altText || p.name,
+        isPrimary: Boolean(img.isPrimary || (uniqueImages.length === 0 && !rawImages.some((i: any) => i.isPrimary))),
+        displayOrder: typeof img.displayOrder === 'number' ? img.displayOrder : idx,
       });
     }
   }
 
+  const fallbackDirect = normalizeProductImageUrl(p.imageUrl);
+  if (uniqueImages.length === 0 && fallbackDirect && !seenUrls.has(fallbackDirect)) {
+    seenUrls.add(fallbackDirect);
+    uniqueImages.push({
+      url: fallbackDirect,
+      altText: p.name,
+      isPrimary: true,
+      displayOrder: 0,
+    });
+  }
+
   const primaryImgObj = uniqueImages.find((img) => img.isPrimary) || uniqueImages[0];
-  const primaryImg = primaryImgObj?.url || p.imageUrl || undefined;
+  const primaryImg = primaryImgObj?.url || fallbackDirect || undefined;
   const images: ProductImageItem[] = uniqueImages;
 
   const categoryRelations = (p.categories || [])

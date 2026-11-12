@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="w-full overflow-x-hidden"
+      className="w-full overflow-x-clip"
       suppressHydrationWarning
     >
       <head>
@@ -45,7 +45,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="bg-sandalLight text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-hidden"
+        className="bg-sandalLight text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-clip"
         suppressHydrationWarning
       >
         <StoreProvider>

@@ -64,16 +64,16 @@ export function NotificationToast() {
       onTransitionEnd={() => { if (!visible) setDisplayed(null); }}
     >
       {/* Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-white shadow-[0_8px_32px_rgba(0,0,0,0.18)] border border-gray-100">
+      <div className="relative overflow-hidden rounded-2xl border border-brand-border bg-white shadow-[0_8px_28px_rgba(23,59,58,0.14)]">
 
         {/* Top accent stripe */}
-        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-orange" />
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-brand-primary" />
 
         {/* Main content */}
         <div className="flex items-center gap-3 px-4 py-3">
 
           {/* Icon bubble */}
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-brand-red-shadow text-brand-accent shadow-sm">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-primary text-brand-accent shadow-sm">
             {getIcon(displayed)}
           </div>
 
@@ -87,16 +87,16 @@ export function NotificationToast() {
             type="button"
             onClick={dismiss}
             aria-label="Dismiss notification"
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-500 hover:bg-brand-surface-soft hover:text-brand-ink transition-colors"
           >
-            <X size={13} />
+            <X size={14} />
           </button>
         </div>
 
         {/* Progress bar */}
-        <div className="h-0.5 bg-gray-100">
+        <div className="h-0.5 bg-brand-surface-soft">
           <div
-            className="h-full bg-gradient-to-r from-brand-primary to-brand-accent origin-left"
+            className="h-full bg-brand-primary origin-left"
             style={{
               animation: visible
                 ? `hm-toast-progress ${AUTO_DISMISS_MS}ms linear forwards`

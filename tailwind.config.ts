@@ -113,11 +113,29 @@ const config: Config = {
         label: ["var(--font-ui)"],
         space: ["var(--font-ui)"],
       },
+      spacing: {
+        "4.5": "1.125rem",
+        "13": "3.25rem",
+        "18": "4.5rem",
+        "22": "5.5rem",
+      },
+      opacity: {
+        "12": "0.12",
+      },
+      borderRadius: {
+        xs: "0.125rem",
+      },
+      backdropBlur: {
+        "2xs": "2px",
+        xs: "4px",
+      },
       boxShadow: {
+        "2xs": "0 1px 2px 0 rgb(23 59 58 / 0.04)",
+        xs: "0 1px 3px 0 rgb(23 59 58 / 0.06)",
         'solid-sm': '0 1px 2px rgb(var(--brand-ink-rgb) / 0.08)',
         'solid-md': '0 4px 12px rgb(var(--brand-ink-rgb) / 0.08)',
         'solid-gold': '0 2px 8px rgb(var(--brand-accent-rgb) / 0.25)',
-        'card': '0 6px 24px -4px rgb(var(--brand-ink-rgb) / 0.07)',
+        'card': '0 4px 20px -6px rgb(var(--brand-ink-rgb) / 0.07)',
       },
       keyframes: {
         sway: {

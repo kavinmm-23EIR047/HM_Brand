@@ -360,40 +360,29 @@ export function Testimonials() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#FAF7F2] py-12 sm:py-14 lg:py-16"
+      className="relative w-full overflow-hidden border-b border-brand-border bg-brand-surface-alt py-12 sm:py-14 lg:py-16"
       aria-label="Customer testimonials"
     >
-      {/* Subtle background decorations */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#7E1D2D]/[0.025] blur-3xl"
-      />
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#FBBC05]/[0.04] blur-3xl"
-      />
-
-      {/* Full-width content */}
-      <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-6 lg:px-10 xl:px-14 2xl:px-16">
+      {/* Standardized .page-container content */}
+      <div className="page-container relative">
         {/* ================= HEADER ================= */}
-        <div className="relative mb-8 text-center sm:mb-10 lg:mb-12">
+        <div className="relative mb-8 text-center sm:mb-10">
           {/* Google badge */}
-          <div className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white px-4 py-2 shadow-sm">
-            <GoogleLogo size={21} />
+          <div className="mb-3 inline-flex items-center gap-2.5 rounded-full border border-brand-border bg-white px-4 py-1.5 shadow-2xs">
+            <GoogleLogo size={20} />
 
-            <span className="text-[10px] font-bold uppercase tracking-[0.13em] text-neutral-700 sm:text-xs">
+            <span className="text-xs font-bold uppercase tracking-[0.13em] text-neutral-700">
               Google Reviews
             </span>
           </div>
 
           {/* Heading */}
-          <h2 className="font-brand text-2xl font-bold uppercase leading-tight tracking-wide text-[#7E1D2D] sm:text-3xl md:text-4xl lg:text-5xl xl:text-[52px]">
+          <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold uppercase leading-tight tracking-wide text-brand-primary">
             What Our Customers Say
           </h2>
 
           {/* Rating */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
             <GoogleStars size={20} />
 
             <span className="text-base font-bold text-neutral-900 sm:text-lg">
@@ -402,24 +391,24 @@ export function Testimonials() {
 
             <span className="hidden h-5 w-px bg-neutral-300 sm:block" />
 
-            <span className="text-xs text-neutral-500 sm:text-sm md:text-base">
+            <span className="text-xs text-neutral-600 sm:text-sm">
               Verified Google Reviews
             </span>
           </div>
 
-          <p className="mt-2.5 text-sm text-neutral-500 sm:text-base">
+          <p className="mt-2 text-xs text-neutral-600 sm:text-sm">
             Real experiences from our happy customers
           </p>
 
-          {/* Review actions */}
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:-translate-y-1/2 lg:justify-end">
+          {/* Review actions — Clean Centered Row (Zero Absolute Header Collisions) */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <a
               href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#7E1D2D] px-4 py-2.5 text-sm font-semibold text-[#7E1D2D] transition-colors duration-200 hover:bg-[#7E1D2D]/5 active:scale-[0.98]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand-primary bg-white px-5 py-2 text-xs font-bold uppercase tracking-wider text-brand-primary transition-colors duration-200 hover:bg-brand-surface-soft active:scale-[0.98]"
             >
-              <ExternalLink size={16} />
+              <ExternalLink size={15} />
               <span>View All Reviews</span>
             </a>
 
@@ -427,9 +416,9 @@ export function Testimonials() {
               href={GOOGLE_WRITE_REVIEW_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#7E1D2D] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[#681724] active:scale-[0.98]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand-primary px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-colors duration-200 hover:bg-brand-hover active:scale-[0.98]"
             >
-              <PenLine size={16} />
+              <PenLine size={15} />
               <span>Write a Review</span>
             </a>
           </div>
@@ -515,8 +504,8 @@ export function Testimonials() {
                       "rounded-2xl border bg-white p-5 sm:p-6 lg:p-6 xl:p-7",
                       "transition-[transform,opacity,box-shadow,border-color] duration-300 ease-out",
                       isActive
-                        ? "z-10 scale-100 border-[#7E1D2D]/20 opacity-100 shadow-[0_18px_50px_rgba(60,30,20,0.12)]"
-                        : "scale-[0.95] sm:scale-[0.96] border-neutral-100 opacity-75 hover:opacity-95 shadow-[0_8px_25px_rgba(0,0,0,0.035)]",
+                        ? "z-10 scale-100 border-brand-primary/40 opacity-100 shadow-[0_18px_50px_rgba(60,30,20,0.12)]"
+                        : "scale-[0.95] sm:scale-[0.96] border-brand-border opacity-85 hover:opacity-100 shadow-2xs",
                     ].join(" ")}
                     style={{
                       transformOrigin: "center center",
@@ -578,7 +567,7 @@ export function Testimonials() {
                             {review.name}
                           </h3>
 
-                          <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-neutral-500 sm:text-xs">
+                          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-500">
                             {review.badge}
                           </p>
                         </div>
@@ -587,7 +576,7 @@ export function Testimonials() {
                       <div className="flex shrink-0 flex-col items-end gap-1.5">
                         <GoogleStars size={isActive ? 15 : 13} />
 
-                        <span className="whitespace-nowrap text-[10px] text-neutral-500 sm:text-xs">
+                        <span className="whitespace-nowrap text-xs text-neutral-500">
                           {review.time}
                         </span>
                       </div>
@@ -605,7 +594,7 @@ export function Testimonials() {
             type="button"
             onClick={handlePrevious}
             aria-label="Previous review"
-            className="flex lg:hidden h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#7E1D2D] shadow-xs active:scale-95 transition-all"
+            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs active:scale-95 transition-all"
           >
             <ChevronLeft size={18} strokeWidth={2.5} />
           </button>
@@ -635,7 +624,7 @@ export function Testimonials() {
             type="button"
             onClick={handleNext}
             aria-label="Next review"
-            className="flex lg:hidden h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#7E1D2D] shadow-xs active:scale-95 transition-all"
+            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs active:scale-95 transition-all"
           >
             <ChevronRight size={18} strokeWidth={2.5} />
           </button>

@@ -67,15 +67,14 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
     <div className="flex min-h-screen flex-col bg-[#FBF6EB] text-[#263B3D]">
       <Navigation />
       <main className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-10 sm:px-6 sm:py-14">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(244,211,137,0.32),_transparent_54%)]" />
         <section className="relative w-full max-w-xl overflow-hidden rounded-[28px] border border-[#E9D9BB] bg-[#FFFDFA] shadow-[0_24px_70px_rgba(69,51,29,0.12)]">
-          <div className="h-1.5 bg-gradient-to-r from-[#173F3D] via-[#A7193D] to-[#E0B64E]" />
+          <div className="h-1.5 bg-brand-primary" />
           <div className="px-6 py-8 sm:px-10 sm:py-10">
             <div className="mx-auto mb-7 grid h-14 w-14 place-items-center rounded-2xl border border-[#E9D9BB] bg-[#FFF6E8] text-[#A7193D] shadow-sm">
               {registering ? <UserRound size={25} /> : <Lock size={24} />}
             </div>
             <div className="mb-8 text-center">
-              <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#A7193D]">HM Brand · Devotee Account</p>
+              <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.2em] text-[#A7193D]">HM Brand · Devotee Account</p>
               <h1 className="font-brand text-3xl font-bold uppercase text-[#173F3D] sm:text-4xl">{registering ? "Create your account" : "Welcome back"}</h1>
               <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#6D716D]">
                 {registering ? "Join the HM family for faster checkout and easy order updates." : "Sign in to view your orders, saved addresses, and account details."}

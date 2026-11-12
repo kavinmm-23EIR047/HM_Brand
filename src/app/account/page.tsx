@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import {
 import { InnerPage } from "@/components/inner-page";
 import { useStore, UserAddress } from "@/components/store";
 import { AccountPageSkeleton } from "@/components/loading-skeletons";
+import { SacredDiyaSvg, SacredLotusSvg } from "@/components/sacred-icons";
 
 export default function AccountPage() {
   const {
@@ -225,18 +226,18 @@ export default function AccountPage() {
       title={`Welcome, ${user.fullName}`}
       subtitle="Manage your profile, tracked orders, saved mandir delivery addresses, and wishlist."
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+      <div className="page-container py-10 sm:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Sidebar Menu */}
-          <aside className="lg:col-span-4 bg-[#FFF8E7] p-6 rounded-3xl border-2 border-[#C89B3C]/40 space-y-2 shadow-sm">
+          <aside className="lg:col-span-4 bg-[#FFF8E7] p-6 rounded-3xl border border-[#C89B3C]/40 space-y-2 shadow-sm">
             <div className="p-4 bg-[#F4D35E]/20 rounded-2xl border border-[#C89B3C]/30 mb-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#E85D04] text-[#FFF8E7] flex items-center justify-center text-xl font-bold shadow-inner">
-                ॐ
+              <div className="w-12 h-12 rounded-full bg-white border border-[#C89B3C]/50 flex items-center justify-center shadow-2xs shrink-0">
+                <SacredLotusSvg className="h-7 w-7" />
               </div>
               <div className="min-w-0">
                 <h3 className="font-display text-lg text-[#6B4226] font-bold truncate">{user.fullName}</h3>
-                <span className="inline-block bg-[#A90C35] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-xs">
+                <span className="inline-block bg-[#A90C35] text-white text-ui-11 font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow-xs">
                   {user.role} MEMBER
                 </span>
               </div>
@@ -435,9 +436,9 @@ export default function AccountPage() {
                     {savedAddresses.map((addr) => (
                       <div
                         key={addr.id}
-                        className={`p-5 bg-white rounded-2xl border-2 transition shadow-xs flex flex-col justify-between space-y-3 ${
+                        className={`p-5 bg-white rounded-2xl border transition shadow-xs flex flex-col justify-between space-y-3 ${
                           addr.isDefault
-                            ? "border-[#588157] bg-gradient-to-b from-[#F4FBF4] to-white"
+                            ? "border-[#588157] bg-[#F3FAF3]"
                             : "border-[#C89B3C]/30"
                         }`}
                       >
@@ -445,7 +446,7 @@ export default function AccountPage() {
                           <div className="flex items-start justify-between gap-2">
                             <span className="font-bold text-sm text-[#6B4226]">{addr.recipientName}</span>
                             {addr.isDefault && (
-                              <span className="px-2.5 py-0.5 rounded-full bg-[#588157] text-white text-[9px] font-extrabold flex items-center gap-1 shadow-xs whitespace-nowrap">
+                              <span className="px-2.5 py-0.5 rounded-full bg-[#588157] text-white text-ui-11 font-extrabold flex items-center gap-1 shadow-xs whitespace-nowrap">
                                 <CheckCircle2 size={11} />
                                 <span>DEFAULT DELIVERY</span>
                               </span>
@@ -467,7 +468,7 @@ export default function AccountPage() {
                             <button
                               type="button"
                               onClick={() => setDefaultAddress(addr.id)}
-                              className="text-[11px] font-extrabold text-[#588157] hover:underline flex items-center gap-1"
+                              className="text-xs font-extrabold text-[#588157] hover:underline flex items-center gap-1"
                             >
                               <Check size={13} />
                               <span>Make Default Delivery</span>
@@ -705,7 +706,7 @@ export default function AccountPage() {
                 </h3>
                 <div className="space-y-3">
                   <div className="p-4 bg-white rounded-2xl border border-[#C89B3C]/30 flex items-start gap-3 shadow-xs">
-                    <span className="text-2xl">🪔</span>
+                    <SacredDiyaSvg className="h-7 w-7 mt-0.5" />
                     <div>
                       <h4 className="font-display text-base font-bold text-[#6B4226]">
                         Navaratri Special Collection is Ready

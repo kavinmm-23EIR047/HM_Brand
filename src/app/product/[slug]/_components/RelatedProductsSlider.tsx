@@ -68,7 +68,7 @@ export function RelatedProductsSlider({ products }: RelatedProductsSliderProps) 
               type="button"
               onClick={() => scroll("left")}
               aria-label="Previous products"
-              className="h-9 w-9 sm:h-10 sm:w-10 rounded-full border border-brand-border bg-white flex items-center justify-center text-brand-ink hover:border-brand-primary hover:bg-brand-primary hover:text-white transition shadow-2xs cursor-pointer active:scale-95"
+              className="h-10 w-10 rounded-full border border-brand-border bg-white flex items-center justify-center text-brand-ink hover:border-brand-primary hover:bg-brand-primary hover:text-white transition shadow-2xs cursor-pointer active:scale-95"
             >
               <ChevronLeft size={18} />
             </button>
@@ -76,7 +76,7 @@ export function RelatedProductsSlider({ products }: RelatedProductsSliderProps) 
               type="button"
               onClick={() => scroll("right")}
               aria-label="Next products"
-              className="h-9 w-9 sm:h-10 sm:w-10 rounded-full border border-brand-border bg-white flex items-center justify-center text-brand-ink hover:border-brand-primary hover:bg-brand-primary hover:text-white transition shadow-2xs cursor-pointer active:scale-95"
+              className="h-10 w-10 rounded-full border border-brand-border bg-white flex items-center justify-center text-brand-ink hover:border-brand-primary hover:bg-brand-primary hover:text-white transition shadow-2xs cursor-pointer active:scale-95"
             >
               <ChevronRight size={18} />
             </button>

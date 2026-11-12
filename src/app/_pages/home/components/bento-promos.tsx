@@ -2,15 +2,16 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { IndiaTricolorMarkSvg } from "@/components/sacred-icons";
 
 export function BentoPromos() {
   return (
-    <section className="bg-brand-surface-warm py-6 sm:py-9">
-      <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+    <section className="bg-brand-surface-alt border-b border-brand-border py-8 sm:py-12">
+      <div className="page-container">
         <div className="grid items-stretch gap-5 lg:grid-cols-12">
 
           {/* MAIN FLAGSHIP CARD: 10-IN-1 AROMA FAMILY PACK */}
-          <article className="relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-brand-primary via-brand-primary-alt to-brand-red-black text-white border-2 border-brand-accent/60 shadow-xl lg:col-span-7">
+          <article className="relative flex flex-col overflow-hidden rounded-3xl bg-brand-primary text-white border border-brand-primary shadow-sm lg:col-span-7">
 
             <div className="relative z-10 flex w-full flex-col justify-between p-5 sm:p-7 h-full">
 
@@ -20,8 +21,9 @@ export function BentoPromos() {
                 {/* LEFT SIDE CONTENT */}
                 <div className="flex-1 space-y-3 w-full">
                   {/* Clean Top Eyebrow Badge */}
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-3 py-1 text-ui-11 sm:text-xs font-bold tracking-wider text-brand-ink shadow-xs uppercase">
-                    <span>🇮🇳 1ST TIME IN INDIA</span>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-brand-accent px-3 py-1 text-ui-11 sm:text-xs font-bold tracking-wider text-brand-ink shadow-xs uppercase">
+                    <IndiaTricolorMarkSvg className="h-3.5 w-5" />
+                    <span>1ST TIME IN INDIA</span>
                   </div>
 
                   {/* Main Clear Title */}
@@ -41,14 +43,14 @@ export function BentoPromos() {
 
                   {/* Price & CTA Row */}
                   <div className="pt-1.5 flex flex-wrap items-center gap-3">
-                    <div className="flex items-baseline gap-2 bg-black/40 border border-brand-accent/60 px-3 py-1.5 rounded-lg">
-                      <span className="font-price text-xs line-through text-white/70 tabular-nums">₹120</span>
+                    <div className="flex items-baseline gap-2 bg-black/30 border border-brand-accent/60 px-3 py-1.5 rounded-lg">
+                      <span className="font-price text-xs line-through text-white/75 tabular-nums">₹120</span>
                       <span className="font-brand text-lg sm:text-xl font-bold text-brand-accent-soft tabular-nums">₹100</span>
                     </div>
 
                     <Link
-                      href="/shop"
-                      className="inline-flex items-center gap-2 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white text-brand-heading px-4 sm:px-5 py-2 font-brand text-xs font-bold uppercase tracking-wider shadow-md transition hover:scale-105 active:scale-95"
+                      href="/shop?category=Family%20Pack"
+                      className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white text-brand-heading px-5 py-2.5 font-brand text-xs font-bold uppercase tracking-wider shadow-sm transition active:scale-95"
                     >
                       <span>Buy Family Pack</span>
                       <ArrowRight size={14} />
@@ -63,7 +65,7 @@ export function BentoPromos() {
                     alt="HM Brand Divine Mascot with 10-in-1 Assorted Incense & Camphor"
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 30vw"
-                    className="object-contain object-center drop-shadow-2xl"
+                    className="object-contain object-center"
                   />
                 </div>
 
@@ -74,7 +76,10 @@ export function BentoPromos() {
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck size={15} className="text-brand-accent" /> 100% Charcoal-Free
                 </span>
-                <span>Coimbatore Crafted 🇮🇳</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span>Coimbatore Crafted</span>
+                  <IndiaTricolorMarkSvg className="h-3.5 w-5" />
+                </span>
               </div>
             </div>
 
@@ -84,22 +89,22 @@ export function BentoPromos() {
           <div className="grid gap-4 lg:col-span-5 lg:grid-rows-2">
 
             {/* Card 1: Wellness & Harmony */}
-            <article className="group relative flex min-h-[136px] items-center justify-between gap-2 overflow-hidden rounded-2xl bg-[#dcebc9] px-4 py-3 sm:gap-4 sm:rounded-3xl sm:p-6 shadow-sm border border-brand-green/30 transition hover:shadow-md">
+            <article className="group relative flex min-h-[144px] items-center justify-between gap-3 overflow-hidden rounded-2xl bg-[#EAF3DF] px-4 py-3.5 sm:gap-4 sm:rounded-3xl sm:p-6 shadow-xs border border-[#CBE0B5] transition hover:border-brand-forest/50">
               {/* Left Content */}
-              <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
-                <span className="font-brand text-[9px] sm:text-ui-11 font-bold tracking-wider text-brand-forest uppercase block">
+              <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
+                <span className="font-brand text-ui-11 font-bold tracking-wider text-brand-forest uppercase block">
                   WELLNESS &amp; HARMONY
                 </span>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-bold leading-tight tracking-wide text-brand-heading font-brand uppercase">
                   Pure Home Fragrance
                 </h3>
-                <p className="text-[11px] sm:text-xs leading-relaxed text-[#1F2937]/90 font-normal line-clamp-2">
+                <p className="text-xs leading-relaxed text-[#1F2937]/90 font-normal line-clamp-2">
                   Botanical aromas to relax, purify air, and bring positive energy.
                 </p>
                 <div className="pt-0.5 sm:pt-1">
                   <Link
                     href="/shop"
-                    className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-brand-forest-dark hover:bg-brand-forest px-3 py-1.5 sm:min-h-0 sm:px-4.5 sm:py-2.5 font-brand text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white transition shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
+                    className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand-forest-dark hover:bg-brand-forest px-4 py-2 font-brand text-xs font-bold uppercase tracking-wider text-white transition shadow-xs active:scale-95 whitespace-nowrap"
                   >
                     <span>Shop Essentials</span>
                     <ArrowRight size={13} />
@@ -108,7 +113,7 @@ export function BentoPromos() {
               </div>
 
               {/* Right Image: Framed & Proportional */}
-              <div className="relative h-24 w-24 sm:w-36 sm:h-36 shrink-0 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-brand-green/20 bg-white/40 p-1 flex items-center justify-center">
+              <div className="relative h-24 w-24 sm:w-36 sm:h-36 shrink-0 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-[#CBE0B5] bg-white p-1 flex items-center justify-center">
                 <Image
                   src="/images/hm_cardamom_promo_green.jpg"
                   alt="HM Brand Cardamom Incense Sticks with natural cardamom pods and flowers"
@@ -120,22 +125,22 @@ export function BentoPromos() {
             </article>
 
             {/* Card 2: Mindful Living */}
-            <article className="group relative flex min-h-[136px] items-center justify-between gap-2 overflow-hidden rounded-2xl bg-[#4e82a8] px-4 py-3 sm:gap-4 sm:rounded-3xl sm:p-6 text-white shadow-sm border border-[#4e82a8]/40 transition hover:shadow-md">
+            <article className="group relative flex min-h-[144px] items-center justify-between gap-3 overflow-hidden rounded-2xl bg-brand-ink px-4 py-3.5 sm:gap-4 sm:rounded-3xl sm:p-6 text-white shadow-xs border border-brand-ink transition hover:border-brand-accent/60">
               {/* Left Content */}
-              <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
-                <span className="font-brand text-[9px] sm:text-ui-11 font-bold tracking-wider text-[#FDE68A] uppercase block">
+              <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
+                <span className="font-brand text-ui-11 font-bold tracking-wider text-[#FDE68A] uppercase block">
                   NATURAL PURITY
                 </span>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-bold leading-tight tracking-wide text-white font-brand uppercase">
                   100% Charcoal-Free
                 </h3>
-                <p className="text-[11px] sm:text-xs leading-relaxed text-white/90 font-normal line-clamp-2">
+                <p className="text-xs leading-relaxed text-white/90 font-normal line-clamp-2">
                   Clean white smoke that protects family health with zero soot.
                 </p>
                 <div className="pt-0.5 sm:pt-1">
                   <Link
                     href="/about"
-                    className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-brand-orange hover:bg-[#d65a12] px-3 py-1.5 sm:min-h-0 sm:px-4.5 sm:py-2.5 font-brand text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white transition shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
+                    className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white px-4 py-2 font-brand text-xs font-bold uppercase tracking-wider text-brand-ink transition shadow-xs active:scale-95 whitespace-nowrap"
                   >
                     <span>Explore Benefits</span>
                     <ArrowRight size={13} />
@@ -144,7 +149,7 @@ export function BentoPromos() {
               </div>
 
               {/* Right Image: Framed & Proportional */}
-              <div className="relative h-24 w-24 sm:w-36 sm:h-36 shrink-0 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-white/20 bg-white/20 p-1 flex items-center justify-center">
+              <div className="relative h-24 w-24 sm:w-36 sm:h-36 shrink-0 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-white/15 bg-white/10 p-1 flex items-center justify-center">
                 <Image
                   src="/images/hm_charcoal_free_promo_blue.jpg"
                   alt="HM Brand Pure Loban Cup Sambrani Charcoal-Free with Brass Diya"

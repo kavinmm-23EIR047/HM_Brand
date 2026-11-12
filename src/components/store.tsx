@@ -135,7 +135,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     bannerRequestAttempts.current += 1;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/banners`, { signal: AbortSignal.timeout(10000) });
+      const res = await fetch(`${API_BASE_URL}/banners`, { cache: "no-store", signal: AbortSignal.timeout(10000) });
       const json = res.ok ? await res.json().catch(() => null) : null;
       if (json?.success && Array.isArray(json.data)) {
         setDbBanners(json.data);
@@ -162,8 +162,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     let requiredDataLoaded = false;
     try {
       const [prodResult, catResult] = await Promise.allSettled([
-        fetch(`${API_BASE_URL}/products?limit=100`, { signal: AbortSignal.timeout(10000) }),
-        fetch(`${API_BASE_URL}/categories`, { signal: AbortSignal.timeout(10000) }),
+        fetch(`${API_BASE_URL}/products?limit=500`, { cache: "no-store", signal: AbortSignal.timeout(10000) }),
+        fetch(`${API_BASE_URL}/categories`, { cache: "no-store", signal: AbortSignal.timeout(10000) }),
       ]);
       const responseFrom = (result: PromiseSettledResult<Response>) =>
         result.status === "fulfilled" && result.value.ok ? result.value : null;
@@ -668,7 +668,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         discountAmount: data.data.discountAmount,
       };
       setAppliedCoupon(couponObj);
-      showNotification(`🎉 Coupon "${cleanCode}" applied successfully!`);
+      showNotification(`Coupon "${cleanCode}" applied successfully!`);
       return { success: true, message: `Coupon "${cleanCode}" applied!` };
     } catch {
       return { success: false, message: "Unable to validate coupon. Please check connection." };

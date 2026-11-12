@@ -12,11 +12,20 @@ import {
   Star,
   Leaf,
   ShieldCheck,
+  Tag,
   Truck,
   ArrowRight,
 } from "lucide-react";
 import { useStore } from "@/components/store";
-import type { Product } from "@/lib/products";
+import { hasProductRating, type Product } from "@/lib/products";
+import {
+  AromaFlameSvg,
+  EditorialStarSvg,
+  KalashCrownSvg,
+  SacredBotanicalSvg,
+  SacredDiyaSvg,
+  SacredLotusSvg,
+} from "@/components/sacred-icons";
 
 const FILTER_TABS = [
   { id: "all", label: "All Products" },
@@ -138,34 +147,34 @@ function getBadgeInfo(product: Product) {
   if (b.includes("bestseller") || b.includes("best")) {
     return {
       text: product.badge,
-      icon: "👑",
+      icon: <KalashCrownSvg className="h-3.5 w-3.5" />,
       className: "bg-brand-surface-promo text-brand-amber-bright border-brand-yellow-bright",
     };
   }
   if (b.includes("new")) {
     return {
       text: product.badge,
-      icon: "🍃",
+      icon: <SacredBotanicalSvg className="h-3.5 w-3.5" />,
       className: "bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]",
     };
   }
   if (b.includes("trend")) {
     return {
       text: product.badge,
-      icon: "🔥",
+      icon: <AromaFlameSvg className="h-3.5 w-3.5" />,
       className: "bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]",
     };
   }
   if (b.includes("coupon") || b.includes("off")) {
     return {
       text: product.badge,
-      icon: "🏷️",
+      icon: <Tag size={12} className="text-brand-primary shrink-0" />,
       className: "bg-brand-surface-warm text-brand-primary border-brand-accent",
     };
   }
   return {
     text: product.badge,
-    icon: "✦",
+    icon: <EditorialStarSvg className="h-3 w-3 text-brand-primary" />,
     className: "bg-brand-surface-promo text-brand-primary border-brand-border",
   };
 }
@@ -269,13 +278,9 @@ export function BestsellerShowcase() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-surface-alt py-12 sm:py-16 border-y border-brand-accent/35 font-sans">
-      
-      {/* Soft Ambient Corner Accent */}
-      <div className="pointer-events-none absolute -right-12 -top-12 w-52 h-52 rounded-full bg-brand-primary/10 blur-3xl" />
-
+    <section className="relative w-full overflow-hidden bg-brand-surface-alt py-12 sm:py-16 border-b border-brand-border font-sans">
         <div
-          className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:max-w-[1440px] 2xl:max-w-[1560px]"
+          className="page-container relative z-10"
           onMouseEnter={() => setAutoplayPaused(true)}
           onMouseLeave={() => setAutoplayPaused(false)}
           onFocusCapture={() => setAutoplayPaused(true)}
@@ -319,7 +324,7 @@ export function BestsellerShowcase() {
 
               <div className="flex flex-col items-center text-center">
                 <div className="h-10 w-10 rounded-full bg-brand-primary/15 text-brand-primary flex items-center justify-center mb-1">
-                  <span className="text-base">🪷</span>
+                  <SacredLotusSvg className="h-5 w-5" />
                 </div>
                 <span className="text-xs font-bold text-brand-heading block">Traditional</span>
                 <span className="text-xs text-brand-gray block font-medium -mt-0.5">Vedic Formula</span>
@@ -428,16 +433,16 @@ export function BestsellerShowcase() {
               return (
                 <div
                   key={product.slug}
-                  className="group flex min-w-0 w-[calc((100%_-_0.75rem)_/_2)] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs transition-all duration-300 hover:border-brand-accent hover:shadow-lg min-[640px]:w-[calc((100%_-_2.5rem)_/_3)] lg:w-[calc((100%_-_3.75rem)_/_4)]"
+                  className="group flex min-w-0 w-[calc((100%_-_0.75rem)_/_2)] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs transition-all duration-300 hover:border-brand-primary/50 hover:shadow-md min-[640px]:w-[calc((100%_-_2.5rem)_/_3)] lg:w-[calc((100%_-_3.75rem)_/_4)]"
                 >
-                  {/* Top Image: Full Width Edge-to-Edge with Bottom Dividing Border */}
-                  <div className="relative h-[118px] min-[380px]:h-[140px] w-full shrink-0 overflow-hidden border-b border-brand-border/70 bg-brand-surface-alt sm:h-[176px] lg:h-[220px]">
-                    <Link href={`/product/${product.slug}`} className="absolute inset-0 block">
+                  {/* Top Image: Unified 1:1 Soho Frame (Zero Cropping on Tall Pouches/Boxes) */}
+                  <div className="relative aspect-square w-full shrink-0 overflow-hidden border-b border-brand-border/70 bg-brand-surface-soft p-2.5 sm:p-3.5">
+                    <Link href={`/product/${product.slug}`} className="relative flex h-full w-full items-center justify-center">
                       {productImg ? (
                         <img
                           src={productImg}
                           alt={product.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                           onError={(e) => {
                             const target = e.currentTarget as HTMLImageElement;
                             if (!target.src.includes("hm_glory_agarbatti")) {
@@ -446,9 +451,9 @@ export function BestsellerShowcase() {
                           }}
                         />
                       ) : (
-                        <div className="flex h-full w-full flex-col items-center justify-center text-brand-ink/40 text-xs">
-                          <span className="text-3xl">🪔</span>
-                          <span className="font-brand text-xs font-bold text-brand-primary mt-1 tracking-wider">HM PURITY</span>
+                        <div className="flex h-full w-full flex-col items-center justify-center text-brand-ink/50 text-xs">
+                          <SacredDiyaSvg className="h-10 w-10" />
+                          <span className="font-brand text-xs font-bold text-brand-primary mt-1.5 tracking-wider">HM PURITY</span>
                         </div>
                       )}
                     </Link>
@@ -456,7 +461,7 @@ export function BestsellerShowcase() {
                     {/* Status Badge - Render ONLY if present from Backend */}
                     {badge && (
                       <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-ui-10 sm:text-ui-11 font-bold uppercase tracking-wider border shadow-2xs backdrop-blur-xs ${badge.className}`}>
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-ui-11 font-bold uppercase tracking-wider border shadow-2xs ${badge.className}`}>
                           <span>{badge.icon}</span>
                           <span>{badge.text}</span>
                         </span>
@@ -471,10 +476,10 @@ export function BestsellerShowcase() {
                         toggleWishlist(product.slug);
                       }}
                       aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                      className={`absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-full transition-transform active:scale-90 shadow-2xs backdrop-blur-xs cursor-pointer ${
+                      className={`absolute right-2.5 top-2.5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-brand-border transition-transform active:scale-90 shadow-2xs cursor-pointer ${
                         wishlisted
-                          ? "bg-brand-primary text-white"
-                          : "bg-white/95 text-brand-ink hover:bg-brand-primary hover:text-white"
+                          ? "bg-brand-primary text-white border-brand-primary"
+                          : "bg-white text-brand-ink hover:bg-brand-primary hover:text-white hover:border-brand-primary"
                       }`}
                     >
                       <Heart size={15} fill={wishlisted ? "currentColor" : "none"} />
@@ -496,16 +501,18 @@ export function BestsellerShowcase() {
                         {product.subCategory || product.category || "Flora Series"}
                       </p>
 
-                      {/* Rating */}
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <Star size={13} fill="var(--brand-orange)" className="text-brand-orange" />
-                        <span className="text-xs sm:text-sm font-bold text-brand-heading">
-                          {product.rating || 4.9}
-                        </span>
-                        <span className="text-xs text-brand-gray font-medium">
-                          ({product.reviewCount || 48})
-                        </span>
-                      </div>
+                      {/* Rating (Backend data only) */}
+                      {hasProductRating(product) && (
+                        <div className="flex items-center gap-1.5 mt-2">
+                          <Star size={13} fill="var(--brand-orange)" className="text-brand-orange" />
+                          <span className="text-xs sm:text-sm font-bold text-brand-heading">
+                            {product.rating.toFixed(1)}
+                          </span>
+                          <span className="text-xs text-brand-gray font-medium">
+                            ({product.reviewCount})
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Bottom Price & Add to Cart Row */}
@@ -566,23 +573,6 @@ export function BestsellerShowcase() {
 
         </div>
 
-      </div>
-
-      {/* Decorative Bottom-Left Incense & Flower Accent */}
-      <div
-        className="pointer-events-none absolute -left-6 -bottom-6 w-44 h-44 sm:w-60 sm:h-60 opacity-30 mix-blend-multiply select-none"
-        style={{
-          maskImage: "radial-gradient(circle at 35% 65%, black 50%, transparent 95%)",
-          WebkitMaskImage: "radial-gradient(circle at 35% 65%, black 50%, transparent 95%)",
-        }}
-      >
-        <Image
-          src="/images/purity/natural-ingredients.jpg"
-          alt=""
-          fill
-          sizes="250px"
-          className="object-contain rotate-12"
-        />
       </div>
 
     </section>

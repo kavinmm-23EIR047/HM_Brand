@@ -119,16 +119,13 @@ export function TrustStrip() {
   }, [isPaused, scrollTo, pillars.length]);
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-surface-alt pt-8 sm:pt-10 pb-6 sm:pb-8 border-y border-brand-accent/35 font-sans">
+    <section className="relative w-full overflow-hidden bg-white py-10 sm:py-14 border-b border-brand-border font-sans">
 
-      <div className="pointer-events-none absolute -left-12 -top-12 w-48 h-48 rounded-full bg-brand-green/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-12 -top-12 w-48 h-48 rounded-full bg-brand-primary/10 blur-3xl" />
-
-      <div className="relative z-10 mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8">
+      <div className="page-container relative z-10">
 
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-7 sm:mb-9">
-          <span className="font-brand text-ui-11 sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1.5">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+          <span className="font-brand text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1.5">
             THE HM PURITY PROMISE
           </span>
           <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold text-brand-heading uppercase tracking-wide leading-tight">
@@ -140,13 +137,12 @@ export function TrustStrip() {
         </div>
 
         {/* DESKTOP: 4-column grid */}
-        <div className="hidden lg:grid lg:grid-cols-4 lg:divide-x lg:divide-[#E5D7B7]/80">
+        <div className="hidden lg:grid lg:grid-cols-4 lg:divide-x lg:divide-brand-border">
           {pillars.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div key={idx} className="group flex flex-col items-center px-4 pt-0 text-center">
-                <div className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border border-brand-accent/60 bg-gradient-to-br from-brand-surface-bright to-[#F5EACB] shadow-sm transition-all duration-300 group-hover:border-brand-accent group-hover:shadow-md mb-3.5">
-                  <div className="absolute inset-1 rounded-xl bg-white/70" />
+              <div key={idx} className="group flex flex-col items-center px-5 pt-0 text-center">
+                <div className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border border-brand-border bg-brand-surface-soft shadow-2xs transition-all duration-300 group-hover:border-brand-primary group-hover:shadow-sm mb-3.5">
                   <div className="relative z-10" style={{ color: item.iconColor }}>
                     <Icon size={32} strokeWidth={1.8} />
                   </div>
@@ -194,18 +190,17 @@ export function TrustStrip() {
                     pauseTemporarily(4000);
                     scrollTo(idx);
                   }}
-                  className="flex min-w-[min(82vw,320px)] max-w-[320px] shrink-0 snap-center flex-col gap-3 rounded-2xl border border-brand-border bg-white/90 p-5 shadow-sm cursor-pointer"
+                  className="flex min-w-[min(82vw,320px)] max-w-[320px] shrink-0 snap-center flex-col gap-3 rounded-2xl border border-brand-border bg-brand-surface-bright p-5 shadow-2xs cursor-pointer"
                 >
-                  <div className="relative flex h-12 w-12 items-center justify-center rounded-xl border border-brand-accent/60 bg-gradient-to-br from-brand-surface-bright to-[#F5EACB] shadow-sm">
-                    <div className="absolute inset-1 rounded-xl bg-white/70" />
+                  <div className="relative flex h-12 w-12 items-center justify-center rounded-xl border border-brand-border bg-white shadow-2xs">
                     <div className="relative z-10" style={{ color: item.iconColor }}>
                       <Icon size={24} strokeWidth={1.8} />
                     </div>
                   </div>
                   <div>
-                    <span className="mb-0.5 block font-brand text-[10px] font-bold uppercase tracking-[0.14em] text-brand-primary">{item.tag}</span>
+                    <span className="mb-0.5 block font-brand text-xs font-bold uppercase tracking-[0.14em] text-brand-primary">{item.tag}</span>
                     <h3 className="mb-1 font-brand text-base font-bold uppercase leading-tight tracking-wide text-brand-heading">{item.title}</h3>
-                    <span className={`mb-2 inline-block rounded-md px-2.5 py-1 font-brand text-[10px] font-bold uppercase tracking-wide ${item.badgeBg} ${item.badgeText}`}>{item.subtitle}</span>
+                    <span className={`mb-2 inline-block rounded-md px-2.5 py-1 font-brand text-ui-11 font-bold uppercase tracking-wide ${item.badgeBg} ${item.badgeText}`}>{item.subtitle}</span>
                     <p className="text-xs font-medium leading-relaxed text-brand-slate">{item.desc}</p>
                   </div>
                 </div>
@@ -222,9 +217,9 @@ export function TrustStrip() {
                 scrollTo((activeIdx - 1 + pillars.length) % pillars.length);
               }}
               aria-label="Previous pillar"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white shadow-sm transition active:scale-95 hover:border-brand-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white shadow-2xs transition active:scale-95 hover:border-brand-primary"
             >
-              <ChevronLeft size={16} className="text-brand-primary" />
+              <ChevronLeft size={17} className="text-brand-primary" />
             </button>
 
             <div className="flex items-center gap-2">
@@ -251,20 +246,18 @@ export function TrustStrip() {
                 scrollTo((activeIdx + 1) % pillars.length);
               }}
               aria-label="Next pillar"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white shadow-sm transition active:scale-95 hover:border-brand-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white shadow-2xs transition active:scale-95 hover:border-brand-primary"
             >
-              <ChevronRight size={16} className="text-brand-primary" />
+              <ChevronRight size={17} className="text-brand-primary" />
             </button>
           </div>
         </div>
 
       </div>
 
-      {/* Heritage banner */}
-      <div className="relative mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 mt-7 sm:mt-9">
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#750C21] via-[#90142C] to-[#66091A] text-white py-4 sm:py-5 px-5 sm:px-8 lg:px-12 shadow-lg border border-brand-accent/30">
-          <div className="pointer-events-none absolute -right-12 -top-12 w-48 h-48 rounded-full bg-brand-accent/10 blur-2xl" />
-          <div className="pointer-events-none absolute -left-12 -bottom-12 w-48 h-48 rounded-full bg-[#2E6B36]/20 blur-2xl" />
+      {/* Heritage banner — Solid Editorial Maroon */}
+      <div className="page-container relative mt-8 sm:mt-10">
+        <div className="relative overflow-hidden rounded-2xl bg-brand-primary text-white py-5 sm:py-6 px-5 sm:px-8 lg:px-12 shadow-card border border-brand-accent/35">
           <div className="pointer-events-none absolute bottom-1 left-2 sm:left-4 w-12 sm:w-16 h-12 sm:h-16 select-none opacity-85 z-10">
             <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
               <path d="M12,90 Q30,42 68,32 Q45,64 12,90 Z" fill="#2E6B36" />

@@ -28,7 +28,7 @@ export default function WishlistPage() {
       title="Wishlist"
       subtitle="Keep the fragrances and puja essentials you love close at hand."
     >
-      <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-9 lg:px-8">
+      <div className="page-container py-6 sm:py-9">
         {!isMounted || isLoadingSavedProducts ? (
           <section aria-label="Loading wishlist" aria-busy="true" className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {Array.from({ length: 4 }, (_, index) => (

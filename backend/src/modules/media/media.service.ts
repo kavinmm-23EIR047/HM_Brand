@@ -3,6 +3,7 @@ import { deleteImage, uploadImage } from '../../shared/cloudinary';
 import { BadRequestError, NotFoundError } from '../../shared/errors/custom.error';
 import { generateSlug } from '../../shared/utils/slug.util';
 import { optimizeImageToWebp } from '../../shared/image-optimizer';
+import { invalidateSearchCache } from '../products/products.search';
 
 export const mediaTypes = ['PRODUCT', 'CATEGORY', 'BANNER', 'HOMEPAGE', 'COLLECTION', 'FESTIVAL', 'OTHER'] as const;
 type MediaType = (typeof mediaTypes)[number];
@@ -57,7 +58,8 @@ export class MediaService {
         suffix += 1;
       }
 
-      const existingFilename = requestedImage?.storageKey?.split('/').pop();
+      const rawExistingName = requestedImage?.storageKey?.split('/').pop()?.replace(/\.[a-z0-9]+$/i, '');
+      const existingFilename = rawExistingName ? generateSlug(rawExistingName).slice(0, 120) : '';
       filename = requestedImage
         ? (existingFilename || (primary && !hasBaseSlug ? productSlug : `${productSlug}-${suffix}`))
         : (primary && !hasBaseSlug && product.images.length === 0
@@ -138,6 +140,7 @@ export class MediaService {
     const uploaded = await uploadImage(optimized.buffer, { folder, publicId: filename });
     try {
       const record = await applyUpload(uploaded.secureUrl, uploaded.publicId);
+      if (type === 'PRODUCT') invalidateSearchCache();
       return {
         ...uploaded,
         format: optimized.format,
@@ -172,6 +175,7 @@ export class MediaService {
         });
       }
     }
+    invalidateSearchCache();
   }
 
   async delete(typeValue: unknown, entityId: string, data: Record<string, unknown>) {

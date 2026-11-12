@@ -27,7 +27,7 @@ import {
 import { useStore } from "@/components/store";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { mapDbProductToProduct } from "@/lib/products";
+import { hasProductRating, mapDbProductToProduct } from "@/lib/products";
 import { ShopPageSkeleton } from "@/components/loading-skeletons";
 
 const CATEGORY_IMAGE_SEARCH_TERMS: Record<string, string[]> = {
@@ -494,7 +494,7 @@ function ShopContent() {
     <div className="min-h-screen flex flex-col justify-between bg-[#FBF8F3] text-brand-ink font-sans">
       <div>
         <Navigation />
-        <div className="mx-auto max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px] px-4 sm:px-6 lg:px-8 space-y-4 pt-3 pb-12">
+        <div className="page-container space-y-4 pt-3 pb-24 md:pb-12">
 
           {/* ─── 1. BREADCRUMB ─── */}
           <nav
@@ -523,12 +523,11 @@ function ShopContent() {
           </nav>
 
           {/* ─── 2. EDITORIAL HERO CATEGORY BANNER ─── */}
-          <section className="relative flex min-h-[68px] items-center justify-between gap-3 overflow-hidden rounded-2xl border border-brand-border bg-gradient-to-r from-brand-surface-cream via-[#FFF3E1] to-[#FCECC9] px-3 py-2 shadow-xs sm:min-h-[82px] sm:px-5 sm:py-3">
-            <div className="pointer-events-none absolute inset-y-0 right-16 w-32 opacity-20 bg-[radial-gradient(#287541_1px,transparent_1px)] [background-size:10px_10px] sm:right-24" />
+          <section className="relative flex min-h-[68px] items-center justify-between gap-3 overflow-hidden rounded-2xl border border-brand-border bg-brand-surface-warm px-3 py-2 shadow-xs sm:min-h-[82px] sm:px-5 sm:py-3">
             <h1 className="relative z-10 min-w-0 font-brand text-lg font-bold leading-tight uppercase tracking-wide text-brand-ink sm:text-2xl">
               {activeLabel}
             </h1>
-            <div className="relative z-10 h-12 w-14 shrink-0 overflow-hidden rounded-lg border border-white/80 bg-white/65 shadow-xs sm:h-16 sm:w-20 sm:rounded-xl">
+            <div className="relative z-10 h-12 w-14 shrink-0 overflow-hidden rounded-lg border border-brand-border bg-white shadow-xs sm:h-16 sm:w-20 sm:rounded-xl">
               <img src={SHOP_CATEGORY_BANNER_IMAGE} alt="HM Brand puja products" className="h-full w-full object-cover object-center" />
             </div>
           </section>
@@ -867,7 +866,9 @@ function ShopContent() {
                       <option value="featured">Sort by: Featured</option>
                       <option value="price-low">Price: Low to High</option>
                       <option value="price-high">Price: High to Low</option>
-                      <option value="rating">Customer Rating</option>
+                      {allProducts.some((p) => hasProductRating(p)) && (
+                        <option value="rating">Customer Rating</option>
+                      )}
                       <option value="newest">Newest Arrival</option>
                     </select>
                     <ChevronDown
@@ -885,12 +886,12 @@ function ShopContent() {
                         setHasChosenViewMode(true);
                       }}
                       aria-label="Grid view"
-                      className={`p-1.5 rounded-md transition ${viewMode === "grid"
+                      className={`inline-flex h-10 w-10 items-center justify-center rounded-md transition ${viewMode === "grid"
                           ? "bg-brand-primary text-white shadow-2xs"
                           : "text-stone-500 hover:text-brand-ink"
                         }`}
                     >
-                      <LayoutGrid size={15} />
+                      <LayoutGrid size={16} />
                     </button>
                     <button
                       type="button"
@@ -899,12 +900,12 @@ function ShopContent() {
                         setHasChosenViewMode(true);
                       }}
                       aria-label="List view"
-                      className={`p-1.5 rounded-md transition ${viewMode === "list"
+                      className={`inline-flex h-10 w-10 items-center justify-center rounded-md transition ${viewMode === "list"
                           ? "bg-brand-primary text-white shadow-2xs"
                           : "text-stone-500 hover:text-brand-ink"
                         }`}
                     >
-                      <List size={15} />
+                      <List size={16} />
                     </button>
                   </div>
                 </div>
@@ -957,7 +958,7 @@ function ShopContent() {
                           {/* Top Badge */}
                           {badge && (
                             <span
-                              className={`absolute left-2.5 top-2.5 z-10 rounded-md px-2 py-0.5 text-ui-9 font-bold text-white shadow-2xs ${badge.bg}`}
+                              className={`absolute left-2.5 top-2.5 z-10 rounded-md px-2 py-0.5 text-ui-11 font-bold text-white shadow-2xs ${badge.bg}`}
                             >
                               {badge.text}
                             </span>
@@ -971,7 +972,7 @@ function ShopContent() {
                               toggleWishlist(product.slug);
                             }}
                             aria-label="Wishlist"
-                            className="absolute right-2.5 top-2.5 z-10 h-7 w-7 rounded-full bg-white/95 flex items-center justify-center shadow-xs transition hover:scale-110 cursor-pointer"
+                            className="absolute right-2.5 top-2.5 z-10 h-9 w-9 rounded-full border border-brand-border/80 bg-white flex items-center justify-center shadow-xs transition hover:scale-105 cursor-pointer"
                           >
                             <Heart
                               size={13}
@@ -987,11 +988,11 @@ function ShopContent() {
                         {/* Content Box */}
                         <div className="pt-3 flex flex-1 flex-col justify-between">
                           <div>
-                            {/* Rating & Review Count */}
-                            {product.rating > 0 && <div className="mb-1.5 flex items-center gap-1.5 text-xs">
+                            {/* Rating & Review Count (Backend data only) */}
+                            {hasProductRating(product) && <div className="mb-1.5 flex items-center gap-1.5 text-xs">
                               <Star size={13} className="fill-brand-orange text-brand-orange" />
-                              <span className="font-bold text-xs text-brand-heading">{product.rating}</span>
-                              {product.reviewCount > 0 && <span className="text-brand-gray text-xs font-medium">({product.reviewCount})</span>}
+                              <span className="font-bold text-xs text-brand-heading">{product.rating.toFixed(1)}</span>
+                              <span className="text-brand-gray text-xs font-medium">({product.reviewCount})</span>
                             </div>}
 
                             {/* Product Title */}
@@ -1056,11 +1057,11 @@ function ShopContent() {
                             href={`/product/${product.slug}`}
                             className="absolute inset-0 flex items-center justify-center"
                           >
-                            {product.image ? <img src={product.image} alt={product.name} loading="lazy" className="h-full w-full object-contain p-1.5" /> : <span className="px-1 text-center text-[10px] text-brand-muted">Image unavailable</span>}
+                            {product.image ? <img src={product.image} alt={product.name} loading="lazy" className="h-full w-full object-contain p-2" /> : <span className="px-1 text-center text-xs text-brand-muted">Image unavailable</span>}
                           </Link>
                           {badge && (
                             <span
-                              className={`absolute left-1.5 top-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-md px-1.5 py-0.5 text-[9px] font-bold text-white ${badge.bg}`}
+                              className={`absolute left-1.5 top-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-md px-1.5 py-0.5 text-ui-11 font-bold text-white ${badge.bg}`}
                             >
                               {badge.text}
                             </span>
@@ -1070,17 +1071,17 @@ function ShopContent() {
                         {/* Content */}
                         <div className="flex min-w-0 flex-1 flex-col justify-between gap-1 text-left">
                           <div className="min-w-0">
-                          {product.rating > 0 && <div className="mb-0.5 flex items-center gap-1.5 text-xs">
+                          {hasProductRating(product) && <div className="mb-0.5 flex items-center gap-1.5 text-xs">
                             <Star size={13} className="fill-brand-orange text-brand-orange" />
-                            <span className="font-bold text-xs text-brand-heading">{product.rating}</span>
-                            {product.reviewCount > 0 && <span className="text-brand-gray text-xs font-medium">({product.reviewCount})</span>}
+                            <span className="font-bold text-xs text-brand-heading">{product.rating.toFixed(1)}</span>
+                            <span className="text-brand-gray text-xs font-medium">({product.reviewCount})</span>
                           </div>}
                           <Link href={`/product/${product.slug}`}>
                             <h4 className="line-clamp-1 font-brand text-sm sm:text-base font-bold uppercase tracking-wide text-brand-heading hover:text-brand-primary transition-colors">
                               {product.name}
                             </h4>
                           </Link>
-                          <p className="mt-0.5 line-clamp-2 text-[11px] sm:text-xs text-brand-slate font-medium leading-snug">
+                          <p className="mt-0.5 line-clamp-2 text-xs text-brand-slate font-medium leading-snug">
                             {product.note || product.subCategory}
                           </p>
                           {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
@@ -1103,15 +1104,15 @@ function ShopContent() {
                             )}
                           </div>
 
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => toggleWishlist(product.slug)}
                               aria-label="Wishlist"
-                              className="h-8 w-8 rounded-full border border-stone-200 bg-white flex items-center justify-center"
+                              className="h-10 w-10 rounded-full border border-stone-200 bg-white flex items-center justify-center"
                             >
                               <Heart
-                                size={14}
+                                size={15}
                                 className={
                                   isWishlisted
                                     ? "fill-brand-primary text-brand-primary"
@@ -1123,9 +1124,9 @@ function ShopContent() {
                               type="button"
                               onClick={() => addToCartAndReview(product)}
                               disabled={!product.inStock}
-                              className="inline-flex h-8 items-center justify-center gap-1 rounded-lg bg-brand-primary hover:bg-brand-mid-hover text-white px-2.5 text-[10px] font-semibold shadow-2xs transition-colors sm:gap-1.5 sm:px-3 sm:py-2 sm:text-xs"
+                              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg bg-brand-primary hover:bg-brand-mid-hover text-white px-3.5 text-xs font-semibold shadow-2xs transition-colors sm:px-4 sm:py-2"
                             >
-                              <ShoppingBag size={13} />
+                              <ShoppingBag size={14} />
                               <span className="sm:hidden">{product.inStock ? "Add" : "Sold"}</span>
                               <span className="hidden sm:inline">{product.inStock ? "Add to Cart" : "Sold Out"}</span>
                             </button>
@@ -1171,7 +1172,8 @@ function ShopContent() {
                   <button
                     type="button"
                     onClick={() => setMobileFilterOpen(false)}
-                    className="p-1 rounded-full text-stone-400 hover:text-brand-ink"
+                    aria-label="Close filters"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stone-500 hover:bg-stone-100 hover:text-brand-ink"
                   >
                     <X size={20} />
                   </button>

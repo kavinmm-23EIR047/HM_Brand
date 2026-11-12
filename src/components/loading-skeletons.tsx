@@ -33,11 +33,11 @@ export function ShopPageContentSkeleton() {
 }
 
 export function AdminPageSkeleton() {
-  return <div className="min-h-screen bg-[#F3F6F8]" aria-busy="true" aria-label="Loading admin page"><div className="grid min-h-screen lg:grid-cols-[248px_minmax(0,1fr)]"><aside className="hidden space-y-4 bg-[#123B3A] p-5 lg:block">{Array.from({ length: 9 }, (_, i) => <SkeletonBlock key={i} className="h-10 w-full bg-white/15" />)}</aside><AdminPageContentSkeleton /></div></div>;
+  return <div className="min-h-screen bg-[#F4F6F9]" aria-busy="true" aria-label="Loading admin page"><div className="grid min-h-screen lg:grid-cols-[252px_minmax(0,1fr)]"><aside className="hidden space-y-4 bg-[#122629] p-5 lg:block">{Array.from({ length: 10 }, (_, i) => <SkeletonBlock key={i} className="h-10 w-full bg-white/15" />)}</aside><AdminPageContentSkeleton /></div></div>;
 }
 
 export function AdminPageContentSkeleton() {
-  return <main className="mx-auto w-full max-w-7xl space-y-5 px-4 py-6 sm:px-6"><div className="rounded-2xl bg-white p-5"><SkeletonBlock className="h-7 w-56" /><SkeletonBlock className="mt-2 h-4 w-72" /></div><div className="flex gap-2 overflow-hidden rounded-2xl bg-white p-3">{Array.from({ length: 6 }, (_, i) => <SkeletonBlock key={i} className="h-10 w-24 shrink-0 rounded-xl" />)}</div><div className="rounded-2xl border border-brand-border bg-white p-4 sm:p-6"><div className="mb-5 flex justify-between"><SkeletonBlock className="h-8 w-56" /><SkeletonBlock className="h-10 w-32 rounded-xl" /></div><div className="space-y-3">{Array.from({ length: 6 }, (_, i) => <SkeletonBlock key={i} className="h-14 w-full rounded-xl" />)}</div></div></main>;
+  return <main className="mx-auto w-full max-w-[1640px] space-y-5 px-4 py-5 sm:px-6 lg:px-8"><div className="rounded-xl border border-[#DCE2EA] bg-white p-5"><SkeletonBlock className="h-7 w-56" /><SkeletonBlock className="mt-2 h-4 w-72" /></div><div className="flex gap-2 overflow-hidden rounded-xl border border-[#DCE2EA] bg-white p-3">{Array.from({ length: 6 }, (_, i) => <SkeletonBlock key={i} className="h-10 w-28 shrink-0 rounded-lg" />)}</div><div className="rounded-xl border border-[#DCE2EA] bg-white p-4 sm:p-6"><div className="mb-5 flex justify-between"><SkeletonBlock className="h-8 w-56" /><SkeletonBlock className="h-10 w-36 rounded-lg" /></div><div className="space-y-3">{Array.from({ length: 6 }, (_, i) => <SkeletonBlock key={i} className="h-14 w-full rounded-lg" />)}</div></div></main>;
 }
 
 export function ContactPageSkeleton() {
