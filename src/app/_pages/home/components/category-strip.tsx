@@ -19,7 +19,10 @@ interface CategoryItem {
     name: string;
     slug: string;
     desc: string;
+    price?: string;
+    badge?: string;
     icon: "sparkles" | "package" | "zap";
+    art: any;
     children?: { name: string; slug: string }[];
   }[];
 }
@@ -54,8 +57,11 @@ const agarbattiSubcategories = [
   {
     name: "Exclusive",
     slug: "exclusive",
+    price: "₹125",
+    badge: "50–65 Sticks",
     desc: "MRP ₹125 · Signature collection · 50–65 sticks",
     icon: "sparkles" as const,
+    art: "incense" as const,
     children: [
       { name: "Pancharudhra", slug: "pancha-rudhra" },
       { name: "Real Stone", slug: "real-stone" },
@@ -73,8 +79,11 @@ const agarbattiSubcategories = [
   {
     name: "Budget Pack",
     slug: "budget-pack",
+    price: "₹120",
+    badge: "12-Box Bundle",
     desc: "₹12 MRP/box · 12 sticks/box · 12-Box Bundle (₹120)",
     icon: "package" as const,
+    art: "family-pack" as const,
     children: [
       { name: "Jasmine", slug: "jasmine-budget-pack" },
       { name: "Kewda", slug: "kewda-budget-pack" },
@@ -92,8 +101,11 @@ const agarbattiSubcategories = [
   {
     name: "Super Series",
     slug: "super-series",
+    price: "₹75",
+    badge: "100g Pack",
     desc: "MRP ₹75 · 100gms · 6 signature fragrances",
     icon: "zap" as const,
+    art: "dhoop-stick" as const,
     children: [
       { name: "Rose", slug: "rose" },
       { name: "Glory", slug: "glory" },
@@ -215,6 +227,7 @@ function getPreset(slug: string, name: string, idx: number) {
 export function CategoryStrip() {
   const { dbCategories } = useStore();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeSubTab, setActiveSubTab] = useState<string>("exclusive");
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -300,10 +313,11 @@ export function CategoryStrip() {
   const activeSubCategoryOwner = categories.find(
     (c) => c.slug === activeDropdown && c.subCategories && c.subCategories.length > 0
   );
+  const activeSub = activeSubCategoryOwner?.subCategories?.find((s) => s.slug === activeSubTab) || activeSubCategoryOwner?.subCategories?.[0];
 
   return (
     <section
-      className="relative z-30 w-full overflow-visible border-y border-brand-border bg-white py-5 sm:py-7"
+      className="relative z-30 w-full overflow-visible bg-brand-surface-alt py-3.5 sm:py-6"
       ref={containerRef}
       onMouseEnter={() => setAutoplayPaused(true)}
       onMouseLeave={() => {
@@ -320,18 +334,18 @@ export function CategoryStrip() {
       <div className="page-container">
         
         {/* Section Header */}
-        <div className="mb-3 flex items-center justify-between gap-2 sm:mb-4">
+        <div className="mb-2.5 flex items-center justify-between gap-2 sm:mb-4">
           <span className="hidden h-px w-8 bg-brand-primary/30 sm:inline-block" />
-          <span className="flex-1 text-center font-brand text-xs font-bold tracking-[.15em] text-brand-primary uppercase sm:tracking-[.2em]">
+          <span className="flex-1 text-center font-brand text-[11px] sm:text-xs font-bold tracking-[.14em] text-brand-primary uppercase sm:tracking-[.2em]">
             EXPLORE SACRED CATEGORIES
           </span>
           <span className="hidden h-px w-8 bg-brand-primary/30 sm:inline-block" />
           <div className="flex shrink-0 items-center gap-1.5">
-            <button type="button" onClick={() => moveSlider(activeSlide - 1)} aria-label="Previous categories" className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:text-brand-primary sm:h-11 sm:w-11">
-              <ChevronLeft size={18} />
+            <button type="button" onClick={() => moveSlider(activeSlide - 1)} aria-label="Previous categories" className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:text-brand-primary sm:h-11 sm:w-11">
+              <ChevronLeft size={16} />
             </button>
-            <button type="button" onClick={() => moveSlider(activeSlide + 1)} aria-label="Next categories" className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:text-brand-primary sm:h-11 sm:w-11">
-              <ChevronRight size={18} />
+            <button type="button" onClick={() => moveSlider(activeSlide + 1)} aria-label="Next categories" className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:text-brand-primary sm:h-11 sm:w-11">
+              <ChevronRight size={16} />
             </button>
           </div>
         </div>
@@ -385,7 +399,7 @@ export function CategoryStrip() {
                     </div>
                   </Link>
 
-                  {/* Accessible Click/Tap Toggle Button for Subcategories (Never Clipped!) */}
+                  {/* Accessible Click/Tap Toggle Button for Subcategories */}
                   {hasSubs && (
                     <button
                       type="button"
@@ -395,10 +409,11 @@ export function CategoryStrip() {
                         setActiveDropdown(isDropdownOpen ? null : item.slug);
                       }}
                       aria-expanded={isDropdownOpen}
-                      className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-primary text-ui-11 font-bold text-brand-accent px-2.5 py-0.5 shadow-2xs border border-brand-accent/50 hover:bg-brand-hover transition"
+                      className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-brand-primary text-ui-11 font-bold text-brand-accent px-3 py-1 shadow-2xs border border-brand-accent/60 hover:bg-brand-hover hover:border-brand-accent hover:scale-105 active:scale-95 transition-all cursor-pointer"
                     >
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand-accent animate-pulse" />
                       <span>3 Series</span>
-                      <ChevronDown size={11} className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown size={11} className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180 text-white" : ""}`} />
                     </button>
                   )}
                 </div>
@@ -406,83 +421,175 @@ export function CategoryStrip() {
             })}
           </div>
 
-          {/* Interactive Non-Clipped Flyout Panel Positioned Outside overflow-x-auto */}
+          {/* Interactive Luxury Non-Clipped Subcategory Flyout Panel */}
           {activeSubCategoryOwner && (
-            <div className="absolute left-0 top-full z-50 w-full max-w-[600px] pt-2.5 text-left animate-in fade-in slide-in-from-top-1 duration-150">
-              <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-brand-border bg-white shadow-[0_20px_50px_rgba(23,59,58,0.18)]">
-                <div className="flex items-start justify-between gap-4 border-b border-brand-border bg-brand-surface-soft px-5 py-4 sm:px-6">
+            <div className="absolute left-0 right-0 sm:left-0 sm:right-auto sm:w-[620px] top-full z-50 pt-2 text-left animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-[#EAE1D3] bg-[#FFFDF8] shadow-[0_24px_60px_rgba(48,41,35,0.18)]">
+                
+                {/* 1. Header with Royal Crimson Gradient & Temple Gold */}
+                <div className="flex items-center justify-between gap-3 border-b border-[#EAE1D3] bg-gradient-to-r from-[#9E1830] via-[#851327] to-[#9E1830] px-4 py-3 sm:px-6 sm:py-3.5 text-white">
                   <div>
-                    <p className="flex items-center gap-2 text-xs font-extrabold tracking-[.14em] text-brand-primary uppercase">
-                      <Sparkles size={14} className="text-brand-orange" /> {activeSubCategoryOwner.name} Collections
+                    <p className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.2em] text-[#C89B3C] uppercase">
+                      <Sparkles size={12} className="text-[#C89B3C]" /> {activeSubCategoryOwner.name} Collections
                     </p>
-                    <p className="mt-1 text-xs text-[#68756D]">Choose a series, then pick a fragrance.</p>
+                    <h3 className="font-heading text-sm sm:text-base font-bold text-white tracking-wide mt-0.5">
+                      Select a Series to Browse Fragrances
+                    </h3>
                   </div>
                   <button
                     type="button"
                     onClick={() => setActiveDropdown(null)}
-                    aria-label="Close Agarbatti categories"
-                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-brand-border bg-white text-brand-ink transition hover:border-brand-primary hover:text-brand-primary"
+                    aria-label="Close categories"
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/25 bg-white/10 text-white transition hover:bg-white/20 hover:scale-105 active:scale-95 cursor-pointer"
                   >
-                    <X size={16} />
+                    <X size={15} />
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5">
-                  {activeSubCategoryOwner.subCategories?.map((sub) => (
-                    <section
-                      key={sub.slug}
-                      className={`rounded-2xl border border-brand-border/80 bg-brand-surface-bright p-3.5 ${!sub.children ? "sm:col-span-2 sm:order-last" : ""}`}
-                    >
-                      <div className="flex items-start gap-2.5">
-                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-brand-surface-warm text-brand-primary">
-                          {sub.icon === "sparkles" ? <Sparkles size={16} /> : sub.icon === "package" ? <Package size={16} /> : <Zap size={16} />}
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <Link
-                            href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
-                            onClick={() => setActiveDropdown(null)}
-                            className="text-xs font-extrabold text-brand-ink transition hover:text-brand-primary"
-                          >
-                            {sub.name}
-                          </Link>
-                          <p className="mt-0.5 text-ui-11 leading-relaxed text-[#5F6D66]">{sub.desc}</p>
-                        </div>
-                        <Link
-                          href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(sub.name)}`}
-                          onClick={() => setActiveDropdown(null)}
-                          aria-label={`Browse ${sub.name}`}
-                          className="mt-1 text-brand-primary transition hover:translate-x-0.5"
+                {/* 2. Side-by-Side Series Circles Strip */}
+                <div className="bg-[#F5EFE3]/70 px-3 py-2.5 sm:px-5 sm:py-3 border-b border-[#EAE1D3]">
+                  <div className="flex items-center justify-between mb-2 px-1">
+                    <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-[#746B62]">
+                      Explore by Series ({activeSubCategoryOwner.subCategories?.length || 3})
+                    </span>
+                    <span className="text-[10px] font-semibold text-brand-primary">
+                      Tap series circle to switch
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                    {activeSubCategoryOwner.subCategories?.map((sub) => {
+                      const isTabActive = activeSub?.slug === sub.slug;
+                      return (
+                        <button
+                          key={sub.slug}
+                          type="button"
+                          onClick={() => setActiveSubTab(sub.slug)}
+                          className={`group/circle flex flex-col items-center p-2 rounded-xl transition-all duration-200 cursor-pointer text-center relative border ${
+                            isTabActive
+                              ? "bg-white shadow-xs border-[#C89B3C] ring-2 ring-[#C89B3C]/35 scale-[1.02]"
+                              : "bg-white/60 hover:bg-white border-[#EAE1D3] hover:border-[#C89B3C]/60"
+                          }`}
                         >
-                          <ArrowRight size={14} />
-                        </Link>
-                      </div>
-                      {sub.children && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {sub.children.map((child) => (
-                            <Link
-                              key={child.slug}
-                              href={`/product/${child.slug}`}
-                              onClick={() => setActiveDropdown(null)}
-                              className="rounded-full border border-brand-border bg-white px-2.5 py-1 text-ui-11 font-semibold text-brand-ink transition hover:border-brand-primary hover:bg-brand-primary hover:text-white"
+                          {/* Series Main Circle with Side Circle Badge */}
+                          <div className="relative mb-1.5">
+                            <div
+                              className={`h-11 w-11 sm:h-13 sm:w-13 rounded-full overflow-hidden p-1 transition-all duration-200 ${
+                                isTabActive
+                                  ? "bg-brand-primary ring-2 ring-[#C89B3C] shadow-sm"
+                                  : "bg-brand-primary/85 group-hover/circle:bg-brand-primary group-hover/circle:scale-105"
+                              }`}
                             >
-                              {child.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </section>
-                  ))}
+                              <RitualArt kind={sub.art} className="h-full w-full scale-[1.12]" />
+                            </div>
+
+                            {/* Small Side Circle Badge at bottom right */}
+                            <div
+                              className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 sm:h-4.5 sm:w-4.5 rounded-full flex items-center justify-center text-[9px] font-bold border border-white shadow-2xs ${
+                                isTabActive
+                                  ? "bg-[#C89B3C] text-[#302923]"
+                                  : "bg-[#F5EFE3] text-[#746B62] group-hover/circle:bg-[#C89B3C] group-hover/circle:text-[#302923]"
+                              }`}
+                            >
+                              {sub.children?.length || 0}
+                            </div>
+                          </div>
+
+                          <span className={`text-[11px] sm:text-xs font-bold leading-tight ${isTabActive ? "text-brand-primary" : "text-[#302923]"}`}>
+                            {sub.name}
+                          </span>
+                          <span className="text-[10px] text-brand-primary font-semibold mt-0.5">
+                            {sub.price}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <div className="border-t border-brand-border bg-brand-surface-soft px-4 py-3 sm:px-5">
+                {/* 3. Active Series Details Card with Prominent Side Circle */}
+                {activeSub && (
+                  <div className="p-3.5 sm:p-5 space-y-3">
+                    {/* Series Hero Banner with Side Circle */}
+                    <div className="flex items-start gap-3 sm:gap-4 p-3 rounded-xl bg-white border border-[#EAE1D3] shadow-2xs">
+                      {/* Prominent Side Circle */}
+                      <div className="relative shrink-0">
+                        <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-brand-primary p-1.5 border-2 border-[#C89B3C] ring-4 ring-[#F5EFE3] shadow-sm overflow-hidden">
+                          <RitualArt kind={activeSub.art} className="h-full w-full scale-[1.15]" />
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-[#C89B3C] text-[#302923] flex items-center justify-center font-bold text-[10px] border-2 border-white shadow-2xs">
+                          {activeSub.children?.length || 0}
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <h4 className="font-heading text-sm sm:text-base font-bold text-[#302923]">
+                            {activeSub.name} Series
+                          </h4>
+                          {activeSub.badge && (
+                            <span className="inline-block rounded-full bg-[#F5EFE3] border border-[#C89B3C]/40 px-2 py-0.5 text-[10px] font-bold text-brand-primary">
+                              {activeSub.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-0.5 text-[11px] sm:text-xs text-[#746B62] leading-snug">
+                          {activeSub.desc}
+                        </p>
+                        <div className="mt-1.5">
+                          <Link
+                            href={`/shop?category=agarbatti&subcategory=${encodeURIComponent(activeSub.name)}`}
+                            onClick={() => setActiveDropdown(null)}
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-brand-primary hover:text-brand-hover hover:underline"
+                          >
+                            Browse entire {activeSub.name} range <ArrowRight size={12} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Fragrance List Header */}
+                    <div className="pt-1">
+                      <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#746B62] mb-2 px-1">
+                        <span>Fragrances in {activeSub.name} ({activeSub.children?.length || 0})</span>
+                        <span className="text-[10px] font-normal normal-case text-stone-500">Click to view product</span>
+                      </div>
+
+                      {/* Fragrance Chips with Mini Side Circles */}
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 max-h-[160px] overflow-y-auto pr-1">
+                        {activeSub.children?.map((child, idx) => (
+                          <Link
+                            key={child.slug}
+                            href={`/product/${child.slug}`}
+                            onClick={() => setActiveDropdown(null)}
+                            className="group/chip inline-flex items-center gap-1.5 rounded-full border border-[#EAE1D3] bg-white px-2.5 py-1 text-xs font-semibold text-[#302923] shadow-2xs transition-all duration-150 hover:border-brand-primary hover:bg-[#9E1830] hover:text-white hover:scale-[1.02]"
+                          >
+                            {/* Mini Side Circle */}
+                            <span className="h-4 w-4 rounded-full bg-[#F5EFE3] group-hover/chip:bg-white/20 border border-[#C89B3C]/50 group-hover/chip:border-white/50 flex items-center justify-center text-[9px] font-bold text-brand-primary group-hover/chip:text-white shrink-0 transition-colors">
+                              {idx + 1}
+                            </span>
+                            <span>{child.name}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Luxury Footer */}
+                <div className="border-t border-[#EAE1D3] bg-[#F5EFE3]/80 px-4 py-2.5 sm:px-6 sm:py-3 flex items-center justify-between gap-3">
+                  <span className="text-[11px] font-sans text-[#746B62] hidden sm:inline">
+                    Handcrafted in Coimbatore · 100% Charcoal-Free
+                  </span>
                   <Link
                     href="/shop?category=agarbatti"
                     onClick={() => setActiveDropdown(null)}
-                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-xs font-bold text-white transition hover:bg-brand-hover"
+                    className="flex min-h-9 sm:min-h-10 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-brand-hover hover:scale-[1.01]"
                   >
-                    View all {activeSubCategoryOwner.name} <ArrowRight size={14} />
+                    View All 28 Agarbatti Fragrances <ArrowRight size={13} />
                   </Link>
                 </div>
+
               </div>
             </div>
           )}

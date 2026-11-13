@@ -15,6 +15,8 @@ import adminRoutes from '../modules/admin/admin.routes';
 import addressesRoutes from '../modules/addresses/addresses.routes';
 import mediaRoutes from '../modules/media/media.routes';
 import contentRoutes from '../modules/content/content.routes';
+import notificationsRoutes from '../modules/notifications/notifications.routes';
+import leadsRoutes from '../modules/leads/leads.routes';
 
 const router = Router();
 
@@ -34,5 +36,7 @@ router.use('/coupons', couponsRoutes);
 router.use('/admin', adminRoutes);
 router.use('/media', mediaRoutes);
 router.use('/content', contentRoutes);
+router.use('/notifications', notificationsRoutes);
+router.use('/leads', leadsRoutes);
 
 export default router;

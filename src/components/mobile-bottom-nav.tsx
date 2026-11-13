@@ -24,8 +24,7 @@ export function MobileBottomNav() {
         }
 
         const footerBounds = footer.getBoundingClientRect();
-        const navTop = window.innerHeight - nav.getBoundingClientRect().height;
-        setIsFooterVisible(footerBounds.top < navTop && footerBounds.bottom > 0);
+        setIsFooterVisible(footerBounds.top < window.innerHeight && footerBounds.bottom > 0);
       });
     };
 
@@ -42,14 +41,14 @@ export function MobileBottomNav() {
   if (pathname?.startsWith("/admin") || pathname === "/login" || pathname?.startsWith("/product/")) return null;
 
   const itemClass = (active: boolean) =>
-    `flex h-12 min-w-[52px] flex-col items-center justify-center gap-1 text-xs font-bold tracking-wide transition-colors ${
-      active ? "text-brand-primary" : "text-brand-ink/85 hover:text-brand-primary"
+    `flex h-12 min-w-[52px] flex-col items-center justify-center gap-1 font-sans text-xs font-semibold tracking-wide transition-colors ${
+      active ? "text-brand-primary" : "text-brand-slate hover:text-brand-primary"
     }`;
 
   return (
     <nav
       aria-label="Mobile primary"
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-brand-border bg-sandalLight md:hidden transition-all duration-300 ease-in-out ${
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-brand-border bg-brand-surface/95 backdrop-blur-md md:hidden transition-all duration-300 ease-in-out ${
         isFooterVisible
           ? "translate-y-full opacity-0 pointer-events-none"
           : "translate-y-0 opacity-100 pointer-events-auto"

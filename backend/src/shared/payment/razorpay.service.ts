@@ -93,6 +93,29 @@ export class RazorpayService {
 
     return expectedSignature === options.razorpaySignature;
   }
+
+  /**
+   * Verifies Razorpay Webhook signature using HMAC SHA-256
+   */
+  verifyWebhookSignature(rawBody: string, signature: string): boolean {
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET || this.keySecret;
+    if (!secret) {
+      console.warn('[RazorpayService] RAZORPAY_WEBHOOK_SECRET is missing.');
+      return false;
+    }
+
+    try {
+      const expected = crypto
+        .createHmac('sha256', secret)
+        .update(rawBody)
+        .digest('hex');
+
+      return expected === signature;
+    } catch (err) {
+      console.error('[RazorpayService] Error verifying webhook signature', err);
+      return false;
+    }
+  }
 }
 
 export const razorpayService = new RazorpayService();

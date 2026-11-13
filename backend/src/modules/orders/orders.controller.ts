@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ordersService, OrdersService } from './orders.service';
 import { sendSuccess, sendPaginated } from '../../shared/utils/response.util';
+import { razorpayService } from '../../shared/payment/razorpay.service';
 
 export class OrdersController {
   constructor(private service: OrdersService = ordersService) {}
@@ -26,6 +27,26 @@ export class OrdersController {
         razorpaySignature: req.body.razorpaySignature,
       });
       return sendSuccess(res, updatedOrder, 'Payment verified successfully');
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  handleWebhook = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const signature = req.headers['x-razorpay-signature'] as string;
+      const rawBody = (req as any).rawBody || JSON.stringify(req.body);
+
+      if (signature) {
+        const isValid = razorpayService.verifyWebhookSignature(rawBody, signature);
+        if (!isValid) {
+          console.warn('[OrdersController] Webhook signature verification failed');
+          return res.status(400).json({ success: false, message: 'Invalid webhook signature' });
+        }
+      }
+
+      const result = await this.service.processRazorpayWebhook(req.body);
+      return res.status(200).json({ success: true, ...result });
     } catch (error) {
       return next(error);
     }

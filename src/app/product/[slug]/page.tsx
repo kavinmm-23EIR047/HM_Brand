@@ -112,7 +112,7 @@ export default async function ProductDetailsPage({
       subtitle={product.note}
       showHero={false}
     >
-      <div className="page-container py-4 sm:py-8 pb-28 md:pb-8 space-y-6 sm:space-y-12">
+      <div className="page-container py-4 sm:py-8 pb-6 sm:pb-10 space-y-6 sm:space-y-10">
 
         {/* ─── 1. BREADCRUMB ─── */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-ui-13 font-medium text-stone-500">
@@ -405,109 +405,139 @@ export default async function ProductDetailsPage({
           </div>
         </section>
 
-        {/* ─── 4. DUAL CARDS: BOTANICAL BENEFITS & NATURAL CARE ─── */}
-        <section className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-2">
+        {/* ─── 4. DUAL CARDS: BOTANICAL BENEFITS & NATURAL CARE (PREMIUM REDESIGN) ─── */}
+        <section className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2">
           
-          {/* Left Card: Sacred Botanical Benefits (Mint Surface) */}
-          <div className="rounded-2xl sm:rounded-3xl border border-brand-positive-soft bg-[#F2F8F3] p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-green-dark uppercase mb-1">
-                <Leaf size={13} />
-                WELLBEING &amp; PURITY
+          {/* Card 1: Sacred Botanical Benefits */}
+          <div className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-[#EAE1D3] bg-white p-5 sm:p-7 shadow-2xs hover:shadow-md hover:border-[#C89B3C]/50 transition-all duration-300">
+            {/* Subtle Golden Lotus Watermark in Background */}
+            <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.06] select-none text-[#C89B3C]">
+              <Lotus className="h-44 w-44" />
+            </div>
+
+            {/* Header */}
+            <div className="relative z-10 space-y-1 pb-4 border-b border-[#EAE1D3]/80">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-[0.2em] text-brand-primary uppercase">
+                <Leaf size={12} className="text-[#C89B3C]" />
+                Wellbeing &amp; Purity
               </span>
-              <h3 className="font-playfair text-2xl sm:text-3xl text-brand-ink font-bold tracking-tight">
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#302923] tracking-tight">
                 Sacred Botanical Benefits
               </h3>
             </div>
 
-            {/* 3 Benefit Badges */}
-            <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 sm:gap-4 pt-1 sm:pt-2">
-              <div className="space-y-1 sm:space-y-2">
-                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
-                  <Leaf size={15} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
+            {/* 3 Benefit Feature Blocks */}
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 pt-4">
+              {/* Item 1 */}
+              <div className="group/item flex flex-col justify-between rounded-xl p-3 bg-brand-surface-warm/30 hover:bg-[#F5EFE3]/70 border border-[#EAE1D3]/70 transition-all duration-200">
+                <div className="h-10 w-10 rounded-xl bg-white border border-[#C89B3C]/35 text-brand-primary flex items-center justify-center shadow-2xs mb-2.5 group-hover/item:scale-105 group-hover/item:border-brand-primary/50 transition-all">
+                  <Leaf size={18} className="text-brand-primary" />
                 </div>
-                <strong className="text-xs font-bold text-brand-ink block leading-tight">
-                  100% natural ingredients
-                </strong>
-                <p className="text-ui-11 text-stone-600 leading-relaxed">
-                  Pure plant extracts and essential oils.
-                </p>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
+                    100% Natural Ingredients
+                  </h4>
+                  <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
+                    Pure plant extracts and essential oils.
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-1 sm:space-y-2">
-                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
-                  <ShieldCheck size={15} className="sm:hidden" /><ShieldCheck size={18} className="hidden sm:block" />
+              {/* Item 2 */}
+              <div className="group/item flex flex-col justify-between rounded-xl p-3 bg-brand-surface-warm/30 hover:bg-[#F5EFE3]/70 border border-[#EAE1D3]/70 transition-all duration-200">
+                <div className="h-10 w-10 rounded-xl bg-white border border-[#C89B3C]/35 text-brand-primary flex items-center justify-center shadow-2xs mb-2.5 group-hover/item:scale-105 group-hover/item:border-brand-primary/50 transition-all">
+                  <ShieldCheck size={18} className="text-brand-primary" />
                 </div>
-                <strong className="text-xs font-bold text-brand-ink block leading-tight">
-                  Zero harmful chemicals
-                </strong>
-                <p className="text-ui-11 text-stone-600 leading-relaxed">
-                  Safe for family, children and pets.
-                </p>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
+                    Zero Harmful Chemicals
+                  </h4>
+                  <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
+                    Safe for family, children and pets.
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-1 sm:space-y-2">
-                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-green-dark/12 text-brand-green-dark flex items-center justify-center">
-                  <Sparkles size={15} className="sm:hidden" /><Sparkles size={18} className="hidden sm:block" />
+              {/* Item 3 */}
+              <div className="group/item flex flex-col justify-between rounded-xl p-3 bg-brand-surface-warm/30 hover:bg-[#F5EFE3]/70 border border-[#EAE1D3]/70 transition-all duration-200">
+                <div className="h-10 w-10 rounded-xl bg-white border border-[#C89B3C]/35 text-brand-primary flex items-center justify-center shadow-2xs mb-2.5 group-hover/item:scale-105 group-hover/item:border-brand-primary/50 transition-all">
+                  <Sparkles size={18} className="text-brand-primary" />
                 </div>
-                <strong className="text-xs font-bold text-brand-ink block leading-tight">
-                  Uplifts clarity and divine ambience
-                </strong>
-                <p className="text-ui-11 text-stone-600 leading-relaxed">
-                  Purifies negative energies and restores peace.
-                </p>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
+                    Divine Ambience
+                  </h4>
+                  <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
+                    Purifies negative energies and restores peace.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Card: Preserving Maximum Fragrance (Warm Cream Surface) */}
-          <div className="rounded-2xl sm:rounded-3xl border border-brand-surface-warm bg-[#FFFBF4] p-4 sm:p-8 relative overflow-hidden shadow-2xs space-y-3 sm:space-y-5">
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-primary uppercase mb-1">
-                <Sparkles size={13} />
-                NATURAL CARE
+          {/* Card 2: Preserving Maximum Fragrance */}
+          <div className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-[#EAE1D3] bg-white p-5 sm:p-7 shadow-2xs hover:shadow-md hover:border-[#C89B3C]/50 transition-all duration-300">
+            {/* Subtle Golden Lotus Watermark in Background */}
+            <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.06] select-none text-[#C89B3C]">
+              <Lotus className="h-44 w-44" />
+            </div>
+
+            {/* Header */}
+            <div className="relative z-10 space-y-1 pb-4 border-b border-[#EAE1D3]/80">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-[0.2em] text-[#C89B3C] uppercase">
+                <Sparkles size={12} className="text-[#C89B3C]" />
+                Natural Care
               </span>
-              <h3 className="font-playfair text-2xl sm:text-3xl text-brand-ink font-bold tracking-tight">
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#302923] tracking-tight">
                 Preserving Maximum Fragrance
               </h3>
             </div>
 
-            {/* 3 Care Badges */}
-            <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 sm:gap-4 pt-1 sm:pt-2">
-              <div className="space-y-1 sm:space-y-2">
-                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
-                  <Sun size={15} className="sm:hidden" /><Sun size={18} className="hidden sm:block" />
+            {/* 3 Care Feature Blocks */}
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 pt-4">
+              {/* Item 1 */}
+              <div className="group/item flex flex-col justify-between rounded-xl p-3 bg-brand-surface-warm/30 hover:bg-[#F5EFE3]/70 border border-[#EAE1D3]/70 transition-all duration-200">
+                <div className="h-10 w-10 rounded-xl bg-white border border-[#C89B3C]/35 text-[#C89B3C] flex items-center justify-center shadow-2xs mb-2.5 group-hover/item:scale-105 group-hover/item:border-[#C89B3C] transition-all">
+                  <Sun size={18} className="text-[#C89B3C]" />
                 </div>
-                <strong className="text-xs font-bold text-brand-ink block leading-tight">
-                  Keep in shade
-                </strong>
-                <p className="text-ui-11 text-stone-600 leading-relaxed">
-                  Store in a cool, dry place away from direct sunlight and heat.
-                </p>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
+                    Keep in Shade
+                  </h4>
+                  <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
+                    Store in a cool place away from direct sunlight.
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-1 sm:space-y-2">
-                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
-                  <Droplets size={15} className="sm:hidden" /><Droplets size={18} className="hidden sm:block" />
+              {/* Item 2 */}
+              <div className="group/item flex flex-col justify-between rounded-xl p-3 bg-brand-surface-warm/30 hover:bg-[#F5EFE3]/70 border border-[#EAE1D3]/70 transition-all duration-200">
+                <div className="h-10 w-10 rounded-xl bg-white border border-[#C89B3C]/35 text-[#C89B3C] flex items-center justify-center shadow-2xs mb-2.5 group-hover/item:scale-105 group-hover/item:border-[#C89B3C] transition-all">
+                  <Droplets size={18} className="text-[#C89B3C]" />
                 </div>
-                <strong className="text-xs font-bold text-brand-ink block leading-tight">
-                  Resist humidity
-                </strong>
-                <p className="text-ui-11 text-stone-600 leading-relaxed">
-                  Ensure packaging is resealed after each use.
-                </p>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
+                    Resist Humidity
+                  </h4>
+                  <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
+                    Ensure packaging is resealed after each use.
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-1 sm:space-y-2">
-                <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-full bg-brand-primary/12 text-brand-primary flex items-center justify-center">
-                  <Lock size={15} className="sm:hidden" /><Lock size={18} className="hidden sm:block" />
+              {/* Item 3 */}
+              <div className="group/item flex flex-col justify-between rounded-xl p-3 bg-brand-surface-warm/30 hover:bg-[#F5EFE3]/70 border border-[#EAE1D3]/70 transition-all duration-200">
+                <div className="h-10 w-10 rounded-xl bg-white border border-[#C89B3C]/35 text-[#C89B3C] flex items-center justify-center shadow-2xs mb-2.5 group-hover/item:scale-105 group-hover/item:border-[#C89B3C] transition-all">
+                  <Lock size={18} className="text-[#C89B3C]" />
                 </div>
-                <strong className="text-xs font-bold text-brand-ink block leading-tight">
-                  Preserve freshness
-                </strong>
-                <p className="text-ui-11 text-stone-600 leading-relaxed">
-                  Use within 12 months of opening.
-                </p>
+                <div>
+                  <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
+                    Preserve Freshness
+                  </h4>
+                  <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
+                    Use within 12 months of opening pack.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

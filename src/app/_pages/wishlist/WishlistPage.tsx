@@ -6,6 +6,7 @@ import { ArrowRight, Heart, Sparkles } from "lucide-react";
 import { InnerPage } from "@/components/inner-page";
 import { useStore } from "@/components/store";
 import { ProductCard } from "@/app/product/[slug]/_components/ProductCard";
+import { SkeletonProductCard } from "@/components/loading-skeletons";
 
 export default function WishlistPage() {
   const { wishlist, dbProducts, isInitialDataLoading } = useStore();
@@ -30,15 +31,9 @@ export default function WishlistPage() {
     >
       <div className="page-container py-6 sm:py-9">
         {!isMounted || isLoadingSavedProducts ? (
-          <section aria-label="Loading wishlist" aria-busy="true" className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          <section aria-label="Loading wishlist" aria-busy="true" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {Array.from({ length: 4 }, (_, index) => (
-              <div key={index} className="overflow-hidden rounded-2xl border border-brand-border bg-white p-2.5">
-                <div className="aspect-square animate-pulse rounded-xl bg-brand-border/45" />
-                <div className="space-y-2 p-2 pt-3">
-                  <div className="h-4 w-4/5 animate-pulse rounded bg-brand-border/45" />
-                  <div className="h-3 w-2/3 animate-pulse rounded bg-brand-border/45" />
-                </div>
-              </div>
+              <SkeletonProductCard key={index} />
             ))}
           </section>
         ) : savedProducts.length === 0 && wishlist.length === 0 ? (

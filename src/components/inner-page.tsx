@@ -21,13 +21,13 @@ export function InnerPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-sandalLight text-brand-ink font-sans antialiased selection:bg-brand-accent selection:text-brand-ink">
+    <div className="min-h-screen flex flex-col justify-between bg-brand-surface-alt text-brand-ink font-sans antialiased selection:bg-brand-accent selection:text-brand-ink">
       <div>
         <Navigation />
 
         {/* Solid Editorial Heritage Page Banner */}
         {showHero && (
-          <section className="relative overflow-hidden border-b border-brand-border bg-brand-surface-warm py-8 sm:py-10">
+          <section className="relative overflow-hidden border-b border-brand-border bg-brand-surface-alt py-8 sm:py-10">
             {/* Ambient Rotating Mandala */}
             <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 sm:h-96 sm:w-96 opacity-15">
               <MandalaMotif speed={90} strokeColor="var(--brand-orange)" strokeWidth={1.5} counterRotate={true} />
@@ -87,7 +87,7 @@ export function InnerPage({
         )}
 
         {/* Main Content Body */}
-        <main className="pb-20 md:pb-0">{children}</main>
+        <main className="pb-4 md:pb-0">{children}</main>
       </div>
 
       <Footer />

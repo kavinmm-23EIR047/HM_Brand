@@ -41,15 +41,15 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs hover:border-brand-primary hover:shadow-md transition-all duration-300">
-      {/* Top Image & Badge Container - Full Width Uncropped */}
-      <div className="relative aspect-square w-full overflow-hidden bg-brand-surface-soft border-b border-brand-border/70 flex items-center justify-center p-2.5 sm:p-3.5">
-        <Link href={`/product/${product.slug}`} className="flex h-full w-full items-center justify-center">
+    <article className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+      {/* Top Image: Balanced Square Aspect Ratio Frame - Clean Full-Bleed with Rounded Corners */}
+      <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-t-2xl border-b border-brand-border/70 bg-brand-surface-warm/30">
+        <Link href={`/product/${product.slug}`} className="relative block h-full w-full overflow-hidden">
           {product.image ? (
             <img
               src={product.image}
               alt={product.name}
-              className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget as HTMLImageElement;
                 if (!target.src.includes("hm_glory_agarbatti")) {
@@ -58,40 +58,40 @@ export function ProductCard({ product }: { product: Product }) {
               }}
             />
           ) : (
-            <div className="flex flex-col items-center text-center text-brand-ink select-none p-4">
-              <SacredDiyaSvg className="h-11 w-11 transition transform group-hover:scale-110" />
-              <p className="mt-2.5 font-space text-ui-11 font-bold tracking-widest text-brand-primary uppercase">
-                HM AGARBATTIS
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-[#F5EFE3] to-[#FFFDF8] p-4 text-center select-none">
+              <SacredDiyaSvg className="h-11 w-11 text-brand-primary/80 transition transform group-hover:scale-110" />
+              <p className="mt-2.5 font-sans text-xs font-bold tracking-widest text-brand-primary uppercase">
+                HM PURITY
               </p>
-              <p className="text-xs font-semibold text-brand-ink mt-0.5">{product.subCategory || product.category}</p>
+              <p className="font-sans text-[11px] text-brand-slate mt-0.5">{product.subCategory || product.category || "Devotional Essentials"}</p>
             </div>
           )}
         </Link>
 
-        {/* Badge */}
+        {/* Floating Subtle Product Badge */}
         {product.badge && (
-          <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-ui-11 sm:text-xs font-bold uppercase tracking-wider text-brand-primary shadow-xs border border-brand-border">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-primary" />
-              {product.badge}
+          <div className="absolute left-2.5 top-2.5 z-10 max-w-[calc(100%-3.5rem)] pointer-events-none sm:left-3 sm:top-3">
+            <span className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-md px-2.5 py-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-brand-primary shadow-xs border border-brand-border/80">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary" />
+              <span className="truncate">{product.badge}</span>
             </span>
           </div>
         )}
 
-        {/* Wishlist Button */}
+        {/* Floating Wishlist Button */}
         <button
           onClick={(e) => {
             e.preventDefault();
             toggleWishlist(product.slug);
           }}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute right-2.5 top-2.5 z-10 h-9 w-9 rounded-full flex items-center justify-center transition border shadow-2xs ${
+          className={`absolute right-2.5 top-2.5 z-10 h-8 w-8 sm:right-3 sm:top-3 sm:h-9 sm:w-9 rounded-full flex items-center justify-center transition-all duration-200 border shadow-xs cursor-pointer ${
             wishlisted
-              ? "bg-brand-primary text-white border-brand-primary"
-              : "bg-white text-brand-ink/80 border-brand-border hover:bg-brand-primary hover:text-white hover:border-brand-primary"
+              ? "bg-brand-primary text-white border-brand-primary scale-105"
+              : "bg-white/95 backdrop-blur-md text-brand-heading border-brand-border/80 hover:bg-brand-primary hover:text-white hover:border-brand-primary hover:scale-105 active:scale-95"
           }`}
         >
-          <Heart size={15} fill={wishlisted ? "currentColor" : "none"} />
+          <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill={wishlisted ? "currentColor" : "none"} />
         </button>
       </div>
 
@@ -101,52 +101,52 @@ export function ProductCard({ product }: { product: Product }) {
           {/* Rating (Render only if real backend rating & reviews exist) */}
           {hasProductRating(product) ? (
             <div className="flex items-center gap-1.5 text-xs sm:text-sm mb-1.5">
-              <div className="flex text-[#F47A20]">
+              <div className="flex text-brand-accent">
                 <Star size={13} fill="currentColor" />
               </div>
-              <span className="font-bold text-xs sm:text-sm text-[#111827]">{product.rating.toFixed(1)}</span>
-              <span className="text-[#4B5563] text-xs font-medium">({product.reviewCount})</span>
+              <span className="font-bold text-xs sm:text-sm text-brand-heading">{product.rating.toFixed(1)}</span>
+              <span className="text-brand-slate text-xs font-medium">({product.reviewCount})</span>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 text-xs text-[#287541] font-semibold mb-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#287541]" />
+            <div className="flex items-center gap-1.5 text-xs text-brand-forest font-semibold mb-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-forest" />
               <span>Pure Sacred Purity</span>
             </div>
           )}
 
-          {/* Title - Logo font family (Cinzel / LA LUXES SERIF) */}
+          {/* Title - Manrope 16px Semibold */}
           <Link href={`/product/${product.slug}`}>
-            <h3 className="break-words font-brand text-xs sm:text-sm font-bold uppercase tracking-wider leading-snug text-brand-heading transition group-hover:text-brand-primary">
+            <h3 className="break-words font-sans text-[15px] sm:text-[16px] font-semibold tracking-normal leading-snug text-brand-heading transition-colors group-hover:text-brand-primary line-clamp-1">
               {product.name}
             </h3>
           </Link>
 
-          {/* Note / Subtitle - Crisp high contrast */}
-          <p className="mt-1 text-xs leading-relaxed text-brand-gray font-sans font-normal">
+          {/* Note / Subtitle */}
+          <p className="mt-1 text-xs leading-relaxed text-brand-slate font-sans font-normal line-clamp-2">
             {product.note}
           </p>
           {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
-            <p className="mt-1 text-[11px] font-semibold text-[#9E1830]">
+            <p className="mt-1 text-[11px] font-semibold text-brand-primary">
               {product.bundleQuantity}-Box Bundle · ₹{Math.round(effectivePrice / (product.bundleQuantity || 1))}/box
             </p>
           )}
         </div>
 
         {/* Price & Action */}
-        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 pt-2 border-t border-brand-surface-soft">
+        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 pt-2 border-t border-brand-border/60">
           <div className="min-w-0">
             <div className="flex items-baseline gap-1.5">
               {effectivePrice > 0 ? (
-                <span className="font-brand font-bold text-sm sm:text-base text-brand-primary tracking-tight">
+                <span className="font-sans font-bold text-[17px] sm:text-[18px] text-brand-primary tracking-tight">
                   ₹{effectivePrice}
                 </span>
               ) : (
-                <span className="font-brand text-ui-11 sm:text-xs font-bold uppercase tracking-wider text-brand-primary">
+                <span className="font-sans text-xs font-bold uppercase tracking-wider text-brand-primary">
                   {product.subCategory?.toLowerCase().includes("exclusive") ? "Exclusive" : "Price on Request"}
                 </span>
               )}
               {product.mrp && product.mrp !== `₹${product.price}` && (
-                <span className="font-sans text-ui-11 sm:text-xs font-medium text-brand-gray line-through">
+                <span className="font-sans text-xs font-medium text-brand-slate line-through">
                   {product.mrp}
                 </span>
               )}
@@ -160,7 +160,7 @@ export function ProductCard({ product }: { product: Product }) {
               router.push("/cart");
             }}
             disabled={!product.inStock}
-            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-brand-primary hover:bg-brand-hover px-4 py-2 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all shadow-2xs active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] bg-brand-primary hover:bg-brand-hover border border-brand-accent/40 px-3.5 sm:px-4 py-2 font-sans text-xs sm:text-sm font-semibold uppercase tracking-wider text-white transition-all duration-200 shadow-2xs hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
           >
             <ShoppingBag size={14} />
             <span>{product.inStock ? "Add" : "Sold Out"}</span>

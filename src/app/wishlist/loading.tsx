@@ -1,0 +1,6 @@
+import { WishlistPageSkeleton } from "@/components/loading-skeletons";
+
+export default function Loading() {
+  return <WishlistPageSkeleton />;
+}
+

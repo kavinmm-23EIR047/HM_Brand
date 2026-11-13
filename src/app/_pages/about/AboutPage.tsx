@@ -138,7 +138,7 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 1: HERO SECTION                                                   */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-brand-surface-soft pt-8 sm:pt-14 pb-16 sm:pb-24 border-b border-brand-border overflow-hidden">
+        <section className="relative w-full bg-brand-surface-alt pt-8 sm:pt-14 pb-16 sm:pb-24 border-b border-brand-border overflow-hidden">
 
           <div className="page-container relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -225,7 +225,7 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 2: OUR STORY (WESTERN GHATS HERITAGE)                             */}
         {/* ========================================================================= */}
-        <section id="story" className="relative w-full bg-[#F5F8F2] py-14 sm:py-20 lg:py-24 border-b border-brand-border overflow-hidden scroll-mt-20">
+        <section id="story" className="relative w-full bg-brand-surface-alt py-14 sm:py-20 lg:py-24 border-b border-brand-border overflow-hidden scroll-mt-20">
           <div className="page-container relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
               
@@ -297,7 +297,7 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 3: OUR 3 SACRED PILLARS                                           */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-brand-surface-bright py-16 sm:py-24 overflow-hidden scroll-mt-20" id="pillars">
+        <section className="relative w-full bg-brand-surface-alt py-16 sm:py-24 overflow-hidden scroll-mt-20" id="pillars">
           <div className="page-container relative">
             
             {/* Header */}
@@ -378,7 +378,7 @@ export default function AboutPage() {
         {/* ========================================================================= */}
         {/* SECTION 4: HOLISTIC WELLBEING — WHY CHOOSE HM AGARBATTIS?                 */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-brand-surface-soft py-16 sm:py-24 border-y border-brand-border overflow-hidden">
+        <section className="relative w-full bg-brand-surface-alt py-16 sm:py-24 border-y border-brand-border overflow-hidden">
           <div className="page-container relative">
             
             {/* Header */}

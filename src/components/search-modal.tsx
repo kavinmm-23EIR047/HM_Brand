@@ -282,14 +282,14 @@ export function SearchModal() {
   return (
     <div className="fixed inset-0 z-[100] overflow-hidden" role="dialog" aria-modal="true" aria-label="Search products">
       <button
-        className="absolute inset-0 bg-[#123936]/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-brand-ink/60 backdrop-blur-sm"
         onClick={() => setIsSearchOpen(false)}
         aria-label="Close search overlay"
       />
       <div className="relative flex h-[100dvh] items-stretch justify-center sm:h-full sm:items-start sm:overflow-y-auto sm:px-4 sm:py-12 lg:pt-[10vh]">
-        <div className="relative flex h-full w-full max-w-[960px] flex-col overflow-hidden bg-[#FFF9EC] text-brand-ink shadow-2xl sm:h-auto sm:max-h-[84vh] sm:rounded-3xl sm:ring-1 sm:ring-white/70">
-          <div className="hidden shrink-0 items-center gap-3 border-b border-brand-border-alt px-6 py-5 sm:flex lg:px-8">
-            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-brand-border focus-within:ring-2 focus-within:ring-brand-primary/40">
+        <div className="relative flex h-full w-full max-w-[960px] flex-col overflow-hidden bg-brand-surface text-brand-ink shadow-2xl sm:h-auto sm:max-h-[84vh] sm:rounded-2xl border border-brand-border">
+          <div className="hidden shrink-0 items-center gap-3 border-b border-brand-border px-6 py-5 sm:flex lg:px-8">
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-[10px] bg-white px-4 py-3 border border-brand-border focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary">
               <Search size={20} className="shrink-0 text-brand-primary" />
               <input
                 ref={inputRef}
@@ -301,28 +301,28 @@ export function SearchModal() {
                 }}
                 placeholder="Search products by name, fragrance, or category..."
                 aria-label="Search products"
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-brand-muted"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-brand-slate/60 text-brand-ink"
               />
               {loading && <Loader2 size={17} className="animate-spin text-brand-primary" />}
               {query && <button onClick={() => setQuery("")} aria-label="Clear search"><X size={17} /></button>}
             </div>
-            <kbd className="rounded-lg bg-[#F4E6C8] px-2.5 py-2 text-ui-11 font-bold text-[#76573C]">Ctrl K</kbd>
+            <kbd className="rounded-md bg-brand-surface-warm px-2.5 py-1.5 text-xs font-semibold text-brand-slate border border-brand-border">Ctrl K</kbd>
             <button
               onClick={() => setIsSearchOpen(false)}
-              className="grid h-10 w-10 place-items-center rounded-full text-brand-primary transition hover:bg-[#F4EBD9]"
+              className="grid h-10 w-10 place-items-center rounded-full text-brand-slate transition hover:text-brand-primary hover:bg-brand-surface-warm"
               aria-label="Close search"
             >
               <X size={21} />
             </button>
           </div>
 
-          <div className="flex shrink-0 items-center justify-between border-b border-brand-border-alt px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] sm:hidden">
+          <div className="flex shrink-0 items-center justify-between border-b border-brand-border px-4 pb-3 pt-[max(12px,env(safe-area-inset-top))] sm:hidden">
             <button onClick={() => setIsSearchOpen(false)} className="grid h-9 w-9 place-items-center text-brand-primary" aria-label="Close search"><X size={21} /></button>
-            <h2 className="text-sm font-extrabold">Search products</h2>
+            <h2 className="text-sm font-extrabold text-brand-heading">Search products</h2>
             <span className="w-9" />
           </div>
           <div className="shrink-0 px-4 py-3 sm:hidden">
-            <div className="flex items-center gap-2.5 rounded-xl bg-white px-3.5 py-3 ring-1 ring-brand-border focus-within:ring-2 focus-within:ring-brand-primary/40">
+            <div className="flex items-center gap-2.5 rounded-[10px] bg-white px-3.5 py-3 border border-brand-border focus-within:border-brand-primary focus-within:ring-1 focus-within:ring-brand-primary">
               <Search size={19} className="shrink-0 text-brand-primary" />
               <input
                 ref={mobileInputRef}
@@ -334,7 +334,7 @@ export function SearchModal() {
                 }}
                 placeholder="Search products..."
                 aria-label="Search products"
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-brand-muted"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-brand-slate/60 text-brand-ink"
               />
               {loading && <Loader2 size={16} className="animate-spin text-brand-primary" />}
               {query && <button onClick={() => setQuery("")} aria-label="Clear search"><X size={16} /></button>}

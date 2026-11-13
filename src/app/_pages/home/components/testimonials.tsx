@@ -360,66 +360,62 @@ export function Testimonials() {
 
   return (
     <section
-      className="relative w-full overflow-hidden border-b border-brand-border bg-brand-surface-alt py-12 sm:py-14 lg:py-16"
+      className="relative w-full overflow-hidden bg-brand-surface-alt py-7 sm:py-12 lg:py-14"
       aria-label="Customer testimonials"
     >
       {/* Standardized .page-container content */}
       <div className="page-container relative">
         {/* ================= HEADER ================= */}
-        <div className="relative mb-8 text-center sm:mb-10">
+        <div className="relative mb-5 text-center sm:mb-8">
           {/* Google badge */}
-          <div className="mb-3 inline-flex items-center gap-2.5 rounded-full border border-brand-border bg-white px-4 py-1.5 shadow-2xs">
-            <GoogleLogo size={20} />
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-brand-border bg-white px-2.5 py-1 shadow-2xs sm:gap-2 sm:px-3.5 sm:py-1.5">
+            <GoogleLogo size={15} />
 
-            <span className="text-xs font-bold uppercase tracking-[0.13em] text-neutral-700">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-neutral-700">
               Google Reviews
             </span>
           </div>
 
           {/* Heading */}
-          <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold uppercase leading-tight tracking-wide text-brand-primary">
-            What Our Customers Say
+          <h2 className="font-brand text-lg sm:text-2xl lg:text-3xl font-bold uppercase leading-tight tracking-wide text-brand-primary">
+            What Customers Say
           </h2>
 
           {/* Rating */}
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
-            <GoogleStars size={20} />
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <GoogleStars size={16} />
 
-            <span className="text-base font-bold text-neutral-900 sm:text-lg">
+            <span className="text-sm font-bold text-neutral-900 sm:text-lg">
               5.0
             </span>
 
-            <span className="hidden h-5 w-px bg-neutral-300 sm:block" />
+            <span className="hidden h-4 w-px bg-neutral-300 sm:block" />
 
             <span className="text-xs text-neutral-600 sm:text-sm">
-              Verified Google Reviews
+              Verified Reviews
             </span>
           </div>
 
-          <p className="mt-2 text-xs text-neutral-600 sm:text-sm">
-            Real experiences from our happy customers
-          </p>
-
-          {/* Review actions — Clean Centered Row (Zero Absolute Header Collisions) */}
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+          {/* Review actions — Clean Centered Row */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
             <a
               href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand-primary bg-white px-5 py-2 text-xs font-bold uppercase tracking-wider text-brand-primary transition-colors duration-200 hover:bg-brand-surface-soft active:scale-[0.98]"
+              className="inline-flex min-h-9 sm:min-h-11 items-center justify-center gap-1.5 rounded-full border border-brand-primary bg-white px-3.5 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-primary transition-colors duration-200 hover:bg-brand-surface-soft active:scale-[0.98]"
             >
-              <ExternalLink size={15} />
-              <span>View All Reviews</span>
+              <ExternalLink size={13} />
+              <span>View Reviews</span>
             </a>
 
             <a
               href={GOOGLE_WRITE_REVIEW_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand-primary px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-colors duration-200 hover:bg-brand-hover active:scale-[0.98]"
+              className="inline-flex min-h-9 sm:min-h-11 items-center justify-center gap-1.5 rounded-full bg-brand-primary px-3.5 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-colors duration-200 hover:bg-brand-hover active:scale-[0.98]"
             >
-              <PenLine size={15} />
-              <span>Write a Review</span>
+              <PenLine size={13} />
+              <span>Write Review</span>
             </a>
           </div>
         </div>
@@ -459,9 +455,8 @@ export function Testimonials() {
                 setIsPaused(false);
               }
             }}
-            className={`relative overflow-hidden w-full ${
-              mounted ? "opacity-100" : "opacity-0"
-            } transition-opacity duration-300`}
+            className={`relative overflow-hidden w-full ${mounted ? "opacity-100" : "opacity-0"
+              } transition-opacity duration-300`}
           >
             <div
               ref={trackRef}
@@ -589,14 +584,14 @@ export function Testimonials() {
         </div>
 
         {/* ================= PAGINATION & MOBILE ARROWS ================= */}
-        <div className="mt-3 flex items-center justify-center gap-3">
+        <div className="mt-3 flex items-center justify-center gap-2.5">
           <button
             type="button"
             onClick={handlePrevious}
             aria-label="Previous review"
-            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs active:scale-95 transition-all"
+            className="flex lg:hidden h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs active:scale-95 transition-all"
           >
-            <ChevronLeft size={18} strokeWidth={2.5} />
+            <ChevronLeft size={16} strokeWidth={2.5} />
           </button>
 
           <div className="flex items-center gap-2">
@@ -610,10 +605,10 @@ export function Testimonials() {
                   aria-label={`Go to review ${index + 1}`}
                   aria-current={isDotActive ? "true" : undefined}
                   className={[
-                    "h-2.5 rounded-full transition-all duration-300",
+                    "h-2 rounded-full transition-all duration-300",
                     isDotActive
-                      ? "w-8 bg-[#7E1D2D]"
-                      : "w-2.5 bg-neutral-300 hover:bg-neutral-400",
+                      ? "w-6 sm:w-8 bg-[#7E1D2D]"
+                      : "w-2 bg-neutral-300 hover:bg-neutral-400",
                   ].join(" ")}
                 />
               );
@@ -624,28 +619,28 @@ export function Testimonials() {
             type="button"
             onClick={handleNext}
             aria-label="Next review"
-            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs active:scale-95 transition-all"
+            className="flex lg:hidden h-8 w-8 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs active:scale-95 transition-all"
           >
-            <ChevronRight size={18} strokeWidth={2.5} />
+            <ChevronRight size={16} strokeWidth={2.5} />
           </button>
         </div>
 
         {/* ================= BOTTOM CTA ================= */}
-        <div className="mt-9 overflow-hidden rounded-2xl border border-[#7E1D2D]/10 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.035)] sm:mt-11">
-          <div className="flex flex-col items-center justify-center gap-4 px-5 py-6 text-center sm:px-8 lg:flex-row lg:gap-8 lg:py-6">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-[#7E1D2D]/15 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.035)] sm:mt-9">
+          <div className="flex flex-col items-center justify-between gap-3 px-4 py-4 text-center sm:px-7 sm:py-5 lg:flex-row lg:gap-6 lg:text-left">
             {/* CTA message */}
-            <div className="flex items-center gap-4">
-              <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#7E1D2D]/5 text-[#7E1D2D] sm:flex">
-                <Quote size={23} />
+            <div className="flex items-center gap-3">
+              <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#7E1D2D]/8 text-[#7E1D2D] sm:flex">
+                <Quote size={18} />
               </div>
 
-              <div className="text-center lg:text-left">
-                <h3 className="font-brand text-lg font-bold text-[#7E1D2D] sm:text-xl">
+              <div>
+                <h3 className="font-brand text-sm sm:text-lg font-bold uppercase tracking-wide text-[#7E1D2D]">
                   Loved our products?
                 </h3>
 
-                <p className="mt-1 text-sm leading-relaxed text-neutral-500 sm:text-base">
-                  Help others discover us by sharing your experience on Google.
+                <p className="mt-0.5 text-xs sm:text-sm text-neutral-500">
+                  Rate your experience on Google.
                 </p>
               </div>
             </div>
@@ -655,13 +650,13 @@ export function Testimonials() {
               href={GOOGLE_WRITE_REVIEW_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#7E1D2D] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#681724] hover:shadow-md active:scale-[0.98] sm:w-auto sm:px-6"
+              className="inline-flex min-h-9 sm:min-h-10 items-center justify-center gap-2 rounded-full bg-[#7E1D2D] px-4 py-1.5 sm:px-5 sm:py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all duration-200 hover:bg-[#681724] active:scale-[0.98] whitespace-nowrap"
             >
-              <GoogleLogo size={23} />
+              <GoogleLogo size={15} />
 
-              <span>Share Your Experience on Google</span>
+              <span>Review on Google</span>
 
-              <ChevronRight size={18} />
+              <ChevronRight size={14} />
             </a>
           </div>
         </div>

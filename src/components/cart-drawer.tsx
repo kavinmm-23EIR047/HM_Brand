@@ -41,35 +41,35 @@ export function CartDrawer() {
       />
 
       <div className="fixed inset-y-0 right-0 flex w-full max-w-full justify-end">
-        <aside className="flex h-[100dvh] w-full max-w-md flex-col justify-between bg-sacredCream text-charcoal shadow-2xl">
+        <aside className="flex h-[100dvh] w-full max-w-md flex-col justify-between bg-brand-surface text-brand-ink shadow-2xl">
           {/* Header */}
-          <div className="border-b border-antiqueGold/30 bg-turmeric/20 p-4 sm:p-6">
+          <div className="border-b border-brand-border bg-brand-surface-warm/60 p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div className="flex min-w-0 items-center gap-2.5">
-                <ShoppingBag className="text-saffron" size={24} />
-                <h2 className="truncate font-brand text-lg font-bold uppercase tracking-wider text-earthBrown sm:text-xl">Your Sacred Basket</h2>
+                <ShoppingBag className="text-brand-primary" size={24} />
+                <h2 className="truncate font-brand text-lg font-bold uppercase tracking-wider text-brand-heading sm:text-xl">Your Sacred Basket</h2>
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
                 aria-label="Close cart"
-                className="p-2 text-earthBrown hover:bg-sacredCream rounded-full transition"
+                className="p-2 text-brand-slate hover:bg-white rounded-full transition"
               >
                 <X size={20} />
               </button>
             </div>
 
             {/* Free Delivery Meter */}
-            <div className="mt-4 rounded-lg bg-white/80 p-3">
-              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs font-semibold text-earthBrown">
+            <div className="mt-4 rounded-[10px] bg-white p-3 border border-brand-border">
+              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs font-semibold text-brand-slate">
                 <span className="flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-saffron" />
+                  <Sparkles size={14} className="text-brand-accent" />
                   {amountLeft > 0 ? `Add ₹${amountLeft} more for FREE Delivery` : "You unlocked FREE Delivery!"}
                 </span>
                 <span>{progressPercent}%</span>
               </div>
-              <div className="mt-2 w-full h-2 bg-sandalwood/20 rounded-full overflow-hidden">
+              <div className="mt-2 w-full h-2 bg-brand-surface-warm rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-saffron transition-all duration-300"
+                  className="h-full bg-brand-primary transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -223,16 +223,16 @@ export function CartDrawer() {
                 <Link
                   href="/shop"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-outline-earth flex min-h-12 items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-center text-xs font-bold uppercase tracking-wider shadow-sm sm:text-sm"
+                  className="btn-secondary flex min-h-11 items-center justify-center whitespace-nowrap rounded-[10px] px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all duration-200"
                 >
                   Continue Shopping
                 </Link>
                 <Link
                   href="/cart"
                   onClick={() => setIsCartOpen(false)}
-                  className="btn-saffron flex min-h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-3 text-center text-xs font-bold uppercase tracking-wider shadow-sm sm:text-sm"
+                  className="btn-primary flex min-h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-[10px] px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all duration-200"
                 >
-                  Review Basket <ArrowRight size={16} />
+                  Review Basket <ArrowRight size={15} />
                 </Link>
               </div>
             </div>

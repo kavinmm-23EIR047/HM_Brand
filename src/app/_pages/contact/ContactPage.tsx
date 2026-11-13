@@ -66,14 +66,14 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#b7e4c7] bg-[#f2fbf5] p-5 sm:p-6">
+            <div className="rounded-2xl border border-brand-border bg-brand-positive-soft p-5 sm:p-6">
               <div className="flex items-start gap-3">
-                <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#25D366]/15 text-[#168943]"><MessageCircle size={22} /></span>
+                <span className="grid size-11 shrink-0 place-items-center rounded-[10px] bg-brand-forest/15 text-brand-forest"><MessageCircle size={22} /></span>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#168943]">Help desk</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-forest">Help desk</p>
                   <h2 className="mt-1 font-heading text-xl font-bold text-brand-ink">Need a quick answer?</h2>
-                  <p className="mt-1 text-sm leading-6 text-brand-charcoal/75">Chat directly with our help desk on WhatsApp. No website form or backend is used.</p>
-                  <a href={`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello HM Brand, I need help with an enquiry.")}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#168943] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#117438]">
+                  <p className="mt-1 text-sm leading-6 text-brand-slate">Chat directly with our help desk on WhatsApp. No website form or backend is used.</p>
+                  <a href={`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello HM Brand, I need help with an enquiry.")}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-[#14532D] hover:bg-[#0F3F22] border border-brand-accent/30 px-5 py-2.5 text-sm font-sans font-semibold text-white transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.98]">
                     <MessageCircle size={17} /> WhatsApp {CONTACT_WHATSAPP_DISPLAY}
                   </a>
                 </div>
@@ -81,31 +81,31 @@ export default function ContactPage() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <a href="mailto:jayamassociatescoimbatore@gmail.com" className="flex items-center gap-3 rounded-xl border border-brand-border bg-white p-4 text-sm text-brand-charcoal/80 transition hover:border-brand-primary/40">
+              <a href="mailto:jayamassociatescoimbatore@gmail.com" className="flex items-center gap-3 rounded-xl border border-brand-border bg-white p-4 text-sm text-brand-slate transition hover:border-brand-primary">
                 <Mail size={18} className="shrink-0 text-brand-primary" /><span className="min-w-0"><strong className="block text-brand-ink">Email</strong><span className="break-all text-xs">jayamassociatescoimbatore@gmail.com</span></span>
               </a>
-              <a href="https://instagram.com/hmagarbatti5" target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl border border-brand-border bg-white p-4 text-sm text-brand-charcoal/80 transition hover:border-brand-primary/40">
+              <a href="https://instagram.com/hmagarbatti5" target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl border border-brand-border bg-white p-4 text-sm text-brand-slate transition hover:border-brand-primary">
                 <span className="shrink-0 text-brand-primary"><InstagramIcon /></span><span><strong className="block text-brand-ink">Instagram</strong><span className="text-xs">@hmagarbatti5</span></span>
               </a>
             </div>
-            <p className="flex items-center gap-2 px-1 text-xs text-brand-charcoal/65"><Clock size={14} /> Monday–Saturday, 9:00 AM–8:00 PM IST</p>
+            <p className="flex items-center gap-2 px-1 text-xs text-brand-slate"><Clock size={14} /> Monday–Saturday, 9:00 AM–8:00 PM IST</p>
           </section>
 
           <section className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:p-7">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">Send an enquiry</p>
             <h2 className="mt-1 font-heading text-2xl font-bold text-brand-ink">Message our help desk</h2>
-            <p className="mt-2 text-sm leading-6 text-brand-charcoal/70">Fill this in and we’ll prepare your message in WhatsApp. You can review and send it there.</p>
+            <p className="mt-2 text-sm leading-6 text-brand-slate">Fill this in and we’ll prepare your message in WhatsApp. You can review and send it there.</p>
             <form onSubmit={sendWhatsAppQuery} className="mt-6 space-y-4">
-              <label className="block text-sm font-semibold text-brand-ink">Your name <span className="font-normal text-brand-charcoal/55">(optional)</span>
-                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} type="text" autoComplete="name" placeholder="Your name" className="mt-1.5 min-h-11 w-full rounded-xl border border-brand-border bg-brand-surface/30 px-3.5 text-sm outline-none transition placeholder:text-brand-charcoal/45 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10" />
+              <label className="block text-sm font-semibold text-brand-ink">Your name <span className="font-normal text-brand-slate">(optional)</span>
+                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} type="text" autoComplete="name" placeholder="Your name" className="mt-1.5 min-h-11 w-full rounded-[10px] border border-brand-border bg-white px-3.5 text-sm outline-none transition placeholder:text-brand-slate/50 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
               </label>
-              <label className="block text-sm font-semibold text-brand-ink">Your phone <span className="font-normal text-brand-charcoal/55">(optional)</span>
-                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} type="tel" autoComplete="tel" placeholder="Your phone number" className="mt-1.5 min-h-11 w-full rounded-xl border border-brand-border bg-brand-surface/30 px-3.5 text-sm outline-none transition placeholder:text-brand-charcoal/45 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10" />
+              <label className="block text-sm font-semibold text-brand-ink">Your phone <span className="font-normal text-brand-slate">(optional)</span>
+                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} type="tel" autoComplete="tel" placeholder="Your phone number" className="mt-1.5 min-h-11 w-full rounded-[10px] border border-brand-border bg-white px-3.5 text-sm outline-none transition placeholder:text-brand-slate/50 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
               </label>
               <label className="block text-sm font-semibold text-brand-ink">How can we help? *
-                <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required rows={5} placeholder="Write your question or order enquiry..." className="mt-1.5 w-full resize-y rounded-xl border border-brand-border bg-brand-surface/30 px-3.5 py-3 text-sm leading-6 outline-none transition placeholder:text-brand-charcoal/45 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10" />
+                <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required rows={5} placeholder="Write your question or order enquiry..." className="mt-1.5 w-full resize-y rounded-[10px] border border-brand-border bg-white px-3.5 py-3 text-sm leading-6 outline-none transition placeholder:text-brand-slate/50 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
               </label>
-              <button type="submit" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-primary/90 sm:w-auto">
+              <button type="submit" className="btn-primary inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-brand-primary px-6 py-3 font-sans text-sm font-semibold text-white border border-brand-accent/40 transition hover:bg-brand-hover hover:-translate-y-0.5 active:scale-[0.98] sm:w-auto">
                 <MessageCircle size={17} /> Continue in WhatsApp
               </button>
               <p className="text-xs leading-5 text-brand-charcoal/60">Your message opens in WhatsApp addressed to {CONTACT_WHATSAPP_DISPLAY}. It is not submitted to this website.</p>

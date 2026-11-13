@@ -1,341 +1,169 @@
 "use client";
 
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, Heart, Sparkles, ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Leaf, Heart, Sparkles } from "lucide-react";
+
+const STORY_VALUES = [
+  {
+    number: "01",
+    title: "Yoga & Mind",
+    desc: "Calm & focus.",
+    icon: Leaf,
+    accent: "var(--brand-green)",
+    iconBg: "bg-[#EAF5EC]",
+  },
+  {
+    number: "02",
+    title: "God & Prayer",
+    desc: "Temple aroma.",
+    icon: Heart,
+    accent: "var(--brand-primary)",
+    iconBg: "bg-[#FFF2F4]",
+  },
+  {
+    number: "03",
+    title: "Pure Virtue",
+    desc: "Charcoal-free.",
+    icon: Sparkles,
+    accent: "var(--brand-amber-bright)",
+    iconBg: "bg-brand-surface-cream",
+  },
+];
 
 export function OurStorySection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const activeIdxRef = useRef(0);
-  const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    activeIdxRef.current = activeIdx;
-  }, [activeIdx]);
-
-  useEffect(() => {
-    return () => {
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    };
-  }, []);
-
-  const pauseTemporarily = useCallback((ms = 4000) => {
-    setIsPaused(true);
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => {
-      setIsPaused(false);
-    }, ms);
-  }, []);
-
-  const scrollTo = useCallback((idx: number) => {
-    const container = scrollRef.current;
-    if (!container) return;
-    const card = container.children[idx] as HTMLElement | undefined;
-    if (card) {
-      const cardRect = card.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      const delta =
-        cardRect.left + cardRect.width / 2 - (containerRect.left + containerRect.width / 2);
-      container.scrollBy({ left: delta, behavior: "smooth" });
-    }
-    setActiveIdx(idx);
-  }, []);
-
-  const onScroll = useCallback(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-    const cards = Array.from(container.children) as HTMLElement[];
-    const containerRect = container.getBoundingClientRect();
-    const containerCenter = containerRect.left + containerRect.width / 2;
-    let closestIdx = 0;
-    let closestDist = Infinity;
-    cards.forEach((card, idx) => {
-      const cardRect = card.getBoundingClientRect();
-      const cardCenter = cardRect.left + cardRect.width / 2;
-      const dist = Math.abs(containerCenter - cardCenter);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closestIdx = idx;
-      }
-    });
-    setActiveIdx(closestIdx);
-  }, []);
-
-  // Autoslide effect for mobile/tablet slider
-  useEffect(() => {
-    if (isPaused) return;
-
-    const interval = setInterval(() => {
-      if (typeof window !== "undefined" && window.innerWidth >= 640) return;
-      const next = (activeIdxRef.current + 1) % 3; // 3 values
-      scrollTo(next);
-    }, 3800);
-
-    return () => clearInterval(interval);
-  }, [isPaused, scrollTo]);
-
-  const values = [
-    {
-      number: "01",
-      title: "Yoga & Mind",
-      subtitle: "Ancient Tradition",
-      description: "Find natural balance and mental clarity through pure botanical aromas.",
-      icon: Leaf,
-      accentColor: "var(--brand-green)",
-      badgeBg: "bg-[#EAF5EC]",
-      badgeText: "text-brand-green-dark",
-      iconBg: "bg-brand-green/12",
-      borderHover: "hover:border-brand-green/50",
-    },
-    {
-      number: "02",
-      title: "God & Prayer",
-      subtitle: "Sacred Wellbeing",
-      description: "Infuse your home and daily prayer rituals with divine temple fragrances.",
-      icon: Heart,
-      accentColor: "var(--brand-primary)",
-      badgeBg: "bg-[#FFF2F4]",
-      badgeText: "text-brand-primary",
-      iconBg: "bg-brand-primary/12",
-      borderHover: "hover:border-brand-primary/50",
-    },
-    {
-      number: "03",
-      title: "Pure Virtue",
-      subtitle: "Better Tomorrow",
-      description: "Crafted charcoal-free with pure ingredients for healthy, conscious living.",
-      icon: Sparkles,
-      accentColor: "var(--brand-amber-bright)",
-      badgeBg: "bg-brand-surface-cream",
-      badgeText: "text-brand-amber",
-      iconBg: "bg-brand-orange/12",
-      borderHover: "hover:border-brand-orange/50",
-    },
-  ];
-
   return (
-    <section className="relative w-full overflow-hidden bg-white py-12 sm:py-16 lg:py-20 border-b border-brand-border font-sans">
-
-      <div className="page-container relative">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-16">
-          
-          {/* LEFT: STORY CONTENT */}
-          <div className="order-2 min-w-0 lg:order-1 lg:col-span-7">
-            {/* Eyebrow */}
-            <div className="mb-3.5 flex items-center gap-2">
-              <span className="h-[2px] w-8 rounded-full bg-brand-orange" />
-              <span className="font-brand text-ui-11 sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-primary">
-                OUR STORY &amp; HERITAGE
-              </span>
-            </div>
-
-            {/* Main Heading */}
-            <h2 className="max-w-2xl font-brand text-xl sm:text-2xl lg:text-3xl font-bold leading-snug tracking-wide text-brand-heading uppercase">
-              Bringing Nature,
-              <br className="hidden sm:block" /> Tradition &amp; Wellbeing
-              <span className="text-brand-green"> Together.</span>
-            </h2>
-
-            {/* Sub-narrative */}
-            <p className="mt-3 max-w-xl font-sans text-xs sm:text-sm leading-relaxed text-brand-slate font-normal">
-              At HM Agarbattis, we believe in the power of natural fragrances
-              to create a calmer, happier and more positive life. Our products
-              are thoughtfully crafted with pure ingredients, inspired by
-              India&apos;s rich traditions and a modern mindful lifestyle.
-            </p>
-
-            {/* THREE VALUES — CENTERED SLIDER ON MOBILE, 3-COL GRID ON TABLET/DESKTOP */}
-            <div className="mt-6 sm:mt-8">
-              <div
-                ref={scrollRef}
-                onScroll={onScroll}
-                onMouseEnter={() => {
-                  if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
-                    setIsPaused(true);
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
-                    setIsPaused(false);
-                  }
-                }}
-                onTouchStart={() => pauseTemporarily(5000)}
-                onTouchEnd={() => pauseTemporarily(4000)}
-                className="relative flex overflow-x-auto sm:grid sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-4.5 pb-2 snap-x snap-mandatory no-scrollbar px-[calc((100%-min(82vw,300px))/2)] sm:px-0"
-                style={{
-                  scrollbarWidth: "none",
-                  msOverflowStyle: "none",
-                }}
-              >
-                {values.map((value, idx) => {
-                  const Icon = value.icon;
-                  const isActive = idx === activeIdx;
-
-                  return (
-                    <div
-                      key={value.number}
-                      onClick={() => {
-                        pauseTemporarily(4000);
-                        scrollTo(idx);
-                      }}
-                      className={`group relative flex flex-col justify-between rounded-2xl border bg-brand-surface-bright p-4 sm:p-5 transition-all duration-300 w-[min(82vw,300px)] sm:w-auto shrink-0 snap-center cursor-pointer sm:cursor-default ${
-                        isActive
-                          ? "border-[#9E1830] shadow-md ring-1 ring-[#9E1830]/20"
-                          : "border-[#EADBBD] hover:border-[#9E1830]/50 hover:shadow-md"
-                      }`}
-                    >
-                      {/* Top Header: Icon & Step Number */}
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <div
-                            className={`flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl ${value.iconBg} transition-transform duration-300 group-hover:scale-110 shadow-2xs`}
-                            style={{ color: value.accentColor }}
-                          >
-                            <Icon size={20} strokeWidth={2.2} />
-                          </div>
-                          <span className="font-serif text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#FFF9EC] border border-[#EADBBD] text-[#8C6D37] tabular-nums">
-                            {value.number}
-                          </span>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-serif text-base sm:text-lg font-bold text-[#173B3A] uppercase tracking-wide group-hover:text-[#9E1830] transition-colors leading-tight">
-                          {value.title}
-                        </h3>
-
-                        {/* Subtitle Pill */}
-                        <div className="mt-1.5">
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-extrabold uppercase tracking-wider ${value.badgeBg} ${value.badgeText} shadow-2xs`}
-                          >
-                            {value.subtitle}
-                          </span>
-                        </div>
-
-                        {/* Description */}
-                        <p className="mt-2.5 text-xs sm:text-sm text-[#4A4036] font-normal leading-relaxed">
-                          {value.description}
-                        </p>
-                      </div>
-
-                      {/* Bottom subtle accent line */}
-                      <div className="mt-4 pt-2.5 border-t border-[#F2EADB] flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-[#173B3A]/70 uppercase tracking-wider">
-                          HM Purity
-                        </span>
-                        <span
-                          className="h-2 w-2 rounded-full transition-transform group-hover:scale-125"
-                          style={{ backgroundColor: value.accentColor }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* MOBILE ONLY: Navigations & Paginations */}
-              <div className="mt-4 flex sm:hidden items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    pauseTemporarily(4000);
-                    scrollTo((activeIdx - 1 + values.length) % values.length);
-                  }}
-                  aria-label="Previous value"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs transition hover:bg-brand-primary/5 active:scale-95"
-                >
-                  <ChevronLeft size={16} strokeWidth={2.5} />
-                </button>
-
-                <div className="flex items-center gap-2">
-                  {values.map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        pauseTemporarily(4000);
-                        scrollTo(i);
-                      }}
-                      aria-label={`Go to slide ${i + 1}`}
-                      aria-current={i === activeIdx ? "true" : undefined}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        i === activeIdx
-                          ? "w-6 bg-brand-primary"
-                          : "w-2 bg-brand-border hover:bg-brand-slate/40"
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    pauseTemporarily(4000);
-                    scrollTo((activeIdx + 1) % values.length);
-                  }}
-                  aria-label="Next value"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-2xs transition hover:bg-brand-primary/5 active:scale-95"
-                >
-                  <ChevronRight size={16} strokeWidth={2.5} />
-                </button>
-              </div>
-            </div>
-
-            {/* CTA Action Row */}
-            <div className="mt-5 sm:mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-              <Link
-                href="/about"
-                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-primary hover:bg-brand-hover text-white px-6 sm:px-7 py-3 font-brand text-xs sm:text-sm font-bold uppercase tracking-wider shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-              >
-                <span>Know Our Story</span>
-                <ArrowRight
-                  size={15}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </Link>
-
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-green">
-                <ShieldCheck size={16} className="text-brand-green" />
-                <span>100% Charcoal-Free Heritage</span>
-              </span>
-            </div>
-          </div>
-
-          {/* RIGHT: ILLUSTRATION WITH SOLID EDITORIAL PEDESTAL FRAME */}
-          <div className="order-1 flex min-w-0 justify-center lg:order-2 lg:col-span-5">
-            <div className="relative w-full max-w-[290px] sm:max-w-[360px] lg:max-w-[420px]">
-              
-              {/* Solid soft circular pedestal */}
+    <section className="relative w-full overflow-hidden bg-brand-surface-alt py-6 sm:py-12 lg:py-14 font-sans">
+      <div className="page-container">
+        {/* TOP / MAIN SPLIT: LEFT IMAGE + RIGHT CONTENT (Mobile & Desktop) */}
+        <div className="flex flex-row items-center gap-3.5 sm:gap-8 lg:grid lg:grid-cols-12 lg:gap-12">
+          {/* LEFT: ILLUSTRATION */}
+          <div className="w-28 min-[400px]:w-32 sm:w-52 lg:w-auto lg:col-span-5 shrink-0 flex justify-center">
+            <div className="relative w-full max-w-[340px]">
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-[10%] rounded-full border border-brand-border bg-brand-surface-soft"
+                className="pointer-events-none absolute inset-[8%] rounded-full border border-brand-border bg-white"
               />
-
               <div className="relative aspect-square w-full">
                 <Image
                   src="/images/hm_story_yoga_god_virtue.png"
                   alt="HM Agarbattis sacred flame mascot meditating on a lotus flower with diya and temple bell"
                   fill
-                  sizes="(max-width: 640px) 280px, (max-width: 1024px) 360px, 420px"
+                  sizes="(max-width: 640px) 128px, (max-width: 1024px) 208px, 340px"
                   className="object-contain transition-transform duration-500 hover:scale-[1.03]"
                 />
               </div>
-
-              {/* Caption pill below */}
-              <div className="mt-3 flex justify-center px-1 text-center">
-                <span className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-brand-border bg-white px-3.5 py-2 font-tagline text-ui-11 font-bold uppercase leading-none tracking-[0.08em] text-brand-green shadow-2xs whitespace-nowrap sm:px-4 sm:text-xs sm:tracking-[0.12em]">
+              <div className="hidden sm:flex mt-3 justify-center">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-border bg-white px-3 py-1 font-tagline text-[10px] font-bold uppercase tracking-[0.08em] text-brand-green shadow-2xs whitespace-nowrap">
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-green" />
-                  Rooted in Tradition · Made with Care
+                  Coimbatore Heritage
                 </span>
               </div>
             </div>
           </div>
 
+          {/* RIGHT: SHORT CONTENT + VALUES + CTA */}
+          <div className="flex-1 min-w-0 lg:col-span-7">
+            <div className="mb-1.5 sm:mb-2.5 flex items-center gap-1.5">
+              <span className="h-[2px] w-5 sm:w-7 rounded-full bg-brand-orange" />
+              <span className="font-brand text-[9px] sm:text-xs font-bold uppercase tracking-[0.18em] text-brand-primary">
+                OUR STORY
+              </span>
+            </div>
+
+            <h2 className="font-brand text-base sm:text-2xl lg:text-3xl font-bold leading-tight tracking-wide text-brand-heading uppercase">
+              Nature &amp; Tradition <span className="text-brand-green">Together.</span>
+            </h2>
+
+            <p className="mt-1 sm:mt-2 font-sans text-[11px] sm:text-sm leading-snug sm:leading-relaxed text-brand-slate font-normal max-w-lg">
+              Coimbatore botanical resins crafted for calm, pure daily rituals.
+            </p>
+
+            {/* 3 VALUES: Compact 3-column mini-grid on sm+ */}
+            <div className="hidden sm:grid sm:grid-cols-3 gap-3 mt-5">
+              {STORY_VALUES.map((value) => {
+                const Icon = value.icon;
+                return (
+                  <div
+                    key={value.number}
+                    className="group flex flex-col justify-between gap-2 rounded-xl border border-brand-border bg-white p-3.5 transition hover:border-brand-primary/60"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-lg border border-brand-border/80 ${value.iconBg}`}
+                        style={{ color: value.accent }}
+                      >
+                        <Icon size={15} strokeWidth={2} />
+                      </div>
+                      <span className="font-mono text-[10px] font-bold text-brand-gray">
+                        {value.number}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-brand text-xs font-bold text-brand-heading uppercase tracking-wide group-hover:text-brand-primary transition-colors">
+                        {value.title}
+                      </h3>
+                      <p className="text-[11px] text-brand-slate leading-snug mt-0.5">
+                        {value.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* CTA Row */}
+            <div className="mt-3 sm:mt-6 flex items-center gap-3">
+              <Link
+                href="/about"
+                className="group inline-flex min-h-8 sm:min-h-10 items-center justify-center gap-1.5 rounded-full bg-brand-primary hover:bg-brand-hover text-white px-3.5 py-1.5 sm:px-5 sm:py-2 font-brand text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-xs transition active:scale-95 whitespace-nowrap"
+              >
+                <span>Our Story</span>
+                <ArrowRight
+                  size={12}
+                  className="transition-transform duration-300 group-hover:translate-x-0.5 sm:h-3.5 sm:w-3.5"
+                />
+              </Link>
+              <span className="text-[10px] sm:text-xs font-semibold text-brand-green whitespace-nowrap">
+                Charcoal-Free
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* MOBILE COMPACT 3-PILLAR STRIP (Zero stacking bloat) */}
+        <div className="mt-4 grid grid-cols-3 gap-2 sm:hidden">
+          {STORY_VALUES.map((value) => {
+            const Icon = value.icon;
+            return (
+              <div
+                key={value.number}
+                className="flex flex-col gap-1 rounded-xl border border-brand-border bg-white p-2.5"
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`flex h-6 w-6 items-center justify-center rounded-md ${value.iconBg}`}
+                    style={{ color: value.accent }}
+                  >
+                    <Icon size={12} strokeWidth={2.1} />
+                  </span>
+                  <span className="font-mono text-[9px] font-bold text-brand-gray">
+                    {value.number}
+                  </span>
+                </div>
+                <span className="font-brand text-[10px] font-bold uppercase text-brand-heading leading-tight">
+                  {value.title}
+                </span>
+                <span className="text-[10px] text-brand-slate leading-tight">
+                  {value.desc}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
+

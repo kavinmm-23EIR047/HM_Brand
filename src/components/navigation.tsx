@@ -32,6 +32,102 @@ import {
   SacredDiyaSvg,
 } from "@/components/sacred-icons";
 
+/* ── ENTRANCE DRAWING-STYLE SACRED VECTOR ILLUSTRATIONS ── */
+
+/** Illustrated South Indian Entrance Mango Leaf & Marigold Toranam Garland */
+function EntranceDoorwayToran() {
+  return (
+    <div className="absolute top-0 left-0 right-0 h-3 overflow-hidden pointer-events-none select-none z-10 opacity-90 flex">
+      {Array.from({ length: 32 }).map((_, i) => (
+        <svg key={i} viewBox="0 0 48 14" className="h-3 w-12 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Golden Twine / Rope */}
+          <path d="M0 2 Q24 6 48 2" stroke="#FDE68A" strokeWidth="1.2" />
+          {/* Mango Leaf Left (Maavilai) */}
+          <path d="M14 3 C11 7 15 11 17 14 C18 10 19 6 18 3 Z" fill="#2D6A4F" stroke="#1B4332" strokeWidth="0.5" />
+          <line x1="16" y1="3" x2="17" y2="13" stroke="#74C69D" strokeWidth="0.5" />
+          {/* Yellow Marigold Flower (Samandhi) */}
+          <circle cx="24" cy="5" r="2.8" fill="#F59E0B" stroke="#FEF08A" strokeWidth="0.6" />
+          <circle cx="24" cy="5" r="1.3" fill="#D97706" />
+          {/* Mango Leaf Right */}
+          <path d="M34 3 C37 7 33 11 31 14 C30 10 29 6 30 3 Z" fill="#2D6A4F" stroke="#1B4332" strokeWidth="0.5" />
+          <line x1="32" y1="3" x2="31" y2="13" stroke="#74C69D" strokeWidth="0.5" />
+          {/* Hanging Bell */}
+          <path d="M23 8 H25 L26 11 H22 Z" fill="#C89B3C" stroke="#78350F" strokeWidth="0.4" />
+          <circle cx="24" cy="12" r="0.7" fill="#FDE68A" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+/** Illustrated South Indian Temple Entrance Hanging Brass Bell (Ghanti) */
+function EntranceHangingBell({ className = "h-7 w-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 34" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      {/* Golden Chain Links */}
+      <line x1="12" y1="0" x2="12" y2="11" stroke="#FDE68A" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
+      <circle cx="12" cy="11.5" r="2" stroke="#C89B3C" strokeWidth="1.2" fill="#F59E0B" />
+      {/* Bell Crown Loop */}
+      <path d="M10 14 C10 12 14 12 14 14" stroke="#FDE68A" strokeWidth="1.2" />
+      {/* Bell Dome Body */}
+      <path d="M9 15 C9 15 8 21 5 25 C5 27 19 27 19 25 C16 21 15 15 15 15 Z" fill="#C89B3C" stroke="#78350F" strokeWidth="1" />
+      {/* Bell Rim Highlight */}
+      <ellipse cx="12" cy="25" rx="7" ry="2" fill="#FDE68A" stroke="#78350F" strokeWidth="0.8" />
+      {/* Hanging Clapper */}
+      <circle cx="12" cy="28.5" r="1.6" fill="#F59E0B" stroke="#78350F" strokeWidth="0.6" />
+      {/* Radiating Sound Sparks */}
+      <path d="M2.5 25 C1 23 1 27 2.5 25M21.5 25 C23 23 23 27 21.5 25" stroke="#FDE68A" strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
+    </svg>
+  );
+}
+
+/** Illustrated Traditional South Indian Entrance Brass Lamp (Kuthuvilakku) */
+function EntranceKuthuVilakku({ className = "h-8 w-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 22 42" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      {/* Sacred Flame with Golden Halo */}
+      <circle cx="11" cy="7" r="5" fill="#FDE68A" opacity="0.25" />
+      <path d="M11 2 C8 6 9 9 11 11 C13 9 14 6 11 2 Z" fill="#EA580C" />
+      <path d="M11 5 C9.5 7.5 10 9.5 11 10.5 C12 9.5 12.5 7.5 11 5 Z" fill="#FDE68A" />
+      <circle cx="11" cy="9" r="1" fill="#FFFFFF" />
+      {/* Peacock / Annapakshi Finial Top */}
+      <circle cx="11" cy="13" r="1.6" fill="#F59E0B" />
+      {/* Oil Reservoir Thattu */}
+      <ellipse cx="11" cy="16" rx="6.5" ry="2.2" fill="#C89B3C" stroke="#78350F" strokeWidth="0.8" />
+      <ellipse cx="11" cy="15.5" rx="5" ry="1.2" fill="#FDE68A" />
+      {/* Turned Brass Pillar */}
+      <rect x="10" y="17" width="2" height="16" fill="#D97706" />
+      <ellipse cx="11" cy="22" rx="3.5" ry="1.2" fill="#C89B3C" />
+      <ellipse cx="11" cy="28" rx="4" ry="1.2" fill="#C89B3C" />
+      {/* Stepped Pedestal Base */}
+      <path d="M6 37 C6 35 9 33 11 33 C13 33 16 35 16 37 Z" fill="#C89B3C" stroke="#78350F" strokeWidth="0.8" />
+      <ellipse cx="11" cy="38" rx="7.5" ry="2.2" fill="#B45309" stroke="#78350F" strokeWidth="0.8" />
+      <ellipse cx="11" cy="37.5" rx="6" ry="1.2" fill="#FDE68A" />
+    </svg>
+  );
+}
+
+/** Illustrated Temple Gateway Arch (Dwara Torana) Drawing */
+function EntranceToranaArch({ className = "h-8 w-8" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      {/* Sacred Kalasam Peak */}
+      <circle cx="18" cy="3" r="1.8" fill="#FDE68A" />
+      <path d="M18 4 L15 9 H21 Z" fill="#F59E0B" />
+      {/* Arch Curve (Makara Torana) */}
+      <path d="M7 34 V18 C7 11 29 11 29 18 V34" stroke="#FDE68A" strokeWidth="1.5" />
+      <path d="M10 34 V19 C10 14 26 14 26 19 V34" stroke="#C89B3C" strokeWidth="1" strokeDasharray="2 1.5" />
+      {/* Hanging Bell in Center */}
+      <line x1="18" y1="13" x2="18" y2="18" stroke="#FDE68A" strokeWidth="1" />
+      <path d="M16 18 H20 L21 22 H15 Z" fill="#F59E0B" />
+      <circle cx="18" cy="23" r="1" fill="#FDE68A" />
+      {/* Base Plinths */}
+      <ellipse cx="7" cy="34" rx="3.5" ry="1.5" fill="#FDE68A" />
+      <ellipse cx="29" cy="34" rx="3.5" ry="1.5" fill="#FDE68A" />
+    </svg>
+  );
+}
+
 type MegaMenu = "shop" | null;
 
 interface CategoryItem {
@@ -211,89 +307,110 @@ export function Navigation() {
   }, [dbProducts, hoveredCategory]);
 
   return (
-    <div className="relative z-50 font-sans">
-      {/* Top Announcement Bar with Dynamic Text Reveal */}
-      <div className="bg-brand-ink px-2.5 py-2 text-xs font-semibold text-white sm:px-4 sm:text-ui-13 border-b border-brand-accent/40">
-        <div className="mx-auto flex max-w-7xl flex-col gap-1 px-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:px-6 xl:max-w-[1440px] 2xl:max-w-[1560px]">
-          <div className="flex min-w-0 flex-1 items-center sm:min-h-6">
+    <>
+      {/* Top Announcement Bar with Royal Crimson Red Background, Entrance Drawing Illustrations & Text Reveal Animation */}
+      <div className="relative z-50 bg-gradient-to-r from-[#9E1830] via-[#851327] to-[#9E1830] px-3 pt-3.5 pb-2.5 text-[11px] font-semibold text-white sm:px-4 sm:pt-4 sm:pb-3 sm:text-ui-13 border-b-2 border-[#C89B3C]/60 font-sans shadow-md min-h-[48px] sm:min-h-[52px] flex items-center overflow-hidden">
+        
+        {/* 1. Auspicious Entrance Hanging Toranam (Mango Leaves & Marigolds at Doorway Top) */}
+        <EntranceDoorwayToran />
+
+        {/* 2. Background Subtle Temple Entrance Arches */}
+        <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-between px-3 sm:px-12 opacity-15">
+          <EntranceToranaArch className="h-9 w-9 text-[#FDE68A]" />
+          <EntranceToranaArch className="h-9 w-9 text-[#FDE68A]" />
+        </div>
+
+        <div className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-0 sm:px-6 xl:max-w-[1440px] 2xl:max-w-[1560px]">
+          {/* Left: Entrance Kuthuvilakku + Hanging Temple Bell + Announcement */}
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-2.5 sm:min-h-7">
+            {/* Illustrated Entrance Brass Standing Lamp */}
+            <EntranceKuthuVilakku className="h-7 w-4.5 shrink-0 hidden md:block drop-shadow-xs" />
+            
+            {/* Illustrated Hanging Temple Bell */}
+            <EntranceHangingBell className="h-6 w-5 shrink-0 drop-shadow-xs" />
+
             <Link
               href={announcements[activeAnnounce].href}
-              className={`flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 sm:gap-3 transition-all duration-300 ease-out ${
+              className={`flex min-w-0 items-center gap-2 sm:gap-3 transition-all duration-400 ease-out transform ${
                 isRevealing
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 -translate-y-2 pointer-events-none"
+                  ? "opacity-100 translate-y-0 scale-100"
+                  : "opacity-0 -translate-y-2 scale-98 pointer-events-none"
               }`}
             >
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-2.5 py-0.5 text-ui-10 sm:text-ui-11 font-black tracking-wider text-brand-ink shrink-0 uppercase shadow-2xs">
+              <span className="hidden min-[420px]:inline-flex items-center gap-1.5 rounded-full bg-[#C89B3C] border border-[#FDE68A]/60 px-3 py-0.5 text-[10px] sm:text-xs font-black tracking-wider text-stone-950 shrink-0 uppercase shadow-xs">
                 {announcements[activeAnnounce].icon}
                 <span>{announcements[activeAnnounce].badge}</span>
               </span>
-              <span className="text-[11px] leading-snug sm:text-ui-13 font-medium text-white/95">
-                <strong className="text-brand-accent-soft font-bold mr-1.5">{announcements[activeAnnounce].highlight}:</strong>
-                <span className="text-white/90">{announcements[activeAnnounce].text}</span>
+              <span className="truncate text-xs leading-snug sm:text-sm font-medium text-white/95">
+                <strong className="text-[#FDE68A] font-bold mr-1.5 drop-shadow-xs">{announcements[activeAnnounce].highlight}:</strong>
+                <span className="text-white/95">{announcements[activeAnnounce].text}</span>
               </span>
             </Link>
           </div>
-          <div className="flex shrink-0 items-center justify-end gap-2.5 whitespace-nowrap text-white/95 sm:gap-4 text-xs sm:text-ui-13">
-            <Link href="/login" className="hidden items-center gap-1.5 hover:text-brand-accent transition-colors min-[400px]:inline-flex">
-              <Truck size={14} />
+
+          {/* Right: Hanging Bell + Track Order & Contact Links + Entrance Lamp */}
+          <div className="hidden shrink-0 items-center justify-end gap-2.5 sm:gap-3.5 whitespace-nowrap text-white/95 sm:flex text-xs sm:text-sm">
+            <EntranceHangingBell className="h-6 w-5 shrink-0 opacity-90 drop-shadow-xs" />
+            <Link href="/login" className="inline-flex items-center gap-1.5 text-white/90 hover:text-[#FDE68A] transition-colors">
+              <Truck size={14} className="text-[#C89B3C]" />
               <span>Track Order</span>
             </Link>
-            <span className="hidden text-white/40 sm:inline">|</span>
-            <Link href="/contact" className="hidden items-center gap-1.5 hover:text-brand-accent sm:inline-flex transition-colors">
-              <HelpCircle size={14} />
+            <span className="text-[#C89B3C]/60">|</span>
+            <Link href="/contact" className="inline-flex items-center gap-1.5 text-white/90 hover:text-[#FDE68A] transition-colors">
+              <HelpCircle size={14} className="text-[#C89B3C]" />
               <span>{CONTACT_PHONE_DISPLAY}</span>
             </Link>
+            <EntranceKuthuVilakku className="h-7 w-4.5 shrink-0 hidden lg:block drop-shadow-xs" />
           </div>
         </div>
       </div>
 
       {/* Main Navbar Header */}
       <header
-        className="sticky top-0 z-40 bg-brand-surface-bright border-b border-brand-border/70 shadow-xs"
+        className="sticky top-0 z-50 font-sans bg-brand-surface/95 backdrop-blur-md border-b border-brand-border shadow-xs"
         onMouseLeave={() => setOpenMega(null)}
       >
-        <div className="page-container flex h-[68px] sm:h-[76px] items-center justify-between gap-2 sm:gap-4">
+        <div className="page-container flex h-[64px] sm:h-[76px] items-center justify-between gap-2 sm:gap-4">
           
           {/* Left: Tablet/Mobile Drawer Trigger + Brand Logo */}
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:flex-initial">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open navigation menu"
               aria-expanded={mobileMenuOpen}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-brand-border bg-white text-brand-ink transition hover:border-brand-primary hover:text-brand-primary lg:hidden"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-[10px] border border-brand-border bg-white text-brand-ink transition hover:border-brand-primary hover:text-brand-primary lg:hidden"
             >
-              <Menu size={20} strokeWidth={2} />
+              <Menu size={19} strokeWidth={2} />
             </button>
 
-            <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3.5 shrink-0 group" aria-label="HM Brand Home">
-              <div className="relative h-10 w-10 sm:h-12 sm:w-12 shrink-0 transition-transform duration-300 group-hover:scale-105">
+            <Link href="/" className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-3.5 lg:flex-initial group" aria-label="HM Brand Home">
+              <div className="relative h-8 w-8 min-[400px]:h-9 min-[400px]:w-9 sm:h-12 sm:w-12 shrink-0 transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src="/images/brand_logo_icon_transparent.png"
                   alt="HM Brand Logo"
                   fill
-                  sizes="(max-width: 640px) 40px, 48px"
+                  sizes="(max-width: 640px) 36px, 48px"
                   priority
                   className="object-contain"
                 />
               </div>
-              <div className="flex flex-col justify-center leading-tight">
-                <span className="font-brand text-base min-[380px]:text-lg sm:text-2xl font-bold tracking-[0.12em] sm:tracking-[0.16em] uppercase text-brand-heading">
+              <div className="flex min-w-0 flex-col justify-center leading-tight">
+                <span className="font-brand truncate text-[14px] min-[400px]:text-base sm:text-2xl font-bold tracking-[0.05em] sm:tracking-[0.16em] uppercase text-brand-heading">
                   HM <span className="text-brand-primary">BRAND</span>
                 </span>
-                <span className="font-tagline text-[11px] sm:text-ui-13 text-brand-primary tracking-[0.1em] sm:tracking-[0.18em] uppercase font-bold -mt-0.5 whitespace-nowrap">
+                <span className="font-sans truncate text-[7.5px] min-[400px]:text-[9px] sm:text-xs text-brand-primary tracking-[0.04em] sm:tracking-[0.18em] uppercase font-bold -mt-0.5">
                   Discover the Divine Within
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Center: Navigation Links */}
+          {/* Center: Navigation Links in Manrope */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-9 h-full" aria-label="Main Navigation">
             <Link
               href="/"
-              className={`relative py-6 font-brand text-sm sm:text-ui-15 font-bold tracking-wider uppercase transition-colors ${
+              className={`relative py-6 font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                 pathname === "/" ? "text-brand-primary" : "text-brand-heading hover:text-brand-primary"
               }`}
             >
@@ -310,7 +427,7 @@ export function Navigation() {
                 type="button"
                 onClick={() => setOpenMega(openMega === "shop" ? null : "shop")}
                 aria-expanded={openMega === "shop"}
-                className={`relative py-6 inline-flex items-center gap-1.5 font-brand text-sm sm:text-ui-15 font-bold tracking-wider uppercase transition-colors ${
+                className={`relative py-6 inline-flex items-center gap-1.5 font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                   openMega === "shop" || pathname.startsWith("/shop")
                     ? "text-brand-primary"
                     : "text-brand-heading hover:text-brand-primary"
@@ -329,7 +446,7 @@ export function Navigation() {
 
             <Link
               href="/about"
-              className={`relative py-6 font-brand text-sm sm:text-ui-15 font-bold tracking-wider uppercase transition-colors ${
+              className={`relative py-6 font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                 pathname === "/about" ? "text-brand-primary" : "text-brand-heading hover:text-brand-primary"
               }`}
             >
@@ -339,7 +456,7 @@ export function Navigation() {
 
             <Link
               href="/contact"
-              className={`relative py-6 font-brand text-sm sm:text-ui-15 font-bold tracking-wider uppercase transition-colors ${
+              className={`relative py-6 font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                 pathname === "/contact" ? "text-brand-primary" : "text-brand-heading hover:text-brand-primary"
               }`}
             >
@@ -349,16 +466,16 @@ export function Navigation() {
           </nav>
 
           {/* Right Actions: Search Pill, Account, Wishlist, Cart */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-0.5 sm:gap-2.5 shrink-0">
             
             {/* Mobile Compact Search Trigger */}
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search products"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-[10px] text-brand-ink hover:text-brand-primary hover:bg-brand-surface-warm transition md:hidden"
             >
-              <Search size={20} strokeWidth={1.8} />
+              <Search size={19} strokeWidth={1.8} />
             </button>
 
             {/* Tablet & Desktop Search Pill Input */}
@@ -366,21 +483,21 @@ export function Navigation() {
               type="button"
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search products"
-              className="hidden md:flex items-center gap-2.5 h-11 w-52 lg:w-72 xl:w-80 rounded-full border border-brand-border bg-white px-4 text-xs text-brand-ink/70 shadow-2xs hover:border-brand-primary transition-colors"
+              className="hidden md:flex items-center gap-2.5 h-10 w-52 lg:w-72 xl:w-80 rounded-[10px] border border-brand-border bg-white px-3.5 text-xs text-brand-slate shadow-2xs hover:border-brand-primary transition-colors"
             >
               <Search size={15} className="text-brand-primary shrink-0" />
               <span className="truncate">Search for agarbatti, camphor, pooja items...</span>
             </button>
 
-            {/* Admin Badge */}
+            {/* Admin Badge (tablet/desktop header; mobile accesses via menu drawer) */}
             {user?.role === "ADMIN" && (
               <Link
                 href="/admin"
                 aria-label="Admin dashboard"
-                className="inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-full bg-brand-primary px-2 text-xs font-bold text-white transition hover:bg-brand-hover sm:w-auto sm:px-3.5"
+                className="hidden sm:inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-full bg-brand-primary px-2 text-xs font-bold text-white transition hover:bg-brand-hover sm:w-auto sm:px-3.5"
               >
                 <ShieldCheck size={15} />
-                <span className="hidden sm:inline">Admin</span>
+                <span>Admin</span>
               </Link>
             )}
 
@@ -388,16 +505,16 @@ export function Navigation() {
             <Link
               href={user ? "/account" : "/login"}
               aria-label="Account"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition"
             >
-              <User size={20} strokeWidth={1.8} />
+              <User size={19} strokeWidth={1.8} />
             </Link>
 
-            {/* Wishlist */}
+            {/* Wishlist (desktop/tablet header; mobile accesses via menu drawer) */}
             <Link
               href="/wishlist"
               aria-label="Wishlist"
-              className="relative hidden min-[380px]:flex h-11 w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition"
+              className="relative hidden md:flex h-11 w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition"
             >
               <Heart size={20} strokeWidth={1.8} />
               {wishlist.length > 0 && (
@@ -411,9 +528,9 @@ export function Navigation() {
             <Link
               href="/cart"
               aria-label="Cart"
-              className="relative flex h-11 w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition"
+              className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full text-brand-ink hover:text-brand-primary hover:bg-brand-surface-soft transition"
             >
-              <ShoppingBag size={20} strokeWidth={1.8} />
+              <ShoppingBag size={19} strokeWidth={1.8} />
               {totalItems > 0 && (
                 <span className="absolute top-0.5 right-0.5 h-4 min-w-4 px-1 rounded-full bg-brand-primary text-[10px] font-bold text-white flex items-center justify-center shadow-xs">
                   {totalItems}
@@ -764,6 +881,19 @@ export function Navigation() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+              {user?.role === "ADMIN" && (
+                <Link
+                  href="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex min-h-11 items-center justify-between rounded-xl bg-brand-primary px-3.5 py-2.5 text-sm font-bold text-white shadow-xs transition hover:bg-brand-hover"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <ShieldCheck size={17} />
+                    <span>Admin Dashboard</span>
+                  </span>
+                  <ChevronRight size={16} />
+                </Link>
+              )}
               <nav aria-label="Drawer navigation" className="space-y-1">
                 {[
                   { label: "Home", href: "/" },
@@ -818,6 +948,6 @@ export function Navigation() {
         </div>
       )}
 
-    </div>
+    </>
   );
 }

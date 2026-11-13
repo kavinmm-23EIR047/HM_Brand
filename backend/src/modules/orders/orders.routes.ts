@@ -9,6 +9,8 @@ const router = Router();
 // Public / Customer Routes
 router.post('/', optionalAuthenticateJWT, validateRequest(createOrderSchema), ordersController.create);
 router.post('/verify-payment', optionalAuthenticateJWT, validateRequest(verifyPaymentSchema), ordersController.verifyPayment);
+router.post('/webhook', ordersController.handleWebhook);
+router.post('/razorpay-webhook', ordersController.handleWebhook);
 router.get('/shipping-config', ordersController.getShippingConfig);
 
 // Authenticated / Guest Customer Routes

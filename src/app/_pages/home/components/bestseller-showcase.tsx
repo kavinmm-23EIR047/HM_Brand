@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  ChevronLeft,
-  ChevronRight,
   Heart,
   ShoppingCart,
   Star,
@@ -147,34 +145,34 @@ function getBadgeInfo(product: Product) {
   if (b.includes("bestseller") || b.includes("best")) {
     return {
       text: product.badge,
-      icon: <KalashCrownSvg className="h-3.5 w-3.5" />,
+      icon: <KalashCrownSvg className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5" />,
       className: "bg-brand-surface-promo text-brand-amber-bright border-brand-yellow-bright",
     };
   }
   if (b.includes("new")) {
     return {
       text: product.badge,
-      icon: <SacredBotanicalSvg className="h-3.5 w-3.5" />,
+      icon: <SacredBotanicalSvg className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5" />,
       className: "bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]",
     };
   }
   if (b.includes("trend")) {
     return {
       text: product.badge,
-      icon: <AromaFlameSvg className="h-3.5 w-3.5" />,
+      icon: <AromaFlameSvg className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5" />,
       className: "bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3]",
     };
   }
   if (b.includes("coupon") || b.includes("off")) {
     return {
       text: product.badge,
-      icon: <Tag size={12} className="text-brand-primary shrink-0" />,
+      icon: <Tag className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-brand-primary shrink-0" />,
       className: "bg-brand-surface-warm text-brand-primary border-brand-accent",
     };
   }
   return {
     text: product.badge,
-    icon: <EditorialStarSvg className="h-3 w-3 text-brand-primary" />,
+    icon: <EditorialStarSvg className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-brand-primary" />,
     className: "bg-brand-surface-promo text-brand-primary border-brand-border",
   };
 }
@@ -187,17 +185,6 @@ export function BestsellerShowcase() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [slideCount, setSlideCount] = useState(1);
   const [autoplayPaused, setAutoplayPaused] = useState(false);
-
-  const moveSlider = (direction: "previous" | "next") => {
-    if (!sliderRef.current) return;
-    const slider = sliderRef.current;
-    const nextSlide = (activeSlide + (direction === "next" ? 1 : -1) + slideCount) % slideCount;
-    slider.scrollTo({
-      left: Math.min(nextSlide * slider.clientWidth, slider.scrollWidth - slider.clientWidth),
-      behavior: "smooth",
-    });
-    setActiveSlide(nextSlide);
-  };
 
   const visibleTabs = useMemo(() => {
     if (!dbProducts || dbProducts.length === 0) return FILTER_TABS;
@@ -255,7 +242,7 @@ export function BestsellerShowcase() {
   if (!dbProducts || dbProducts.length === 0) {
     if (!isInitialDataLoading) return null;
     return (
-      <section aria-label="Loading popular products" aria-busy="true" className="w-full border-y border-brand-accent/35 bg-brand-surface-alt py-8 sm:py-12">
+      <section aria-label="Loading popular products" aria-busy="true" className="w-full bg-brand-surface-alt py-8 sm:py-12">
         <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
           <div className="space-y-2">
             <div className="h-3 w-32 animate-pulse rounded bg-brand-border/50" />
@@ -278,7 +265,7 @@ export function BestsellerShowcase() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-surface-alt py-12 sm:py-16 border-b border-brand-border font-sans">
+    <section className="relative w-full overflow-hidden bg-brand-surface-alt py-6 sm:py-14 font-sans">
         <div
           className="page-container relative z-10"
           onMouseEnter={() => setAutoplayPaused(true)}
@@ -292,28 +279,28 @@ export function BestsellerShowcase() {
         >
         
         {/* ========================================================================= */}
-        {/* 1. HEADER AREA WITH TITLE, TRUST PILLARS & VIEW ALL BUTTON                */}
+        {/* 1. HEADER AREA WITH TITLE & TOP-RIGHT VIEW ALL BUTTON                     */}
         {/* ========================================================================= */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
+        <div className="flex flex-row items-start sm:items-end justify-between gap-3 sm:gap-6 mb-4 sm:mb-8">
           
           {/* Left: Eyebrow, Heading & Narrative */}
-          <div className="max-w-xl">
-            <span className="font-brand text-ui-11 sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1.5">
+          <div className="min-w-0 flex-1 max-w-xl">
+            <span className="font-brand text-[10px] sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1">
               OUR BEST SELLERS
             </span>
-            <h2 className="font-brand text-xl sm:text-2xl lg:text-3xl font-bold text-brand-heading tracking-wide leading-tight uppercase">
+            <h2 className="font-brand text-lg sm:text-2xl lg:text-3xl font-bold text-brand-heading tracking-wide leading-tight uppercase">
               Popular Picks for a <span className="text-brand-primary">Peaceful Home</span>
             </h2>
-            <p className="mt-2 font-sans text-xs sm:text-sm text-brand-slate leading-relaxed font-normal">
-              Handpicked agarbattis, camphor, pooja essentials and more to bring positivity and divine fragrance into your everyday life.
+            <p className="mt-1 sm:mt-2 font-sans text-xs sm:text-sm text-brand-slate leading-snug sm:leading-relaxed font-normal">
+              Pure agarbattis, camphor &amp; daily pooja essentials.
             </p>
           </div>
 
-          {/* Right: 4 Mini Trust Icons & View All Button */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-5 lg:gap-6">
+          {/* Right: 4 Mini Trust Icons (xl+) & View All Corner Button */}
+          <div className="flex shrink-0 items-center gap-5 lg:gap-6">
             
             {/* 4 Mini Trust Pills */}
-            <div className="hidden sm:grid grid-cols-4 gap-3.5">
+            <div className="hidden xl:grid grid-cols-4 gap-3.5">
               <div className="flex flex-col items-center text-center">
                 <div className="h-10 w-10 rounded-full bg-brand-green/15 text-brand-green flex items-center justify-center mb-1">
                   <Leaf size={18} />
@@ -347,34 +334,15 @@ export function BestsellerShowcase() {
               </div>
             </div>
 
-            {/* Action Buttons: View All + Carousel Nav Arrows (Clean Header Placement) */}
-            <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:ml-auto sm:w-auto sm:justify-end sm:gap-3">
-              <Link
-                href="/shop"
-                className="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand-orange-deep px-4 py-2 font-brand text-[11px] font-bold uppercase tracking-wide text-white shadow-sm transition-all duration-300 hover:bg-[#C85610] hover:scale-105 active:scale-95 whitespace-nowrap sm:min-h-11 sm:px-6 sm:py-3 sm:text-sm sm:tracking-wider"
-              >
-                <span>View All Products</span>
-                <ArrowRight size={14} />
-              </Link>
-              <div className="flex shrink-0 items-center gap-4 sm:gap-5">
-                <button
-                  type="button"
-                  onClick={() => moveSlider("previous")}
-                  aria-label="Previous products"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:bg-brand-primary hover:text-white sm:h-11 sm:w-11"
-                >
-                  <ChevronLeft size={19} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => moveSlider("next")}
-                  aria-label="Next products"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border bg-white text-brand-heading shadow-2xs transition hover:border-brand-primary hover:bg-brand-primary hover:text-white sm:h-11 sm:w-11"
-                >
-                  <ChevronRight size={19} />
-                </button>
-              </div>
-            </div>
+            {/* Right Corner View All Button (Auto-slide handles carousel) */}
+            <Link
+              href="/shop"
+              className="inline-flex min-h-8 sm:min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-[10px] bg-brand-primary hover:bg-brand-hover border border-brand-accent/40 px-3.5 py-1.5 sm:px-5 sm:py-2 font-sans text-xs font-semibold uppercase tracking-wider text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap"
+            >
+              <span className="sm:hidden">View All</span>
+              <span className="hidden sm:inline">View All Products</span>
+              <ArrowRight size={13} />
+            </Link>
 
           </div>
 
@@ -383,11 +351,11 @@ export function BestsellerShowcase() {
         {/* ========================================================================= */}
         {/* 2. CATEGORY FILTER TABS ROW                                              */}
         {/* ========================================================================= */}
-        <div className="mb-6 w-full sm:mb-8">
+        <div className="mb-3.5 w-full sm:mb-7">
           <div
             role="group"
             aria-label="Product categories. Swipe horizontally to see all categories."
-            className="scrollbar-none flex w-full snap-x snap-mandatory items-center gap-1.5 overflow-x-auto scroll-smooth px-1 py-1 sm:gap-2"
+            className="scrollbar-none flex w-full snap-x snap-mandatory items-center gap-1.5 overflow-x-auto scroll-smooth px-0.5 py-0.5 sm:gap-2 sm:px-1 sm:py-1"
           >
             {visibleTabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -397,13 +365,13 @@ export function BestsellerShowcase() {
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
                   aria-pressed={isActive}
-                  className={`inline-flex h-9 shrink-0 snap-start items-center justify-center gap-1.5 rounded-full px-3 sm:h-10 sm:gap-2 sm:px-4 font-brand text-[10px] min-[420px]:text-[11px] sm:text-xs font-bold uppercase tracking-wide leading-tight transition-colors duration-200 shadow-2xs cursor-pointer whitespace-nowrap ${
+                  className={`inline-flex h-8 shrink-0 snap-start items-center justify-center gap-1.5 rounded-[10px] px-2.5 sm:h-10 sm:gap-2 sm:px-4 font-sans text-[11px] sm:text-xs font-semibold uppercase tracking-wide leading-tight transition-all duration-200 shadow-2xs cursor-pointer whitespace-nowrap ${
                     isActive
-                      ? "bg-brand-primary text-white shadow-sm"
+                      ? "bg-brand-primary text-white border border-brand-accent/40 shadow-sm"
                       : "bg-white text-brand-heading border border-brand-border hover:border-brand-primary hover:text-brand-primary"
                   }`}
                 >
-                  <TabIcon id={tab.id} className="h-3.5 w-3.5 shrink-0" />
+                  <TabIcon id={tab.id} className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -423,7 +391,7 @@ export function BestsellerShowcase() {
               const slider = sliderRef.current;
               if (slider) setActiveSlide(Math.min(slideCount - 1, Math.round(slider.scrollLeft / slider.clientWidth)));
             }}
-            className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-0.5 py-3 sm:gap-5"
+            className="scrollbar-none flex snap-x snap-mandatory gap-2.5 overflow-x-auto scroll-smooth px-0.5 py-1.5 sm:gap-5 sm:py-3"
           >
             {displayedProducts.map((product) => {
               const productImg = product.image || product.images?.[0]?.url;
@@ -433,16 +401,16 @@ export function BestsellerShowcase() {
               return (
                 <div
                   key={product.slug}
-                  className="group flex min-w-0 w-[calc((100%_-_0.75rem)_/_2)] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs transition-all duration-300 hover:border-brand-primary/50 hover:shadow-md min-[640px]:w-[calc((100%_-_2.5rem)_/_3)] lg:w-[calc((100%_-_3.75rem)_/_4)]"
+                  className="group flex min-w-0 w-[calc((100%_-_0.625rem)_/_2)] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-border hover:shadow-md min-[640px]:w-[calc((100%_-_2.5rem)_/_3)] lg:w-[calc((100%_-_3.75rem)_/_4)]"
                 >
-                  {/* Top Image: Unified 1:1 Soho Frame (Zero Cropping on Tall Pouches/Boxes) */}
-                  <div className="relative aspect-square w-full shrink-0 overflow-hidden border-b border-brand-border/70 bg-brand-surface-soft p-2.5 sm:p-3.5">
-                    <Link href={`/product/${product.slug}`} className="relative flex h-full w-full items-center justify-center">
+                  {/* Top Image: Balanced Square Aspect Ratio Frame - Clean Full-Bleed with Rounded Corners */}
+                  <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-t-2xl border-b border-brand-border/70 bg-brand-surface-warm/30">
+                    <Link href={`/product/${product.slug}`} className="relative block h-full w-full overflow-hidden">
                       {productImg ? (
                         <img
                           src={productImg}
                           alt={product.name}
-                          className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                           onError={(e) => {
                             const target = e.currentTarget as HTMLImageElement;
                             if (!target.src.includes("hm_glory_agarbatti")) {
@@ -451,24 +419,25 @@ export function BestsellerShowcase() {
                           }}
                         />
                       ) : (
-                        <div className="flex h-full w-full flex-col items-center justify-center text-brand-ink/50 text-xs">
-                          <SacredDiyaSvg className="h-10 w-10" />
-                          <span className="font-brand text-xs font-bold text-brand-primary mt-1.5 tracking-wider">HM PURITY</span>
+                        <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-[#F5EFE3] to-[#FFFDF8] p-4 text-center select-none">
+                          <SacredDiyaSvg className="h-10 w-10 text-brand-primary/80 transition-transform duration-500 group-hover:scale-110" />
+                          <span className="font-sans text-xs font-bold text-brand-primary mt-2 tracking-wider">HM PURITY</span>
+                          <span className="font-sans text-[11px] text-brand-slate mt-0.5">{product.subCategory || product.category || "Devotional Essentials"}</span>
                         </div>
                       )}
                     </Link>
 
-                    {/* Status Badge - Render ONLY if present from Backend */}
+                    {/* Status Badge - Floating Top Left with Frosted Glass */}
                     {badge && (
-                      <div className="absolute left-2.5 top-2.5 z-10 pointer-events-none">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-ui-11 font-bold uppercase tracking-wider border shadow-2xs ${badge.className}`}>
-                          <span>{badge.icon}</span>
-                          <span>{badge.text}</span>
+                      <div className="absolute left-2.5 top-2.5 z-10 max-w-[calc(100%-3.5rem)] pointer-events-none">
+                        <span className="inline-flex max-w-full items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] sm:text-[11px] leading-tight font-semibold uppercase tracking-wider bg-white/95 backdrop-blur-md text-brand-primary border border-brand-border/80 shadow-xs">
+                          <span className="shrink-0">{badge.icon}</span>
+                          <span className="truncate">{badge.text}</span>
                         </span>
                       </div>
                     )}
 
-                    {/* Wishlist Heart Button - Top Right */}
+                    {/* Wishlist Heart Button - Floating Top Right with Frosted Glass */}
                     <button
                       type="button"
                       onClick={(e) => {
@@ -476,39 +445,39 @@ export function BestsellerShowcase() {
                         toggleWishlist(product.slug);
                       }}
                       aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                      className={`absolute right-2.5 top-2.5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-brand-border transition-transform active:scale-90 shadow-2xs cursor-pointer ${
+                      className={`absolute right-2.5 top-2.5 z-10 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-brand-border/80 transition-all duration-200 active:scale-90 shadow-xs cursor-pointer ${
                         wishlisted
-                          ? "bg-brand-primary text-white border-brand-primary"
-                          : "bg-white text-brand-ink hover:bg-brand-primary hover:text-white hover:border-brand-primary"
+                          ? "bg-brand-primary text-white border-brand-primary scale-105"
+                          : "bg-white/95 backdrop-blur-md text-brand-heading hover:bg-brand-primary hover:text-white hover:border-brand-primary hover:scale-105"
                       }`}
                     >
-                      <Heart size={15} fill={wishlisted ? "currentColor" : "none"} />
+                      <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill={wishlisted ? "currentColor" : "none"} />
                     </button>
                   </div>
 
                   {/* Bottom Content Area: Clear padding */}
-                  <div className="p-3.5 sm:p-4 flex flex-1 flex-col justify-between">
+                  <div className="p-2.5 sm:p-4 flex flex-1 flex-col justify-between">
                     <div>
-                      {/* Product Name */}
+                      {/* Product Name - Manrope 16px Semibold */}
                       <Link href={`/product/${product.slug}`} aria-label={`View ${product.name} details`}>
-                        <h3 className="break-words font-brand text-sm sm:text-lg font-bold uppercase tracking-wider text-brand-heading group-hover:text-brand-primary transition-colors leading-snug">
+                        <h3 className="break-words font-sans text-[14px] sm:text-[16px] font-semibold text-brand-heading group-hover:text-brand-primary transition-colors leading-snug line-clamp-1">
                           {product.name}
                         </h3>
                       </Link>
 
                       {/* Subtitle / Series */}
-                      <p className="font-sans text-xs sm:text-ui-13 text-brand-slate font-medium leading-relaxed mt-1">
+                      <p className="font-sans text-[11px] sm:text-xs text-brand-slate font-normal leading-relaxed mt-0.5 sm:mt-1 line-clamp-1">
                         {product.subCategory || product.category || "Flora Series"}
                       </p>
 
                       {/* Rating (Backend data only) */}
                       {hasProductRating(product) && (
-                        <div className="flex items-center gap-1.5 mt-2">
-                          <Star size={13} fill="var(--brand-orange)" className="text-brand-orange" />
+                        <div className="flex items-center gap-1.5 mt-1.5 sm:mt-2">
+                          <Star size={12} fill="var(--brand-accent)" className="text-brand-accent sm:h-[13px] sm:w-[13px]" />
                           <span className="text-xs sm:text-sm font-bold text-brand-heading">
                             {product.rating.toFixed(1)}
                           </span>
-                          <span className="text-xs text-brand-gray font-medium">
+                          <span className="text-[11px] sm:text-xs text-brand-slate font-medium">
                             ({product.reviewCount})
                           </span>
                         </div>
@@ -516,19 +485,19 @@ export function BestsellerShowcase() {
                     </div>
 
                     {/* Bottom Price & Add to Cart Row */}
-                    <div className="mt-3 pt-2.5 border-t border-brand-surface-soft flex items-center justify-between gap-2">
-                      <div>
+                    <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-brand-border/60 flex items-center justify-between gap-2">
+                      <div className="min-w-0">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="font-brand text-xl sm:text-2xl font-extrabold text-brand-primary block leading-none">
+                          <span className="font-sans text-[17px] sm:text-[18px] font-bold text-brand-primary block leading-none">
                             ₹{product.price}
                           </span>
                           {product.mrp && product.mrp !== `₹${product.price}` && (
-                            <span className="font-sans text-xs text-brand-gray line-through font-medium">
+                            <span className="font-sans text-[11px] sm:text-xs text-brand-slate line-through font-medium">
                               {product.mrp}
                             </span>
                           )}
                         </div>
-                        <span className="font-sans text-xs text-brand-gray font-medium block mt-1">
+                        <span className="font-sans text-[11px] sm:text-xs text-brand-slate font-medium block mt-0.5 sm:mt-1 truncate">
                           {product.bundleQuantity && product.bundleQuantity > 1
                             ? `${product.bundleQuantity}-Box Bundle (₹${Math.round(product.price / product.bundleQuantity)}/box)`
                             : `(${product.quantity || "Standard Pack"})`}
@@ -545,9 +514,9 @@ export function BestsellerShowcase() {
                         }}
                         disabled={!product.inStock}
                         aria-label="Add to cart"
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-primary hover:bg-brand-hover text-white shadow-xs transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-[10px] bg-brand-primary hover:bg-brand-hover border border-brand-accent/40 text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
-                        <ShoppingCart size={16} />
+                        <ShoppingCart className="h-4 w-4" />
                       </button>
                     </div>
                   </div>

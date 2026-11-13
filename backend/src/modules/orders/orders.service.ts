@@ -4,6 +4,9 @@ import { BadRequestError, NotFoundError } from '../../shared/errors/custom.error
 import { OrderStatus, PaymentStatus } from '../../shared/types';
 import { shippingConfig } from '../../shared/config/shipping.config';
 import { razorpayService } from '../../shared/payment/razorpay.service';
+import { emailService, OrderEmailData } from '../../shared/messaging/email.service';
+import { telegramService } from '../../shared/messaging/telegram.service';
+import { pushService } from '../../shared/notifications/push.service';
 
 const LEGACY_SLUG_MAP: Record<string, string> = {
   '10-in-1-aroma-family-pack': 'hm-dhoop-stick-10-flavours',
@@ -233,6 +236,10 @@ export class OrdersService {
       }
     );
 
+    if (!isOnlinePayment) {
+      this.dispatchNewOrderNotifications(order);
+    }
+
     return {
       ...order,
       razorpay: razorpayOrderData
@@ -278,7 +285,76 @@ export class OrdersService {
       include: { items: true },
     });
 
+    this.dispatchNewOrderNotifications(updatedOrder);
+
     return updatedOrder;
+  }
+
+  async processRazorpayWebhook(eventData: any) {
+    const event = eventData?.event;
+    console.log(`[OrdersService] Webhook event received: ${event}`);
+
+    const paymentEntity = eventData?.payload?.payment?.entity;
+    const orderEntity = eventData?.payload?.order?.entity;
+
+    const razorpayOrderId = paymentEntity?.order_id || orderEntity?.id;
+    const razorpayPaymentId = paymentEntity?.id;
+    const orderReceipt = orderEntity?.receipt;
+
+    if (!razorpayOrderId && !orderReceipt) {
+      console.warn('[OrdersService] Webhook payload missing order references');
+      return { status: 'skipped', reason: 'Missing order identifiers' };
+    }
+
+    // Find the matching order by razorpayOrderId or orderNumber receipt
+    let order = null;
+    if (razorpayOrderId) {
+      order = await prisma.order.findFirst({
+        where: { razorpayOrderId },
+        include: { items: true },
+      });
+    }
+
+    if (!order && orderReceipt) {
+      order = await prisma.order.findFirst({
+        where: { orderNumber: orderReceipt },
+        include: { items: true },
+      });
+    }
+
+    if (!order) {
+      console.warn(`[OrdersService] No order found for Razorpay order ID: ${razorpayOrderId} / Receipt: ${orderReceipt}`);
+      return { status: 'not_found', razorpayOrderId, orderReceipt };
+    }
+
+    if (event === 'payment.captured' || event === 'order.paid') {
+      const updatedOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: 'COMPLETED',
+          status: 'CONFIRMED',
+          razorpayPaymentId: razorpayPaymentId || order.razorpayPaymentId,
+          razorpayOrderId: razorpayOrderId || order.razorpayOrderId,
+        },
+        include: { items: true },
+      });
+      console.log(`[OrdersService] Webhook confirmed payment for order: ${updatedOrder.orderNumber}`);
+      this.dispatchNewOrderNotifications(updatedOrder);
+      return { status: 'confirmed', orderId: updatedOrder.id, orderNumber: updatedOrder.orderNumber };
+    }
+
+    if (event === 'payment.failed') {
+      const updatedOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: 'FAILED',
+        },
+      });
+      console.log(`[OrdersService] Webhook marked payment as FAILED for order: ${updatedOrder.orderNumber}`);
+      return { status: 'failed', orderId: updatedOrder.id, orderNumber: updatedOrder.orderNumber };
+    }
+
+    return { status: 'unhandled_event', event };
   }
 
   getShippingConfig() {
@@ -335,7 +411,127 @@ export class OrdersService {
       throw new BadRequestError('Cannot move pending order directly to shipping stages. Please confirm the order first.');
     }
 
-    return this.repo.updateStatus(id, status, paymentStatus, courierData);
+    const updated = await this.repo.updateStatus(id, status, paymentStatus, courierData);
+    if (updated) {
+      this.dispatchStatusUpdateNotifications(updated, status, courierData);
+    }
+    return updated;
+  }
+
+  private parseShippingAddress(raw: any) {
+    if (!raw) return { fullName: 'Valued Devotee', email: '', phone: '', street: '', city: 'Coimbatore', state: 'Tamil Nadu', postalCode: '' };
+    if (typeof raw === 'object') return raw;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return { fullName: 'Valued Devotee', street: String(raw), city: '', state: '', postalCode: '', phone: '', email: '' };
+    }
+  }
+
+  private formatOrderForMessaging(order: any): OrderEmailData {
+    const addr = this.parseShippingAddress(order.shippingAddress);
+    return {
+      orderNumber: order.orderNumber,
+      totalAmount: Number(order.totalAmount),
+      subtotal: Number(order.subtotal),
+      discountAmount: Number(order.discountAmount || 0),
+      shippingCost: Number(order.shippingCost || 0),
+      paymentMethod: order.paymentMethod,
+      paymentStatus: order.paymentStatus,
+      razorpayPaymentId: order.razorpayPaymentId || undefined,
+      createdAt: order.createdAt,
+      customer: {
+        fullName: addr.fullName || addr.name || order.customerEmail || 'Valued Devotee',
+        email: order.customerEmail,
+        phone: order.customerPhone || addr.phone || '',
+        street: addr.addressLine1 ? `${addr.addressLine1}${addr.addressLine2 ? ', ' + addr.addressLine2 : ''}` : (addr.street || ''),
+        city: addr.city || '',
+        state: addr.state || 'Tamil Nadu',
+        postalCode: addr.postalCode || addr.pincode || addr.zipCode || '',
+      },
+      items: (order.items || []).map((item: any) => ({
+        name: item.productNameSnapshot || item.product?.name || 'Sacred Agarbatti',
+        quantity: item.quantity,
+        unitPrice: Number(item.unitPriceSnapshot || item.unitPrice || 0),
+        totalPrice: Number(item.totalPrice || 0),
+        image: item.imageUrlSnapshot || undefined,
+      })),
+    };
+  }
+
+  private async dispatchNewOrderNotifications(order: any) {
+    try {
+      const formatted = this.formatOrderForMessaging(order);
+      const customerName = formatted.customer.fullName;
+
+      Promise.allSettled([
+        // 1. Brevo Email to Admin
+        emailService.sendAdminNewOrderAlert(formatted),
+        // 2. Brevo Email to Customer
+        emailService.sendCustomerOrderConfirmation(formatted),
+        // 3. Telegram Bot to Admin Chat
+        telegramService.sendOrderAlert(formatted),
+        // 4. Web Push Notification to Admin devices
+        pushService.notifyAdmins({
+          title: `🛒 New Order: ${order.orderNumber}`,
+          body: `₹${Number(order.totalAmount).toLocaleString('en-IN')} from ${customerName} (${order.paymentMethod})`,
+          url: '/admin',
+          data: { orderId: order.id, orderNumber: order.orderNumber },
+        }),
+      ]).catch((err) => console.error('[OrdersService] Error dispatching new order notifications:', err));
+    } catch (err) {
+      console.error('[OrdersService] Failed to format order for notifications:', err);
+    }
+  }
+
+  private async dispatchStatusUpdateNotifications(
+    order: any,
+    newStatus: string,
+    courierData?: { courierName?: string; trackingNumber?: string; courierNote?: string }
+  ) {
+    try {
+      const addr = this.parseShippingAddress(order.shippingAddress);
+      const customerName = addr.fullName || addr.name || 'Valued Devotee';
+
+      const statusTitles: Record<string, string> = {
+        CONFIRMED: 'Order Confirmed',
+        PROCESSING: 'Order Packing in Progress',
+        READY_TO_SHIP: 'Awaiting Courier Handover',
+        SHIPPED: 'Sacred Parcel Dispatched from Coimbatore!',
+        DISPATCHED: 'Sacred Parcel Dispatched from Coimbatore!',
+        DELIVERED: 'Sacred Fragrance Delivered to Your Home!',
+        CANCELLED: 'Order Cancelled',
+      };
+
+      const statusMsg = statusTitles[newStatus] || `Status updated to ${newStatus}`;
+
+      Promise.allSettled([
+        // 1. Brevo Email to Customer
+        emailService.sendCustomerStatusUpdate(
+          {
+            orderNumber: order.orderNumber,
+            customerEmail: order.customerEmail,
+            customerPhone: order.customerPhone,
+          },
+          customerName,
+          newStatus,
+          courierData
+        ),
+        // 2. Web Push to Customer
+        order.userId
+          ? pushService.notifyCustomer(order.userId, {
+              title: `🚚 ${order.orderNumber}: ${statusMsg}`,
+              body: courierData?.trackingNumber
+                ? `Tracking AWB: ${courierData.trackingNumber} via ${courierData.courierName || 'Courier'}. View live updates in your account.`
+                : `Your sacred parcel status is now ${newStatus}. Tap to view live order tracking.`,
+              url: '/account',
+              data: { orderId: order.id, orderNumber: order.orderNumber, newStatus },
+            })
+          : Promise.resolve({ sent: 0, failed: 0 }),
+      ]).catch((err) => console.error('[OrdersService] Error dispatching status update notifications:', err));
+    } catch (err) {
+      console.error('[OrdersService] Failed to dispatch status update notifications:', err);
+    }
   }
 }
 

@@ -124,18 +124,24 @@ const config: Config = {
       },
       borderRadius: {
         xs: "0.125rem",
+        btn: "0.625rem", // 10px button border radius
       },
       backdropBlur: {
         "2xs": "2px",
         xs: "4px",
       },
       boxShadow: {
-        "2xs": "0 1px 2px 0 rgb(23 59 58 / 0.04)",
-        xs: "0 1px 3px 0 rgb(23 59 58 / 0.06)",
+        "2xs": "0 1px 2px 0 rgb(var(--brand-ink-rgb) / 0.04)",
+        xs: "0 1px 3px 0 rgb(var(--brand-ink-rgb) / 0.06)",
+        sm: "0 2px 6px 0 rgb(var(--brand-ink-rgb) / 0.06)",
+        md: "0 6px 18px -4px rgb(var(--brand-ink-rgb) / 0.08)",
+        lg: "0 12px 28px -6px rgb(var(--brand-ink-rgb) / 0.10)",
+        'card': '0 4px 20px -6px rgb(var(--brand-ink-rgb) / 0.06)',
+        'card-hover': '0 8px 25px -6px rgb(var(--brand-ink-rgb) / 0.10)',
+        'btn': '0 2px 8px -1px rgb(var(--brand-primary-rgb) / 0.25)',
         'solid-sm': '0 1px 2px rgb(var(--brand-ink-rgb) / 0.08)',
         'solid-md': '0 4px 12px rgb(var(--brand-ink-rgb) / 0.08)',
         'solid-gold': '0 2px 8px rgb(var(--brand-accent-rgb) / 0.25)',
-        'card': '0 4px 20px -6px rgb(var(--brand-ink-rgb) / 0.07)',
       },
       keyframes: {
         sway: {

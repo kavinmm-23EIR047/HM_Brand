@@ -5,6 +5,8 @@ import { CartDrawer } from "@/components/cart-drawer";
 import { SearchModal } from "@/components/search-modal";
 import { NotificationToast } from "@/components/notification-toast";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { WebPushNotificationPrompt } from "@/components/web-push-manager";
+import { ChatbotWidget } from "@/components/chatbot-widget";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -40,12 +42,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Marcellus&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Marcellus&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
       <body
-        className="bg-sandalLight text-charcoal antialiased min-h-screen w-full max-w-full overflow-x-clip"
+        className="bg-brand-surface text-brand-ink antialiased min-h-screen w-full max-w-full overflow-x-clip font-sans"
         suppressHydrationWarning
       >
         <StoreProvider>
@@ -54,6 +56,8 @@ export default function RootLayout({
           <SearchModal />
           <NotificationToast />
           <MobileBottomNav />
+          <WebPushNotificationPrompt />
+          <ChatbotWidget />
         </StoreProvider>
       </body>
     </html>

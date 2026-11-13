@@ -1,0 +1,13 @@
+[
+  {
+    "id": "sub_1794589868933_ghs0x",
+    "endpoint": "https://fcm.googleapis.com/fcm/send/dHknlsS4Y3k:APA91bHSy56205kMxXfoGeA6qVGKXEez0gsmrL8JaELxoiFfN2HKrHSdD9KQy8Kf_cJvoArtMFR26CWpcSp1WkigvHZ_pdwLxws6i3l4A2tZwA7neDVhcu1IHNze5UEapl8oTOqNf83P",
+    "keys": {
+      "p256dh": "BIycA8savRZQdtDNg_ONIMBz0Jo_XCME_id8RNWHNL2rxKzazUdVfBWalzjb4dXBlKiggOEef-tmoojfV_O676o",
+      "auth": "AYnuZp1JBucaE1QeMiu4Ug"
+    },
+    "role": "CUSTOMER",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+    "createdAt": "2026-11-13T17:11:08.933Z"
+  }
+]

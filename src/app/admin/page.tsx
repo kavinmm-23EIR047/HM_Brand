@@ -9,14 +9,17 @@ import {
   AlertCircle, RefreshCw, X, Save, Search, ChevronLeft, ChevronRight,
   Filter, ArrowUpDown, RotateCcw, Upload, Truck, User, Copy, MapPin,
   Phone, Mail, Calendar, FileText, ExternalLink, Clock, ArrowUpRight, Check, Star, Menu, Camera, Cloud, Zap,
+  Printer, Send, Bell, Sparkles, MessageSquare,
 } from "lucide-react";
 import { useStore } from "@/components/store";
 import { AdminPageContentSkeleton } from "@/components/loading-skeletons";
 import { normalizeProductImageUrl } from "@/lib/products";
+import { InvoiceModal } from "@/components/invoice-modal";
+import { useWebPush } from "@/components/web-push-manager";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 const PAGE_SIZE = 10;
-const ADMIN_SECTION_IDS = ["overview", "products", "categories", "banners", "orders", "coupons", "collections", "blog", "benefits", "offers"] as const;
+const ADMIN_SECTION_IDS = ["overview", "products", "categories", "banners", "orders", "coupons", "collections", "blog", "benefits", "offers", "leads"] as const;
 const ORDER_STAGE_IDS = ["pending", "confirmed", "ready_to_ship", "dispatched", "returned", "all"] as const;
 const defaultBenefitsContent = {
   eyebrow: "HOLISTIC PURITY & AYURVEDA", title: "The Sacred Natural Benefits of Pure Botanical Fragrance",
@@ -831,6 +834,10 @@ function AdminWorkspace() {
   const [orderSubTab, setOrderSubTab] = useState<string>(initialStage);
   const [orderMonthFilter, setOrderMonthFilter] = useState<string>("all");
   const [customerProfileModal, setCustomerProfileModal] = useState<null | any>(null);
+  const [adminInvoiceOrder, setAdminInvoiceOrder] = useState<any | null>(null);
+  const [testingTelegram, setTestingTelegram] = useState(false);
+  const [enablingPush, setEnablingPush] = useState(false);
+  const { isSupported: pushSupported, isSubscribed: pushSubscribed, subscribeUser: subscribePush } = useWebPush();
   const [dispatchModal, setDispatchModal] = useState<null | {
     orderId: string;
     orderNumber: string;
@@ -839,6 +846,13 @@ function AdminWorkspace() {
     courierNote: string;
     targetStatus: string;
   }>(null);
+
+  // Chatbot & Website Leads State
+  const [leads, setLeads] = useState<any[]>([]);
+  const [searchLead, setSearchLead] = useState("");
+  const [leadPage, setLeadPage] = useState(1);
+  const [leadStatusFilter, setLeadStatusFilter] = useState("all");
+  const [leadCounts, setLeadCounts] = useState({ all: 0, new: 0, contacted: 0, converted: 0, closed: 0 });
 
   // Meilisearch integration for Admin Products Search (typo-tolerant)
   const [meiliProductIds, setMeiliProductIds] = useState<Set<string> | null>(null);
@@ -1378,6 +1392,9 @@ function AdminWorkspace() {
         const r = await fetch(`${API}/admin/dashboard`, { headers: h, ...noCache });
         const j = await r.json();
         if (!checkUnauthorized(r, j) && j.success) setMetrics(j.data);
+        fetch(`${API}/leads`, noCache).then((res) => res.json()).then((ld) => {
+          if (ld.success && ld.data?.counts) setLeadCounts(ld.data.counts);
+        }).catch(() => {});
       } else if (activeTab === "products") {
         const [rProd, rCat] = await Promise.all([
           fetch(`${API}/products?limit=500&includeInactive=true`, { headers: h, ...noCache }),
@@ -1425,6 +1442,13 @@ function AdminWorkspace() {
           const prodJson = await prodRes.json(); if (prodJson.success) setProducts(prodJson.data);
           const colRes = await fetch(`${API}/collections?includeInactive=true`, { headers: h, ...noCache });
           const colJson = await colRes.json(); if (colJson.success) setCollections(colJson.data);
+        }
+      } else if (activeTab === "leads") {
+        const r = await fetch(`${API}/leads`, { headers: h, ...noCache });
+        const j = await r.json();
+        if (j.success && j.data?.items) {
+          setLeads(j.data.items);
+          if (j.data.counts) setLeadCounts(j.data.counts);
         }
       }
     } catch { showStatus("error", "Failed to load tab data. Please check server status."); } finally { setLoading(false); }
@@ -1946,6 +1970,81 @@ function AdminWorkspace() {
     setCustomerProfileModal({ order: ord });
   };
 
+  const handleTestTelegramAlert = async () => {
+    setTestingTelegram(true);
+    try {
+      const res = await fetch(`${API}/notifications/test-admin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminName: user?.fullName || "HM Admin" }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showStatus("success", "✓ Telegram & Web Push test alert sent successfully!");
+      } else {
+        showStatus("error", data.message || "Failed to trigger test alert. Ensure TELEGRAM_BOT_TOKEN is set.");
+      }
+    } catch {
+      showStatus("error", "Error contacting notifications API.");
+    } finally {
+      setTestingTelegram(false);
+    }
+  };
+
+  const handleEnableAdminPush = async () => {
+    setEnablingPush(true);
+    try {
+      const ok = await subscribePush("ADMIN", user?.id);
+      if (ok) {
+        showStatus("success", "✓ Real-time Web Push alerts enabled on this device!");
+      } else {
+        showStatus("error", "Permission dismissed or blocked by browser.");
+      }
+    } catch {
+      showStatus("error", "Failed to subscribe to Web Push.");
+    } finally {
+      setEnablingPush(false);
+    }
+  };
+
+  const handleUpdateLeadStatus = async (id: string, newStatus: string) => {
+    try {
+      const res = await fetch(`${API}/leads/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showStatus("success", `Lead updated to ${newStatus}`);
+        setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status: newStatus } : l)));
+        // Refresh counts
+        fetch(`${API}/leads`).then(r => r.json()).then(d => {
+          if (d.success && d.data?.counts) setLeadCounts(d.data.counts);
+        }).catch(() => {});
+      }
+    } catch {
+      showStatus("error", "Failed to update lead status");
+    }
+  };
+
+  const handleDeleteLead = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this customer lead?")) return;
+    try {
+      const res = await fetch(`${API}/leads/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showStatus("success", "Lead removed successfully");
+        setLeads((prev) => prev.filter((l) => l.id !== id));
+        fetch(`${API}/leads`).then(r => r.json()).then(d => {
+          if (d.success && d.data?.counts) setLeadCounts(d.data.counts);
+        }).catch(() => {});
+      }
+    } catch {
+      showStatus("error", "Failed to delete lead");
+    }
+  };
+
   /* ACCESS GUARD */
   if (!user || user.role !== "ADMIN") {
     return (
@@ -1965,6 +2064,7 @@ function AdminWorkspace() {
       items: [
         { id: "overview", label: "Overview", icon: TrendingUp },
         { id: "orders", label: "Orders", icon: ShoppingBag },
+        { id: "leads", label: "Leads & Chatbot", icon: MessageSquare, badge: leadCounts.new > 0 ? leadCounts.new : undefined },
       ],
     },
     {
@@ -2049,6 +2149,11 @@ function AdminWorkspace() {
                         {id === "products" && products.length > 0 && (
                           <span className={`ml-auto rounded-full px-2 py-0.5 text-xs font-bold tabular-nums ${isActive ? "bg-white/15 text-white" : "bg-white/10 text-white/75"}`}>
                             {products.length}
+                          </span>
+                        )}
+                        {id === "leads" && leadCounts.new > 0 && (
+                          <span className="ml-auto rounded-full bg-[#DFB75A] px-2 py-0.5 text-[11px] font-extrabold text-[#302923] tabular-nums animate-pulse">
+                            {leadCounts.new} new
                           </span>
                         )}
                       </button>
@@ -2773,6 +2878,49 @@ function AdminWorkspace() {
                 subtitle="Manage order pipeline stages, customer profiles, shipping dispatch, and courier tracking numbers."
               />
 
+              {/* REAL-TIME NOTIFICATION & MESSAGING STATUS */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-[#C89B3C]/40 bg-gradient-to-r from-[#FFFDF8] to-[#FAF7F0] shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#9E1830] text-[#DFB75A] flex items-center justify-center shrink-0 shadow-sm">
+                    <Bell size={16} className="animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="font-serif text-xs font-bold text-[#302923] flex items-center gap-1.5">
+                      <span>Real-Time Messaging &amp; Alerts</span>
+                      <Sparkles size={12} className="text-[#C89B3C]" />
+                    </h4>
+                    <p className="text-[11px] text-[#746B62]">
+                      Brevo Email, Telegram Bot &amp; Web Push (Lock-screen &amp; PC enabled)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleTestTelegramAlert}
+                    disabled={testingTelegram}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#229ED9]/40 bg-white hover:bg-[#229ED9]/10 text-[#229ED9] text-xs font-bold transition shadow-xs disabled:opacity-50"
+                  >
+                    <Send size={12} />
+                    <span>{testingTelegram ? "Dispatching..." : "Test Telegram"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleEnableAdminPush}
+                    disabled={pushSubscribed || enablingPush}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition shadow-xs ${
+                      pushSubscribed
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-300 cursor-default"
+                        : "bg-[#9E1830] hover:bg-[#7A1224] text-white border-transparent cursor-pointer"
+                    }`}
+                  >
+                    <Bell size={12} />
+                    <span>{pushSubscribed ? "✓ Push Active (Mobile & PC)" : enablingPush ? "Subscribing..." : "Enable Push Alerts"}</span>
+                  </button>
+                </div>
+              </div>
+
               {/* STAGE SUB-TABS (ZOHO CRM PIPELINE) */}
               <div className="flex items-center gap-2 overflow-x-auto rounded-xl border border-[#DCE2EA] bg-white p-2.5 text-[13px] font-bold shadow-xs">
                 {[
@@ -2984,21 +3132,43 @@ function AdminWorkspace() {
                             </div>
 
                             <div className="space-y-1 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-2.5 text-xs text-[#334155]">
-                              <div className="flex items-center gap-1 text-xs font-bold uppercase text-[#122629]">
-                                <MapPin size={12} className="text-[#861731]" />
-                                <span>Delivery Address</span>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1 text-xs font-bold uppercase text-[#122629]">
+                                  <MapPin size={12} className="text-[#861731]" />
+                                  <span>Delivery Address</span>
+                                </div>
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr.addressText + ', India')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-0.5 text-[11px] font-bold text-[#861731] hover:underline"
+                                  title="Open in Google Maps"
+                                >
+                                  <span>Google Maps ↗</span>
+                                </a>
                               </div>
                               <p className="line-clamp-2 leading-relaxed">{addr.addressText}</p>
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() => openCustomerProfile(ord)}
-                              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#D4DCE6] bg-white px-3 text-xs font-semibold text-[#122629] transition hover:border-[#122629] hover:bg-[#F8FAFC]"
-                            >
-                              <User size={12} />
-                              <span>View Customer Profile & History</span>
-                            </button>
+                            <div className="flex items-center gap-2 pt-1">
+                              <button
+                                type="button"
+                                onClick={() => openCustomerProfile(ord)}
+                                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#D4DCE6] bg-white px-2.5 text-xs font-semibold text-[#122629] transition hover:border-[#122629] hover:bg-[#F8FAFC]"
+                              >
+                                <User size={12} />
+                                <span>Customer Profile</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setAdminInvoiceOrder(ord)}
+                                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#C89B3C] bg-[#FFFDF8] px-2.5 text-xs font-bold text-[#861731] transition hover:bg-[#FDF8EE] shadow-2xs"
+                                title="View & Print Official Tax Invoice"
+                              >
+                                <Printer size={12} />
+                                <span>Invoice</span>
+                              </button>
+                            </div>
                           </td>
 
                           <td className="px-4 py-4 align-top space-y-1">
@@ -3233,9 +3403,22 @@ function AdminWorkspace() {
                           <p className="break-all text-[13px] font-bold text-[#111827]">{ord.customerEmail || "Email not provided"}</p>
                           <p className="mt-1 text-xs text-[#475569]">{ord.customerPhone || addr.phone || "Phone not provided"}</p>
                           <p className="mt-2 flex items-start gap-1.5 text-xs leading-relaxed text-[#475569]"><MapPin size={13} className="mt-0.5 shrink-0 text-[#861731]" /><span>{addr.addressText}</span></p>
-                          <button type="button" onClick={() => openCustomerProfile(ord)} className="mt-3 flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-[#D4DCE6] bg-white px-3 text-xs font-bold text-[#122629] transition hover:border-[#861731]/40 hover:text-[#861731]">
-                            <User size={13} />View customer history
-                          </button>
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr.addressText + ', India')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-[#861731] hover:underline mt-1"
+                          >
+                            <span>Open in Google Maps ↗</span>
+                          </a>
+                          <div className="mt-3 flex items-center gap-2">
+                            <button type="button" onClick={() => openCustomerProfile(ord)} className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-[#D4DCE6] bg-white px-2 text-xs font-bold text-[#122629] transition hover:border-[#861731]/40 hover:text-[#861731]">
+                              <User size={13} />History
+                            </button>
+                            <button type="button" onClick={() => setAdminInvoiceOrder(ord)} className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#C89B3C] bg-[#FFFDF8] px-3 text-xs font-bold text-[#861731] transition hover:bg-[#FDF8EE]">
+                              <Printer size={13} />Invoice
+                            </button>
+                          </div>
                         </div>
                         <div className="rounded-lg border border-[#E8EDF3] bg-[#F8FAFC] p-3">
                           <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-[#64748B]">Order & payment</p>
@@ -3483,6 +3666,282 @@ function AdminWorkspace() {
                 </div>
               </div>
             </form>
+          )}
+
+          {/* LEADS & CHATBOT SECTION */}
+          {activeTab === "leads" && (
+            <div className="space-y-5">
+              <SectionHeader
+                title="Chatbot & Customer Inquiries"
+                subtitle="Manage customer leads, wholesale inquiries, and discount coupon claims captured by the HM Sacred Advisor."
+              />
+
+              {/* Pipeline summary cards */}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="p-4 bg-white rounded-xl border border-[#DCE2EA] shadow-xs">
+                  <span className="text-xs font-bold text-[#64748B] uppercase block">Total Leads</span>
+                  <span className="text-2xl font-extrabold text-[#111827] tabular-nums mt-1 block">{leadCounts.all}</span>
+                </div>
+                <div className="p-4 bg-amber-50/60 rounded-xl border border-amber-200 shadow-xs">
+                  <span className="text-xs font-bold text-amber-800 uppercase block">New Inquiries</span>
+                  <span className="text-2xl font-extrabold text-amber-900 tabular-nums mt-1 block">{leadCounts.new}</span>
+                </div>
+                <div className="p-4 bg-blue-50/60 rounded-xl border border-blue-200 shadow-xs">
+                  <span className="text-xs font-bold text-blue-800 uppercase block">Contacted</span>
+                  <span className="text-2xl font-extrabold text-blue-900 tabular-nums mt-1 block">{leadCounts.contacted}</span>
+                </div>
+                <div className="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200 shadow-xs">
+                  <span className="text-xs font-bold text-emerald-800 uppercase block">Converted</span>
+                  <span className="text-2xl font-extrabold text-emerald-900 tabular-nums mt-1 block">{leadCounts.converted}</span>
+                </div>
+              </div>
+
+              {/* Status Tabs */}
+              <div className="flex items-center gap-2 overflow-x-auto rounded-xl border border-[#DCE2EA] bg-white p-2.5 text-[13px] font-bold shadow-xs">
+                {[
+                  { key: "all", label: "All Leads", count: leadCounts.all, color: "bg-slate-100 text-slate-800" },
+                  { key: "NEW", label: "New (Action Required)", count: leadCounts.new, color: "bg-amber-100 text-amber-800" },
+                  { key: "CONTACTED", label: "Contacted", count: leadCounts.contacted, color: "bg-blue-100 text-blue-800" },
+                  { key: "CONVERTED", label: "Converted / Order Placed", count: leadCounts.converted, color: "bg-emerald-100 text-emerald-800" },
+                  { key: "CLOSED", label: "Closed", count: leadCounts.closed, color: "bg-gray-100 text-gray-800" },
+                ].map((tab) => {
+                  const isActive = leadStatusFilter === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => setLeadStatusFilter(tab.key)}
+                      className={`flex h-10 shrink-0 items-center gap-2 rounded-lg border px-4 whitespace-nowrap transition ${
+                        isActive
+                          ? "border-[#122629] bg-[#122629] text-white shadow-xs"
+                          : "border-[#DCE2EA] bg-[#F8FAFC] text-[#334155] hover:border-[#94A3B8] hover:bg-white"
+                      }`}
+                    >
+                      <span>{tab.label}</span>
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-extrabold tabular-nums ${isActive ? "bg-white/20 text-white" : tab.color}`}>
+                        {tab.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Search Toolbar */}
+              <div className="space-y-3 rounded-xl border border-[#DCE2EA] bg-white p-4 shadow-xs">
+                <div className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" size={16} />
+                  <input
+                    type="text"
+                    value={searchLead}
+                    onChange={(e) => setSearchLead(e.target.value)}
+                    placeholder="Search by customer name, phone, email, or requirement..."
+                    className="h-10 w-full rounded-lg border border-[#D4DCE6] bg-[#F8FAFC] pl-10 pr-9 text-xs font-medium text-[#111827] placeholder:text-[#94A3B8] focus:border-[#122629] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#122629]/15"
+                  />
+                  {searchLead && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchLead("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#64748B] hover:bg-[#EEF2F6] hover:text-[#B42318]"
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Leads Table (Desktop) */}
+              <div className="hidden overflow-hidden rounded-xl border border-[#DCE2EA] bg-white shadow-xs xl:block">
+                <table className="w-full border-collapse text-left text-xs">
+                  <thead className="border-b border-[#DCE2EA] bg-[#F8FAFC] font-bold text-[#111827]">
+                    <tr>
+                      <th className="px-4 py-3.5">Customer &amp; Contact</th>
+                      <th className="px-4 py-3.5">Requirement / Purpose</th>
+                      <th className="px-4 py-3.5">Coupon &amp; Products</th>
+                      <th className="px-4 py-3.5">Status</th>
+                      <th className="px-4 py-3.5">Date</th>
+                      <th className="px-4 py-3.5 text-right">Quick Contact Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#EDF2F7]">
+                    {leads
+                      .filter((l) => (leadStatusFilter === "all" ? true : l.status === leadStatusFilter))
+                      .filter((l) => {
+                        if (!searchLead) return true;
+                        const q = searchLead.toLowerCase();
+                        return (
+                          l.name.toLowerCase().includes(q) ||
+                          l.phone.includes(q) ||
+                          (l.email && l.email.toLowerCase().includes(q)) ||
+                          (l.purpose && l.purpose.toLowerCase().includes(q))
+                        );
+                      })
+                      .map((lead) => {
+                        const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
+                        const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+                        const waMsg = encodeURIComponent(
+                          `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'sacred fragrances'}. How can we assist you with your order?`
+                        );
+                        return (
+                          <tr key={lead.id} className="transition hover:bg-[#F8FAFC]">
+                            <td className="px-4 py-4 align-top space-y-1.5">
+                              <span className="block font-bold text-sm text-[#111827]">{lead.name}</span>
+                              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#861731]">
+                                <Phone size={12} className="shrink-0" />
+                                <a href={`tel:${lead.phone}`} className="hover:underline">{lead.phone}</a>
+                              </div>
+                              {lead.email && (
+                                <div className="flex items-center gap-1.5 text-xs text-[#64748B]">
+                                  <Mail size={12} className="shrink-0" />
+                                  <span className="truncate max-w-[160px]">{lead.email}</span>
+                                </div>
+                              )}
+                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-[#FAF7F0] border border-[#EAE1D3] text-[#746B62]">
+                                Source: {lead.source || 'CHATBOT'}
+                              </span>
+                            </td>
+
+                            <td className="max-w-xs px-4 py-4 align-top space-y-1">
+                              <span className="font-semibold text-[#111827] block text-xs">{lead.purpose}</span>
+                              {lead.notes && <p className="text-xs text-[#64748B] italic">&quot;{lead.notes}&quot;</p>}
+                            </td>
+
+                            <td className="px-4 py-4 align-top space-y-1.5">
+                              {lead.couponGiven && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md font-mono text-[11px] font-bold bg-[#FAF7F0] border border-[#C89B3C]/40 text-[#861731]">
+                                  <Gift size={11} className="text-[#C89B3C]" />
+                                  <span>{lead.couponGiven}</span>
+                                </span>
+                              )}
+                              {lead.recommendedProducts && lead.recommendedProducts.length > 0 && (
+                                <div className="text-[11px] text-[#475569] space-y-0.5 max-w-[180px]">
+                                  {lead.recommendedProducts.map((p: any, idx: number) => (
+                                    <div key={idx} className="truncate">• {p.name}</div>
+                                  ))}
+                                </div>
+                              )}
+                            </td>
+
+                            <td className="px-4 py-4 align-top">
+                              <select
+                                value={lead.status}
+                                onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                                className={`h-8 rounded-lg border px-2.5 text-xs font-bold cursor-pointer transition ${
+                                  lead.status === "NEW"
+                                    ? "bg-amber-50 text-amber-900 border-amber-300"
+                                    : lead.status === "CONTACTED"
+                                    ? "bg-blue-50 text-blue-900 border-blue-300"
+                                    : lead.status === "CONVERTED"
+                                    ? "bg-emerald-50 text-emerald-900 border-emerald-300"
+                                    : "bg-gray-50 text-gray-700 border-gray-300"
+                                }`}
+                              >
+                                <option value="NEW">NEW</option>
+                                <option value="CONTACTED">CONTACTED</option>
+                                <option value="CONVERTED">CONVERTED</option>
+                                <option value="CLOSED">CLOSED</option>
+                              </select>
+                            </td>
+
+                            <td className="px-4 py-4 align-top text-xs text-[#64748B] whitespace-nowrap">
+                              {new Date(lead.createdAt).toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </td>
+
+                            <td className="px-4 py-4 align-top text-right space-x-1.5 whitespace-nowrap">
+                              <a
+                                href={`https://wa.me/${waPhone}?text=${waMsg}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex h-8 items-center gap-1.5 px-3 rounded-lg bg-[#25D366] hover:bg-[#20BA5A] text-white text-xs font-bold transition shadow-xs"
+                                title="Chat on WhatsApp"
+                              >
+                                <MessageSquare size={13} />
+                                <span>WhatsApp</span>
+                              </a>
+                              <button
+                                onClick={() => handleDeleteLead(lead.id)}
+                                className="p-2 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 transition"
+                                title="Delete Lead"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {leads.length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-8 text-center text-xs text-[#64748B]">
+                          No inquiries received yet. Inquiries captured by the Sacred Chatbot will appear here in real time.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Leads Mobile Cards (XL Hidden) */}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:hidden">
+                {leads
+                  .filter((l) => (leadStatusFilter === "all" ? true : l.status === leadStatusFilter))
+                  .map((lead) => {
+                    const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
+                    const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+                    const waMsg = encodeURIComponent(
+                      `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'sacred fragrances'}. How can we assist you with your order?`
+                    );
+                    return (
+                      <div key={lead.id} className="p-4 bg-white rounded-xl border border-[#DCE2EA] shadow-xs space-y-3">
+                        <div className="flex items-start justify-between gap-2 border-b border-[#E8EDF3] pb-2.5">
+                          <div>
+                            <h4 className="font-bold text-sm text-[#111827]">{lead.name}</h4>
+                            <a href={`tel:${lead.phone}`} className="text-xs font-semibold text-[#861731] block mt-0.5">
+                              {lead.phone}
+                            </a>
+                            {lead.email && <span className="text-[11px] text-[#64748B] block">{lead.email}</span>}
+                          </div>
+                          <select
+                            value={lead.status}
+                            onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                            className="text-xs font-bold rounded-lg border px-2 py-1"
+                          >
+                            <option value="NEW">NEW</option>
+                            <option value="CONTACTED">CONTACTED</option>
+                            <option value="CONVERTED">CONVERTED</option>
+                            <option value="CLOSED">CLOSED</option>
+                          </select>
+                        </div>
+
+                        <div className="text-xs text-[#475569] space-y-1">
+                          <p><strong>Interest:</strong> {lead.purpose}</p>
+                          {lead.couponGiven && <p><strong>Coupon:</strong> <code className="font-mono text-[#861731] font-bold">{lead.couponGiven}</code></p>}
+                        </div>
+
+                        <div className="pt-2 border-t border-[#E8EDF3] flex items-center justify-between gap-2">
+                          <a
+                            href={`https://wa.me/${waPhone}?text=${waMsg}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 px-3 rounded-lg bg-[#25D366] text-white text-xs font-bold shadow-xs"
+                          >
+                            <MessageSquare size={13} />
+                            <span>WhatsApp</span>
+                          </a>
+                          <button
+                            onClick={() => handleDeleteLead(lead.id)}
+                            className="p-2 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
           )}
 
             </div>
@@ -3993,6 +4452,13 @@ function AdminWorkspace() {
           })()}
         </Modal>
       )}
+
+      {/* Official Sacred Tax Invoice Modal */}
+      <InvoiceModal
+        isOpen={Boolean(adminInvoiceOrder)}
+        order={adminInvoiceOrder}
+        onClose={() => setAdminInvoiceOrder(null)}
+      />
 
     </div>
   );

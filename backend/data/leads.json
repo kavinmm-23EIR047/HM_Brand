@@ -1,0 +1,29 @@
+[
+  {
+    "id": "lead_1794589903111_rwtt",
+    "name": "KAVIN M M",
+    "phone": "09600732162",
+    "email": "mmkavin96@gmail.com",
+    "purpose": "15% Divine Discount Coupon",
+    "recommendedProducts": [],
+    "couponGiven": "DIVINE15",
+    "status": "NEW",
+    "source": "CHATBOT",
+    "createdAt": "2026-11-13T17:11:43.111Z",
+    "updatedAt": "2026-11-13T17:11:43.111Z"
+  },
+  {
+    "id": "lead_1794586719184_4lbp",
+    "name": "Sarvathan C",
+    "phone": "9876543210",
+    "email": "sarvathan@example.com",
+    "purpose": "Daily Temple Pooja & Sambrani",
+    "preferredFragrance": "Kesar Loban",
+    "recommendedProducts": [],
+    "couponGiven": "DIVINE15",
+    "status": "CONTACTED",
+    "source": "CHATBOT",
+    "createdAt": "2026-11-13T16:18:39.184Z",
+    "updatedAt": "2026-11-13T16:18:58.394Z"
+  }
+]

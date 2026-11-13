@@ -97,7 +97,7 @@ export function HeroBannerSlider() {
   if (total === 0) {
     if (!isBannersLoading) return null;
     return (
-      <section aria-label="Loading promotional banner" aria-busy="true" className="w-full bg-brand-surface-soft">
+      <section aria-label="Loading promotional banner" aria-busy="true" className="w-full bg-brand-surface-alt">
         <div className="w-full h-[220px] sm:h-[380px] lg:h-[520px] animate-pulse bg-brand-border/40" />
       </section>
     );
@@ -106,7 +106,7 @@ export function HeroBannerSlider() {
   return (
     <section
       aria-label="Promotional Hero Banners"
-      className="relative w-full overflow-hidden border-b border-brand-border bg-brand-surface-bright select-none"
+      className="relative w-full overflow-hidden bg-brand-surface-alt select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={handleTouchStart}

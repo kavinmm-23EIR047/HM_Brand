@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Minus, Heart, ShoppingBag, Truck, Lock, Sparkles, Check } from "lucide-react";
 import { useStore } from "@/components/store";
@@ -56,7 +56,34 @@ export function AddPanel({ product }: { product: Product }) {
   const router = useRouter();
   const { lines, add, toggleWishlist, isInWishlist, appliedCoupon, applyCoupon, removeCoupon, subtotal } = useStore();
   const [qty, setQty] = useState(1);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const wishlisted = isInWishlist(product.slug);
+
+  useEffect(() => {
+    let frame = 0;
+    const updateFooterVisibility = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const footer = document.getElementById("site-footer") || document.querySelector("footer");
+        if (!footer) {
+          setIsFooterVisible(false);
+          return;
+        }
+
+        const footerBounds = footer.getBoundingClientRect();
+        setIsFooterVisible(footerBounds.top < window.innerHeight && footerBounds.bottom > 0);
+      });
+    };
+
+    updateFooterVisibility();
+    window.addEventListener("scroll", updateFooterVisibility, { passive: true });
+    window.addEventListener("resize", updateFooterVisibility);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateFooterVisibility);
+      window.removeEventListener("resize", updateFooterVisibility);
+    };
+  }, []);
 
   const isThisCouponApplied = Boolean(
     product.couponCode && appliedCoupon?.code.toUpperCase() === product.couponCode.toUpperCase()
@@ -193,7 +220,7 @@ export function AddPanel({ product }: { product: Product }) {
           type="button"
           onClick={handleAdd}
           disabled={!product.inStock}
-          className="flex h-[52px] w-full items-center justify-center gap-2.5 rounded-2xl bg-brand-primary px-5 text-sm font-brand font-bold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-brand-hover hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-primary flex h-[50px] w-full items-center justify-center gap-2.5 rounded-[10px] bg-brand-primary px-6 py-3 font-sans text-sm font-semibold tracking-wide text-white border border-brand-accent/40 shadow-sm transition-all duration-250 hover:bg-brand-hover hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <ShoppingBag size={19} /> {isBundle ? "Add Bundle to Cart" : "Add to Cart"}
         </button>
@@ -202,10 +229,10 @@ export function AddPanel({ product }: { product: Product }) {
           type="button"
           onClick={() => toggleWishlist(product.slug)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl border transition-all shadow-2xs hover:shadow-sm cursor-pointer active:scale-[0.98] ${
+          className={`flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-[10px] border transition-all shadow-2xs hover:shadow-sm cursor-pointer active:scale-[0.98] ${
             wishlisted
-              ? "bg-[#9E1830] text-white border-[#9E1830]"
-              : "bg-white text-[#173B3A] border-[#EADBBD] hover:border-[#9E1830] hover:text-[#9E1830]"
+              ? "bg-brand-primary text-white border-brand-primary"
+              : "bg-white text-brand-ink border-brand-border hover:border-brand-primary hover:text-brand-primary"
           }`}
         >
           <Heart size={20} fill={wishlisted ? "currentColor" : "none"} />
@@ -228,8 +255,14 @@ export function AddPanel({ product }: { product: Product }) {
         </span>
       </div>
 
-      {/* ── MOBILE FLOATING ACTION BAR ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#EADBBD] bg-white/95 px-3 py-2 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+      {/* ── MOBILE FLOATING ACTION BAR (Hides smoothly when footer enters viewport) ── */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 border-t border-[#EADBBD] bg-white/95 px-3 py-2 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden pb-[calc(0.5rem+env(safe-area-inset-bottom))] transition-all duration-300 ease-in-out ${
+          isFooterVisible
+            ? "translate-y-full opacity-0 pointer-events-none"
+            : "translate-y-0 opacity-100 pointer-events-auto"
+        }`}
+      >
         <div className="mx-auto flex w-full max-w-md items-center gap-2">
           {/* Cart Quantity Controller [ - 1 + ] */}
           <QuantitySelector quantity={qty} onChange={setQty} disabled={!product.inStock} compact />
@@ -239,7 +272,7 @@ export function AddPanel({ product }: { product: Product }) {
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className="flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-brand-primary px-3 text-xs font-brand font-bold uppercase tracking-wide text-white shadow-xs transition-all hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2"
+            className="flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-[10px] bg-brand-primary px-3 text-xs font-sans font-semibold uppercase tracking-wide text-white border border-brand-accent/40 shadow-xs transition-all hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2"
           >
             <span className="shrink-0 font-price text-sm font-extrabold tracking-normal">₹{(effectiveUnitPrice * qty).toLocaleString("en-IN")}</span>
             <span className="h-5 w-px shrink-0 bg-white/35" aria-hidden="true" />

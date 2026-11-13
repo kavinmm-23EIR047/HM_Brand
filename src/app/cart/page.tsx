@@ -261,12 +261,12 @@ export default function CartPage() {
                         value={couponInput}
                         onChange={(e) => setCouponInput(e.target.value)}
                         placeholder="Enter coupon (e.g. 1)"
-                        className="flex-1 text-xs bg-white rounded-lg px-3 py-2 text-brand-charcoal uppercase ring-1 ring-stone-200 outline-none focus:ring-brand-primary"
+                        className="flex-1 text-xs bg-white rounded-[10px] px-3.5 py-2.5 text-brand-ink uppercase border border-brand-border outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
                       />
                       <button
                         type="submit"
                         disabled={couponLoading}
-                        className="btn-outline-earth px-3 py-2 text-xs font-bold rounded-lg uppercase tracking-wider disabled:opacity-50"
+                        className="btn-secondary px-4 py-2 text-xs font-semibold rounded-[10px] uppercase tracking-wider disabled:opacity-50"
                       >
                         {couponLoading ? "..." : "Apply"}
                       </button>

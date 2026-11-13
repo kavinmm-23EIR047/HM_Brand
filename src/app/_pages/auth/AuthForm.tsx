@@ -60,70 +60,70 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
     }
   };
 
-  const fieldClass = "w-full rounded-xl border border-[#E2D2B9] bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-[#253B3E] outline-none transition placeholder:text-[#9B8E81] focus:border-[#A7193D] focus:ring-4 focus:ring-[#A7193D]/10";
-  const labelClass = "mb-1.5 block text-xs font-bold text-[#423A34]";
+  const fieldClass = "w-full rounded-[10px] border border-brand-border bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-brand-ink outline-none transition placeholder:text-brand-slate/50 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary";
+  const labelClass = "mb-1.5 block text-xs font-semibold text-brand-heading";
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FBF6EB] text-[#263B3D]">
+    <div className="flex min-h-screen flex-col bg-brand-surface text-brand-ink font-sans">
       <Navigation />
       <main className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-10 sm:px-6 sm:py-14">
-        <section className="relative w-full max-w-xl overflow-hidden rounded-[28px] border border-[#E9D9BB] bg-[#FFFDFA] shadow-[0_24px_70px_rgba(69,51,29,0.12)]">
-          <div className="h-1.5 bg-brand-primary" />
+        <section className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-brand-border bg-white shadow-card">
+          <div className="h-1 bg-brand-primary" />
           <div className="px-6 py-8 sm:px-10 sm:py-10">
-            <div className="mx-auto mb-7 grid h-14 w-14 place-items-center rounded-2xl border border-[#E9D9BB] bg-[#FFF6E8] text-[#A7193D] shadow-sm">
+            <div className="mx-auto mb-7 grid h-14 w-14 place-items-center rounded-xl border border-brand-border bg-brand-surface-warm/50 text-brand-primary shadow-2xs">
               {registering ? <UserRound size={25} /> : <Lock size={24} />}
             </div>
             <div className="mb-8 text-center">
-              <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.2em] text-[#A7193D]">HM Brand · Devotee Account</p>
-              <h1 className="font-brand text-3xl font-bold uppercase text-[#173F3D] sm:text-4xl">{registering ? "Create your account" : "Welcome back"}</h1>
-              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#6D716D]">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary">HM Brand · Devotee Account</p>
+              <h1 className="font-brand text-2xl font-bold uppercase text-brand-heading sm:text-3xl">{registering ? "Create your account" : "Welcome back"}</h1>
+              <p className="mx-auto mt-2.5 max-w-sm text-xs sm:text-sm leading-relaxed text-brand-slate font-normal">
                 {registering ? "Join the HM family for faster checkout and easy order updates." : "Sign in to view your orders, saved addresses, and account details."}
               </p>
             </div>
 
             {user && !registering && (
-              <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-[#DDE9E3] bg-[#F1F8F4] px-4 py-3 text-xs">
-                <span className="text-[#35594C]">Signed in as <strong>{user.fullName}</strong></span>
-                <Link href={user.role === "ADMIN" ? "/admin" : "/account"} className="shrink-0 font-bold text-[#A7193D] hover:underline">Open account</Link>
+              <div className="mb-5 flex items-center justify-between gap-3 rounded-[10px] border border-brand-border bg-brand-positive-soft px-4 py-3 text-xs">
+                <span className="text-brand-positive-dark font-medium">Signed in as <strong>{user.fullName}</strong></span>
+                <Link href={user.role === "ADMIN" ? "/admin" : "/account"} className="shrink-0 font-bold text-brand-primary hover:underline">Open account</Link>
               </div>
             )}
 
-            {error && <div role="alert" className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#F1B9C2] bg-[#FFF1F3] p-3.5 text-xs font-semibold text-[#8E1834]"><AlertCircle size={16} className="mt-0.5 shrink-0" /><span>{error}</span></div>}
-            {success && <div role="status" className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#B9DDCB] bg-[#EFFAF3] p-3.5 text-xs font-semibold text-[#216345]"><CheckCircle2 size={16} className="mt-0.5 shrink-0" /><span>{success}</span></div>}
+            {error && <div role="alert" className="mb-5 flex items-start gap-2.5 rounded-[10px] border border-red-200 bg-red-50 p-3.5 text-xs font-semibold text-brand-danger"><AlertCircle size={16} className="mt-0.5 shrink-0" /><span>{error}</span></div>}
+            {success && <div role="status" className="mb-5 flex items-start gap-2.5 rounded-[10px] border border-brand-positive-dark/20 bg-brand-positive-soft p-3.5 text-xs font-semibold text-brand-positive-dark"><CheckCircle2 size={16} className="mt-0.5 shrink-0" /><span>{success}</span></div>}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {registering && <div>
                 <label htmlFor="auth-name" className={labelClass}>Full name</label>
-                <div className="relative"><UserRound size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A8177]" /><input id="auth-name" required minLength={2} autoComplete="name" value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="e.g. Ramesh Kumar" className={fieldClass} /></div>
+                <div className="relative"><UserRound size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-slate" /><input id="auth-name" required minLength={2} autoComplete="name" value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="e.g. Ramesh Kumar" className={fieldClass} /></div>
               </div>}
 
               <div>
                 <label htmlFor="auth-email" className={labelClass}>Email address</label>
-                <div className="relative"><Mail size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A8177]" /><input id="auth-email" type="email" required autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" className={fieldClass} /></div>
+                <div className="relative"><Mail size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-slate" /><input id="auth-email" type="email" required autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" className={fieldClass} /></div>
               </div>
 
               {registering && <div>
-                <label htmlFor="auth-phone" className={labelClass}>Mobile phone <span className="font-normal text-[#8A8177]">(optional)</span></label>
-                <div className="relative"><Phone size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A8177]" /><input id="auth-phone" type="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+91 98765 43210" className={fieldClass} /></div>
+                <label htmlFor="auth-phone" className={labelClass}>Mobile phone <span className="font-normal text-brand-slate">(optional)</span></label>
+                <div className="relative"><Phone size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-slate" /><input id="auth-phone" type="tel" autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+91 98765 43210" className={fieldClass} /></div>
               </div>}
 
               <div>
                 <label htmlFor="auth-password" className={labelClass}>Password</label>
-                <div className="relative"><Lock size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A8177]" /><input id="auth-password" type={showPassword ? "text" : "password"} required minLength={registering ? 6 : 1} autoComplete={registering ? "new-password" : "current-password"} value={password} onChange={(event) => setPassword(event.target.value)} placeholder={registering ? "Create a password" : "Enter your password"} className={`${fieldClass} pr-12`} /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#81786F] hover:text-[#173F3D]">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>
+                <div className="relative"><Lock size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-slate" /><input id="auth-password" type={showPassword ? "text" : "password"} required minLength={registering ? 6 : 1} autoComplete={registering ? "new-password" : "current-password"} value={password} onChange={(event) => setPassword(event.target.value)} placeholder={registering ? "Create a password" : "Enter your password"} className={`${fieldClass} pr-12`} /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-brand-slate hover:text-brand-heading">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>
               </div>
 
               {registering && <div>
                 <label htmlFor="auth-confirm-password" className={labelClass}>Confirm password</label>
-                <div className="relative"><Lock size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A8177]" /><input id="auth-confirm-password" type={showConfirmPassword ? "text" : "password"} required minLength={6} autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder="Confirm your password" className={`${fieldClass} pr-12`} /><button type="button" aria-label={showConfirmPassword ? "Hide password" : "Show password"} onClick={() => setShowConfirmPassword((visible) => !visible)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#81786F] hover:text-[#173F3D]">{showConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>
+                <div className="relative"><Lock size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-slate" /><input id="auth-confirm-password" type={showConfirmPassword ? "text" : "password"} required minLength={6} autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder="Confirm your password" className={`${fieldClass} pr-12`} /><button type="button" aria-label={showConfirmPassword ? "Hide password" : "Show password"} onClick={() => setShowConfirmPassword((visible) => !visible)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-brand-slate hover:text-brand-heading">{showConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>
               </div>}
 
-              <button type="submit" disabled={loading} className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#A7193D] px-5 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white shadow-md shadow-[#A7193D]/15 transition hover:bg-[#86132F] disabled:cursor-wait disabled:opacity-60">
+              <button type="submit" disabled={loading} className="btn-primary mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-brand-primary px-6 py-3.5 font-sans text-sm font-semibold uppercase tracking-wider text-white border border-brand-accent/40 shadow-sm transition-all duration-250 hover:bg-brand-hover hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-wait disabled:opacity-60">
                 {loading ? (registering ? "Creating account…" : "Signing in…") : <>{registering ? "Create account" : "Sign in"}<ArrowRight size={17} /></>}
               </button>
             </form>
 
-            <div className="mt-7 border-t border-[#EEE5D8] pt-5 text-center text-sm text-[#6D716D]">
-              {registering ? <>Already have an account? <Link href="/login" className="font-bold text-[#A7193D] hover:underline">Sign in here</Link></> : <>Don&apos;t have an account? <Link href="/register" className="font-bold text-[#A7193D] hover:underline">Create a new account</Link></>}
+            <div className="mt-7 border-t border-brand-border pt-5 text-center text-xs sm:text-sm text-brand-slate">
+              {registering ? <>Already have an account? <Link href="/login" className="font-semibold text-brand-primary hover:underline">Sign in here</Link></> : <>Don&apos;t have an account? <Link href="/register" className="font-semibold text-brand-primary hover:underline">Create a new account</Link></>}
             </div>
           </div>
         </section>

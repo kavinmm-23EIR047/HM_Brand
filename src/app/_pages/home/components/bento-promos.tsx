@@ -6,39 +6,39 @@ import { IndiaTricolorMarkSvg } from "@/components/sacred-icons";
 
 export function BentoPromos() {
   return (
-    <section className="bg-brand-surface-alt border-b border-brand-border py-8 sm:py-12">
+    <section className="bg-brand-surface-alt py-6 sm:py-11">
       <div className="page-container">
-        <div className="grid items-stretch gap-5 lg:grid-cols-12">
+        <div className="grid items-stretch gap-4 sm:gap-5 lg:grid-cols-12">
 
           {/* MAIN FLAGSHIP CARD: 10-IN-1 AROMA FAMILY PACK */}
-          <article className="relative flex flex-col overflow-hidden rounded-3xl bg-brand-primary text-white border border-brand-primary shadow-sm lg:col-span-7">
+          <article className="relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl bg-brand-primary text-white border border-brand-primary shadow-sm lg:col-span-7">
 
-            <div className="relative z-10 flex w-full flex-col justify-between p-5 sm:p-7 h-full">
+            <div className="relative z-10 flex w-full flex-col justify-between p-4 sm:p-7 h-full">
 
               {/* TOP ROW: Text Left, Image Right */}
-              <div className="flex flex-col sm:flex-row items-center gap-5 lg:gap-7 flex-1">
+              <div className="flex flex-col sm:flex-row items-center gap-4 lg:gap-7 flex-1">
 
                 {/* LEFT SIDE CONTENT */}
-                <div className="flex-1 space-y-3 w-full">
+                <div className="flex-1 space-y-2.5 sm:space-y-3 w-full">
                   {/* Clean Top Eyebrow Badge */}
-                  <div className="inline-flex items-center gap-2 rounded-full bg-brand-accent px-3 py-1 text-ui-11 sm:text-xs font-bold tracking-wider text-brand-ink shadow-xs uppercase">
-                    <IndiaTricolorMarkSvg className="h-3.5 w-5" />
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-2.5 py-0.5 text-[9px] sm:text-[11px] font-bold tracking-wider text-brand-ink shadow-xs uppercase whitespace-nowrap">
+                    <IndiaTricolorMarkSvg className="h-3 w-4 sm:h-3.5 sm:w-5" />
                     <span>1ST TIME IN INDIA</span>
                   </div>
 
                   {/* Main Clear Title */}
                   <div>
-                    <h2 className="text-xl sm:text-2xl lg:text-ui-26 font-bold leading-snug tracking-wide text-white font-brand uppercase">
+                    <h2 className="text-lg sm:text-2xl lg:text-ui-26 font-bold leading-snug tracking-wide text-white font-brand uppercase">
                       10 in 1 Aroma Family Pack
                     </h2>
-                    <p className="mt-1 font-tagline text-xs sm:text-sm text-brand-accent-soft font-semibold tracking-wide">
-                      Smell of Purity • 10 Divine Fragrances in One Box
+                    <p className="mt-0.5 font-tagline text-xs sm:text-sm text-brand-accent-soft font-semibold tracking-wide">
+                      10 Divine Fragrances in One Box
                     </p>
                   </div>
 
                   {/* Concise, Feel-Good Copy */}
-                  <p className="font-sans text-xs sm:text-sm text-white/90 font-normal leading-relaxed max-w-md">
-                    Handcrafted with pure botanical resins — Kewda, Loban, Rose, Sandalwood, Lavender, Jasmine &amp; more. 100% charcoal-free for pure daily devotion.
+                  <p className="font-sans text-xs sm:text-sm text-white/90 font-normal leading-snug sm:leading-relaxed max-w-md">
+                    Pure botanical blends (Kewda, Loban, Rose, Sandal &amp; more) &mdash; 100% charcoal-free.
                   </p>
 
                   {/* Price & CTA Row */}
@@ -50,10 +50,10 @@ export function BentoPromos() {
 
                     <Link
                       href="/shop?category=Family%20Pack"
-                      className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white text-brand-heading px-5 py-2.5 font-brand text-xs font-bold uppercase tracking-wider shadow-sm transition active:scale-95"
+                      className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white text-brand-heading px-3.5 py-1.5 sm:px-5 sm:py-2 font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-sm transition active:scale-95 whitespace-nowrap"
                     >
                       <span>Buy Family Pack</span>
-                      <ArrowRight size={14} />
+                      <ArrowRight size={13} />
                     </Link>
                   </div>
                 </div>
@@ -104,7 +104,7 @@ export function BentoPromos() {
                 <div className="pt-0.5 sm:pt-1">
                   <Link
                     href="/shop"
-                    className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand-forest-dark hover:bg-brand-forest px-4 py-2 font-brand text-xs font-bold uppercase tracking-wider text-white transition shadow-xs active:scale-95 whitespace-nowrap"
+                    className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 rounded-full bg-brand-forest-dark hover:bg-brand-forest px-3.5 py-1.5 sm:px-4 sm:py-2 font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white transition shadow-xs active:scale-95 whitespace-nowrap"
                   >
                     <span>Shop Essentials</span>
                     <ArrowRight size={13} />
@@ -140,7 +140,7 @@ export function BentoPromos() {
                 <div className="pt-0.5 sm:pt-1">
                   <Link
                     href="/about"
-                    className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white px-4 py-2 font-brand text-xs font-bold uppercase tracking-wider text-brand-ink transition shadow-xs active:scale-95 whitespace-nowrap"
+                    className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white px-3.5 py-1.5 sm:px-4 sm:py-2 font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-ink transition shadow-xs active:scale-95 whitespace-nowrap"
                   >
                     <span>Explore Benefits</span>
                     <ArrowRight size={13} />
