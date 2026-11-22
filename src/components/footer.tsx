@@ -5,10 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Heart, Leaf, FlaskConical, ShieldCheck, Award,
-  MapPin, Phone, Mail, ChevronDown, Sparkles
+  MapPin, Phone, Mail, ChevronDown, MessageCircle
 } from "lucide-react";
 import { MandalaMotif, ToranMaalai } from "./illustrations";
-import { CONTACT_ADDRESS, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact-info";
+import {
+  CONTACT_ADDRESS,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_TEL,
+  CONTACT_WHATSAPP_COMMUNITY_URL,
+} from "@/lib/contact-info";
 import { EditorialStarSvg, IndiaTricolorMarkSvg } from "@/components/sacred-icons";
 
 function InstagramIcon({ size = 14, className = "" }: { size?: number; className?: string }) {
@@ -125,7 +130,7 @@ function AccordionSection({ title, children }: { title: string; children: React.
       <button
         type="button"
         onClick={() => setOpen((p) => !p)}
-        className="flex w-full items-center justify-between py-3.5 text-left font-brand font-bold text-xs uppercase tracking-widest text-[#FDE68A] md:hidden cursor-pointer"
+        className="flex w-full items-center justify-between py-3.5 text-left font-brand font-bold text-xs uppercase tracking-wider text-[#FDE68A] md:hidden cursor-pointer"
       >
         <span className="flex items-center gap-2">
           <EditorialStarSvg className="h-3.5 w-3.5 text-[#C89B3C]" />
@@ -138,7 +143,7 @@ function AccordionSection({ title, children }: { title: string; children: React.
       </button>
 
       {/* Desktop heading */}
-      <h4 className="hidden md:flex items-center gap-2 pb-3.5 font-brand font-bold text-sm uppercase tracking-widest text-[#FDE68A] border-b border-[#C89B3C]/40">
+      <h4 className="hidden md:flex items-center gap-2 pb-3.5 font-brand font-bold text-sm uppercase tracking-wider text-[#FDE68A] border-b border-[#C89B3C]/40">
         <EditorialStarSvg className="h-3.5 w-3.5 text-[#C89B3C]" />
         <span dangerouslySetInnerHTML={{ __html: title }} />
       </h4>
@@ -152,9 +157,6 @@ function AccordionSection({ title, children }: { title: string; children: React.
 }
 
 export function Footer() {
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
-
   return (
     <footer
       id="site-footer"
@@ -192,11 +194,11 @@ export function Footer() {
               <Image src="/images/brand_logo_gold_transparent.png" alt="HM Brand" fill unoptimized sizes="56px" className="object-contain" />
             </div>
             <div className="leading-tight">
-              <span className="font-brand text-lg sm:text-xl font-bold tracking-[0.16em] uppercase text-white block">
-                HM <span className="text-[#FDE68A]">BRAND</span>
+              <span className="font-brand text-lg sm:text-xl font-bold tracking-normal uppercase text-white block">
+                HM{' '}<span className="text-[#FDE68A]">BRAND</span>
               </span>
-              <span className="font-tagline text-xs text-[#FDE68A]/90 tracking-[0.16em] uppercase font-bold whitespace-nowrap block mt-0.5">
-                Discover the Divine Within
+              <span className="font-tagline text-xs text-[#FDE68A]/90 tracking-normal uppercase font-bold whitespace-nowrap block mt-0.5">
+                Pure Incense &bull; Coimbatore
               </span>
             </div>
           </Link>
@@ -205,7 +207,7 @@ export function Footer() {
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             {[
               { icon: <Leaf size={14} />, label: "100% Natural Botanicals" },
-              { icon: <ShieldCheck size={14} />, label: "Charcoal-Free Resins" },
+              { icon: <ShieldCheck size={14} />, label: "Pure Temple Resins" },
               { icon: <FlaskConical size={14} />, label: "Zero Toxic Chemicals" },
               { icon: <Award size={14} />, label: "Handcrafted in Coimbatore" },
             ].map(({ icon, label }) => (
@@ -234,7 +236,7 @@ export function Footer() {
                 <li><Link href="/shop?category=Havan%20Cups" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Cup Sambrani &amp; Havan Cups</Link></li>
                 <li><Link href="/shop?category=Dhoop%20Stick" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Bambooless Dhoop Sticks</Link></li>
                 <li><Link href="/shop?category=Incense%20Cones" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Natural Incense Cones</Link></li>
-                <li><Link href="/shop?category=Family%20Pack" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">10-in-1 Divine Family Pack</Link></li>
+                <li><Link href="/shop?category=Family%20Pack" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">10-in-1 Aroma Family Pack</Link></li>
               </ul>
               {/* Illustrator Vector Accent */}
               <div className="pt-5 hidden md:block opacity-85">
@@ -247,12 +249,12 @@ export function Footer() {
           <div className="md:px-8">
             <AccordionSection title="Quick Links">
               <ul className="space-y-3 text-sm text-white/90 font-medium">
-                <li><Link href="/shop" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">All Sacred Collections</Link></li>
-                <li><Link href="/about" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Our Vedic Story</Link></li>
-                <li><Link href="/about#story" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Heritage &amp; Purity Promise</Link></li>
+                <li><Link href="/shop" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">All Products</Link></li>
+                <li><Link href="/about" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Our Story &amp; Craft</Link></li>
+                <li><Link href="/craftsmanship" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block font-semibold text-[#FDE68A]">Workshop Tour &amp; Craftsmanship</Link></li>
                 <li><Link href="/wishlist" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Saved Wishlist</Link></li>
-                <li><Link href="/account" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">My Customer Account</Link></li>
-                <li><Link href="/contact" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Contact Workshop</Link></li>
+                <li><Link href="/account" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">My Account</Link></li>
+                <li><Link href="/contact" className="hover:text-[#FDE68A] hover:translate-x-1 transition-all inline-block">Contact Us</Link></li>
               </ul>
             </AccordionSection>
           </div>
@@ -281,52 +283,35 @@ export function Footer() {
             </AccordionSection>
           </div>
 
-          {/* BOX 4 — Newsletter & Brass Diya Art */}
+          {/* BOX 4 — Newsletter & WhatsApp Community */}
           <div className="md:pl-8">
             <AccordionSection title="Join Our Circle">
-              <p className="text-xs sm:text-[13px] text-white/85 leading-relaxed mb-4">
-                Receive auspicious festival offers, new fragrance launches &amp; sacred pooja wellness tips.
+              <p className="text-xs sm:text-[13px] text-white/85 leading-relaxed mb-3.5">
+                Get updates on festival offers, restocks, and new handmade fragrance launches.
               </p>
-              {newsletterSubscribed ? (
-                <div className="rounded-[10px] border border-[#FDE68A]/60 bg-white/15 p-4 text-xs font-semibold text-[#FDE68A]">
-                  Thank you! You are subscribed for seasonal divine HM Brand updates.
-                </div>
-              ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (!newsletterEmail.trim()) return;
-                    setNewsletterSubscribed(true);
-                    setNewsletterEmail("");
-                  }}
-                  className="space-y-2.5"
+
+              {/* WhatsApp Community Direct Action */}
+              <div className="mb-4">
+                <a
+                  href={CONTACT_WHATSAPP_COMMUNITY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full h-11 rounded-[10px] bg-[#25D366] hover:bg-[#20BA5A] text-white font-sans font-bold text-xs uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5 active:scale-95 cursor-pointer shadow-md flex items-center justify-center gap-2 border border-white/20 group"
                 >
-                  <input
-                    suppressHydrationWarning
-                    type="email"
-                    required
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    aria-label="Email address for updates"
-                    className="w-full h-11 rounded-[10px] text-xs text-[#302923] bg-white px-3.5 focus:outline-none focus:ring-2 focus:ring-[#C89B3C] font-medium placeholder:text-stone-400 shadow-inner"
-                  />
-                  <button
-                    type="submit"
-                    suppressHydrationWarning
-                    className="w-full h-11 rounded-[10px] bg-[#C89B3C] hover:bg-[#D4A84B] text-stone-950 font-sans font-bold text-xs uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5 active:scale-95 cursor-pointer shadow-xs border border-[#FDE68A]/40 flex items-center justify-center gap-1.5"
-                  >
-                    <Sparkles size={13} className="text-stone-950" />
-                    <span>Subscribe for Blessings</span>
-                  </button>
-                </form>
-              )}
+                  <MessageCircle size={16} className="text-white fill-white/20 transition-transform group-hover:scale-110" />
+                  <span>Join WhatsApp Community</span>
+                </a>
+                <p className="text-[10px] text-white/70 text-center mt-1.5 flex items-center justify-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse inline-block" />
+                  <span>Instant drops, festival offers &amp; direct blessings</span>
+                </p>
+              </div>
 
               {/* Illustrator Brass Diya Vector Art */}
-              <div className="mt-5 flex items-center gap-3 pt-3 border-t border-[#C89B3C]/25">
-                <IllustratorBrassDiya className="h-12 w-12 shrink-0 drop-shadow-md" />
+              <div className="mt-4 flex items-center gap-3 pt-3 border-t border-[#C89B3C]/25">
+                <IllustratorBrassDiya className="h-10 w-10 shrink-0 drop-shadow-md" />
                 <p className="font-sans text-[11px] text-white/80 leading-snug">
-                  Zero Charcoal • Pure Herbal Essential Oils • 100% Traditional South Indian Craftsmanship
+                  Pure Botanical Tree Gums • Sacred Flower Extracts • Coimbatore Heritage Craft
                 </p>
               </div>
             </AccordionSection>
@@ -341,8 +326,8 @@ export function Footer() {
           <p>© {new Date().getFullYear()} HM AGARBATTIS COIMBATORE. All Rights Reserved. •{" "}
             <Link href="/admin" className="hover:text-[#FDE68A] transition underline font-semibold">Admin</Link>
           </p>
-          <div className="flex items-center gap-1.5 font-tagline font-bold tracking-[0.16em] uppercase text-[#FDE68A]">
-            <span>Discover the Divine Within</span>
+          <div className="flex items-center gap-1.5 font-tagline font-bold tracking-normal uppercase text-[#FDE68A]">
+            <span>Pure Incense, Honest Ingredients</span>
             <Heart size={12} className="text-[#FF5400] fill-[#FF5400] ml-1" />
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">

@@ -92,7 +92,7 @@ export function ProductGallery({
         {/* Top-Left Badge (Only if badge provided from backend) */}
         {badge && (
           <div className="absolute top-3.5 left-3.5 z-20">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#9E1830] px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white shadow-sm border border-white/20">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#9E1830] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm border border-white/20">
               <Star size={11} fill="currentColor" />
               <span>{badge}</span>
             </span>
@@ -181,13 +181,13 @@ export function ProductGallery({
       {/* ── 3. 4 FEATURE CARDS (CHARCOAL-FREE, HANDCRAFTED, PURE BOTANICALS, SAFE & NATURAL) ── */}
       {/* Compact 4-column trust row keeps the mobile product overview short. */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-0.5 sm:pt-1">
-        {/* Charcoal-Free */}
+        {/* Temple Purity */}
         <div className="min-w-0 rounded-xl sm:rounded-2xl border border-[#EADBBD] bg-white p-2.5 sm:p-3 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xs hover:border-[#287541] transition-colors">
           <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#287541]/10 text-[#287541] flex items-center justify-center">
             <Leaf size={13} />
           </div>
           <span className="text-xs font-bold text-[#173B3A] leading-tight block">
-            Charcoal-Free
+            Temple Purity
           </span>
         </div>
 

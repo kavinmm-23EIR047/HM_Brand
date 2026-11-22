@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "HM Agarbattis | Discover the Divine Within",
+  title: "HM Agarbattis | Handcrafted Incense & Daily Pooja Essentials — Coimbatore",
   alternates: { canonical: "/" },
 };
 

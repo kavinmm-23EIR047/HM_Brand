@@ -7,6 +7,7 @@ import { NotificationToast } from "@/components/notification-toast";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { WebPushNotificationPrompt } from "@/components/web-push-manager";
 import { ChatbotWidget } from "@/components/chatbot-widget";
+import { LeftAgarbattis } from "@/components/left-agarbattis";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -15,12 +16,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "HM Agarbattis | Discover the Divine Within — Sacred Temple Fragrances Coimbatore",
+  title: "HM Agarbattis | Handcrafted Incense, Pure Camphor & Sambrani — Coimbatore",
   description:
-    "Handcrafted Indian spiritual fragrances, Bhimseni camphor, cup sambrani, dhoop cones and sacred puja essentials by HM Agarbattis Coimbatore.",
+    "Handmade natural flower agarbattis, pure Bhimseni camphor, and traditional cup sambrani made in Peelamedu, Coimbatore. Safe, soot-free incense for daily morning pooja.",
   metadataBase: new URL("https://www.hmagarbattis.com"),
   keywords:
-    "HM Agarbattis, incense sticks Coimbatore, pure bhimseni camphor, sambrani cups, kesar loban, temple puja essentials, sacred fragrances",
+    "HM Agarbattis, incense sticks Coimbatore, pure bhimseni camphor, sambrani cups, kesar loban, daily pooja essentials, pure botanical agarbatti",
 };
 
 export default function RootLayout({
@@ -58,6 +59,7 @@ export default function RootLayout({
           <MobileBottomNav />
           <WebPushNotificationPrompt />
           <ChatbotWidget />
+          <LeftAgarbattis />
         </StoreProvider>
       </body>
     </html>

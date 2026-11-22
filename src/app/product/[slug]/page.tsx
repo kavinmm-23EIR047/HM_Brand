@@ -115,9 +115,9 @@ export default async function ProductDetailsPage({
       <div className="page-container py-4 sm:py-8 pb-6 sm:pb-10 space-y-6 sm:space-y-10">
 
         {/* ─── 1. BREADCRUMB ─── */}
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-ui-13 font-medium text-stone-500">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-ui-13 font-medium text-brand-muted">
           <Link href="/" className="inline-flex items-center gap-1 hover:text-brand-primary transition-colors">
-            <Home size={13} className="text-stone-400" />
+            <Home size={13} className="text-brand-muted/70" />
             <span>Home</span>
           </Link>
           <span className="text-stone-300">›</span>
@@ -165,7 +165,7 @@ export default async function ProductDetailsPage({
                       ))}
                     </div>
                     <span className="font-bold text-[#173B3A]">{(product.rating).toFixed(1)}</span>
-                    <span className="text-stone-400">({product.reviewCount} {product.reviewCount === 1 ? "review" : "reviews"})</span>
+                    <span className="text-brand-muted">({product.reviewCount} {product.reviewCount === 1 ? "review" : "reviews"})</span>
                   </div>
                 ) : (
                   <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#173B3A] bg-[#FAF7EE] border border-[#EADBBD] px-3 py-1 rounded-full shadow-2xs">
@@ -192,7 +192,7 @@ export default async function ProductDetailsPage({
                     ? product.descriptionParagraphs
                     : product.description
                       ? [product.description]
-                      : ["A sacred fragrance crafted to bring divine peace, positivity and serenity into your home."]
+                      : ["Handcrafted with natural ingredients for a clean, soothing fragrance without smoke irritation."]
                   ).map((para, idx) => (
                     <p key={idx}>{para}</p>
                   ))}
@@ -224,7 +224,7 @@ export default async function ProductDetailsPage({
                     <Package size={16} className="sm:hidden" /><Package size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-brand-muted block">
                       {specConfig.packLabel}
                     </span>
                     <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
@@ -239,7 +239,7 @@ export default async function ProductDetailsPage({
                     <Clock size={16} className="sm:hidden" /><Clock size={18} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-brand-muted block">
                       {specConfig.durationLabel}
                     </span>
                     <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
@@ -255,7 +255,7 @@ export default async function ProductDetailsPage({
                       <Ruler size={16} className="sm:hidden" /><Ruler size={18} className="hidden sm:block" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
+                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-brand-muted block">
                         Size
                       </span>
                       <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
@@ -269,7 +269,7 @@ export default async function ProductDetailsPage({
                       <Leaf size={16} className="sm:hidden" /><Leaf size={18} className="hidden sm:block" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-[#6B7280] block">
+                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide sm:tracking-wider text-brand-muted block">
                         {specConfig.fallbackSpecLabel}
                       </span>
                       <span className="font-brand text-xs sm:text-sm font-bold text-[#111827] uppercase leading-tight block">
@@ -368,7 +368,7 @@ export default async function ProductDetailsPage({
         <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-brand-border bg-brand-surface-bright p-4 sm:p-9 shadow-xs">
           <div className="grid grid-cols-1 items-center gap-4 sm:gap-8 lg:grid-cols-12">
             <div className="space-y-2 sm:space-y-3 lg:col-span-4">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-brand-primary">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-primary">
                 <Sparkles size={13} /> HOW TO USE
               </span>
               <h2 className="font-playfair text-2xl font-bold tracking-tight text-brand-ink sm:text-3xl">
@@ -417,12 +417,12 @@ export default async function ProductDetailsPage({
 
             {/* Header */}
             <div className="relative z-10 space-y-1 pb-4 border-b border-[#EAE1D3]/80">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-[0.2em] text-brand-primary uppercase">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-wider text-brand-primary uppercase">
                 <Leaf size={12} className="text-[#C89B3C]" />
-                Wellbeing &amp; Purity
+                Pure &amp; Non-Toxic
               </span>
               <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#302923] tracking-tight">
-                Sacred Botanical Benefits
+                Natural Botanical Benefits
               </h3>
             </div>
 
@@ -465,10 +465,10 @@ export default async function ProductDetailsPage({
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-[13px] font-sans font-bold text-[#302923] leading-snug">
-                    Divine Ambience
+                    Fresh, Calming Scent
                   </h4>
                   <p className="mt-1 text-[11px] font-sans text-stone-600 leading-relaxed">
-                    Purifies negative energies and restores peace.
+                    Leaves your rooms smelling fresh and welcoming all day.
                   </p>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default async function ProductDetailsPage({
 
             {/* Header */}
             <div className="relative z-10 space-y-1 pb-4 border-b border-[#EAE1D3]/80">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-[0.2em] text-[#C89B3C] uppercase">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-bold tracking-wider text-[#C89B3C] uppercase">
                 <Sparkles size={12} className="text-[#C89B3C]" />
                 Natural Care
               </span>

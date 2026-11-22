@@ -22,8 +22,8 @@ export function BentoPromos() {
                 <div className="flex-1 space-y-2.5 sm:space-y-3 w-full">
                   {/* Clean Top Eyebrow Badge */}
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-2.5 py-0.5 text-[9px] sm:text-[11px] font-bold tracking-wider text-brand-ink shadow-xs uppercase whitespace-nowrap">
-                    <IndiaTricolorMarkSvg className="h-3 w-4 sm:h-3.5 sm:w-5" />
-                    <span>1ST TIME IN INDIA</span>
+                    <Sparkles size={12} className="text-brand-ink" />
+                    <span>HERITAGE FAMILY COLLECTION</span>
                   </div>
 
                   {/* Main Clear Title */}
@@ -32,13 +32,13 @@ export function BentoPromos() {
                       10 in 1 Aroma Family Pack
                     </h2>
                     <p className="mt-0.5 font-tagline text-xs sm:text-sm text-brand-accent-soft font-semibold tracking-wide">
-                      10 Divine Fragrances in One Box
+                      A sacred temple fragrance for every morning prayer
                     </p>
                   </div>
 
                   {/* Concise, Feel-Good Copy */}
                   <p className="font-sans text-xs sm:text-sm text-white/90 font-normal leading-snug sm:leading-relaxed max-w-md">
-                    Pure botanical blends (Kewda, Loban, Rose, Sandal &amp; more) &mdash; 100% charcoal-free.
+                    Hand-blended with sacred Loban, temple Rose, chandan Sandalwood, sweet Kewda and 6 more nostalgic fragrances &mdash; filling your home with peace, positivity, and dawn blessings.
                   </p>
 
                   {/* Price & CTA Row */}
@@ -62,7 +62,7 @@ export function BentoPromos() {
                 <div className="relative w-full sm:w-[45%] h-44 sm:h-full min-h-[190px] flex items-center justify-center">
                   <Image
                     src="/images/hm_flagship_mascot_transparent.png"
-                    alt="HM Brand Divine Mascot with 10-in-1 Assorted Incense & Camphor"
+                    alt="HM Brand Mascot with 10-in-1 Assorted Incense & Camphor"
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 30vw"
                     className="object-contain object-center"
@@ -74,7 +74,7 @@ export function BentoPromos() {
               {/* BOTTOM TRUST LINE */}
               <div className="border-t border-white/20 pt-3 mt-5 flex items-center justify-between text-xs text-white/90 font-medium w-full">
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck size={15} className="text-brand-accent" /> 100% Charcoal-Free
+                  <ShieldCheck size={15} className="text-brand-accent" /> Pure Botanical Flora
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <span>Coimbatore Crafted</span>
@@ -93,20 +93,20 @@ export function BentoPromos() {
               {/* Left Content */}
               <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
                 <span className="font-brand text-ui-11 font-bold tracking-wider text-brand-forest uppercase block">
-                  WELLNESS &amp; HARMONY
+                  MORNING HARMONY
                 </span>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-bold leading-tight tracking-wide text-brand-heading font-brand uppercase">
-                  Pure Home Fragrance
+                  Cardamom &amp; Fresh Flora
                 </h3>
                 <p className="text-xs leading-relaxed text-[#1F2937]/90 font-normal line-clamp-2">
-                  Botanical aromas to relax, purify air, and bring positive energy.
+                  Crisp cardamom seeds ground with fresh morning petals &mdash; clearing morning fatigue and filling your home with sweet serenity.
                 </p>
                 <div className="pt-0.5 sm:pt-1">
                   <Link
                     href="/shop"
                     className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 rounded-full bg-brand-forest-dark hover:bg-brand-forest px-3.5 py-1.5 sm:px-4 sm:py-2 font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white transition shadow-xs active:scale-95 whitespace-nowrap"
                   >
-                    <span>Shop Essentials</span>
+                    <span>Try Cardamom</span>
                     <ArrowRight size={13} />
                   </Link>
                 </div>
@@ -124,25 +124,25 @@ export function BentoPromos() {
               </div>
             </article>
 
-            {/* Card 2: Mindful Living */}
+            {/* Card 2: Mindful Living / Sacred Temple Tradition */}
             <article className="group relative flex min-h-[144px] items-center justify-between gap-3 overflow-hidden rounded-2xl bg-brand-ink px-4 py-3.5 sm:gap-4 sm:rounded-3xl sm:p-6 text-white shadow-xs border border-brand-ink transition hover:border-brand-accent/60">
               {/* Left Content */}
               <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
                 <span className="font-brand text-ui-11 font-bold tracking-wider text-[#FDE68A] uppercase block">
-                  NATURAL PURITY
+                  SACRED TEMPLE RITUAL
                 </span>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-bold leading-tight tracking-wide text-white font-brand uppercase">
-                  100% Charcoal-Free
+                  Cup Sambrani &amp; Loban
                 </h3>
                 <p className="text-xs leading-relaxed text-white/90 font-normal line-clamp-2">
-                  Clean white smoke that protects family health with zero soot.
+                  Natural Benzoin tree resin and temple loban that release a divine, calming white smoke &mdash; blessing your home with peace.
                 </p>
                 <div className="pt-0.5 sm:pt-1">
                   <Link
-                    href="/about"
+                    href="/shop?category=Sambrani"
                     className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 rounded-full bg-brand-accent hover:bg-brand-orange hover:text-white px-3.5 py-1.5 sm:px-4 sm:py-2 font-brand text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-ink transition shadow-xs active:scale-95 whitespace-nowrap"
                   >
-                    <span>Explore Benefits</span>
+                    <span>Explore Sambrani</span>
                     <ArrowRight size={13} />
                   </Link>
                 </div>
@@ -152,7 +152,7 @@ export function BentoPromos() {
               <div className="relative h-24 w-24 sm:w-36 sm:h-36 shrink-0 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs border border-white/15 bg-white/10 p-1 flex items-center justify-center">
                 <Image
                   src="/images/hm_charcoal_free_promo_blue.jpg"
-                  alt="HM Brand Pure Loban Cup Sambrani Charcoal-Free with Brass Diya"
+                  alt="HM Brand Pure Loban Cup Sambrani with Brass Diya and Temple Smoke"
                   fill
                   sizes="(max-width: 640px) 96px, 144px"
                   className="object-cover rounded-xl transition-transform duration-500 group-hover:scale-105"

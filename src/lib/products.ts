@@ -208,7 +208,7 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
     ],
     howToUse: [
       "Place pure camphor or sambrani resin in the top bowl.",
-      "Plug in and switch on to gently diffuse the sacred aroma.",
+      "Plug in and switch on to gently diffuse the soothing aroma.",
     ],
   },
   "homam-kit": {
@@ -217,7 +217,7 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
     fallbackDuration: "Complete ritual kit",
     fallbackSpecLabel: "Contents",
     fallbackSpecValue: "6 Homam Essentials",
-    fragranceNotes: ["20-Herb Homam", "Cow Dung", "Sacred Resins"],
+    fragranceNotes: ["20-Herb Homam", "Cow Dung", "Natural Tree Resins"],
     benefits: [
       "All 6 traditional homam essentials packed together",
       "Ready-to-use mud pot, herbs, slokam card & manual",
@@ -230,19 +230,19 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
   },
   "havan-cup": {
     packLabel: "Pack Size",
-    durationLabel: "Usage",
-    fallbackDuration: "Traditional ritual cup",
+    durationLabel: "Burning Time",
+    fallbackDuration: "25 - 30 minutes",
     fallbackSpecLabel: "Formulation",
-    fallbackSpecValue: "Pure Sambrani Resin",
-    fragranceNotes: ["Pure Sambrani", "Warm Resins", "Temple Wood"],
+    fallbackSpecValue: "Pure Loban & Forest Resins",
+    fragranceNotes: ["Pure Loban", "Warm Tree Resins", "Temple Wood"],
     benefits: [
-      "Rich, soothing sambrani resin aroma",
-      "Ready-to-light traditional havan cup format",
-      "Enhances spiritual ambience for pooja and meditation",
+      "Natural tree loban with calm, soothing white smoke",
+      "Ready-to-light traditional herbal cup format",
+      "Dispels stale air and brings peace to morning prayer",
     ],
     howToUse: [
-      "Place the sambrani cup on a heat-safe plate or holder.",
-      "Light the outer rim until it glows evenly and releases fragrant smoke.",
+      "Place the sambrani cup on the included metal burning plate or a heat-safe holder.",
+      "Light the top rim until it glows evenly, then allow the fragrant white smoke to diffuse.",
     ],
   },
   camphor: {
@@ -251,7 +251,7 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
     fallbackDuration: "Residue-free clean burning",
     fallbackSpecLabel: "Formulation",
     fallbackSpecValue: "100% Pure Camphor",
-    fragranceNotes: ["Pure Camphor", "Cool Camphoric", "Divine White Resins"],
+    fragranceNotes: ["Pure Camphor", "Cool Camphoric", "Pure Resins"],
     benefits: [
       "100% pure residue-free burning camphor",
       "Purifies indoor atmosphere and vastu energy",
@@ -259,7 +259,7 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
     ],
     howToUse: [
       "Place on a camphor burner, aarti plate, or electric diffuser.",
-      "Light with a flame or switch on your diffuser for sacred purifying aroma.",
+      "Light with a flame or switch on your diffuser for clean purifying aroma.",
     ],
   },
   dhoop: {
@@ -268,10 +268,10 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
     fallbackDuration: "Approximately 35 mins per stick",
     fallbackSpecLabel: "Formulation",
     fallbackSpecValue: "100% Bamboo-Less Dhoop",
-    fragranceNotes: ["Sacred Resins", "Rare Woods", "Herbal Extracts"],
+    fragranceNotes: ["Natural Tree Resins", "Rare Woods", "Herbal Extracts"],
     benefits: [
       "100% natural bamboo-less formulation",
-      "Dense, long-lasting sacred aroma",
+      "Dense, long-lasting natural aroma",
       "Purifies negative energies and calms the mind",
     ],
     howToUse: [
@@ -284,11 +284,11 @@ const PRODUCT_KIND_CONFIG: Record<ProductKind, ProductKindConfig> = {
     durationLabel: "Burning Time",
     fallbackDuration: "50 minutes",
     fallbackSpecLabel: "Formulation",
-    fallbackSpecValue: "100% Charcoal-Free",
+    fallbackSpecValue: "Pure Botanical Flora",
     fragranceNotes: ["Natural Resins", "Essential Oils", "Botanicals"],
     benefits: [
       "100% natural organic ingredients",
-      "Zero harmful charcoal or synthetic toxins",
+      "Pure natural tree resins & safe temple botanicals",
       "Uplifts daily rituals and home ambiance",
     ],
     howToUse: [
@@ -354,6 +354,59 @@ export function normalizeProductImageUrl(rawUrl?: string | null): string {
   if (trimmed.startsWith("/uploads/")) return `${MEDIA_ORIGIN}${trimmed}`;
   return trimmed;
 }
+
+const PRODUCT_HUMANIZED_OVERRIDES: Record<string, {
+  tagline?: string;
+  descriptionParagraphs?: string[];
+  quantity?: string;
+  burnTime?: string;
+  dimensions?: string;
+  ingredients?: string;
+  whatsInside?: string[];
+  whyChoose?: string[];
+  fragranceNotes?: string[];
+}> = {
+  "cup-sambarani": {
+    tagline: "Pure Temple Loban in Ready-to-Light Herbal Havan Cups",
+    descriptionParagraphs: [
+      "Handcrafted in our Peelamedu workshop using natural tree loban, sacred guggul resin, and crushed botanical herbs. When lit, each cup releases dense, serene white smoke that clears stagnant air, dispels negativity, and recreates the sanctified calm of South Indian dawn temple aartis in your home.",
+      "Crafted without synthetic chemical accelerants or black soot, our sambrani cups burn smoothly and gently, leaving a soul-soothing resin fragrance that stays for hours."
+    ],
+    quantity: "12 Havan Cups",
+    burnTime: "25 - 30 mins per cup",
+    ingredients: "Natural Tree Loban, Guggul Resin, Herbal Wood Paste, Sacred Ash Binder",
+    whatsInside: [
+      "12 Ready-to-light Pure Loban Havan Cups",
+      "1 Metal burning plate for safe home placement"
+    ],
+    whyChoose: [
+      "100% natural forest tree gums & sacred herbs",
+      "Long-lasting serene aroma that lingers for hours",
+      "Soothing white smoke safe for morning family prayer"
+    ],
+    fragranceNotes: ["Pure Loban", "Warm Resins", "Temple Wood"]
+  },
+  "cup-sambrani": {
+    tagline: "Pure Temple Loban in Ready-to-Light Herbal Havan Cups",
+    descriptionParagraphs: [
+      "Handcrafted in our Peelamedu workshop using natural tree loban, sacred guggul resin, and crushed botanical herbs. When lit, each cup releases dense, serene white smoke that clears stagnant air, dispels negativity, and recreates the sanctified calm of South Indian dawn temple aartis in your home.",
+      "Crafted without synthetic chemical accelerants or black soot, our sambrani cups burn smoothly and gently, leaving a soul-soothing resin fragrance that stays for hours."
+    ],
+    quantity: "12 Havan Cups",
+    burnTime: "25 - 30 mins per cup",
+    ingredients: "Natural Tree Loban, Guggul Resin, Herbal Wood Paste, Sacred Ash Binder",
+    whatsInside: [
+      "12 Ready-to-light Pure Loban Havan Cups",
+      "1 Metal burning plate for safe home placement"
+    ],
+    whyChoose: [
+      "100% natural forest tree gums & sacred herbs",
+      "Long-lasting serene aroma that lingers for hours",
+      "Soothing white smoke safe for morning family prayer"
+    ],
+    fragranceNotes: ["Pure Loban", "Warm Resins", "Temple Wood"]
+  }
+};
 
 export function mapDbProductToProduct(p: any): Product {
   const rawImages: any[] = Array.isArray(p.images) ? p.images : [];
@@ -431,7 +484,8 @@ export function mapDbProductToProduct(p: any): Product {
     ? p.reviews.length
     : 0;
 
-  const summarySource = parsed.tagline || parsed.paragraphs[0] || notePart;
+  const override = PRODUCT_HUMANIZED_OVERRIDES[p.slug];
+  const summarySource = override?.tagline || parsed.tagline || override?.descriptionParagraphs?.[0] || parsed.paragraphs[0] || notePart;
   const specConfig = getProductSpecConfig({
     slug: p.slug,
     name: p.name,
@@ -447,25 +501,25 @@ export function mapDbProductToProduct(p: any): Product {
     subCategory: p.subcategory?.name || p.subCategory || "",
     subcategoryId: p.subcategoryId || p.subcategory?.id || null,
     note: summarySource ? summarizeAtWordBoundary(summarySource, 115) : "",
-    tagline: parsed.tagline,
+    tagline: override?.tagline || parsed.tagline,
     description: p.description || p.name,
-    descriptionParagraphs: parsed.paragraphs.length > 0
+    descriptionParagraphs: override?.descriptionParagraphs || (parsed.paragraphs.length > 0
       ? parsed.paragraphs
       : p.description
       ? [p.description]
-      : [],
+      : []),
     mrp: numMrp > 0 ? `₹${numMrp}` : "",
     price: !isNaN(numPrice) && numPrice > 0 ? numPrice : 0,
     unitPrice: numUnitPrice,
     bundleQuantity: bundleQty,
-    quantity: quantityPart,
-    burnTime: parsed.burningTime || specConfig.fallbackDuration,
-    dimensions: parsed.dimensions,
-    ingredients: parsed.ingredients,
-    whatsInside: parsed.whatsInside.length > 0 ? parsed.whatsInside : undefined,
-    whyChoose: parsed.whyChoose.length > 0 ? parsed.whyChoose : undefined,
+    quantity: override?.quantity || quantityPart,
+    burnTime: override?.burnTime || parsed.burningTime || specConfig.fallbackDuration,
+    dimensions: override?.dimensions || parsed.dimensions,
+    ingredients: override?.ingredients || parsed.ingredients,
+    whatsInside: override?.whatsInside || (parsed.whatsInside.length > 0 ? parsed.whatsInside : undefined),
+    whyChoose: override?.whyChoose || (parsed.whyChoose.length > 0 ? parsed.whyChoose : undefined),
     pricingNote: parsed.pricingNote,
-    fragranceNotes: specConfig.fragranceNotes,
+    fragranceNotes: override?.fragranceNotes || specConfig.fragranceNotes,
     benefits: specConfig.benefits,
     howToUse: specConfig.howToUse,
     image: primaryImg,
@@ -563,13 +617,13 @@ export const collectionsList = [
     title: "Morning Puja Collection",
     subtitle: "Auspicious Sunrise Ritual",
     description: "Start the day with the gentle glow of a diya, the pure sweetness of Bhimseni camphor, and floral agarbatti that awakens clarity and gratitude.",
-    tagline: "Start every day with divine energy",
+    tagline: "Start every day with fresh, positive energy",
     accent: "Saffron",
     items: ["hm-super-series", "bhimseni-camphor", "fancy-flora"]
   },
   {
     id: "peaceful-evening",
-    title: "Peaceful Evening Sanctuary",
+    title: "Peaceful Evening Collection",
     subtitle: "Twilight Calm & Sandalwood",
     description: "Slow down after sunset. Light paal sambrani and botanical kasturi to release the day's fatigue and wrap your home in soothing stillness.",
     tagline: "Transition into twilight tranquility",
@@ -580,7 +634,7 @@ export const collectionsList = [
     id: "new-home",
     title: "Gruhapravesam & New Home",
     subtitle: "Housewarming Blessings",
-    description: "Purify new corners, invite positive vastu vibrations, and welcome Goddess Lakshmi with sacred Loban, Bhimseni camphor, and Pancha Rudhra.",
+    description: "Purify new corners, invite positive vastu energy, and welcome peace into your new home with pure Loban, Bhimseni camphor, and Pancha Rudhra.",
     tagline: "Blessings for auspicious new beginnings",
     accent: "Gold",
     items: ["pancha-rudhra", "kesar-loban", "bhimseni-camphor"]
@@ -590,15 +644,15 @@ export const collectionsList = [
     title: "Mahaparva Festival Essentials",
     subtitle: "Diwali, Navaratri & Pongal",
     description: "Everything required for festive family gatherings. Rich fragrant agarbattis, instant cup sambrani, and crystalline camphor.",
-    tagline: "Celebrate sacred moments together",
+    tagline: "Celebrate special family moments together",
     accent: "Kumkum",
     items: ["hm-super-series", "cup-sambrani", "kesar-loban", "bhimseni-camphor"]
   },
   {
-    id: "sacred-gifts",
-    title: "Divine Gifting Boxes",
-    subtitle: "Thoughtful Spiritual Gifts",
-    description: "Present the gift of fragrance and blessings to elders, dear ones, and friends on weddings, housewarmings, and festive occasions.",
+    id: "pooja-gifts",
+    title: "Handcrafted Gifting Boxes",
+    subtitle: "Thoughtful Gifts For Family & Friends",
+    description: "Present the gift of pure fragrance to elders, relatives, and friends on weddings, housewarmings, and festive occasions.",
     tagline: "Gift auspicious moments that linger",
     accent: "Teal",
     items: ["pancha-rudhra", "mehak-italian", "chandan-pure-dhoop"]
@@ -610,16 +664,16 @@ export const festivalsList = [
     id: "diwali",
     name: "Diwali — Festival of Lights",
     dateText: "Kartika Amavasya",
-    description: "Illuminate your sanctum with pure brass diyas, fragrant dhoop, and sacred camphor to welcome Goddess Mahalakshmi.",
+    description: "Illuminate your pooja room with pure brass diyas, fragrant dhoop, and pure Bhimseni camphor to welcome Goddess Mahalakshmi.",
     recommendedCategory: "Camphor",
     featuredSlugs: ["bhimseni-camphor", "hm-super-series", "cup-sambrani"],
-    ritualNote: "Light Bhimseni camphor during Lakshmi Puja for divine radiance."
+    ritualNote: "Light Bhimseni camphor during Lakshmi Puja for clean, soot-free radiance."
   },
   {
     id: "navaratri",
     name: "Navaratri & Vijayadashami",
     dateText: "Sharad Navaratri",
-    description: "Nine nights of devotion, music, and prayer. Fill each sacred evening with paal sambrani and sweet floral agarbatti.",
+    description: "Nine nights of devotion, music, and prayer. Fill each festive evening with paal sambrani and sweet floral agarbatti.",
     recommendedCategory: "Sambhrani Powder",
     featuredSlugs: ["cup-sambrani", "fancy-flora", "kesar-loban"],
     ritualNote: "Perform evening dhoop aarti before the Golu display."
@@ -640,7 +694,7 @@ export const festivalsList = [
     description: "Welcome Lord Ganesha with fragrant loban, sweet modak aromas, and special pancha rudhra formulations.",
     recommendedCategory: "Dhoop Stick / Bambooless Stick",
     featuredSlugs: ["kesar-loban", "pancha-rudhra", "bhimseni-camphor"],
-    ritualNote: "Begin all new ventures with Lord Ganesha's sacred blessings."
+    ritualNote: "Begin all new ventures with Lord Ganesha's blessings."
   },
   {
     id: "krishna-janmashtami",
@@ -655,7 +709,7 @@ export const festivalsList = [
     id: "daily-puja",
     name: "Nitya Puja (Daily Worship)",
     dateText: "Everyday Morning & Dusk",
-    description: "A simple 5-minute sacred pause before starting your day. Connect with your inner stillness and calm your thoughts.",
+    description: "A simple 5-minute quiet morning prayer before starting your busy day. Keep your mind calm and centered.",
     recommendedCategory: "Agarbatti",
     featuredSlugs: ["hm-super-series", "bhimseni-camphor", "chandan-pure-dhoop"],
     ritualNote: "A daily ritual that keeps the heart grounded and home peaceful."

@@ -50,7 +50,7 @@ export function InnerPage({
                 </nav>
 
                 {/* Eyebrow Badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1 font-brand text-xs font-bold tracking-[0.2em] text-brand-primary uppercase shadow-2xs border border-brand-border">
+                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1 font-brand text-xs font-bold tracking-wider text-brand-primary uppercase shadow-2xs border border-brand-border">
                   <Sparkles size={13} className="text-brand-orange" />
                   <span>{eyebrow}</span>
                 </div>
@@ -75,7 +75,7 @@ export function InnerPage({
                     <span className="font-brand text-xs font-bold text-brand-accent-soft uppercase tracking-wider leading-tight whitespace-nowrap">
                       Coimbatore
                     </span>
-                    <span className="font-brand text-ui-11 font-bold text-white uppercase tracking-widest mt-1 leading-tight">
+                    <span className="font-brand text-ui-11 font-bold text-white uppercase tracking-wider mt-1 leading-tight">
                       Pure<br />Heritage
                     </span>
                   </div>

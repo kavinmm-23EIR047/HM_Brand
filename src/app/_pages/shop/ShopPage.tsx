@@ -525,7 +525,7 @@ function ShopContent() {
           {/* ─── 1. BREADCRUMB ─── */}
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 sm:gap-2 text-xs font-medium text-stone-500"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs font-medium text-brand-muted"
           >
             <Link
               href="/"
@@ -952,7 +952,7 @@ function ShopContent() {
                   <h3 className="font-heading text-sm sm:text-base font-bold text-brand-ink">
                     {activeLabel}
                   </h3>
-                  <span className="text-xs text-stone-500 font-medium">
+                  <span className="text-xs text-brand-muted font-medium">
                     ({filteredProducts.length})
                   </span>
                 </div>
@@ -986,7 +986,7 @@ function ShopContent() {
                     </select>
                     <ChevronDown
                       size={14}
-                      className="pointer-events-none absolute right-2.5 text-stone-400"
+                      className="pointer-events-none absolute right-2.5 text-brand-muted"
                     />
                   </div>
 
@@ -1001,7 +1001,7 @@ function ShopContent() {
                       aria-label="Grid view"
                       className={`inline-flex h-10 w-10 items-center justify-center rounded-md transition ${viewMode === "grid"
                           ? "bg-brand-primary text-white shadow-2xs"
-                          : "text-stone-500 hover:text-brand-ink"
+                          : "text-brand-muted hover:text-brand-ink"
                         }`}
                     >
                       <LayoutGrid size={16} />
@@ -1015,7 +1015,7 @@ function ShopContent() {
                       aria-label="List view"
                       className={`inline-flex h-10 w-10 items-center justify-center rounded-md transition ${viewMode === "list"
                           ? "bg-brand-primary text-white shadow-2xs"
-                          : "text-stone-500 hover:text-brand-ink"
+                          : "text-brand-muted hover:text-brand-ink"
                         }`}
                     >
                       <List size={16} />
@@ -1033,7 +1033,7 @@ function ShopContent() {
                   <h4 className="font-playfair text-xl font-bold text-brand-ink">
                     No Products Match Your Filter
                   </h4>
-                  <p className="text-xs text-stone-500 max-w-sm mx-auto">
+                  <p className="text-xs text-brand-muted max-w-sm mx-auto">
                     Try clearing selected categories or price filters to see more authentic items.
                   </p>
                   <button
@@ -1396,7 +1396,7 @@ function ShopContent() {
                               All Products
                             </span>
                           </div>
-                          <span className="text-stone-400 text-[11px] tabular-nums">({allProducts.length})</span>
+                          <span className="text-brand-muted text-[11px] tabular-nums">({allProducts.length})</span>
                         </label>
 
                         {categoryOptions.map((category) => {
@@ -1419,12 +1419,12 @@ function ShopContent() {
                                   <span className={`truncate ${isChecked ? "font-bold text-brand-primary" : ""}`}>{category.name}</span>
                                 </label>
                                 <div className="flex items-center gap-1 shrink-0 ml-2">
-                                  <span className="text-stone-400 text-[11px] tabular-nums">({count})</span>
+                                  <span className="text-brand-muted text-[11px] tabular-nums">({count})</span>
                                   {hasSubs && (
                                     <button
                                       type="button"
                                       onClick={() => toggleCategoryDropdown(category.slug)}
-                                      className="h-6 w-6 flex items-center justify-center text-stone-400 hover:text-brand-primary cursor-pointer"
+                                      className="h-6 w-6 flex items-center justify-center text-brand-muted hover:text-brand-primary cursor-pointer"
                                       aria-label={`Toggle ${category.name} subcategories`}
                                     >
                                       <ChevronDown size={13} className={`transition-transform duration-200 ${isOpen ? "rotate-180 text-brand-primary" : ""}`} />
@@ -1448,7 +1448,7 @@ function ShopContent() {
                                           />
                                           <span className={`truncate ${subcategoryChecked ? "font-bold text-brand-primary" : ""}`}>{subcategory.name}</span>
                                         </div>
-                                        <span className="text-stone-400 text-[10px] tabular-nums ml-2">({subcategoryCount})</span>
+                                        <span className="text-brand-muted text-[10px] tabular-nums ml-2">({subcategoryCount})</span>
                                       </label>
                                     );
                                   })}
@@ -1555,7 +1555,7 @@ function ShopContent() {
                             />
                             <span>In stock</span>
                           </div>
-                          <span className="text-stone-400 text-[11px] tabular-nums">({inStockCount})</span>
+                          <span className="text-brand-muted text-[11px] tabular-nums">({inStockCount})</span>
                         </label>
                         <label className="flex items-center justify-between py-1.5 px-1 rounded text-xs text-brand-heading cursor-pointer select-none hover:bg-brand-surface-warm/40">
                           <div className="flex items-center gap-2">
@@ -1570,7 +1570,7 @@ function ShopContent() {
                             />
                             <span>Out of stock</span>
                           </div>
-                          <span className="text-stone-400 text-[11px] tabular-nums">({outOfStockCount})</span>
+                          <span className="text-brand-muted text-[11px] tabular-nums">({outOfStockCount})</span>
                         </label>
                       </div>
                     )}
@@ -1612,7 +1612,7 @@ export default function ShopPage() {
     <Suspense
       fallback={
         <div className="p-16 text-center text-brand-primary font-bold">
-          Loading sacred collection...
+          Loading products...
         </div>
       }
     >

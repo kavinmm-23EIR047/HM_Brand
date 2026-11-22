@@ -22,16 +22,16 @@ const PAGE_SIZE = 10;
 const ADMIN_SECTION_IDS = ["overview", "products", "categories", "banners", "orders", "coupons", "collections", "blog", "benefits", "offers", "leads"] as const;
 const ORDER_STAGE_IDS = ["pending", "confirmed", "ready_to_ship", "dispatched", "returned", "all"] as const;
 const defaultBenefitsContent = {
-  eyebrow: "HOLISTIC PURITY & AYURVEDA", title: "The Sacred Natural Benefits of Pure Botanical Fragrance",
-  subtitle: "Discover why botanical incense and sacred aromatics elevate daily rituals.", heroBadge: "100% CHARCOAL-FREE BOTANICAL WELLNESS",
-  heroTitle: "Breathe clean, pure, and spiritually uplifting fragrance.", heroDescription: "In traditional Ayurveda, fragrance is a sacred part of mindful living. Pure resins, camphor, and herbal incense bring a gentle aroma to your space.",
-  comparisonTitle: "HM Agarbattis vs. Ordinary Market Incense", ingredientsTitle: "Sacred Ingredients & Their Benefits",
+  eyebrow: "NATURAL PURITY", title: "Natural Benefits of Pure Botanical Incense",
+  subtitle: "Discover why traditional hand-rolled incense is better for your home and family.", heroBadge: "100% PURE & BOTANICAL",
+  heroTitle: "Breathe clean, pure, and soothing fragrance.", heroDescription: "Pure tree resins, Bhimseni camphor, and flower extracts bring a gentle, pleasant aroma without eye irritation or black soot.",
+  comparisonTitle: "HM Agarbattis vs. Ordinary Market Incense", ingredientsTitle: "Natural Ingredients & Their Benefits",
   comparison: [], ingredients: [],
 };
 const defaultOffersContent = {
-  eyebrow: "FESTIVE OFFERS & SPECIAL BUNDLES", title: "Sacred Fragrances, Special Festive Blessings",
-  subtitle: "Discover limited-time offers, value combos, and curated gift boxes.", badge: "LIMITED TIME FESTIVE PRICING",
-  heroTitle: "A Little More Joy & Fragrance in Every Order.", description: "Handcrafted fragrances and sacred essentials for your daily pooja and celebrations.",
+  eyebrow: "FESTIVE OFFERS & SPECIAL BUNDLES", title: "Handcrafted Combos for Festivals & Daily Pooja",
+  subtitle: "Discover limited-time offers, value combos, and family packs.", badge: "DIRECT WORKSHOP PRICING",
+  heroTitle: "A Little More Joy & Fragrance in Every Order.", description: "Handcrafted agarbattis, pure camphor, and cup sambrani direct from our Coimbatore workshop.",
   featureOne: "Direct from Coimbatore", featureTwo: "Free Samples Included", cta: "Explore Offer Picks",
   picksTitle: "Popular Offer Picks", bundlesTitle: "Shop By Pooja & Celebration Occasion", bundleDescription: "Specially paired fragrant sets for home warming, festivals, and personal wellness.",
   productIds: [], collectionIds: [],
@@ -2115,7 +2115,7 @@ function AdminWorkspace() {
                   <Layers size={20} />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#F3C967]">HM Brand</p>
+                  <p className="text-xs font-extrabold uppercase tracking-normal text-[#F3C967]">HM Brand</p>
                   <p className="truncate text-[13px] font-semibold text-white">Store CRM Console</p>
                 </div>
               </div>
@@ -2889,7 +2889,7 @@ function AdminWorkspace() {
                       <span>Real-Time Messaging &amp; Alerts</span>
                       <Sparkles size={12} className="text-[#C89B3C]" />
                     </h4>
-                    <p className="text-[11px] text-[#746B62]">
+                    <p className="text-[11px] text-[#4A3F35]">
                       Brevo Email, Telegram Bot &amp; Web Push (Lock-screen &amp; PC enabled)
                     </p>
                   </div>
@@ -3673,7 +3673,7 @@ function AdminWorkspace() {
             <div className="space-y-5">
               <SectionHeader
                 title="Chatbot & Customer Inquiries"
-                subtitle="Manage customer leads, wholesale inquiries, and discount coupon claims captured by the HM Sacred Advisor."
+                subtitle="Manage customer leads, wholesale inquiries, and discount coupon claims captured by the Website Chatbot."
               />
 
               {/* Pipeline summary cards */}
@@ -3779,7 +3779,7 @@ function AdminWorkspace() {
                         const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
                         const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
                         const waMsg = encodeURIComponent(
-                          `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'sacred fragrances'}. How can we assist you with your order?`
+                          `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'agarbattis & pooja essentials'}. How can we assist you with your order?`
                         );
                         return (
                           <tr key={lead.id} className="transition hover:bg-[#F8FAFC]">
@@ -3795,7 +3795,7 @@ function AdminWorkspace() {
                                   <span className="truncate max-w-[160px]">{lead.email}</span>
                                 </div>
                               )}
-                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-[#FAF7F0] border border-[#EAE1D3] text-[#746B62]">
+                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-[#FAF7F0] border border-[#EAE1D3] text-[#4A3F35]">
                                 Source: {lead.source || 'CHATBOT'}
                               </span>
                             </td>
@@ -3875,7 +3875,7 @@ function AdminWorkspace() {
                     {leads.length === 0 && (
                       <tr>
                         <td colSpan={6} className="px-4 py-8 text-center text-xs text-[#64748B]">
-                          No inquiries received yet. Inquiries captured by the Sacred Chatbot will appear here in real time.
+                          No inquiries received yet. Inquiries captured by the Website Chatbot will appear here in real time.
                         </td>
                       </tr>
                     )}
@@ -3891,7 +3891,7 @@ function AdminWorkspace() {
                     const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
                     const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
                     const waMsg = encodeURIComponent(
-                      `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'sacred fragrances'}. How can we assist you with your order?`
+                      `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'agarbattis & pooja essentials'}. How can we assist you with your order?`
                     );
                     return (
                       <div key={lead.id} className="p-4 bg-white rounded-xl border border-[#DCE2EA] shadow-xs space-y-3">

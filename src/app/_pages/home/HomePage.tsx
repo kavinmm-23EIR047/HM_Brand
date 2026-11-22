@@ -10,6 +10,7 @@ import { BentoPromos } from "./components/bento-promos";
 import { DeliveryReachBanner } from "./components/delivery-reach-banner";
 import { Testimonials } from "./components/testimonials";
 import { OurStorySection } from "./components/our-story-section";
+import { WorkshopShowcase } from "./components/workshop-showcase";
 import { BestsellerShowcase } from "./components/bestseller-showcase";
 import { CONTACT_WHATSAPP_NUMBER } from "@/lib/contact-info";
 
@@ -30,20 +31,23 @@ export default function HomePage() {
         {/* 4. BESTSELLERS PRODUCT SHOWCASE (CATEGORY TABS & DIRECT CONVERSION) */}
         <BestsellerShowcase />
 
-        {/* 5. THE HM PURITY PROMISE (CORE BRAND DIFFERENTIATOR & TRUST PILLARS) */}
-        <TrustStrip />
-
-        {/* 6. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER & VALUE BUNDLES) */}
+        {/* 5. BENTO PROMO GRID (10-IN-1 FAMILY PACK OFFER & VALUE BUNDLES) */}
         <BentoPromos />
 
-        {/* 7. DELIVERY REACH BANNER (100+ SOUTH INDIA DISTRICTS FAST DISPATCH) */}
+        {/* 6. DELIVERY REACH BANNER (100+ SOUTH INDIA DISTRICTS FAST DISPATCH) */}
         <DeliveryReachBanner />
+
+        {/* 7. THE HM PURITY PROMISE (CORE BRAND DIFFERENTIATOR & TRUST PILLARS) */}
+        <TrustStrip />
 
         {/* 9. CUSTOMER REVIEWS & VERIFIED BUYER SOCIAL PROOF */}
         <Testimonials />
 
-        {/* 10. BRAND STORY & VEDIC WELLBEING */}
+        {/* 10. BRAND STORY & CRAFTSMANSHIP */}
         <OurStorySection />
+
+        {/* 10B. WORKSHOP SHOWCASE (REAL HANDS & CRAFTSMANSHIP IN ACTION) */}
+        <WorkshopShowcase />
 
         {/* 11. WHATSAPP COMMUNITY CTA — CLEAN SOHO EDITORIAL CONCIERGE BAR */}
         <section className="bg-brand-surface-alt py-6 sm:py-10">
@@ -57,14 +61,14 @@ export default function HomePage() {
                   </div>
 
                   <div className="min-w-0">
-                    <span className="font-brand text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#14532D] block">
-                      WHATSAPP HELP DESK
+                    <span className="font-brand text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#14532D] block">
+                      DIRECT FROM COIMBATORE
                     </span>
                     <h2 className="mt-0.5 font-brand text-base sm:text-xl font-bold uppercase tracking-wide text-brand-heading leading-tight">
-                      Here to Help.
+                      Need help picking a scent or placing an order?
                     </h2>
                     <p className="mt-0.5 text-xs sm:text-sm text-brand-slate leading-snug">
-                      Quick help with scents, bundles &amp; orders.
+                      Chat directly with our Coimbatore workshop team. Quick answers for pooja scents &amp; bundles.
                     </p>
                   </div>
                 </div>

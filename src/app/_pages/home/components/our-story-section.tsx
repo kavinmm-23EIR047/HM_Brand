@@ -8,24 +8,24 @@ import { ArrowRight, Leaf, Heart, Sparkles } from "lucide-react";
 const STORY_VALUES = [
   {
     number: "01",
-    title: "Yoga & Mind",
-    desc: "Calm & focus.",
+    title: "Pure Resins",
+    desc: "Loban & forest herbs.",
     icon: Leaf,
     accent: "var(--brand-green)",
     iconBg: "bg-[#EAF5EC]",
   },
   {
     number: "02",
-    title: "God & Prayer",
-    desc: "Temple aroma.",
+    title: "Temple Purity",
+    desc: "Calm aroma & clean air.",
     icon: Heart,
     accent: "var(--brand-primary)",
     iconBg: "bg-[#FFF2F4]",
   },
   {
     number: "03",
-    title: "Pure Virtue",
-    desc: "Charcoal-free.",
+    title: "Local Artisans",
+    desc: "Handcrafted in Peelamedu.",
     icon: Sparkles,
     accent: "var(--brand-amber-bright)",
     iconBg: "bg-brand-surface-cream",
@@ -48,7 +48,7 @@ export function OurStorySection() {
               <div className="relative aspect-square w-full">
                 <Image
                   src="/images/hm_story_yoga_god_virtue.png"
-                  alt="HM Agarbattis sacred flame mascot meditating on a lotus flower with diya and temple bell"
+                  alt="HM Agarbattis mascot meditating on a lotus flower with diya and temple bell"
                   fill
                   sizes="(max-width: 640px) 128px, (max-width: 1024px) 208px, 340px"
                   className="object-contain transition-transform duration-500 hover:scale-[1.03]"
@@ -67,17 +67,17 @@ export function OurStorySection() {
           <div className="flex-1 min-w-0 lg:col-span-7">
             <div className="mb-1.5 sm:mb-2.5 flex items-center gap-1.5">
               <span className="h-[2px] w-5 sm:w-7 rounded-full bg-brand-orange" />
-              <span className="font-brand text-[9px] sm:text-xs font-bold uppercase tracking-[0.18em] text-brand-primary">
-                OUR STORY
+              <span className="font-brand text-[9px] sm:text-xs font-bold uppercase tracking-wider text-brand-primary">
+                ABOUT OUR CRAFT
               </span>
             </div>
 
             <h2 className="font-brand text-base sm:text-2xl lg:text-3xl font-bold leading-tight tracking-wide text-brand-heading uppercase">
-              Nature &amp; Tradition <span className="text-brand-green">Together.</span>
+              Pure Incense, <span className="text-brand-green">Made With Devotion.</span>
             </h2>
 
             <p className="mt-1 sm:mt-2 font-sans text-[11px] sm:text-sm leading-snug sm:leading-relaxed text-brand-slate font-normal max-w-lg">
-              Coimbatore botanical resins crafted for calm, pure daily rituals.
+              Crushed temple flowers, natural tree resins, and pure botanical herbs &mdash; hand-rolled with mindful care in our Coimbatore workshop.
             </p>
 
             {/* 3 VALUES: Compact 3-column mini-grid on sm+ */}
@@ -114,7 +114,7 @@ export function OurStorySection() {
             </div>
 
             {/* CTA Row */}
-            <div className="mt-3 sm:mt-6 flex items-center gap-3">
+            <div className="mt-3 sm:mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href="/about"
                 className="group inline-flex min-h-8 sm:min-h-10 items-center justify-center gap-1.5 rounded-full bg-brand-primary hover:bg-brand-hover text-white px-3.5 py-1.5 sm:px-5 sm:py-2 font-brand text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-xs transition active:scale-95 whitespace-nowrap"
@@ -125,8 +125,14 @@ export function OurStorySection() {
                   className="transition-transform duration-300 group-hover:translate-x-0.5 sm:h-3.5 sm:w-3.5"
                 />
               </Link>
+              <Link
+                href="/craftsmanship"
+                className="inline-flex min-h-8 sm:min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white hover:bg-brand-surface-soft px-3.5 py-1.5 sm:px-4 sm:py-2 font-brand text-[10px] sm:text-xs font-bold uppercase tracking-wider text-brand-ink transition active:scale-95 whitespace-nowrap"
+              >
+                <span>View Workshop Photos</span>
+              </Link>
               <span className="text-[10px] sm:text-xs font-semibold text-brand-green whitespace-nowrap">
-                Charcoal-Free
+                Pure Botanical Flora
               </span>
             </div>
           </div>

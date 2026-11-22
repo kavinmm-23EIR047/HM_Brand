@@ -240,14 +240,14 @@ export function Navigation() {
       icon: <IndiaTricolorMarkSvg className="h-3 w-4" />,
       badge: "1ST TIME IN INDIA",
       highlight: "10-in-1 Aroma Family Pack",
-      text: "10 Divine Fragrances in One Pack",
+      text: "10 Natural Scents in One Box",
       href: "/shop",
     },
     {
       icon: <EditorialStarSvg className="h-3 w-3 text-brand-primary" />,
-      badge: "SMELL OF PURITY",
-      highlight: "100% Charcoal-Free Herbal Resins",
-      text: "Zero Black Soot • Pure Daily Devotion",
+      badge: "NO BLACK SMOKE",
+      highlight: "Pure Temple Botanical Resins",
+      text: "Gentle White Smoke • Safe for Daily Pooja",
       href: "/about",
     },
     {
@@ -259,9 +259,9 @@ export function Navigation() {
     },
     {
       icon: <SacredDiyaSvg className="h-3.5 w-3.5" />,
-      badge: "SACRED TRADITION",
+      badge: "COIMBATORE CRAFT",
       highlight: "Kewda, Loban, Sandalwood & Camphor",
-      text: "Authentic Vedic Temple Fragrances",
+      text: "Made with Real Tree Resins & Bamboo",
       href: "/shop",
     },
   ], []);
@@ -396,10 +396,10 @@ export function Navigation() {
                 />
               </div>
               <div className="flex min-w-0 flex-col justify-center leading-tight">
-                <span className="font-brand truncate text-[14px] min-[400px]:text-base sm:text-2xl font-bold tracking-[0.05em] sm:tracking-[0.16em] uppercase text-brand-heading">
-                  HM <span className="text-brand-primary">BRAND</span>
+                <span className="font-brand truncate text-[14px] min-[400px]:text-base sm:text-2xl font-bold tracking-normal uppercase text-brand-heading">
+                  HM{' '}<span className="text-brand-primary">BRAND</span>
                 </span>
-                <span className="font-sans truncate text-[7.5px] min-[400px]:text-[9px] sm:text-xs text-brand-primary tracking-[0.04em] sm:tracking-[0.18em] uppercase font-bold -mt-0.5">
+                <span className="font-sans truncate text-[7.5px] min-[400px]:text-[9px] sm:text-xs text-brand-primary tracking-normal uppercase font-bold -mt-0.5">
                   Discover the Divine Within
                 </span>
               </div>
@@ -423,24 +423,31 @@ export function Navigation() {
               className="relative h-full flex items-center"
               onMouseEnter={() => setOpenMega("shop")}
             >
-              <button
-                type="button"
-                onClick={() => setOpenMega(openMega === "shop" ? null : "shop")}
-                aria-expanded={openMega === "shop"}
+              <Link
+                href="/shop"
                 className={`relative py-6 inline-flex items-center gap-1.5 font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                   openMega === "shop" || pathname.startsWith("/shop")
                     ? "text-brand-primary"
                     : "text-brand-heading hover:text-brand-primary"
                 }`}
               >
-                <span>SHOP</span>
+                SHOP
+                {(openMega === "shop" || pathname.startsWith("/shop")) && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-brand-primary rounded-full" />
+                )}
+              </Link>
+              <button
+                type="button"
+                onClick={() => setOpenMega(openMega === "shop" ? null : "shop")}
+                aria-label={openMega === "shop" ? "Close shop categories" : "Open shop categories"}
+                aria-haspopup="true"
+                aria-expanded={openMega === "shop"}
+                className="relative ml-1 inline-flex h-9 w-8 items-center justify-center rounded-md text-brand-heading transition-colors hover:bg-brand-surface-soft hover:text-brand-primary"
+              >
                 <ChevronDown
                   size={15}
                   className={`transition-transform duration-300 ${openMega === "shop" ? "rotate-180" : ""}`}
                 />
-                {(openMega === "shop" || pathname.startsWith("/shop")) && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-brand-primary rounded-full" />
-                )}
               </button>
             </div>
 
@@ -452,6 +459,16 @@ export function Navigation() {
             >
               <span>ABOUT</span>
               {pathname === "/about" && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-brand-primary rounded-full" />}
+            </Link>
+
+            <Link
+              href="/craftsmanship"
+              className={`relative py-6 font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
+                pathname === "/craftsmanship" ? "text-brand-primary" : "text-brand-heading hover:text-brand-primary"
+              }`}
+            >
+              <span>WORKSHOP</span>
+              {pathname === "/craftsmanship" && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-brand-primary rounded-full" />}
             </Link>
 
             <Link
@@ -560,17 +577,17 @@ export function Navigation() {
                 {/* ------------------------------------------------------------- */}
                 <div className="col-span-3 border-r border-brand-border/70 pr-4 sm:pr-6 flex flex-col justify-between">
                   <div>
-                    <span className="font-space text-xs font-bold tracking-[0.18em] text-brand-primary uppercase block mb-4">
+                    <span className="font-space text-xs font-bold tracking-wider text-brand-primary uppercase block mb-4">
                       SHOP BY CATEGORY
                     </span>
 
                     <div className="space-y-1">
                       {CATEGORIES_LIST.map((item) => {
-                        const isActive = hoveredCategory.toLowerCase() === item.name.toLowerCase();
+                        const isActive = hoveredCategory.toLowerCase() === item.name.toLowerCase() || hoveredCategory.toLowerCase() === item.queryParam.toLowerCase();
                         return (
                           <div
                             key={item.id}
-                            onMouseEnter={() => setHoveredCategory(item.name)}
+                            onMouseEnter={() => setHoveredCategory(item.queryParam)}
                             className="group"
                           >
                             <Link
@@ -645,7 +662,7 @@ export function Navigation() {
                   <div>
                     {/* Header: Popular Picks + View All */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-space text-xs font-bold tracking-[0.18em] text-brand-primary uppercase">
+                      <span className="font-space text-xs font-bold tracking-wider text-brand-primary uppercase">
                         POPULAR PICKS
                       </span>
                       <Link
@@ -777,21 +794,21 @@ export function Navigation() {
                 <div className="col-span-4 relative rounded-2xl bg-[#EFF5EB] p-6 lg:p-7 overflow-hidden border border-[#CFE0C5] flex flex-col justify-between">
 
                   <div className="relative z-10">
-                    <span className="font-space text-xs font-bold tracking-[0.18em] text-brand-amber uppercase block mb-1.5">
-                      FRAGRANCE FOR A BETTER TOMORROW
+                    <span className="font-space text-xs font-bold tracking-wider text-brand-amber uppercase block mb-1.5">
+                      HONEST COIMBATORE CRAFT
                     </span>
                     <h3 className="font-playfair text-xl lg:text-2xl font-bold text-brand-ink leading-tight">
-                      Find a fragrance for every ritual
+                      A fresh scent for every morning pooja
                     </h3>
                     <p className="font-sans text-xs text-brand-ink/80 leading-relaxed mt-1.5 max-w-[270px]">
-                      Discover pure temple fragrances, charcoal-free sticks &amp; sacred puja essentials.
+                      Handcrafted natural agarbattis, pure Bhimseni camphor &amp; sacred dhoop cups.
                     </p>
                   </div>
 
                   {/* Dedicated Story & Purity Interactive Feature Cards */}
                   <div className="relative z-10 my-3 space-y-2.5">
                     <Link
-                      href="/about#pillars"
+                      href="/about"
                       onClick={() => setOpenMega(null)}
                       className="group flex items-center gap-3 rounded-xl bg-white border border-[#DCE8D3] p-3 shadow-2xs hover:shadow-sm hover:border-brand-green transition-all"
                     >
@@ -801,18 +818,18 @@ export function Navigation() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                           <span className="font-playfair font-bold text-xs sm:text-sm text-brand-ink group-hover:text-brand-green transition-colors">
-                            Natural Benefits
+                            Zero Black Smoke
                           </span>
                           <ArrowRight size={12} className="text-brand-green transition-transform group-hover:translate-x-0.5" />
                         </div>
                         <span className="block text-ui-11 text-brand-ink/70 line-clamp-1">
-                          Therapeutic herbs, charcoal-free &amp; clean burn
+                          Gentle white smoke that won’t irritate eyes or throat
                         </span>
                       </div>
                     </Link>
 
                     <Link
-                      href="/about#story"
+                      href="/craftsmanship"
                       onClick={() => setOpenMega(null)}
                       className="group flex items-center gap-3 rounded-xl bg-white border border-[#DCE8D3] p-3 shadow-2xs hover:shadow-sm hover:border-brand-primary transition-all"
                     >
@@ -822,12 +839,12 @@ export function Navigation() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                           <span className="font-playfair font-bold text-xs sm:text-sm text-brand-ink group-hover:text-brand-primary transition-colors">
-                            Our Story &amp; Rituals
+                            Inside Our Workshop
                           </span>
                           <ArrowRight size={12} className="text-brand-primary transition-transform group-hover:translate-x-0.5" />
                         </div>
                         <span className="block text-ui-11 text-brand-ink/70 line-clamp-1">
-                          Vedic customs, fragrance guides &amp; craft
+                          See how our artisans hand-roll sticks in Coimbatore
                         </span>
                       </div>
                     </Link>
@@ -865,8 +882,8 @@ export function Navigation() {
           <div className="relative z-10 flex h-full w-full max-w-xs sm:max-w-sm flex-col bg-brand-surface-bright border-r border-brand-border shadow-2xl">
             <div className="flex items-center justify-between border-b border-brand-border px-5 py-4 bg-white">
               <div className="leading-tight">
-                <span className="font-brand text-base font-bold uppercase tracking-[0.14em] text-brand-heading">
-                  HM <span className="text-brand-primary">BRAND</span>
+                <span className="font-brand text-base font-bold uppercase tracking-normal text-brand-heading">
+                  HM{' '}<span className="text-brand-primary">BRAND</span>
                 </span>
                 <span className="block text-xs font-medium text-brand-muted">Menu &amp; Categories</span>
               </div>
@@ -898,7 +915,8 @@ export function Navigation() {
                 {[
                   { label: "Home", href: "/" },
                   { label: "Shop All Products", href: "/shop" },
-                  { label: "Our Story & Heritage", href: "/about" },
+                  { label: "Our Story", href: "/about" },
+                  { label: "Workshop Craftsmanship", href: "/craftsmanship" },
                   { label: "Contact Us", href: "/contact" },
                   { label: "Saved Wishlist", href: "/wishlist" },
                   { label: user ? "My Account" : "Sign In / Register", href: user ? "/account" : "/login" },
@@ -923,7 +941,7 @@ export function Navigation() {
               </nav>
 
               <div className="border-t border-brand-border pt-4">
-                <span className="block px-2 pb-2.5 font-space text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">
+                <span className="block px-2 pb-2.5 font-space text-xs font-bold uppercase tracking-wider text-brand-primary">
                   Shop By Category
                 </span>
                 <div className="grid grid-cols-1 gap-1">

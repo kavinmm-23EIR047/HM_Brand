@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 import {
   Copy,
   Check,
@@ -87,29 +88,111 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
       year: "numeric",
     });
 
+  // Festive Celebration Confetti Blast
+  const triggerCelebration = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      // 1. Center Grand Burst (spreads papers across the screen)
+      confetti({
+        particleCount: 85,
+        spread: 95,
+        origin: { y: 0.45 },
+        colors: ["#C89B3C", "#9E1830", "#10B981", "#F59E0B", "#DFB75A", "#FFFFFF"],
+        ticks: 240,
+        gravity: 0.85,
+        scalar: 1.15,
+        disableForReducedMotion: true,
+      });
+
+      // 2. Left Cannon Paper Blast
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0.05, y: 0.65 },
+          colors: ["#C89B3C", "#9E1830", "#10B981", "#DFB75A"],
+          ticks: 200,
+          gravity: 0.9,
+          scalar: 1.05,
+          disableForReducedMotion: true,
+        });
+      }, 200);
+
+      // 3. Right Cannon Paper Blast
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 120,
+          spread: 55,
+          origin: { x: 0.95, y: 0.65 },
+          colors: ["#C89B3C", "#9E1830", "#10B981", "#DFB75A"],
+          ticks: 200,
+          gravity: 0.9,
+          scalar: 1.05,
+          disableForReducedMotion: true,
+        });
+      }, 400);
+
+      // 4. Gentle Golden Paper Shower
+      setTimeout(() => {
+        confetti({
+          particleCount: 35,
+          spread: 120,
+          origin: { y: 0.15 },
+          colors: ["#DFB75A", "#C89B3C", "#10B981", "#FFFFFF"],
+          ticks: 240,
+          gravity: 0.7,
+          scalar: 0.95,
+          disableForReducedMotion: true,
+        });
+      }, 650);
+    } catch {
+      // Silently ignore if canvas-confetti is unavailable
+    }
+  }, []);
+
+  // Blast celebratory papers upon arriving at payment success screen
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      triggerCelebration();
+    }, 320);
+    return () => clearTimeout(timer);
+  }, [triggerCelebration]);
+
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       {/* ── Top Hero Confirmation Banner ── */}
       <div className="surface-card p-6 sm:p-8 text-center relative overflow-hidden bg-gradient-to-b from-white to-[#FAF7F0] border border-[#302923]/15 shadow-sm">
-        {/* Solid Proper Size Checkmark Badge */}
-        <div className="mb-3.5 flex justify-center">
-          <SolidSuccessTick size={64} />
+        {/* Animated Green Checkmark Badge with Pop-in & Draw & Tap to Celebrate */}
+        <div className="mb-3.5 flex flex-col items-center justify-center gap-1.5">
+          <SolidSuccessTick size={72} onClick={triggerCelebration} />
+          <button
+            type="button"
+            onClick={triggerCelebration}
+            className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-800 transition cursor-pointer select-none mt-1 opacity-90 hover:opacity-100"
+            title="Click to celebrate with confetti papers!"
+          >
+            <Sparkles size={12} className="text-[#C89B3C]" />
+            <span>Tap tick to celebrate!</span>
+          </button>
         </div>
 
         {/* Regal Headline */}
-        <span className="font-sans text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#9E1830] block mb-1">
-          Sacred Purchase Consecrated
+        <span className="font-sans text-[11px] font-extrabold uppercase tracking-wider text-[#9E1830] block mb-1">
+          Order Confirmed &amp; In Progress
         </span>
         <h2 className="font-brand text-2xl sm:text-3xl font-bold text-[#302923] uppercase tracking-wide">
-          Thank You For Your Sacred Order!
+          Thank You For Your Order!
         </h2>
-        <p className="mt-1.5 text-xs sm:text-sm text-[#746B62] max-w-lg mx-auto leading-relaxed">
-          Your order is confirmed. Our workshop in Peelamedu, Coimbatore has received your sacred basket for blessing and damage-proof dispatch.
+        <p className="mt-1.5 text-xs sm:text-sm text-[#4A3F35] max-w-lg mx-auto leading-relaxed">
+          Your order is confirmed! Our workshop in Peelamedu, Coimbatore has received your order and is packing it carefully for dispatch.
         </p>
 
         {/* Order Reference Pill & 1-Click Copy */}
         <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-2 p-1.5 sm:px-4 sm:py-2 rounded-xl bg-white border border-[#302923]/20 shadow-2xs">
-          <span className="text-xs text-[#746B62] font-semibold">Order Reference:</span>
+          <span className="text-xs text-[#4A3F35] font-semibold">Order Reference:</span>
           <span className="font-mono text-xs sm:text-sm font-bold text-[#9E1830] tracking-wider select-all">
             {displayId}
           </span>
@@ -140,11 +223,11 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
             <span>100% Payment Verified via Razorpay</span>
           </span>
           {order.razorpayPaymentId && (
-            <span className="text-[11px] font-mono text-[#746B62] bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+            <span className="text-[11px] font-mono text-[#4A3F35] bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
               Txn: {order.razorpayPaymentId}
             </span>
           )}
-          <span className="inline-flex items-center gap-1 text-[11px] text-[#746B62] font-medium">
+          <span className="inline-flex items-center gap-1 text-[11px] text-[#4A3F35] font-medium">
             <Calendar size={12} /> {formattedDate}
           </span>
         </div>
@@ -155,7 +238,7 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
         {/* Left Column (7 Columns): Live Dispatch Journey Tracker & Delivery Destination */}
         <div className="lg:col-span-7 space-y-6">
           {/* Responsive Dispatch Tracker */}
-          <SacredDispatchTracker />
+          <SacredDispatchTracker onTickClick={triggerCelebration} />
 
           {/* Delivery Destination Card */}
           <div className="surface-card p-5 sm:p-6 space-y-4 border border-[#302923]/15">
@@ -171,14 +254,14 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
             {order.customer ? (
               <div className="space-y-3 text-xs leading-relaxed text-[#302923]">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#746B62] block">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
                     Recipient
                   </span>
                   <p className="text-sm font-bold text-[#302923]">{order.customer.fullName}</p>
                 </div>
 
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#746B62] block">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
                     Shipping Address
                   </span>
                   <p className="font-medium text-[#302923]/90">
@@ -189,7 +272,7 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-[#302923]/10 flex flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium text-[#746B62]">
+                <div className="pt-2 border-t border-[#302923]/10 flex flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium text-[#4A3F35]">
                   <p className="flex items-center gap-1.5">
                     <Phone size={12} className="text-[#9E1830] shrink-0" />
                     <span>{order.customer.phone}</span>
@@ -201,7 +284,7 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-[#746B62]">Delivery address logged with order.</p>
+              <p className="text-xs text-[#4A3F35]">Delivery address logged with order.</p>
             )}
 
             <div className="pt-2">
@@ -209,7 +292,7 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
                 <Clock size={16} className="text-[#9E1830] shrink-0" />
                 <div>
                   <p className="font-bold text-[11px]">Estimated Pan-India Arrival</p>
-                  <p className="text-[10px] text-[#746B62]">3 to 5 business days via sacred express courier dispatch.</p>
+                  <p className="text-[10px] text-[#4A3F35]">3 to 5 business days via express courier dispatch.</p>
                 </div>
               </div>
             </div>
@@ -257,7 +340,7 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
                       <span className="font-bold text-[#302923] block truncate text-xs">
                         {line.product.name}
                       </span>
-                      <span className="text-[10px] text-[#746B62]">
+                      <span className="text-[10px] text-[#4A3F35]">
                         {line.product.quantity || "Standard Pack"}
                         {line.product.bundleQuantity && line.product.bundleQuantity > 1
                           ? ` · ${line.qty * line.product.bundleQuantity} boxes`
@@ -270,14 +353,14 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
                   </div>
                 ))
               ) : (
-                <p className="text-xs text-[#746B62] py-2">Items confirmed and recorded.</p>
+                <p className="text-xs text-[#4A3F35] py-2">Items confirmed and recorded.</p>
               )}
             </div>
 
             {/* Pricing totals */}
             <div className="pt-3 border-t border-[#302923]/15 space-y-1.5 text-xs">
               {order.subtotal !== undefined && (
-                <div className="flex justify-between text-[#746B62]">
+                <div className="flex justify-between text-[#4A3F35]">
                   <span>Basket Subtotal</span>
                   <span className="font-bold text-[#302923]">₹{order.subtotal}</span>
                 </div>
@@ -288,8 +371,8 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
                   <span>-₹{order.discountAmount}</span>
                 </div>
               ) : null}
-              <div className="flex justify-between text-[#746B62]">
-                <span>Pan-India Sacred Courier</span>
+              <div className="flex justify-between text-[#4A3F35]">
+                <span>Pan-India Courier</span>
                 <span className="font-bold text-emerald-700 uppercase">FREE</span>
               </div>
               <div className="flex justify-between items-baseline pt-2 border-t border-[#302923]/15 text-sm font-bold">
@@ -330,7 +413,7 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
               </Link>
             </div>
 
-            <p className="text-[10px] text-center text-[#746B62] pt-1">
+            <p className="text-[10px] text-center text-[#4A3F35] pt-1">
               Order confirmation &amp; invoice dispatched to your email and phone.
             </p>
           </div>

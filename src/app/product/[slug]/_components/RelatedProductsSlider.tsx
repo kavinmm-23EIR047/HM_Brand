@@ -41,14 +41,14 @@ export function RelatedProductsSlider({ products }: RelatedProductsSliderProps) 
       {/* ── HEADER ROW: TITLE & ACTION BUTTONS (NO CONTAINER) ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <span className="font-space text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1">
-            SACRED HARMONY
+          <span className="font-space text-xs font-bold tracking-wider text-brand-primary uppercase block mb-1">
+            FREQUENTLY BOUGHT TOGETHER
           </span>
           <h2 className="font-playfair text-2xl sm:text-3xl lg:text-[34px] font-bold text-brand-ink tracking-tight leading-snug">
-            Complete Your Sacred Altar
+            Complete Your Morning Pooja Set
           </h2>
           <p className="mt-1 font-sans text-xs sm:text-sm text-brand-ink/70">
-            Handcrafted pure botanicals and complementary fragrances to elevate your ritual space.
+            Handcrafted pure incense, Bhimseni camphor, and cup sambrani paired for daily rituals.
           </p>
         </div>
 

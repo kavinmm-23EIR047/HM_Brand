@@ -9,8 +9,8 @@ export async function generateMetadata({
   const hasFilters = Object.keys(params).length > 0;
 
   return {
-    title: "Shop Sacred Fragrances | HM Agarbattis",
-    description: "Explore the HM Agarbattis product catalogue, including incense, camphor, sambrani, and pooja essentials.",
+    title: "Shop Natural Incense & Daily Pooja Essentials | HM Agarbattis",
+    description: "Explore the HM Agarbattis collection: pure botanical agarbattis, pure Bhimseni camphor, cup sambrani, and dhoop cones direct from Coimbatore.",
     alternates: { canonical: "/shop" },
     robots: hasFilters ? { index: false, follow: true } : { index: true, follow: true },
   };

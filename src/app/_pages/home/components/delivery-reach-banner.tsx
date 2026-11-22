@@ -26,7 +26,7 @@ const SOUTH_INDIA_STATES: StateCoverage[] = [
   {
     id: "tamil-nadu",
     name: "Tamil Nadu",
-    tagline: "Home of Sacred Gopurams & Coimbatore Hub",
+    tagline: "Dispatched direct from our Coimbatore workshop",
     districtsCount: 38,
     dispatchTime: "1–2 days from dispatch",
     sampleDistricts: ["Coimbatore", "Chennai", "Madurai", "Salem", "Trichy", "Tirunelveli"],
@@ -43,7 +43,7 @@ const SOUTH_INDIA_STATES: StateCoverage[] = [
   {
     id: "kerala",
     name: "Kerala",
-    tagline: "God's Own Country & Sacred Backwaters",
+    tagline: "Quick express delivery across all districts",
     districtsCount: 14,
     dispatchTime: "2–3 days express courier",
     sampleDistricts: ["Kochi / Ernakulam", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Palakkad"],
@@ -56,7 +56,7 @@ const SOUTH_INDIA_STATES: StateCoverage[] = [
   {
     id: "andhra-pradesh",
     name: "Andhra Pradesh",
-    tagline: "Land of Tirupati Balaji & Amaravati",
+    tagline: "Direct 2–3 day delivery across AP",
     districtsCount: 26,
     dispatchTime: "2–3 days direct delivery",
     sampleDistricts: ["Tirupati", "Visakhapatnam", "Vijayawada", "Guntur", "Kurnool"],
@@ -71,7 +71,7 @@ const SOUTH_INDIA_STATES: StateCoverage[] = [
   {
     id: "karnataka",
     name: "Karnataka",
-    tagline: "Silicon Valley & Mysore Sandal Heritage",
+    tagline: "Fast shipping to Bengaluru, Mysuru & districts",
     districtsCount: 31,
     dispatchTime: "2–3 days express shipping",
     sampleDistricts: ["Bengaluru", "Mysuru", "Hubballi-Dharwad", "Mangaluru", "Belagavi"],
@@ -87,7 +87,7 @@ const SOUTH_INDIA_STATES: StateCoverage[] = [
   {
     id: "telangana",
     name: "Telangana",
-    tagline: "City of Pearls & Charminar Traditions",
+    tagline: "Reliable courier to Hyderabad & all districts",
     districtsCount: 33,
     dispatchTime: "2–3 days tracked delivery",
     sampleDistricts: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam"],
@@ -103,7 +103,7 @@ const SOUTH_INDIA_STATES: StateCoverage[] = [
   {
     id: "puducherry",
     name: "Puducherry",
-    tagline: "French Heritage & Auroville Coastal Sanctuary",
+    tagline: "Fast 1–2 day local delivery",
     districtsCount: 4,
     dispatchTime: "1–2 days safe transit",
     sampleDistricts: ["Puducherry", "Karaikal", "Mahe", "Yanam"],
@@ -475,8 +475,8 @@ export function DeliveryReachBanner() {
             <div className="space-y-3 sm:space-y-4">
               {/* Eyebrow */}
               <div className="flex items-center gap-1.5">
-                <span className="font-brand text-[10px] sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase">
-                  OUR REACH
+                <span className="font-brand text-[10px] sm:text-xs font-bold tracking-wider text-brand-primary uppercase">
+                  DIRECT DISPATCH
                 </span>
                 <SacredLotusSvg className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </div>
@@ -487,10 +487,10 @@ export function DeliveryReachBanner() {
                   id="delivery-reach-heading"
                   className="font-brand text-lg sm:text-2xl lg:text-3xl font-bold tracking-wide text-brand-heading leading-tight uppercase"
                 >
-                  100+ Districts Across <span className="text-brand-primary">South India</span>
+                  Delivering Across 100+ Districts in <span className="text-brand-primary">South India</span>
                 </h2>
                 <p className="mt-1 font-sans text-xs sm:text-sm leading-snug text-brand-slate font-normal">
-                  Direct Coimbatore dispatch. Tap a state to view covered districts.
+                  Fresh stock packed and dispatched straight from our Coimbatore workshop. Tap a state to view districts.
                 </p>
               </div>
 

@@ -26,7 +26,7 @@ export function HeroBannerSlider() {
     dbBanners && dbBanners.length > 0
       ? dbBanners.map((b: any) => ({
         id: b.id,
-        title: b.title || "HM Brand Sacred Fragrances",
+        title: b.title || "HM Brand Handcrafted Fragrances",
         desktopImage: b.desktopImage || b.image,
         mobileImage: b.mobileImage,
         href: safeBannerHref(b.ctaLink),
@@ -34,7 +34,6 @@ export function HeroBannerSlider() {
       : [];
 
   const [current, setCurrent] = useState(0);
-  const [paused, setPaused] = useState(false);
 
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
@@ -60,12 +59,12 @@ export function HeroBannerSlider() {
 
   // Autoplay
   useEffect(() => {
-    if (paused || total <= 1) return;
+    if (total <= 1) return;
 
     const interval = setInterval(nextSlide, 5000);
 
     return () => clearInterval(interval);
-  }, [paused, total, nextSlide]);
+  }, [total, nextSlide]);
 
   // Mobile swipe support
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -107,8 +106,6 @@ export function HeroBannerSlider() {
     <section
       aria-label="Promotional Hero Banners"
       className="relative w-full overflow-hidden bg-brand-surface-alt select-none"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -125,15 +122,15 @@ export function HeroBannerSlider() {
           >
             {activeSlides.map((slide, index) => {
               const content = (
-                <div className="relative w-full">
-                  {/* Desktop / tablet banner */}
+                <div className="relative isolate w-full overflow-hidden bg-brand-surface-alt">
+                  {/* Keep the full banner artwork visible edge to edge at its natural ratio. */}
                   <img
                     src={slide.desktopImage}
                     alt={slide.title || "HM Brand Banner"}
                     draggable={false}
                     fetchPriority={index === 0 ? "high" : "auto"}
                     loading={index === 0 ? "eager" : "lazy"}
-                    className={`block w-full h-auto max-w-none ${slide.mobileImage
+                    className={`block h-auto w-full min-w-full object-cover object-center ${slide.mobileImage
                         ? "hidden sm:block"
                         : "block"
                       }`}
@@ -146,7 +143,7 @@ export function HeroBannerSlider() {
                       alt={slide.title || "HM Brand Banner"}
                       draggable={false}
                       loading={index === 0 ? "eager" : "lazy"}
-                      className="block w-full h-auto max-w-none sm:hidden"
+                      className="block h-auto w-full min-w-full object-cover object-center sm:hidden"
                     />
                   )}
                 </div>

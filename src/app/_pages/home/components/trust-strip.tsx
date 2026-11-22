@@ -15,8 +15,8 @@ const PILLARS = [
   {
     num: "02",
     icon: ShieldCheck,
-    title: "Zero Charcoal",
-    desc: "Clean burn, zero black soot.",
+    title: "Temple Purity",
+    desc: "Serene white smoke, pure aroma.",
     accent: "var(--brand-primary)",
     iconBg: "bg-[#FFF2F4]",
   },
@@ -31,8 +31,8 @@ const PILLARS = [
   {
     num: "04",
     icon: Landmark,
-    title: "Made in India",
-    desc: "Coimbatore Vedic craft.",
+    title: "Made in Coimbatore",
+    desc: "Handcrafted in Tamil Nadu.",
     accent: "var(--brand-ink)",
     iconBg: "bg-[#E6F0EE]",
   },
@@ -45,15 +45,15 @@ export function TrustStrip() {
         {/* Compact Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-5 sm:mb-7">
           <div>
-            <span className="font-brand text-[10px] sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1">
-              THE HM PURITY PROMISE
+            <span className="font-brand text-[10px] sm:text-xs font-bold tracking-wider text-brand-primary uppercase block mb-1">
+              OUR PROMISE TO YOU
             </span>
             <h2 className="font-brand text-lg sm:text-2xl lg:text-3xl font-bold text-brand-heading uppercase tracking-wide leading-tight">
-              Pure Devotion. <span className="text-brand-primary">Zero Compromise.</span>
+              Honest Ingredients. <span className="text-brand-primary">Safe For Every Home.</span>
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-brand-slate font-normal sm:text-right max-w-sm">
-            Natural herbs, pure resins &amp; charcoal-free recipes.
+            Pure tree resins, sacred herbs &amp; authentic dawn temple fragrances.
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export function TrustStrip() {
                   >
                     <Icon size={18} strokeWidth={1.9} />
                   </div>
-                  <span className="font-mono text-[11px] font-bold tracking-widest text-brand-gray">
+                  <span className="font-mono text-[11px] font-bold tracking-wider text-brand-gray">
                     {item.num}
                   </span>
                 </div>
@@ -107,7 +107,7 @@ export function TrustStrip() {
                 &ldquo;உருவத்தைத் தாண்டி, வாசனை பேசுகிறது.&rdquo;
               </p>
             </div>
-            <span className="inline-flex self-center sm:self-auto shrink-0 items-center rounded-full border border-brand-accent-soft bg-brand-accent text-brand-darkest px-2.5 py-0.5 sm:px-3.5 sm:py-1 font-brand text-[9px] sm:text-xs font-extrabold uppercase tracking-[0.12em] whitespace-nowrap select-none">
+            <span className="inline-flex self-center sm:self-auto shrink-0 items-center rounded-full border border-brand-accent-soft bg-brand-accent text-brand-darkest px-2.5 py-0.5 sm:px-3.5 sm:py-1 font-brand text-[9px] sm:text-xs font-extrabold uppercase tracking-wider whitespace-nowrap select-none">
               Coimbatore Heritage
             </span>
           </div>

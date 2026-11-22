@@ -47,7 +47,7 @@ export function CartDrawer() {
             <div className="flex items-center justify-between">
               <div className="flex min-w-0 items-center gap-2.5">
                 <ShoppingBag className="text-brand-primary" size={24} />
-                <h2 className="truncate font-brand text-lg font-bold uppercase tracking-wider text-brand-heading sm:text-xl">Your Sacred Basket</h2>
+                <h2 className="truncate font-brand text-lg font-bold uppercase tracking-wider text-brand-heading sm:text-xl">Your Shopping Cart</h2>
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
@@ -81,15 +81,15 @@ export function CartDrawer() {
             {lines.length === 0 ? (
               <div className="text-center py-12 flex flex-col items-center">
                 <MascotBasket size={150} />
-                <h3 className="font-display text-2xl text-earthBrown mt-4">Your basket is waiting</h3>
+                <h3 className="font-display text-2xl text-earthBrown mt-4">Your cart is empty</h3>
                 <p className="text-sm text-charcoal/70 mt-2 max-w-xs leading-relaxed">
-                  Fill your home with authentic temple fragrances, pure camphor, and handcrafted agarbattis.
+                  Fill your home with natural fragrances, pure Bhimseni camphor, and handcrafted agarbattis.
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
                   className="btn-saffron mt-6 min-h-12 whitespace-nowrap rounded-lg px-6 py-3 text-xs font-bold uppercase tracking-wider shadow-sm sm:text-sm"
                 >
-                  Explore Sacred Essentials
+                  Browse Products
                 </button>
               </div>
             ) : (

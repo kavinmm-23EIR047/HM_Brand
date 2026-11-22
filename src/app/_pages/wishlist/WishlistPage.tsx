@@ -41,7 +41,7 @@ export default function WishlistPage() {
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-primary/15 bg-brand-surface-soft text-brand-primary">
               <Heart size={26} />
             </div>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-primary">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-brand-primary">
               <Sparkles size={13} /> Saved for later
             </span>
             <h2 className="mt-2 font-brand text-xl font-bold text-brand-ink sm:text-2xl">Your wishlist is waiting</h2>

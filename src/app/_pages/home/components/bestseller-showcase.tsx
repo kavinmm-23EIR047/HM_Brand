@@ -285,14 +285,14 @@ export function BestsellerShowcase() {
           
           {/* Left: Eyebrow, Heading & Narrative */}
           <div className="min-w-0 flex-1 max-w-xl">
-            <span className="font-brand text-[10px] sm:text-xs font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1">
-              OUR BEST SELLERS
+            <span className="font-brand text-[10px] sm:text-xs font-bold tracking-wider text-brand-primary uppercase block mb-1">
+              WHAT FAMILIES ORDER MOST
             </span>
             <h2 className="font-brand text-lg sm:text-2xl lg:text-3xl font-bold text-brand-heading tracking-wide leading-tight uppercase">
-              Popular Picks for a <span className="text-brand-primary">Peaceful Home</span>
+              Customer favorites for <span className="text-brand-primary">daily morning pooja</span>
             </h2>
             <p className="mt-1 sm:mt-2 font-sans text-xs sm:text-sm text-brand-slate leading-snug sm:leading-relaxed font-normal">
-              Pure agarbattis, camphor &amp; daily pooja essentials.
+              Our most-loved hand-rolled agarbattis, pure Bhimseni camphor &amp; sacred dhoop cups.
             </p>
           </div>
 
@@ -314,7 +314,7 @@ export function BestsellerShowcase() {
                   <SacredLotusSvg className="h-5 w-5" />
                 </div>
                 <span className="text-xs font-bold text-brand-heading block">Traditional</span>
-                <span className="text-xs text-brand-gray block font-medium -mt-0.5">Vedic Formula</span>
+                <span className="text-xs text-brand-gray block font-medium -mt-0.5">Heritage Recipe</span>
               </div>
 
               <div className="flex flex-col items-center text-center">

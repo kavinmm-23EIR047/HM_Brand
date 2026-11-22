@@ -121,7 +121,7 @@ const fallbackCategories: CategoryItem[] = [
   {
     name: "Agarbatti",
     slug: "agarbatti",
-    subtitle: "Divine Handcrafted",
+    subtitle: "Pure Botanical Sticks",
     href: "/shop?category=agarbatti",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
@@ -152,7 +152,7 @@ const fallbackCategories: CategoryItem[] = [
   {
     name: "Incense Cones",
     slug: "incense-cones",
-    subtitle: "Charcoal-free Cones",
+    subtitle: "Pure Botanical Cones",
     href: "/shop?category=incense-cones",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
@@ -162,7 +162,7 @@ const fallbackCategories: CategoryItem[] = [
   {
     name: "Havan Cups",
     slug: "havan-cups",
-    subtitle: "Sacred Ritual Cups",
+    subtitle: "Natural Dhoop Cups",
     href: "/shop?category=havan-cups",
     circleBg: UNIFIED_CIRCLE_BG,
     arrowBg: UNIFIED_ARROW_BG,
@@ -337,7 +337,7 @@ export function CategoryStrip() {
         <div className="mb-2.5 flex items-center justify-between gap-2 sm:mb-4">
           <span className="hidden h-px w-8 bg-brand-primary/30 sm:inline-block" />
           <span className="flex-1 text-center font-brand text-[11px] sm:text-xs font-bold tracking-[.14em] text-brand-primary uppercase sm:tracking-[.2em]">
-            EXPLORE SACRED CATEGORIES
+            CHOOSE WHAT YOU NEED FOR POOJA
           </span>
           <span className="hidden h-px w-8 bg-brand-primary/30 sm:inline-block" />
           <div className="flex shrink-0 items-center gap-1.5">
@@ -429,7 +429,7 @@ export function CategoryStrip() {
                 {/* 1. Header with Royal Crimson Gradient & Temple Gold */}
                 <div className="flex items-center justify-between gap-3 border-b border-[#EAE1D3] bg-gradient-to-r from-[#9E1830] via-[#851327] to-[#9E1830] px-4 py-3 sm:px-6 sm:py-3.5 text-white">
                   <div>
-                    <p className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.2em] text-[#C89B3C] uppercase">
+                    <p className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-sans font-bold tracking-wider text-[#C89B3C] uppercase">
                       <Sparkles size={12} className="text-[#C89B3C]" /> {activeSubCategoryOwner.name} Collections
                     </p>
                     <h3 className="font-heading text-sm sm:text-base font-bold text-white tracking-wide mt-0.5">
@@ -449,7 +449,7 @@ export function CategoryStrip() {
                 {/* 2. Side-by-Side Series Circles Strip */}
                 <div className="bg-[#F5EFE3]/70 px-3 py-2.5 sm:px-5 sm:py-3 border-b border-[#EAE1D3]">
                   <div className="flex items-center justify-between mb-2 px-1">
-                    <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-[#746B62]">
+                    <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-brand-muted">
                       Explore by Series ({activeSubCategoryOwner.subCategories?.length || 3})
                     </span>
                     <span className="text-[10px] font-semibold text-brand-primary">
@@ -487,7 +487,7 @@ export function CategoryStrip() {
                               className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 sm:h-4.5 sm:w-4.5 rounded-full flex items-center justify-center text-[9px] font-bold border border-white shadow-2xs ${
                                 isTabActive
                                   ? "bg-[#C89B3C] text-[#302923]"
-                                  : "bg-[#F5EFE3] text-[#746B62] group-hover/circle:bg-[#C89B3C] group-hover/circle:text-[#302923]"
+                                  : "bg-[#F5EFE3] text-brand-muted group-hover/circle:bg-[#C89B3C] group-hover/circle:text-[#302923]"
                               }`}
                             >
                               {sub.children?.length || 0}
@@ -533,7 +533,7 @@ export function CategoryStrip() {
                             </span>
                           )}
                         </div>
-                        <p className="mt-0.5 text-[11px] sm:text-xs text-[#746B62] leading-snug">
+                        <p className="mt-0.5 text-[11px] sm:text-xs text-brand-muted leading-snug">
                           {activeSub.desc}
                         </p>
                         <div className="mt-1.5">
@@ -550,9 +550,9 @@ export function CategoryStrip() {
 
                     {/* Fragrance List Header */}
                     <div className="pt-1">
-                      <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#746B62] mb-2 px-1">
+                      <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-brand-muted mb-2 px-1">
                         <span>Fragrances in {activeSub.name} ({activeSub.children?.length || 0})</span>
-                        <span className="text-[10px] font-normal normal-case text-stone-500">Click to view product</span>
+                        <span className="text-[10px] font-normal normal-case text-brand-muted">Click to view product</span>
                       </div>
 
                       {/* Fragrance Chips with Mini Side Circles */}
@@ -578,8 +578,8 @@ export function CategoryStrip() {
 
                 {/* 4. Luxury Footer */}
                 <div className="border-t border-[#EAE1D3] bg-[#F5EFE3]/80 px-4 py-2.5 sm:px-6 sm:py-3 flex items-center justify-between gap-3">
-                  <span className="text-[11px] font-sans text-[#746B62] hidden sm:inline">
-                    Handcrafted in Coimbatore · 100% Charcoal-Free
+                  <span className="text-[11px] font-sans text-brand-muted hidden sm:inline">
+                    Handcrafted in Coimbatore · Pure Temple Fragrance
                   </span>
                   <Link
                     href="/shop?category=agarbatti"

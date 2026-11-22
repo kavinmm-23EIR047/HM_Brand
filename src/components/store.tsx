@@ -592,7 +592,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         showNotification("Item removed from your wishlist");
         return prev.filter((s) => s !== slug);
       }
-      showNotification("Saved to your sacred wishlist");
+      showNotification("Saved to your wishlist");
       return [...prev, slug];
     });
 

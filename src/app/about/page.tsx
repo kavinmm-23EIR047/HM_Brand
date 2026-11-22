@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About HM Agarbattis | Our Story",
-  description: "Learn about HM Agarbattis and our tradition of creating sacred fragrances for everyday rituals.",
+  title: "About HM Agarbattis | Our Workshop & Story",
+  description: "Learn how HM Agarbattis makes honest, pure botanical incense sticks, pure Bhimseni camphor, and cup sambrani in Coimbatore.",
   alternates: { canonical: "/about" },
 };
 

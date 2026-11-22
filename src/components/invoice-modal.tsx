@@ -112,7 +112,7 @@ export function InvoiceModal({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#15803D]"></span>
             <h3 className="font-serif font-bold text-[#302923] text-sm sm:text-base">
-              Sacred Tax Invoice: {invoiceNumber}
+              Tax Invoice: {invoiceNumber}
             </h3>
           </div>
           <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ export function InvoiceModal({
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-[#746B62] hover:text-[#302923] rounded-lg hover:bg-black/5 transition-colors"
+              className="p-2 text-[#4A3F35] hover:text-[#302923] rounded-lg hover:bg-black/5 transition-colors"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
@@ -149,16 +149,16 @@ export function InvoiceModal({
                 />
               </div>
               <div>
-                <span className="text-[10px] tracking-[0.25em] font-bold text-[#9E1830] uppercase">
-                  Sacred Fragrance Heritage
+                <span className="text-[10px] tracking-wider font-bold text-[#9E1830] uppercase">
+                  Handcrafted Fragrance Heritage
                 </span>
                 <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#302923]">
                   HM AGARBATTI WORKS
                 </h1>
-                <p className="text-xs text-[#746B62] mt-0.5">
+                <p className="text-xs text-[#4A3F35] mt-0.5">
                   M/s. Jayam Associates &bull; Peelamedu Main Rd, Sowri Palayam, Coimbatore - 641028, TN, India
                 </p>
-                <p className="text-xs text-[#746B62]">
+                <p className="text-xs text-[#4A3F35]">
                   <strong>Phone:</strong> +91 63821 77441 &bull; <strong>Email:</strong> jayamassociatescoimbatore@gmail.com
                 </p>
                 <p className="text-[11px] font-mono text-[#9E1830] mt-0.5 font-semibold">
@@ -171,11 +171,11 @@ export function InvoiceModal({
               <span className="inline-block px-2.5 py-0.5 bg-[#9E1830] text-white text-[10px] font-bold tracking-wider rounded uppercase mb-1.5">
                 TAX INVOICE
               </span>
-              <div className="text-xs text-[#746B62]">Invoice Ref:</div>
+              <div className="text-xs text-[#4A3F35]">Invoice Ref:</div>
               <div className="font-mono text-sm font-bold text-[#302923]">{invoiceNumber}</div>
-              <div className="text-xs text-[#746B62] mt-1">Date:</div>
+              <div className="text-xs text-[#4A3F35] mt-1">Date:</div>
               <div className="text-xs font-semibold text-[#302923]">{orderDate}</div>
-              <div className="text-xs text-[#746B62] mt-1">Payment Status:</div>
+              <div className="text-xs text-[#4A3F35] mt-1">Payment Status:</div>
               <div className="text-xs font-bold text-[#15803D]">
                 {order.paymentStatus === 'COMPLETED' ? 'PAID & CONFIRMED' : order.paymentStatus}
               </div>
@@ -189,7 +189,7 @@ export function InvoiceModal({
                 <ShieldCheck className="w-3.5 h-3.5" /> Billed & Delivered To:
               </h4>
               <p className="text-sm font-bold text-[#302923]">{recipientName}</p>
-              <p className="text-xs text-[#746B62] mt-0.5">{recipientEmail} &bull; {recipientPhone}</p>
+              <p className="text-xs text-[#4A3F35] mt-0.5">{recipientEmail} &bull; {recipientPhone}</p>
               <p className="text-xs text-[#302923] mt-2 leading-relaxed">
                 {fullStreet ? `${fullStreet}, ` : ''}{cityStateZip}
               </p>
@@ -210,22 +210,22 @@ export function InvoiceModal({
               </h4>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between py-0.5 border-b border-[#F5EFE3]">
-                  <span className="text-[#746B62]">Order Number:</span>
+                  <span className="text-[#4A3F35]">Order Number:</span>
                   <span className="font-mono font-bold">{order.orderNumber}</span>
                 </div>
                 <div className="flex justify-between py-0.5 border-b border-[#F5EFE3]">
-                  <span className="text-[#746B62]">Payment Gateway:</span>
+                  <span className="text-[#4A3F35]">Payment Gateway:</span>
                   <span className="font-semibold">{order.paymentMethod}</span>
                 </div>
                 {order.razorpayPaymentId && (
                   <div className="flex justify-between py-0.5 border-b border-[#F5EFE3]">
-                    <span className="text-[#746B62]">Razorpay Payment ID:</span>
+                    <span className="text-[#4A3F35]">Razorpay Payment ID:</span>
                     <span className="font-mono text-[11px]">{order.razorpayPaymentId}</span>
                   </div>
                 )}
                 <div className="flex justify-between py-0.5">
-                  <span className="text-[#746B62]">Dispatch Origin:</span>
-                  <span className="font-semibold text-[#9E1830]">Coimbatore Sacred Works</span>
+                  <span className="text-[#4A3F35]">Dispatch Origin:</span>
+                  <span className="font-semibold text-[#9E1830]">Coimbatore Workshop</span>
                 </div>
               </div>
             </div>
@@ -237,7 +237,7 @@ export function InvoiceModal({
               <thead className="bg-[#FAF7F0] text-[#302923] font-serif border-b border-[#EAE1D3]">
                 <tr>
                   <th className="py-3 px-3 w-12 text-center">#</th>
-                  <th className="py-3 px-3">Sacred Fragrance & Description</th>
+                  <th className="py-3 px-3">Product &amp; Description</th>
                   <th className="py-3 px-3 text-center">HSN</th>
                   <th className="py-3 px-3 text-center">Qty</th>
                   <th className="py-3 px-3 text-right">Unit Price</th>
@@ -246,20 +246,20 @@ export function InvoiceModal({
               </thead>
               <tbody className="divide-y divide-[#F5EFE3]">
                 {order.items.map((item, idx) => {
-                  const name = item.productNameSnapshot || item.name || 'Sacred Agarbatti';
+                  const name = item.productNameSnapshot || item.name || 'Handmade Agarbatti';
                   const unitPrice = item.unitPriceSnapshot || item.unitPrice || (item.totalPrice / (item.quantity || 1));
                   return (
                     <tr key={idx} className="hover:bg-[#FFFDF8]">
-                      <td className="py-3 px-3 text-center text-[#746B62] font-mono">{idx + 1}</td>
+                      <td className="py-3 px-3 text-center text-[#4A3F35] font-mono">{idx + 1}</td>
                       <td className="py-3 px-3 font-semibold text-[#302923]">
                         {name}
                         {item.skuSnapshot ? (
-                          <span className="block text-[10px] font-mono text-[#746B62] font-normal">
+                          <span className="block text-[10px] font-mono text-[#4A3F35] font-normal">
                             SKU: {item.skuSnapshot}
                           </span>
                         ) : null}
                       </td>
-                      <td className="py-3 px-3 text-center text-[#746B62] font-mono text-[11px]">33074100</td>
+                      <td className="py-3 px-3 text-center text-[#4A3F35] font-mono text-[11px]">33074100</td>
                       <td className="py-3 px-3 text-center font-bold text-[#302923]">{item.quantity}</td>
                       <td className="py-3 px-3 text-right font-mono text-[#302923]">
                         ₹{Number(unitPrice).toLocaleString('en-IN')}
@@ -277,13 +277,13 @@ export function InvoiceModal({
           {/* Totals & Calculations */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start mt-6">
             <div className="p-4 rounded-xl bg-[#FAF7F0] border border-[#EAE1D3] text-xs">
-              <span className="text-[10px] font-bold text-[#746B62] uppercase tracking-wider block mb-1">
+              <span className="text-[10px] font-bold text-[#4A3F35] uppercase tracking-wider block mb-1">
                 Amount in Words:
               </span>
               <p className="font-serif font-bold text-[#9E1830] text-sm italic">
                 {amountWords}
               </p>
-              <div className="mt-4 pt-3 border-t border-[#EAE1D3] space-y-1 text-[11px] text-[#746B62]">
+              <div className="mt-4 pt-3 border-t border-[#EAE1D3] space-y-1 text-[11px] text-[#4A3F35]">
                 <p>&bull; 100% Herbal temple ingredients, hand-rolled in Tamil Nadu.</p>
                 <p>&bull; This is a computer-generated official tax invoice, authenticated by Jayam Associates.</p>
               </div>
@@ -291,17 +291,17 @@ export function InvoiceModal({
 
             <div className="space-y-2 text-xs">
               <div className="flex justify-between py-1 border-b border-[#F5EFE3]">
-                <span className="text-[#746B62]">Items Subtotal:</span>
+                <span className="text-[#4A3F35]">Items Subtotal:</span>
                 <span className="font-mono font-semibold">₹{Number(order.subtotal).toLocaleString('en-IN')}</span>
               </div>
               {Number(order.discountAmount || 0) > 0 && (
                 <div className="flex justify-between py-1 border-b border-[#F5EFE3] text-[#15803D]">
-                  <span>Divine Discount / Offer:</span>
+                  <span>Special Discount:</span>
                   <span className="font-mono font-semibold">-₹{Number(order.discountAmount).toLocaleString('en-IN')}</span>
                 </div>
               )}
               <div className="flex justify-between py-1 border-b border-[#F5EFE3]">
-                <span className="text-[#746B62]">Sacred Coimbatore Courier:</span>
+                <span className="text-[#4A3F35]">Direct Coimbatore Courier:</span>
                 <span className="font-semibold text-[#15803D]">
                   {Number(order.shippingCost || 0) > 0 ? `₹${order.shippingCost}` : 'FREE'}
                 </span>
@@ -325,14 +325,14 @@ export function InvoiceModal({
               </div>
               <div>
                 <p className="font-semibold text-[#302923]">Pure Coimbatore Dispatch Verified</p>
-                <p className="text-[11px] text-[#746B62]">Batch packed with temple blessings</p>
+                <p className="text-[11px] text-[#4A3F35]">Batch packed with temple blessings</p>
               </div>
             </div>
 
             <div className="text-right">
               <p className="text-xs font-serif font-bold text-[#302923]">For HM Agarbatti Works (Jayam Associates)</p>
               <div className="h-10"></div>
-              <p className="text-[11px] text-[#746B62] font-semibold border-t border-[#746B62]/40 pt-1">
+              <p className="text-[11px] text-[#4A3F35] font-semibold border-t border-[#4A3F35]/40 pt-1">
                 Authorized Signatory
               </p>
             </div>

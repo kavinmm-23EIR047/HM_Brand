@@ -74,7 +74,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
               {registering ? <UserRound size={25} /> : <Lock size={24} />}
             </div>
             <div className="mb-8 text-center">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-primary">HM Brand · Devotee Account</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-brand-primary">HM Brand · Devotee Account</p>
               <h1 className="font-brand text-2xl font-bold uppercase text-brand-heading sm:text-3xl">{registering ? "Create your account" : "Welcome back"}</h1>
               <p className="mx-auto mt-2.5 max-w-sm text-xs sm:text-sm leading-relaxed text-brand-slate font-normal">
                 {registering ? "Join the HM family for faster checkout and easy order updates." : "Sign in to view your orders, saved addresses, and account details."}

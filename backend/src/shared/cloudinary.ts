@@ -29,6 +29,7 @@ export interface CloudinaryUpload {
 export interface CloudinaryImageTarget {
   folder: string;
   publicId: string;
+  format?: 'webp' | 'gif';
 }
 
 function validateTarget({ folder, publicId }: CloudinaryImageTarget): void {
@@ -44,7 +45,7 @@ export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget)
     const stream = client.uploader.upload_stream(
       {
         resource_type: 'image',
-        format: 'webp',
+        format: target.format || 'webp',
         // `folder` is required: it controls the Media Library folder, not merely the URL.
         folder: target.folder,
         // Dynamic-folder Cloudinary accounts use this value for the Media Library location.
@@ -63,7 +64,7 @@ export async function uploadImage(buffer: Buffer, target: CloudinaryImageTarget)
     secureUrl: result.secure_url || client.url(result.public_id, {
       secure: true,
       version: result.version,
-      format: result.format || 'webp',
+      format: result.format || target.format || 'webp',
     }),
   };
 }

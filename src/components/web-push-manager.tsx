@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Bell, BellOff, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Bell, ShieldCheck, Sparkles, X } from 'lucide-react';
 
 const VAPID_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
@@ -112,47 +112,87 @@ export function WebPushNotificationPrompt({
   userId?: string;
 }) {
   const { isSupported, permission, isSubscribed, loading, subscribeUser } = useWebPush();
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(true);
 
-  // If already subscribed or unsupported or blocked or dismissed, don't show prompt
+  // Check session storage on mount so user isn't re-prompted during the same session
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isDismissed = sessionStorage.getItem('hm_push_prompt_dismissed');
+      if (!isDismissed) {
+        setDismissed(false);
+      }
+    }
+  }, []);
+
+  const handleDismiss = () => {
+    setDismissed(true);
+    try {
+      sessionStorage.setItem('hm_push_prompt_dismissed', 'true');
+    } catch {}
+  };
+
+  // If already subscribed, unsupported, blocked, or dismissed, do not render
   if (!isSupported || isSubscribed || permission === 'denied' || dismissed) {
     return null;
   }
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:w-96 z-40 bg-[#FFFDF8] border-2 border-[#C89B3C]/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md animate-fade-in">
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9E1830] to-[#7A1224] text-[#DFB75A] flex items-center justify-center shrink-0 shadow-md">
-          <Bell className="w-5 h-5 animate-bounce" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="font-serif text-sm font-bold text-[#302923] tracking-wide flex items-center gap-1.5">
-            {role === 'ADMIN' ? 'Admin Live Order Alerts' : 'Instant Order Tracking & Blessings'}
-            <Sparkles className="w-3.5 h-3.5 text-[#C89B3C]" />
-          </h4>
-          <p className="text-xs text-[#746B62] mt-1 leading-relaxed">
-            {role === 'ADMIN'
-              ? 'Receive real-time sound & push notifications for incoming orders even when device is locked.'
-              : 'Get instant cross-device updates for parcel dispatch, festival offers, and Coimbatore blessings.'}
-          </p>
-          <div className="flex items-center gap-2 mt-3">
-            <button
-              onClick={() => subscribeUser(role, userId)}
-              disabled={loading}
-              className="px-3 py-1.5 bg-[#9E1830] hover:bg-[#7A1224] text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#DFB75A]" />
-              {loading ? 'Enabling...' : 'Enable Notifications'}
-            </button>
-            <button
-              onClick={() => setDismissed(true)}
-              className="px-2.5 py-1.5 text-xs text-[#746B62] hover:text-[#302923] font-medium transition-colors"
-            >
-              Later
-            </button>
+    <aside
+      aria-label="Notification prompt"
+      className="animate-notification-enter fixed left-1/2 z-[60] w-[calc(100%-16px)] max-w-[720px] -translate-x-1/2 overflow-hidden rounded-2xl border border-[#C89B3C]/45 bg-[#FFFDF8] shadow-[0_10px_30px_rgba(48,41,35,0.18)] font-sans"
+      style={{ top: 'max(8px, env(safe-area-inset-top))' }}
+    >
+      <div className="flex flex-col gap-2 px-3 py-2.5 text-xs sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#F8E9E8] text-[#9E1830]">
+            <Bell className="h-4 w-4" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <span className="flex items-center gap-1 whitespace-nowrap font-bold leading-tight text-[#302923]">
+              {role === 'ADMIN' ? 'Live Order Alerts' : 'Order Tracking & Offers'}
+              <Sparkles className="w-3 h-3 text-[#C89B3C] shrink-0" />
+            </span>
+            <p className="truncate pt-0.5 text-[11px] leading-tight text-[#746B62]">
+              {role === 'ADMIN'
+                ? 'Sound alerts for incoming orders when locked.'
+                : 'Get instant dispatch updates & festival blessings.'}
+            </p>
           </div>
         </div>
+
+        <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-2.5">
+          <button
+            type="button"
+            onClick={async () => {
+              const ok = await subscribeUser(role, userId);
+              if (ok) handleDismiss();
+            }}
+            disabled={loading}
+            className="flex min-h-8 items-center gap-1 rounded-full bg-[#9E1830] px-3 text-[11px] font-bold text-white shadow-xs transition-all hover:bg-[#7A1224] active:scale-95 disabled:opacity-50 sm:px-3.5 sm:text-xs"
+          >
+            <ShieldCheck className="w-3 h-3 text-[#DFB75A]" />
+            <span>{loading ? 'Enabling...' : 'Allow'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDismiss}
+            className="px-2 py-1 text-[11px] font-medium text-[#746B62] transition-colors hover:text-[#302923] sm:text-xs"
+          >
+            Later
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDismiss}
+            aria-label="Close notification bar"
+            className="rounded-full p-1 text-[#746B62] transition-colors hover:bg-black/5 hover:text-[#302923]"
+          >
+            <X size={15} />
+          </button>
+        </div>
       </div>
-    </div>
+    </aside>
   );
 }

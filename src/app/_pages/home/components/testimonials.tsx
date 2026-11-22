@@ -371,7 +371,7 @@ export function Testimonials() {
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-brand-border bg-white px-2.5 py-1 shadow-2xs sm:gap-2 sm:px-3.5 sm:py-1.5">
             <GoogleLogo size={15} />
 
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-neutral-700">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-700">
               Google Reviews
             </span>
           </div>
@@ -562,7 +562,7 @@ export function Testimonials() {
                             {review.name}
                           </h3>
 
-                          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-500">
+                          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-brand-muted">
                             {review.badge}
                           </p>
                         </div>
@@ -571,7 +571,7 @@ export function Testimonials() {
                       <div className="flex shrink-0 flex-col items-end gap-1.5">
                         <GoogleStars size={isActive ? 15 : 13} />
 
-                        <span className="whitespace-nowrap text-xs text-neutral-500">
+                        <span className="whitespace-nowrap text-xs text-brand-muted">
                           {review.time}
                         </span>
                       </div>
@@ -639,7 +639,7 @@ export function Testimonials() {
                   Loved our products?
                 </h3>
 
-                <p className="mt-0.5 text-xs sm:text-sm text-neutral-500">
+                <p className="mt-0.5 text-xs sm:text-sm text-brand-muted">
                   Rate your experience on Google.
                 </p>
               </div>

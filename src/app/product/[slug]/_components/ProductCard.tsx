@@ -60,7 +60,7 @@ export function ProductCard({ product }: { product: Product }) {
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-[#F5EFE3] to-[#FFFDF8] p-4 text-center select-none">
               <SacredDiyaSvg className="h-11 w-11 text-brand-primary/80 transition transform group-hover:scale-110" />
-              <p className="mt-2.5 font-sans text-xs font-bold tracking-widest text-brand-primary uppercase">
+              <p className="mt-2.5 font-sans text-xs font-bold tracking-wider text-brand-primary uppercase">
                 HM PURITY
               </p>
               <p className="font-sans text-[11px] text-brand-slate mt-0.5">{product.subCategory || product.category || "Devotional Essentials"}</p>
@@ -110,7 +110,7 @@ export function ProductCard({ product }: { product: Product }) {
           ) : (
             <div className="flex items-center gap-1.5 text-xs text-brand-forest font-semibold mb-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-forest" />
-              <span>Pure Sacred Purity</span>
+              <span>Pure Botanical Flora</span>
             </div>
           )}
 

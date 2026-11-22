@@ -3,6 +3,7 @@ import { deleteImage, uploadImage } from '../../shared/cloudinary';
 import { BadRequestError, NotFoundError } from '../../shared/errors/custom.error';
 import { generateSlug } from '../../shared/utils/slug.util';
 import { optimizeImageToWebp } from '../../shared/image-optimizer';
+import sharp from 'sharp';
 import { invalidateSearchCache } from '../products/products.search';
 
 export const mediaTypes = ['PRODUCT', 'CATEGORY', 'BANNER', 'HOMEPAGE', 'COLLECTION', 'FESTIVAL', 'OTHER'] as const;
@@ -131,13 +132,32 @@ export class MediaService {
       filename = safeSlug(String(data.imageSlug || ''), 'Image slug');
     }
 
-    const optimized = await optimizeImageToWebp(file.buffer, {
-      maxDimension: 1600,
-      quality: 85,
-      effort: 5,
-    });
+    // Sharp's normal WebP conversion keeps only one frame of an animated GIF.
+    // Preserve GIF bytes for hero banners so the browser can play the animation.
+    const bannerMetadata = type === 'BANNER'
+      ? await sharp(file.buffer).metadata().catch(() => null)
+      : null;
+    const isGifBanner = bannerMetadata?.format === 'gif';
+    const optimized = isGifBanner
+      ? {
+          buffer: file.buffer,
+          format: 'gif' as const,
+          width: bannerMetadata.width || 0,
+          height: bannerMetadata.height || 0,
+          size: file.size,
+          originalSize: file.size,
+        }
+      : await optimizeImageToWebp(file.buffer, {
+          maxDimension: 1600,
+          quality: 85,
+          effort: 5,
+        });
 
-    const uploaded = await uploadImage(optimized.buffer, { folder, publicId: filename });
+    const uploaded = await uploadImage(optimized.buffer, {
+      folder,
+      publicId: filename,
+      format: isGifBanner ? 'gif' : 'webp',
+    });
     try {
       const record = await applyUpload(uploaded.secureUrl, uploaded.publicId);
       if (type === 'PRODUCT') invalidateSearchCache();

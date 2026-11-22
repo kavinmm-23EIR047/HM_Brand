@@ -23,7 +23,7 @@ export default function NotFound() {
           </h1>
 
           <p className="text-xs sm:text-sm text-brand-charcoal/75 mt-3 max-w-md font-sans leading-relaxed">
-            The page you are looking for might have moved, but peace and divine fragrance are always within reach.
+            The page you are looking for might have moved, but we are always here to help you find the right incense.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">

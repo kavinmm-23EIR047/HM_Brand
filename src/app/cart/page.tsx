@@ -56,25 +56,25 @@ export default function CartPage() {
 
   return (
     <InnerPage
-      eyebrow="YOUR SACRED BASKET"
-      title="Review Your Sacred Selection"
-      subtitle="Verify your chosen products, adjust quantities, and proceed to secure checkout."
+      eyebrow="YOUR CART"
+      title="Review Your Order"
+      subtitle="Verify your items, adjust quantities, and proceed to checkout."
     >
       <div className="page-container py-8 sm:py-10">
         {lines.length === 0 ? (
           <div className="empty-state mx-auto flex max-w-2xl flex-col items-center">
             <MascotBasket size={180} />
             <h2 className="font-display text-xl sm:text-2xl text-brand-brown font-bold mt-5">
-              Your ritual basket is waiting
+              Your cart is empty
             </h2>
             <p className="text-sm text-brand-charcoal/75 mt-3 max-w-md font-sans leading-relaxed">
-              Explore our handcrafted collections of incense sticks, pure camphor, and traditional sambrani to fill your home with divine fragrance.
+              Explore our handcrafted agarbattis, pure Bhimseni camphor, and cup sambrani to find your favorites for morning pooja.
             </p>
             <Link
               href="/shop"
               className="btn-primary mt-8 gap-2 px-5 text-ui-10 uppercase tracking-wide sm:px-8 sm:text-xs"
             >
-              <span>Discover Fragrances</span>
+              <span>Browse Products</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -323,7 +323,7 @@ export default function CartPage() {
                 <div className="pt-2 text-center">
                   <span className="text-ui-11 text-brand-charcoal/60 flex items-center justify-center gap-1.5 font-sans">
                     <ShieldCheck size={14} className="text-brand-green" />
-                    <span>100% Safe & Secure Vedic Commerce</span>
+                    <span>100% Safe & Secure Checkout</span>
                   </span>
                 </div>
               </div>

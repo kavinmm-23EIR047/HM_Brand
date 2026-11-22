@@ -133,11 +133,11 @@ export function AddPanel({ product }: { product: Product }) {
             ₹{effectiveUnitPrice}
           </span>
           {singleItemDiscount > 0 ? (
-            <span className="font-sans text-base sm:text-lg text-stone-400 line-through font-medium">
+            <span className="font-sans text-base sm:text-lg text-brand-muted/80 line-through font-medium">
               ₹{product.price}
             </span>
           ) : mrpNum > product.price ? (
-            <span className="font-sans text-base sm:text-lg text-stone-400 line-through font-medium">
+            <span className="font-sans text-base sm:text-lg text-brand-muted/80 line-through font-medium">
               ₹{mrpNum}
             </span>
           ) : null}

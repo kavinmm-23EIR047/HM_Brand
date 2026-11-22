@@ -4,3 +4,9 @@ export const CONTACT_WHATSAPP_DISPLAY = "+91 86828 05730";
 export const CONTACT_WHATSAPP_NUMBER = "918682805730";
 export const CONTACT_ADDRESS = "Peelamedu Main Rd, Sowri Palayam, Coimbatore, Tamil Nadu 641028, India";
 export const CONTACT_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT_ADDRESS)}`;
+
+export const CONTACT_WHATSAPP_COMMUNITY_URL =
+  process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL ||
+  `https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    "Hello HM Brand! Please add me to your WhatsApp Community for festival offers, restocks & blessings."
+  )}`;

@@ -1,29 +1,98 @@
 "use client";
 
 import React from "react";
-import { Check, Truck, ShieldCheck } from "lucide-react";
+import { Truck, ShieldCheck } from "lucide-react";
 
 /**
- * Solid, authoritative, proper-size success checkmark badge
+ * Animated Success Checkmark Badge:
+ * - Springy pop-in entrance
+ * - Self-drawing animated checkmark SVG stroke
+ * - Outer expanding glowing aura rings
  */
-export function SolidSuccessTick({ size = 64 }: { size?: number }) {
+export function SolidSuccessTick({
+  size = 68,
+  onClick,
+}: {
+  size?: number;
+  onClick?: () => void;
+}) {
   return (
     <div
-      className="inline-flex items-center justify-center rounded-full bg-emerald-600 text-white shadow-md ring-4 ring-emerald-500/20 shrink-0"
-      style={{ width: size, height: size }}
-      aria-label="Order Confirmed"
+      onClick={onClick}
+      className={`relative inline-flex items-center justify-center shrink-0 ${
+        onClick ? "cursor-pointer group" : ""
+      }`}
+      title={onClick ? "Click to celebrate with confetti!" : undefined}
     >
-      <Check size={size * 0.52} strokeWidth={3.5} className="text-white" />
+      {/* Outer pulsing ripple ring */}
+      <div
+        className="absolute rounded-full bg-emerald-500/25 animate-ping pointer-events-none"
+        style={{
+          width: size * 1.35,
+          height: size * 1.35,
+          animationDuration: "2.4s",
+        }}
+      />
+
+      {/* Outer soft glowing aura */}
+      <div
+        className="absolute rounded-full bg-emerald-400/25 blur-md pointer-events-none"
+        style={{ width: size * 1.45, height: size * 1.45 }}
+      />
+
+      {/* Main green badge with spring pop-in */}
+      <div
+        className="relative z-10 flex items-center justify-center rounded-full bg-gradient-to-tr from-emerald-700 via-emerald-600 to-emerald-500 text-white shadow-xl ring-4 ring-emerald-400/30 transition-transform duration-300 group-hover:scale-105 active:scale-95"
+        style={{
+          width: size,
+          height: size,
+          animation: "circlePop 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
+        }}
+        aria-label="Order Confirmed"
+      >
+        {/* Animated Drawing SVG Checkmark */}
+        <svg
+          viewBox="0 0 52 52"
+          className="overflow-visible"
+          style={{ width: size * 0.58, height: size * 0.58 }}
+        >
+          <circle
+            cx="26"
+            cy="26"
+            r="23"
+            fill="none"
+            stroke="rgba(255,255,255,0.25)"
+            strokeWidth="3"
+          />
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14 27 l8 8 l16 -16"
+            style={{
+              strokeDasharray: 54,
+              strokeDashoffset: 54,
+              animation: "checkmarkDraw 0.65s ease-out 0.22s forwards",
+            }}
+          />
+        </svg>
+      </div>
     </div>
   );
 }
 
 /**
  * 100% Responsive, Luxury Sacred Dispatch Tracker
- * - Desktop: Clean horizontal connected progress tracker
+ * - Desktop: Clean horizontal connected progress tracker with animated step 1 tick
  * - Mobile: Clean vertical timeline with connecting line
  */
-export function SacredDispatchTracker() {
+export function SacredDispatchTracker({
+  onTickClick,
+}: {
+  onTickClick?: () => void;
+} = {}) {
   const steps = [
     {
       title: "Order Consecrated",
@@ -32,8 +101,8 @@ export function SacredDispatchTracker() {
       time: "Just Now",
     },
     {
-      title: "Sacred Blessing & Packing",
-      desc: "Damage-proof pack with Diya blessing",
+      title: "Workshop Packing & Quality Check",
+      desc: "Careful moisture-proof packaging",
       status: "active" as const,
       time: "Within 24 Hours",
     },
@@ -44,7 +113,7 @@ export function SacredDispatchTracker() {
       time: "Day 1–2",
     },
     {
-      title: "Doorstep Sacred Arrival",
+      title: "Doorstep Delivery",
       desc: "Fragrance delivered to your door",
       status: "pending" as const,
       time: "3–5 Days",
@@ -61,15 +130,15 @@ export function SacredDispatchTracker() {
           </div>
           <div>
             <h4 className="font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#302923]">
-              Sacred Dispatch Journey
+              Dispatch &amp; Delivery Progress
             </h4>
-            <p className="text-[11px] text-[#746B62]">
+            <p className="text-[11px] text-[#4A3F35]">
               Direct dispatch from Peelamedu, Coimbatore
             </p>
           </div>
         </div>
 
-        <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+        <span className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full shadow-2xs">
           <ShieldCheck size={13} className="text-emerald-700" />
           <span>Live Tracking Ready</span>
         </span>
@@ -90,22 +159,53 @@ export function SacredDispatchTracker() {
             return (
               <div key={st.title} className="flex flex-col items-center text-center">
                 <div
+                  onClick={isDone ? onTickClick : undefined}
+                  role={isDone && onTickClick ? "button" : undefined}
+                  title={isDone && onTickClick ? "Click to celebrate with confetti!" : undefined}
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-xs ${
                     isDone
-                      ? "bg-emerald-600 text-white ring-4 ring-emerald-100"
+                      ? `bg-emerald-600 text-white ring-4 ring-emerald-200 shadow-md ${
+                          onTickClick ? "cursor-pointer hover:scale-110 active:scale-95" : ""
+                        }`
                       : isActive
                       ? "bg-[#9E1830] text-white ring-4 ring-[#9E1830]/20 animate-pulse"
-                      : "bg-[#F5EFE3] text-[#746B62] border border-[#302923]/25"
+                      : "bg-[#F5EFE3] text-[#4A3F35] border border-[#302923]/25"
                   }`}
+                  style={
+                    isDone
+                      ? {
+                          animation:
+                            "circlePop 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
+                        }
+                      : undefined
+                  }
                 >
-                  {isDone ? <Check size={16} strokeWidth={3.5} /> : idx + 1}
+                  {isDone ? (
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 overflow-visible">
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13 l4 4 l10 -10"
+                        style={{
+                          strokeDasharray: 24,
+                          strokeDashoffset: 24,
+                          animation: "checkmarkDraw 0.5s ease-out 0.2s forwards",
+                        }}
+                      />
+                    </svg>
+                  ) : (
+                    idx + 1
+                  )}
                 </div>
 
                 <div className="mt-2.5">
                   <p className="font-sans text-xs font-bold text-[#302923] leading-snug">
                     {st.title}
                   </p>
-                  <p className="text-[10px] text-[#746B62] mt-0.5 leading-tight">
+                  <p className="text-[10px] text-[#4A3F35] mt-0.5 leading-tight">
                     {st.desc}
                   </p>
                   <span
@@ -114,7 +214,7 @@ export function SacredDispatchTracker() {
                         ? "text-emerald-700"
                         : isActive
                         ? "text-[#9E1830]"
-                        : "text-[#746B62]"
+                        : "text-[#4A3F35]"
                     }`}
                   >
                     {st.time}
@@ -138,15 +238,46 @@ export function SacredDispatchTracker() {
           return (
             <div key={st.title} className="flex items-start gap-3.5 relative z-10">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold shadow-xs ${
+                onClick={isDone ? onTickClick : undefined}
+                role={isDone && onTickClick ? "button" : undefined}
+                title={isDone && onTickClick ? "Click to celebrate with confetti!" : undefined}
+                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold shadow-xs transition-all ${
                   isDone
-                    ? "bg-emerald-600 text-white ring-2 ring-emerald-100"
+                    ? `bg-emerald-600 text-white ring-2 ring-emerald-200 shadow-sm ${
+                        onTickClick ? "cursor-pointer hover:scale-110 active:scale-95" : ""
+                      }`
                     : isActive
                     ? "bg-[#9E1830] text-white ring-2 ring-[#9E1830]/20 animate-pulse"
-                    : "bg-[#F5EFE3] text-[#746B62] border border-[#302923]/25"
+                    : "bg-[#F5EFE3] text-[#4A3F35] border border-[#302923]/25"
                 }`}
+                style={
+                  isDone
+                    ? {
+                        animation:
+                          "circlePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
+                      }
+                    : undefined
+                }
               >
-                {isDone ? <Check size={14} strokeWidth={3.5} /> : idx + 1}
+                {isDone ? (
+                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 overflow-visible">
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13 l4 4 l10 -10"
+                      style={{
+                        strokeDasharray: 24,
+                        strokeDashoffset: 24,
+                        animation: "checkmarkDraw 0.5s ease-out 0.2s forwards",
+                      }}
+                    />
+                  </svg>
+                ) : (
+                  idx + 1
+                )}
               </div>
 
               <div className="min-w-0 flex-1 pt-0.5">
@@ -156,13 +287,13 @@ export function SacredDispatchTracker() {
                   </p>
                   <span
                     className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ${
-                      isDone ? "text-emerald-700" : isActive ? "text-[#9E1830]" : "text-[#746B62]"
+                      isDone ? "text-emerald-700" : isActive ? "text-[#9E1830]" : "text-[#4A3F35]"
                     }`}
                   >
                     {st.time}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#746B62] mt-0.5">
+                <p className="text-[11px] text-[#4A3F35] mt-0.5">
                   {st.desc}
                 </p>
               </div>

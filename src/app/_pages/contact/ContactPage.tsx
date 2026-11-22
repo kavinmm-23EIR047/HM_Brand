@@ -42,12 +42,56 @@ export default function ContactPage() {
       title="How Can We Help You?"
       subtitle="Contact our Coimbatore team about products, orders, bulk enquiries, or anything else you need help with."
     >
-      <main className="page-container py-8 sm:py-12">
+      <main className="page-container py-8 sm:py-12 space-y-8 sm:space-y-10">
+        {/* ── TOP INTERACTIVE GOOGLE MAP WITH ACCURATE LOCATION ── */}
+        <section className="rounded-2xl sm:rounded-3xl border border-brand-border bg-white p-4 sm:p-6 shadow-sm overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-primary/10 text-brand-primary">
+                <MapPin size={20} />
+              </span>
+              <div>
+                <h2 className="font-heading text-lg sm:text-xl font-bold text-brand-ink">
+                  Workshop &amp; Store Location
+                </h2>
+                <p className="text-xs text-brand-charcoal/75">
+                  {CONTACT_ADDRESS}
+                </p>
+              </div>
+            </div>
+
+            <a
+              href={CONTACT_MAPS_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-hover transition shadow-xs w-fit"
+            >
+              <span>Open in Google Maps</span>
+              <ArrowUpRight size={14} />
+            </a>
+          </div>
+
+          {/* Embedded Google Map iframe */}
+          <div className="w-full h-[280px] sm:h-[360px] md:h-[420px] rounded-xl sm:rounded-2xl overflow-hidden border border-brand-border/70 relative bg-brand-surface">
+            <iframe
+              title="HM Brand Workshop & Store Location, Peelamedu Coimbatore"
+              src="https://maps.google.com/maps?q=Peelamedu%20Main%20Rd%2C%20Sowri%20Palayam%2C%20Coimbatore%2C%20Tamil%20Nadu%20641028&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={false}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full"
+            />
+          </div>
+        </section>
+
         <div className="grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-7">
           <section className="space-y-4">
             <div className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:p-6">
               <div className="mb-5">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">Visit or call</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-brand-primary">Visit or call</p>
                 <h2 className="mt-1 font-heading text-2xl font-bold text-brand-ink">HM Brand, Coimbatore</h2>
               </div>
               <div className="space-y-4">
@@ -70,7 +114,7 @@ export default function ContactPage() {
               <div className="flex items-start gap-3">
                 <span className="grid size-11 shrink-0 place-items-center rounded-[10px] bg-brand-forest/15 text-brand-forest"><MessageCircle size={22} /></span>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-forest">Help desk</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-forest">Help desk</p>
                   <h2 className="mt-1 font-heading text-xl font-bold text-brand-ink">Need a quick answer?</h2>
                   <p className="mt-1 text-sm leading-6 text-brand-slate">Chat directly with our help desk on WhatsApp. No website form or backend is used.</p>
                   <a href={`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello HM Brand, I need help with an enquiry.")}`} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-[#14532D] hover:bg-[#0F3F22] border border-brand-accent/30 px-5 py-2.5 text-sm font-sans font-semibold text-white transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.98]">
@@ -92,7 +136,7 @@ export default function ContactPage() {
           </section>
 
           <section className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:p-7">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">Send an enquiry</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-brand-primary">Send an enquiry</p>
             <h2 className="mt-1 font-heading text-2xl font-bold text-brand-ink">Message our help desk</h2>
             <p className="mt-2 text-sm leading-6 text-brand-slate">Fill this in and we’ll prepare your message in WhatsApp. You can review and send it there.</p>
             <form onSubmit={sendWhatsAppQuery} className="mt-6 space-y-4">

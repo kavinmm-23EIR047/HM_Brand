@@ -9,7 +9,7 @@
      - Accent colour: #C89B3C (Antique Temple Gold) - 10%
      - Secondary background: #F5EFE3 (Sandalwood Cream)
      - Primary text: #302923 (Deep Charcoal)
-     - Secondary text: #746B62 (Muted Brown)
+     - Secondary text: #4A3F35 (Deep Warm Umber - High Visibility Secondary)
      - Card background: #FFFFFF
      - Card borders: #EAE1D3
      - WhatsApp CTA: #14532D
@@ -54,10 +54,10 @@
   --brand-ink: #302923;          /* Primary text: Deep Charcoal */
   --brand-heading: #302923;      /* Headings text: Deep Charcoal */
   --brand-charcoal: #302923;
-  --brand-slate: #746B62;        /* Secondary text: Muted Brown */
-  --brand-gray: #746B62;
-  --brand-brown: #746B62;
-  --brand-muted: #746B62;
+  --brand-slate: #4A3F35;        /* Secondary text: Deep Warm Umber (High Visibility) */
+  --brand-gray: #4A3F35;
+  --brand-brown: #4A3F35;
+  --brand-muted: #4A3F35;
   --brand-danger: #991B1B;
 
   /* Backgrounds & Surfaces */
@@ -101,9 +101,9 @@
   --brand-ink-rgb: 48 41 35;
   --brand-heading-rgb: 48 41 35;
   --brand-charcoal-rgb: 48 41 35;
-  --brand-slate-rgb: 116 107 98;
-  --brand-gray-rgb: 116 107 98;
-  --brand-brown-rgb: 116 107 98;
+  --brand-slate-rgb: 74 63 53;
+  --brand-gray-rgb: 74 63 53;
+  --brand-brown-rgb: 74 63 53;
   --brand-gold-rgb: 200 155 60;
   --brand-surface-rgb: 255 253 248;
   --brand-surface-warm-rgb: 245 239 227;
@@ -111,7 +111,7 @@
   --brand-surface-alt-rgb: 255 253 248;
   --brand-surface-bright-rgb: 255 253 248;
   --brand-border-rgb: 234 225 211;
-  --brand-muted-rgb: 116 107 98;
+  --brand-muted-rgb: 74 63 53;
   --brand-danger-rgb: 153 27 27;
   --brand-amber-rgb: 200 155 60;
   --brand-amber-bright-rgb: 212 167 71;
@@ -585,6 +585,18 @@ h5 {
   }
 }
 
+@keyframes phoneRing {
+  0%, 100% { transform: rotate(0deg); }
+  8%, 24%, 40% { transform: rotate(-14deg); }
+  16%, 32%, 48% { transform: rotate(14deg); }
+  56% { transform: rotate(0deg); }
+}
+
+.animate-phone-ring {
+  transform-origin: 50% 50%;
+  animation: phoneRing 1.6s ease-in-out infinite;
+}
+
 @keyframes smokeRise {
   0% {
     transform: translateY(0) scaleX(1);
@@ -693,6 +705,36 @@ h5 {
 
 .animate-float {
   animation: gentleFloat 4s ease-in-out infinite;
+}
+
+@keyframes fadeInSoft {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInSoft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes notificationEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.animate-notification-enter {
+  animation: notificationEnter 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 
@@ -1063,5 +1105,33 @@ h5 {
 
 .anim-aroma-wave {
   animation: aromaWaveDrift 2.4s ease-out infinite;
+}
+
+@keyframes progressLinear {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.animate-progress {
+  animation: progressLinear 4.5s linear forwards;
+}
+
+/* ── Corner Agarbatti Smoke ── */
+@keyframes smokeWaft {
+  0%   { transform: translateX(0px) scaleX(1);   opacity: 0.8; }
+  25%  { transform: translateX(-5px) scaleX(1.1); opacity: 0.6; }
+  50%  { transform: translateX(4px) scaleX(0.9);  opacity: 0.5; }
+  75%  { transform: translateX(-3px) scaleX(1.05); opacity: 0.4; }
+  100% { transform: translateX(0px) scaleX(1);   opacity: 0; }
+}
+
+@keyframes emberGlow {
+  0%, 100% { opacity: 1; r: 2.8px; }
+  50%       { opacity: 0.7; r: 3.4px; }
+}
+
+@keyframes ashGrow {
+  from { transform: scaleX(0.8); }
+  to   { transform: scaleX(1.15); }
 }
 

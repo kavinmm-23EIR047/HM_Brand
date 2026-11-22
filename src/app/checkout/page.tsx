@@ -33,27 +33,15 @@ function loadRazorpayScript(): Promise<boolean> {
 function UpiBadge() {
   return (
     <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EAE1D3] bg-white shadow-2xs">
-      <svg className="h-5 w-auto" viewBox="0 0 74 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="UPI">
-        <path d="M12.5 4L20 12L12.5 20H4L11.5 12L4 4H12.5Z" fill="#097939" />
-        <path d="M18.5 4L26 12L18.5 20H10L17.5 12L10 4H18.5Z" fill="#ED752E" />
-        <text x="30" y="17" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="13" fill="#1B2430" letterSpacing="0.5">UPI</text>
-      </svg>
+      <img src="/payment-logos/upi.svg" alt="UPI" className="h-5 w-auto" />
     </div>
   );
 }
 
 function GPayBadge() {
   return (
-    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EAE1D3] bg-white shadow-2xs">
-      <svg className="h-5 w-auto" viewBox="0 0 65 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Google Pay">
-        <g transform="translate(2, 2)">
-          <path d="M19.6 10.2c0-.7-.1-1.4-.2-2H10v3.8h5.4c-.2 1.2-1 2.3-2.1 3v2.5h3.4c2-1.9 3.1-4.6 3.1-7.3z" fill="#4285F4" />
-          <path d="M10 20c2.7 0 5-1 6.7-2.5l-3.4-2.5c-.9.6-2.1 1-3.3 1-2.6 0-4.7-1.7-5.5-4.1H1v2.6C2.8 17.9 6.2 20 10 20z" fill="#34A853" />
-          <path d="M4.5 11.9c-.2-.7-.3-1.4-.3-2.1s.1-1.4.3-2.1V5.1H1C.4 6.4 0 7.8 0 9.8s.4 3.4 1 4.7l3.5-2.6z" fill="#FBBC05" />
-          <path d="M10 3.8c1.5 0 2.8.5 3.9 1.5l2.9-2.9C15 1 12.7 0 10 0 6.2 0 2.8 2.1 1 5.4l3.5 2.6c.8-2.4 2.9-4.2 5.5-4.2z" fill="#EA4335" />
-        </g>
-        <text x="26" y="16.5" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="13" fill="#5F6368">Pay</text>
-      </svg>
+    <div className="inline-flex items-center rounded-lg bg-white">
+      <img src="/payment-logos/google-pay-mark.svg" alt="Google Pay" className="h-8 w-auto" />
     </div>
   );
 }
@@ -61,11 +49,8 @@ function GPayBadge() {
 function PhonePeBadge() {
   return (
     <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EAE1D3] bg-white shadow-2xs">
-      <svg className="h-5 w-auto" viewBox="0 0 85 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PhonePe">
-        <rect x="2" y="2" width="20" height="20" rx="10" fill="#6739B7" />
-        <path d="M13.5 6.5H9.5V17.5H12V13.5H13.8C15.8 13.5 17 12.3 17 10C17 7.7 15.8 6.5 13.5 6.5ZM13.3 11.5H12V8.5H13.3C14.2 8.5 14.7 9 14.7 10C14.7 11 14.2 11.5 13.3 11.5Z" fill="#FFFFFF" />
-        <text x="26" y="16.5" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="12" fill="#6739B7">PhonePe</text>
-      </svg>
+      <img src="/payment-logos/phonepe.svg" alt="" aria-hidden="true" className="h-5 w-5" />
+      <span className="text-[11px] font-bold text-[#5F259F]">PhonePe</span>
     </div>
   );
 }
@@ -73,10 +58,8 @@ function PhonePeBadge() {
 function PaytmBadge() {
   return (
     <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EAE1D3] bg-white shadow-2xs">
-      <svg className="h-4.5 w-auto" viewBox="0 0 68 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Paytm">
-        <text x="2" y="15" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="14" fill="#002E6E">pay</text>
-        <text x="28" y="15" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="14" fill="#00BAF2">tm</text>
-      </svg>
+      <img src="/payment-logos/paytm.svg" alt="" aria-hidden="true" className="h-5 w-5" />
+      <span className="text-[11px] font-bold text-[#002970]">Paytm</span>
     </div>
   );
 }
@@ -84,11 +67,8 @@ function PaytmBadge() {
 function RazorpayBadge() {
   return (
     <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EAE1D3] bg-white shadow-2xs">
-      <svg className="h-4.5 w-auto" viewBox="0 0 92 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Razorpay">
-        <path d="M10.5 1L2 19H7.5L10 12.5H14L15 8.5H10.5L12 4L15.5 1H10.5Z" fill="#0C2340" />
-        <path d="M14 6L11 12.5H15.5L13.5 19L19 9.5H14.5L16 6H14Z" fill="#3395FF" />
-        <text x="22" y="15" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="13" fill="#0C2340">Razorpay</text>
-      </svg>
+      <img src="/payment-logos/razorpay.svg" alt="" aria-hidden="true" className="h-5 w-5" />
+      <span className="text-[11px] font-bold text-[#0C2451]">Razorpay</span>
     </div>
   );
 }
@@ -97,7 +77,7 @@ function CardsNetBankingBadge() {
   return (
     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#EAE1D3] bg-white shadow-2xs">
       <CreditCard size={15} className="text-[#9E1830]" />
-      <span className="text-[11px] font-sans font-bold text-[#302923]">Cards &amp; NetBanking</span>
+      <span className="text-[11px] font-sans font-bold text-[#302923]">Cards &amp; online banking</span>
     </div>
   );
 }
@@ -376,7 +356,7 @@ export default function CheckoutPage() {
       if (isOnline && orderData?.razorpay) {
         const loaded = await loadRazorpayScript();
         if (!loaded) {
-          throw new Error("Unable to connect to Razorpay payment gateway. Please verify your connection.");
+          throw new Error("We couldn’t open the payment options. Please check your connection and try again.");
         }
 
         const rzpOptions = {
@@ -484,7 +464,7 @@ export default function CheckoutPage() {
               setLoading(false);
               setPaymentNotice({
                 type: "warning",
-                message: "Payment window was closed. Your sacred cart has been preserved so you can complete your purchase when ready.",
+                message: "Payment window was closed. Your items are still saved in your cart so you can complete your order when ready.",
               });
             },
           },
@@ -496,7 +476,7 @@ export default function CheckoutPage() {
           const reason = failRes.error?.description || failRes.error?.reason || "Transaction was declined";
           setPaymentNotice({
             type: "error",
-            message: `Payment unsuccessful: ${reason}. Your sacred cart is intact. Please try again with another UPI app or card.`,
+            message: `Payment unsuccessful: ${reason}. Your cart items are saved. Please try again with another UPI app or card.`,
           });
         });
         rzp.open();
@@ -570,12 +550,12 @@ export default function CheckoutPage() {
 
   return (
     <InnerPage
-      eyebrow={completedOrderId ? "SACRED ORDER BLESSING" : "SECURE CHECKOUT"}
+      eyebrow={completedOrderId ? "ORDER CONFIRMATION" : "SECURE CHECKOUT"}
       title={completedOrderId ? "Order Placed Successfully!" : "Almost There"}
       subtitle={
         completedOrderId
-          ? "Thank you for welcoming divine fragrance into your home. Your order is confirmed and queued for direct dispatch from Coimbatore."
-          : "Complete your sacred purchase with encrypted security and direct dispatch from Coimbatore."
+          ? "Thank you! Your order is confirmed and will be packed carefully for direct dispatch from our Coimbatore workshop."
+          : "Complete your order with secure payment and direct dispatch from Coimbatore."
       }
     >
       <div className="page-container py-8 sm:py-10">
@@ -600,10 +580,10 @@ export default function CheckoutPage() {
         ) : lines.length === 0 ? (
           <div className="empty-state mx-auto max-w-xl">
             <h2 className="font-brand text-xl sm:text-2xl text-brand-heading font-bold">
-              Your basket is empty
+              Your cart is empty
             </h2>
             <p className="text-sm text-brand-charcoal/70 mt-2">
-              Please add at least one sacred product before checking out.
+              Please add at least one item to your cart before checking out.
             </p>
             <Link
               href="/shop"
@@ -925,7 +905,7 @@ export default function CheckoutPage() {
                         />
                         <div>
                           <p className="text-xs font-bold text-brand-brown">
-                            Standard Pan-India Sacred Dispatch
+                            Standard Pan-India Express Delivery
                           </p>
                           <p className="text-ui-11 text-brand-charcoal/60">
                             {SHIPPING_CONFIG.deliveryDescription}
@@ -960,14 +940,14 @@ export default function CheckoutPage() {
               {step === 3 && (
                 <form onSubmit={handleSubmitOrder} className="surface-card space-y-6 p-6 sm:p-8">
                   <div>
-                    <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-brand-primary block mb-1">
+                    <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-brand-primary block mb-1">
                       STEP 3 OF 3
                     </span>
                     <h3 className="font-brand text-base sm:text-lg text-brand-heading font-bold uppercase tracking-wider">
-                      3. Secure Online Payment
+                      3. Complete Your Payment
                     </h3>
                     <p className="mt-1 text-xs text-stone-600">
-                      All orders are processed through Razorpay&apos;s 100% encrypted, RBI-compliant payment gateway.
+                      Your payment is handled securely. Choose the option that works best for you.
                     </p>
                   </div>
 
@@ -1007,22 +987,22 @@ export default function CheckoutPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <h4 className="font-sans text-sm sm:text-base font-bold text-[#302923]">
-                            Online Payment (UPI, Cards &amp; NetBanking)
+                            Pay online, your way
                           </h4>
                           <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
-                            Zero Transaction Fee
+                            No extra fees
                           </span>
                         </div>
                         <p className="mt-1 text-xs text-stone-600 leading-relaxed">
-                          Pay securely using your preferred app on the next screen — instant UPI, Google Pay, PhonePe, Paytm, Debit/Credit Card, or Net Banking.
+                          Choose your preferred option on the next screen: UPI, Google Pay, PhonePe, Paytm, cards, or online banking.
                         </p>
                       </div>
                     </div>
 
                     {/* Supported Payment Logos Badges Strip */}
                     <div className="pt-2 border-t border-[#EAE1D3]">
-                      <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#746B62] mb-2.5">
-                        Supported Instant Payment Modes
+                      <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#4A3F35] mb-2.5">
+                        Choose a payment option
                       </p>
                       <div className="flex flex-wrap items-center gap-2">
                         <UpiBadge />
@@ -1038,15 +1018,15 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-3 border-t border-[#EAE1D3]/80 text-[11px] text-stone-600 font-medium">
                       <div className="flex items-center gap-1.5">
                         <Lock size={13} className="text-brand-primary shrink-0" />
-                        <span>256-Bit Bank-Grade SSL</span>
+                        <span>Your payment is secure</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Sparkles size={13} className="text-brand-primary shrink-0" />
-                        <span>Instant Order Confirmation</span>
+                        <span>We&apos;ll confirm your order right away</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <CheckCircle2 size={13} className="text-emerald-700 shrink-0" />
-                        <span>100% Buyer Protection</span>
+                        <span>We&apos;re here if you need help</span>
                       </div>
                     </div>
                   </div>
@@ -1066,10 +1046,10 @@ export default function CheckoutPage() {
                       className="btn-primary flex-1 py-3.5 gap-2 text-xs uppercase tracking-wider disabled:opacity-50 flex items-center justify-center cursor-pointer shadow-sm hover:scale-[1.01] active:scale-[0.99] transition-all"
                     >
                       {loading ? (
-                        <span>Connecting to Gateway...</span>
+                        <span>Opening payment options...</span>
                       ) : (
                         <>
-                          <Lock size={14} /> Pay via Razorpay (₹{finalTotal})
+                          <Lock size={14} /> Continue to payment · ₹{finalTotal}
                         </>
                       )}
                     </button>
@@ -1082,7 +1062,7 @@ export default function CheckoutPage() {
             <div className="lg:col-span-5 space-y-6">
               <aside className="surface-card space-y-4 p-6">
                 <h3 className="font-brand text-base text-brand-heading font-bold uppercase tracking-wider border-b border-[#302923]/15 pb-3">
-                  Sacred Basket ({totalItems} items)
+                  Order Summary ({totalItems} items)
                 </h3>
 
                 <div className="space-y-3 max-h-72 overflow-y-auto pr-1 divide-y divide-brand-border/50">
@@ -1209,10 +1189,10 @@ export default function CheckoutPage() {
               <div className="bg-white p-4 rounded-xl border border-[#302923]/20 text-xs text-brand-brown space-y-2 shadow-2xs">
                 <div className="flex items-center gap-2 font-bold text-[#302923]">
                   <ShieldCheck size={16} />
-                  <span>The HM Devotion Guarantee</span>
+                  <span>The HM Quality Guarantee</span>
                 </div>
                 <p className="text-ui-11 text-brand-charcoal/70 leading-relaxed font-sans">
-                  Every parcel is blessed with sacred care and dispatched with damage-proof packing directly from Peelamedu, Coimbatore.
+                  Every parcel is packed with care in moisture-proof boxes and shipped directly from our workshop in Peelamedu, Coimbatore.
                 </p>
               </div>
             </div>

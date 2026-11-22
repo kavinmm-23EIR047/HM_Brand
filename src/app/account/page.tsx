@@ -192,9 +192,9 @@ export default function AccountPage() {
   if (!user) {
     return (
       <InnerPage
-        eyebrow="DEVOTEE ACCOUNT"
-        title="Your Sacred Account"
-        subtitle="Sign in to view your orders, profile details, and saved wishlist."
+        eyebrow="CUSTOMER ACCOUNT"
+        title="My Account & Orders"
+        subtitle="Sign in to view your orders, delivery status, and saved favorites."
       >
         <div className="mx-auto max-w-md px-4 sm:px-6 py-16 text-center">
           <div className="bg-[#FFF8E7] p-8 rounded-3xl border-2 border-[#C89B3C]/40 shadow-xl space-y-6">
@@ -352,7 +352,7 @@ export default function AccountPage() {
                       <span>Mobile Phone</span>
                     </span>
                     <span className="text-[#6B4226] font-extrabold text-sm block">
-                      {user.phone || <span className="text-gray-400 italic font-normal">Not provided</span>}
+                      {user.phone || <span className="text-brand-muted italic font-normal">Not provided</span>}
                     </span>
                   </div>
 
@@ -428,7 +428,7 @@ export default function AccountPage() {
                     <MapPin size={36} className="mx-auto text-[#C89B3C]/60" />
                     <p className="text-sm font-bold text-[#6B4226]">No delivery addresses saved yet.</p>
                     <p className="text-xs text-[#292524]/70 max-w-sm mx-auto">
-                      Add your home or temple delivery address to enjoy seamless 1-click checkout.
+                      Save your delivery address for faster checkout on your next order.
                     </p>
                     <button
                       onClick={openAddAddressModal}
@@ -520,7 +520,7 @@ export default function AccountPage() {
                       Order History &amp; Tracking
                     </h3>
                     <p className="text-xs text-[#292524]/70">
-                      Track your sacred purchases and delivery progress.
+                      Track your purchases and delivery progress.
                     </p>
                   </div>
                   <button
@@ -535,7 +535,7 @@ export default function AccountPage() {
 
                 {loadingOrders ? (
                   <div className="text-center py-12 text-xs font-bold text-[#6B4226]/60">
-                    Loading your sacred orders...
+                    Loading your orders...
                   </div>
                 ) : orders.length === 0 ? (
                   <div className="bg-white p-8 rounded-2xl border border-[#C89B3C]/30 text-center space-y-3">
@@ -544,7 +544,7 @@ export default function AccountPage() {
                       No orders placed yet
                     </h4>
                     <p className="text-xs text-[#292524]/70 max-w-sm mx-auto">
-                      You haven&apos;t placed any sacred orders yet. Explore our handcrafted collection of agarbattis, pure camphor, and dhoop.
+                      You haven&apos;t placed any orders yet. Explore our handcrafted collection of agarbattis, pure camphor, and dhoop.
                     </p>
                     <Link
                       href="/shop"
@@ -690,7 +690,7 @@ export default function AccountPage() {
                                   <span className="font-mono">{ord.trackingNumber || parsedAddress?.trackingNumber}</span>
                                 </div>
                               ) : (
-                                <span className="text-[11px] text-[#746B62] italic">
+                                <span className="text-[11px] text-[#4A3F35] italic">
                                   {ord.status === 'CONFIRMED' || ord.status === 'PROCESSING'
                                     ? 'Blessing & packaging underway in Peelamedu, Coimbatore'
                                     : 'Awaiting dispatch confirmation'}
@@ -704,7 +704,7 @@ export default function AccountPage() {
                               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-[#9E1830]/40 bg-white hover:bg-[#9E1830] text-[#9E1830] hover:text-white text-xs font-bold transition-all shadow-xs"
                             >
                               <FileText size={13} />
-                              <span>View / Print Sacred Invoice</span>
+                              <span>View / Print Invoice</span>
                             </button>
                           </div>
                         </div>
@@ -763,7 +763,7 @@ export default function AccountPage() {
                       Auspicious Notifications &amp; Web Push
                     </h3>
                     <p className="text-xs text-[#292524]/70">
-                      Stay connected with live parcel dispatch alerts, sacred festival offers, and restock notifications.
+                      Stay connected with live parcel dispatch alerts, festival offers, and restock notifications.
                     </p>
                   </div>
                 </div>
@@ -787,8 +787,8 @@ export default function AccountPage() {
                           {pushSubscribed ? 'Active & Subscribed' : 'Permission Not Enabled'}
                         </span>
                       </div>
-                      <p className="text-xs text-[#746B62] mt-1 leading-relaxed">
-                        Receive instant notifications on your phone or PC when your sacred order is packed and dispatched from Coimbatore, even when your browser is closed or phone screen is locked.
+                      <p className="text-xs text-[#4A3F35] mt-1 leading-relaxed">
+                        Receive instant notifications on your phone or PC when your order is packed and dispatched from Coimbatore, even when your browser is closed or phone screen is locked.
                       </p>
                     </div>
                   </div>
@@ -813,7 +813,7 @@ export default function AccountPage() {
                           : 'Enable Real-time Push Notifications'}
                       </span>
                     </button>
-                    <span className="text-[11px] text-[#746B62]">
+                    <span className="text-[11px] text-[#4A3F35]">
                       Supports Chrome, Edge, Safari (iOS 16.4+), Firefox, and Android.
                     </span>
                   </div>
