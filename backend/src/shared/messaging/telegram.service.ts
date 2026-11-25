@@ -124,7 +124,7 @@ export class TelegramService {
     const testMessage = [
       `🕉️ <b>HM BRAND TELEGRAM NOTIFICATIONS READY!</b>`,
       `━━━━━━━━━━━━━━━━━━━━━━`,
-      `Namaste ${this.escapeHtml(adminName)},`,
+      `Vanakkam ${this.escapeHtml(adminName)},`,
       `Your Telegram Bot integration with HM Agarbattis & Fragrances is successfully verified.`,
       `\nAll new incoming orders, live customer locations, and payment verifications will now arrive instantly in this chat.`,
       `\nTimestamp: <i>${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</i>`,

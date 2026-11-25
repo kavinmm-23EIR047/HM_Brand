@@ -302,7 +302,7 @@ export class EmailService {
 
           <div style="padding: 24px;">
             <p style="font-size: 14px; line-height: 1.6; margin-top: 0;">
-              Namaste <strong>${orderData.customer.fullName}</strong>,<br />
+              Vanakkam <strong>${orderData.customer.fullName}</strong>,<br />
               Your order has been recorded into our sacred ledger. Our artisans in Peelamedu, Coimbatore are preparing your parcels with 100% natural herbal resins, moisture-proof seals, and temple blessings.
             </p>
 
@@ -422,7 +422,7 @@ export class EmailService {
             <h2 style="margin: 6px 0 0;">${title}</h2>
           </div>
           <div style="padding: 24px; font-size: 14px; line-height: 1.6;">
-            <p>Namaste <strong>${customerName}</strong>,</p>
+            <p>Vanakkam <strong>${customerName}</strong>,</p>
             <p>Your sacred order <strong>${order.orderNumber}</strong> has been updated to: <strong style="color: #9E1830;">${newStatus}</strong>.</p>
             ${
               courierData?.courierName || courierData?.trackingNumber

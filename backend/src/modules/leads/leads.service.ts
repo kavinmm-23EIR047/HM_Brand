@@ -177,7 +177,7 @@ export class LeadsService {
     const digitsOnly = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCountry = digitsOnly.length === 10 ? `91${digitsOnly}` : digitsOnly;
     const waUrl = `https://wa.me/${phoneWithCountry}?text=${encodeURIComponent(
-      `Namaste ${lead.name}! Greetings from HM Agarbattis & Fragrances Coimbatore. Thank you for your inquiry regarding ${lead.purpose || 'our sacred fragrances'}. Here is your 15% discount code: ${lead.couponGiven || 'DIVINE15'}. How may we assist you today?`
+      `Vanakkam ${lead.name}! Greetings from HM Agarbattis Coimbatore. Thank you for your inquiry regarding ${lead.purpose || 'our sacred fragrances'}. Here is your 15% discount code: ${lead.couponGiven || 'DIVINE15'}. How may we assist you today?`
     )}`;
 
     const telegramMsg = [

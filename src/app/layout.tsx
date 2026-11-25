@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import "./globals.css";
 import { StoreProvider } from "@/components/store";
 import { CartDrawer } from "@/components/cart-drawer";

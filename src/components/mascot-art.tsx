@@ -5,10 +5,10 @@ import React from "react";
 interface MascotProps {
   className?: string;
   size?: number;
-  mood?: "namaste" | "agarbatti" | "diya" | "meditate" | "basket" | "delivery" | "search" | "lost";
+  mood?: "vanakkam" | "namaste" | "agarbatti" | "diya" | "meditate" | "basket" | "delivery" | "search" | "lost";
 }
 
-export function MascotArt({ className = "", size = 200, mood = "namaste" }: MascotProps) {
+export function MascotArt({ className = "", size = 200, mood = "vanakkam" }: MascotProps) {
   switch (mood) {
     case "agarbatti":
       return <MascotAgarbatti size={size} className={className} />;
@@ -24,6 +24,7 @@ export function MascotArt({ className = "", size = 200, mood = "namaste" }: Masc
       return <MascotSearch size={size} className={className} />;
     case "lost":
       return <MascotLost size={size} className={className} />;
+    case "vanakkam":
     case "namaste":
     default:
       return <MascotNamaste size={size} className={className} />;
@@ -35,10 +36,12 @@ import Image from "next/image";
 export function MascotNamaste({ size = 200, className = "" }: { size?: number; className?: string }) {
   return (
     <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
-      <Image src="/images/mascot_1.png" alt="Mascot Namaste" fill className="object-contain" unoptimized={true} />
+      <Image src="/images/mascot_1.png" alt="Mascot Vanakkam" fill className="object-contain" unoptimized={true} />
     </div>
   );
 }
+
+export const MascotVanakkam = MascotNamaste;
 
 export function MascotAgarbatti({ size = 200, className = "" }: { size?: number; className?: string }) {
   return (

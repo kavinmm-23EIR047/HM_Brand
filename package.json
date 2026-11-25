@@ -16,6 +16,7 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "swiper": "^14.4.0",
     "zod": "latest"
   },
   "devDependencies": {

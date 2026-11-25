@@ -3790,7 +3790,7 @@ function AdminWorkspace() {
                         const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
                         const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
                         const waMsg = encodeURIComponent(
-                          `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'agarbattis & pooja essentials'}. How can we assist you with your order?`
+                          `Vanakkam ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'agarbattis & pooja essentials'}. How can we assist you with your order?`
                         );
                         return (
                           <tr key={lead.id} className="transition hover:bg-[#F8FAFC]">
@@ -3902,7 +3902,7 @@ function AdminWorkspace() {
                     const cleanPhone = lead.phone.replace(/[^0-9]/g, "");
                     const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
                     const waMsg = encodeURIComponent(
-                      `Namaste ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'agarbattis & pooja essentials'}. How can we assist you with your order?`
+                      `Vanakkam ${lead.name}! Greetings from HM Agarbattis Coimbatore. We received your inquiry regarding ${lead.purpose || 'agarbattis & pooja essentials'}. How can we assist you with your order?`
                     );
                     return (
                       <div key={lead.id} className="p-4 bg-white rounded-xl border border-[#DCE2EA] shadow-xs space-y-3">

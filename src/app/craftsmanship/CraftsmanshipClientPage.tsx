@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { A11y, Navigation as SwiperNavigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import {
   X,
   Maximize2,
@@ -142,50 +144,69 @@ export default function CraftsmanshipClientPage() {
               </p>
             </div>
 
-            {/* Clean Pure Photo Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 items-stretch">
+            <Swiper
+              modules={[A11y, SwiperNavigation, Pagination]}
+              className="craftsmanship-swiper"
+              slidesPerView={1.15}
+              slidesPerGroup={1}
+              spaceBetween={14}
+              navigation
+              pagination={{ clickable: true }}
+              a11y={{ paginationBulletMessage: "Go to gallery page {{index}}" }}
+              breakpoints={{
+                640: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 20 },
+                900: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 20 },
+                1200: { slidesPerView: 4, slidesPerGroup: 4, spaceBetween: 20 },
+              }}
+            >
               {CRAFTSMANSHIP_IMAGES.map((item, idx) => (
-                <article
-                  key={item.id}
-                  onClick={() => openLightbox(item, idx)}
-                  className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
-                >
-                  {/* Clean High-Resolution Image */}
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-                    loading={idx < 4 ? "eager" : "lazy"}
-                  />
+                <SwiperSlide key={item.id}>
+                  <article
+                    onClick={() => openLightbox(item, idx)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openLightbox(item, idx);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View photo ${item.index}: ${item.stageName}`}
+                    className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      sizes="(max-width: 640px) 86vw, (max-width: 900px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                      className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                      loading={idx < 4 ? "eager" : "lazy"}
+                    />
 
-                  {/* Minimal Stage Pill (Top Left) */}
-                  <div className="absolute top-2.5 left-2.5 z-20">
-                    <span className="inline-flex items-center rounded-full bg-black/65 backdrop-blur-md text-white px-2 py-0.5 text-[10px] font-bold tracking-wide border border-white/20">
-                      {String(item.index).padStart(2, "0")}
-                    </span>
-                  </div>
+                    <div className="absolute top-2.5 left-2.5 z-20">
+                      <span className="inline-flex items-center rounded-full bg-black/65 backdrop-blur-md text-white px-2 py-0.5 text-[10px] font-bold tracking-wide border border-white/20">
+                        {String(item.index).padStart(2, "0")}
+                      </span>
+                    </div>
 
-                  {/* Subtle Zoom Icon (Top Right on Hover) */}
-                  <div className="absolute top-2.5 right-2.5 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-black/65 backdrop-blur-md text-white border border-white/20 shadow-xs">
-                      <Maximize2 size={12} />
-                    </span>
-                  </div>
+                    <div className="absolute top-2.5 right-2.5 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-black/65 backdrop-blur-md text-white border border-white/20 shadow-xs">
+                        <Maximize2 size={12} />
+                      </span>
+                    </div>
 
-                  {/* Subtle Hover Reveal Title at Bottom */}
-                  <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-white text-xs font-bold truncate drop-shadow-xs">
-                      {item.stageName}
-                    </p>
-                    <p className="text-[10px] text-brand-accent-soft truncate">
-                      {item.highlight}
-                    </p>
-                  </div>
-                </article>
+                    <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+                      <p className="text-white text-xs font-bold truncate drop-shadow-xs">
+                        {item.stageName}
+                      </p>
+                      <p className="text-[10px] text-brand-accent-soft truncate">
+                        {item.highlight}
+                      </p>
+                    </div>
+                  </article>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </div>
         </section>
 
