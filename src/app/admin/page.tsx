@@ -2837,7 +2837,18 @@ function AdminWorkspace() {
                 {paginatedBanners.map(ban => (
                   <div key={ban.id} className="space-y-3 rounded-xl border border-[#DCE2EA] bg-white p-4 shadow-xs">
                     {ban.desktopImage && (
-                      <img src={normalizeProductImageUrl(ban.desktopImage)} alt={ban.title || "Banner"} className="h-36 w-full rounded-lg border border-[#DCE2EA] object-cover" />
+                      <img
+                        src={normalizeProductImageUrl(ban.desktopImage)}
+                        alt={ban.title || "Banner"}
+                        className="h-36 w-full rounded-lg border border-[#DCE2EA] object-cover bg-stone-100"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (!target.dataset.retried) {
+                            target.dataset.retried = "true";
+                            target.src = `${normalizeProductImageUrl(ban.desktopImage)}?t=${Date.now()}`;
+                          }
+                        }}
+                      />
                     )}
                     <div className="flex items-start justify-between gap-2">
                       <div>

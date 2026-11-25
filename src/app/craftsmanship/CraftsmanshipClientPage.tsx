@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Camera,
-  Search,
   X,
   Maximize2,
   ChevronLeft,
@@ -17,40 +15,24 @@ import {
   Sparkles,
   MapPin,
   MessageCircle,
-  Eye,
+  Heart,
 } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import {
   CRAFTSMANSHIP_IMAGES,
-  CRAFT_CATEGORIES,
   type CraftImage,
 } from "@/lib/craftsmanship-data";
 import { CONTACT_WHATSAPP_NUMBER } from "@/lib/contact-info";
 
 export default function CraftsmanshipClientPage() {
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<CraftImage | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number>(0);
 
-  // Filter curated milestone images
-  const filteredImages = useMemo(() => {
-    return CRAFTSMANSHIP_IMAGES.filter((img) => {
-      const matchesCategory = activeCategory === "all" || img.category === activeCategory;
-      const matchesSearch =
-        !searchQuery.trim() ||
-        img.title.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-        img.story.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-        img.stageName.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-        img.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase().trim());
-      return matchesCategory && matchesSearch;
-    });
-  }, [activeCategory, searchQuery]);
+  const totalImages = CRAFTSMANSHIP_IMAGES.length;
 
-  const openLightbox = (item: CraftImage) => {
-    const idx = filteredImages.findIndex((img) => img.id === item.id);
-    setLightboxIndex(idx >= 0 ? idx : 0);
+  const openLightbox = (item: CraftImage, idx: number) => {
+    setLightboxIndex(idx);
     setSelectedImage(item);
   };
 
@@ -59,18 +41,18 @@ export default function CraftsmanshipClientPage() {
   };
 
   const showNext = useCallback(() => {
-    if (filteredImages.length === 0) return;
-    const nextIdx = (lightboxIndex + 1) % filteredImages.length;
+    if (totalImages === 0) return;
+    const nextIdx = (lightboxIndex + 1) % totalImages;
     setLightboxIndex(nextIdx);
-    setSelectedImage(filteredImages[nextIdx]);
-  }, [lightboxIndex, filteredImages]);
+    setSelectedImage(CRAFTSMANSHIP_IMAGES[nextIdx]);
+  }, [lightboxIndex, totalImages]);
 
   const showPrev = useCallback(() => {
-    if (filteredImages.length === 0) return;
-    const prevIdx = (lightboxIndex - 1 + filteredImages.length) % filteredImages.length;
+    if (totalImages === 0) return;
+    const prevIdx = (lightboxIndex - 1 + totalImages) % totalImages;
     setLightboxIndex(prevIdx);
-    setSelectedImage(filteredImages[prevIdx]);
-  }, [lightboxIndex, filteredImages]);
+    setSelectedImage(CRAFTSMANSHIP_IMAGES[prevIdx]);
+  }, [lightboxIndex, totalImages]);
 
   // Keyboard navigation for Lightbox
   useEffect(() => {
@@ -90,13 +72,13 @@ export default function CraftsmanshipClientPage() {
 
       <main className="w-full max-w-full overflow-x-clip">
         {/* ========================================================================= */}
-        {/* HERO BANNER: AUTHENTIC, HUMANIZED WORKSHOP STORY                          */}
+        {/* 1. HERO BANNER: HUMANIZED WORKSHOP STORY (ABOVE THE GALLERY)              */}
         {/* ========================================================================= */}
-        <section className="relative w-full bg-[#FAF7F0] pt-7 sm:pt-12 pb-10 sm:pb-14 border-b border-brand-border">
+        <section className="relative w-full bg-[#FAF7F0] pt-8 sm:pt-14 pb-10 sm:pb-16 border-b border-brand-border">
           <div className="page-container">
-            <div className="max-w-3xl">
+            <div className="max-w-3xl mx-auto text-center space-y-4">
               {/* Breadcrumb */}
-              <nav aria-label="Breadcrumb" className="mb-3.5 flex items-center gap-1.5 text-xs text-brand-slate">
+              <nav aria-label="Breadcrumb" className="mb-2 flex items-center justify-center gap-1.5 text-xs text-brand-slate">
                 <Link href="/" className="hover:text-brand-primary transition-colors">Home</Link>
                 <span>/</span>
                 <Link href="/about" className="hover:text-brand-primary transition-colors">About Us</Link>
@@ -104,7 +86,7 @@ export default function CraftsmanshipClientPage() {
                 <span className="font-semibold text-brand-primary">Workshop Craftsmanship</span>
               </nav>
 
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-primary mb-3">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-brand-primary">
                 <Sparkles size={13} className="shrink-0 text-brand-accent" />
                 <span>Peelamedu, Coimbatore Workshop</span>
               </div>
@@ -113,23 +95,27 @@ export default function CraftsmanshipClientPage() {
                 Behind Every Stick: <span className="text-brand-primary">Crafted With Devotion</span>
               </h1>
 
-              <p className="mt-3 text-sm sm:text-base text-brand-slate leading-relaxed font-normal">
-                An honest, step-by-step view inside our Coimbatore workshop. From blending raw tree gums and hand-rolling each bamboo stick to slow natural aeration racks and direct dispatch to South Indian homes.
+              <p className="text-xs sm:text-base text-brand-slate leading-relaxed font-normal max-w-2xl mx-auto">
+                An authentic, step-by-step photographic view inside our Coimbatore workshop. From kneading raw tree gums and hand-rolling each bamboo stick to slow natural aeration racks and direct dispatch to South Indian homes.
               </p>
 
-              {/* 3 Core Craft Guarantees */}
-              <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:gap-3">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
+              {/* 4 Core Craft Guarantees */}
+              <div className="pt-2 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs font-semibold text-brand-ink">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 shadow-2xs">
                   <Leaf className="h-4 w-4 text-brand-green" />
                   <span>100% Tree Gums &amp; Resins</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 shadow-2xs">
                   <ShieldCheck className="h-4 w-4 text-brand-primary" />
                   <span>Hand-Rolled on Natural Bamboo</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 text-xs font-semibold text-brand-ink shadow-2xs">
-                  <Sparkles className="h-4 w-4 text-brand-orange" />
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 shadow-2xs">
+                  <Heart className="h-4 w-4 text-brand-orange" />
                   <span>Clean White Smoke for Pooja</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3.5 py-1.5">
+                  <MapPin size={13} />
+                  <span>Peelamedu, Coimbatore</span>
                 </div>
               </div>
             </div>
@@ -137,184 +123,74 @@ export default function CraftsmanshipClientPage() {
         </section>
 
         {/* ========================================================================= */}
-        {/* INTERACTIVE CONTROLS: CATEGORIES & SEARCH                                  */}
+        {/* 2. PURE CLEAN PHOTO GALLERY (NO FILTERS, NO TEXT PLASTERED ON IMAGES)     */}
         {/* ========================================================================= */}
-        <section className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-brand-border py-3 shadow-2xs">
+        <section className="py-10 sm:py-16 bg-brand-surface-alt">
           <div className="page-container">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-              {/* Category Filter Pills */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                {CRAFT_CATEGORIES.map((tab) => {
-                  const isActive = activeCategory === tab.id;
-                  const count =
-                    tab.id === "all"
-                      ? CRAFTSMANSHIP_IMAGES.length
-                      : CRAFTSMANSHIP_IMAGES.filter((img) => img.category === tab.id).length;
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => setActiveCategory(tab.id)}
-                      className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap cursor-pointer ${
-                        isActive
-                          ? "bg-brand-primary text-white shadow-xs border border-brand-primary"
-                          : "bg-brand-surface text-brand-ink/80 border border-brand-border hover:border-brand-primary/50 hover:bg-white"
-                      }`}
-                    >
-                      <span>{tab.label}</span>
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? "bg-white/25 text-white" : "bg-black/5 text-brand-slate"}`}>
-                        {count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Search Box */}
-              <div className="relative w-full md:w-64 shrink-0">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-slate" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search workshop steps..."
-                  className="w-full rounded-full border border-brand-border bg-brand-surface pl-8 pr-7 py-1.5 text-xs outline-none transition focus:border-brand-primary focus:bg-white"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery("")}
-                    aria-label="Clear search"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-brand-slate hover:text-brand-ink"
-                  >
-                    <X size={13} />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* CLEAN EDITORIAL CARDS GRID (CURATED TOP CLEAR WORKSHOP MILESTONES)          */}
-        {/* ========================================================================= */}
-        <section className="py-8 sm:py-12 bg-brand-surface-alt">
-          <div className="page-container">
-            {/* Header / Results counter */}
-            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border/70 pb-3">
+            {/* Gallery Heading */}
+            <div className="mb-6 sm:mb-8 text-center sm:text-left flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-brand-border/70 pb-4">
               <div>
                 <span className="font-brand text-xs font-bold uppercase tracking-wider text-brand-primary">
-                  WORKSHOP MILESTONES
+                  AUTHENTIC PHOTO ARCHIVE
                 </span>
-                <h2 className="font-brand text-lg sm:text-2xl font-bold text-brand-heading uppercase tracking-wide">
-                  Top Craftsmanship Stages
+                <h2 className="font-brand text-xl sm:text-2xl font-bold text-brand-heading uppercase tracking-wide">
+                  Workshop Journey in 12 Moments
                 </h2>
               </div>
-              <div className="flex items-center gap-3 text-xs text-brand-slate">
-                <span>Showing <strong>{filteredImages.length}</strong> curated milestones</span>
-                {activeCategory !== "all" && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveCategory("all")}
-                    className="text-brand-primary font-semibold hover:underline cursor-pointer"
-                  >
-                    Show All
-                  </button>
-                )}
-              </div>
+              <p className="text-xs text-brand-slate">
+                Click any photo to view full craftsmanship story &amp; details
+              </p>
             </div>
 
-            {/* Grid of Clean Workshop Cards */}
-            {filteredImages.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-                {filteredImages.map((item, idx) => (
-                  <article
-                    key={item.id}
-                    onClick={() => openLightbox(item)}
-                    className="group relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-[#EADBBD] bg-white shadow-2xs transition-all duration-300 hover:shadow-card hover:border-brand-primary/60 cursor-pointer"
-                  >
-                    {/* Image Container with Crisp Overlays */}
-                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-brand-surface-soft">
-                      <Image
-                        src={item.thumb}
-                        alt={item.alt}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading={idx < 4 ? "eager" : "lazy"}
-                      />
-
-                      {/* Top Step Pill & Preview Button */}
-                      <div className="absolute top-3 left-3 flex items-center gap-2">
-                        <span className="inline-flex items-center rounded-full bg-brand-primary text-white px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                          {item.step}
-                        </span>
-                      </div>
-
-                      <div className="absolute top-3 right-3 rounded-full bg-black/60 backdrop-blur-xs p-1.5 text-white opacity-80 group-hover:opacity-100 transition-opacity">
-                        <Maximize2 size={13} />
-                      </div>
-
-                      {/* Bottom Category Pill */}
-                      <div className="absolute bottom-3 left-3 rounded-lg bg-white/95 backdrop-blur-xs px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-ink shadow-2xs border border-brand-border/60">
-                        {item.categoryLabel}
-                      </div>
-                    </div>
-
-                    {/* Content Section: Humanized & Descriptive */}
-                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                      <div>
-                        <span className="text-[11px] font-semibold text-brand-green uppercase tracking-wide block mb-1">
-                          {item.stageName}
-                        </span>
-                        <h3 className="font-brand text-base sm:text-lg font-bold text-brand-heading leading-snug group-hover:text-brand-primary transition-colors">
-                          {item.title}
-                        </h3>
-                        <p className="mt-2 text-xs sm:text-[13px] text-brand-slate leading-relaxed font-normal">
-                          {item.story}
-                        </p>
-                      </div>
-
-                      {/* Highlight Box with Checkmark */}
-                      <div className="pt-2 border-t border-[#F0E8D8]">
-                        <div className="flex items-start gap-1.5 text-xs font-semibold text-[#1B4332] bg-[#EAF5EC] px-3 py-1.5 rounded-xl border border-[#D1E7DD]">
-                          <CheckCircle2 size={14} className="shrink-0 text-brand-green mt-0.5" />
-                          <span className="leading-tight">{item.highlight}</span>
-                        </div>
-
-                        <div className="mt-3 flex items-center justify-between text-xs text-brand-slate">
-                          <span className="text-[11px] text-brand-slate/80">Peelamedu, Coimbatore</span>
-                          <span className="inline-flex items-center gap-1 font-bold text-brand-primary group-hover:translate-x-0.5 transition-transform">
-                            <span>Inspect Photo</span>
-                            <ArrowRight size={12} />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-brand-border bg-white p-12 text-center max-w-md mx-auto">
-                <p className="text-base font-bold text-brand-ink">No workshop stages match your search</p>
-                <p className="mt-1 text-xs text-brand-slate">Try selecting another chapter or clear your search term.</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveCategory("all");
-                    setSearchQuery("");
-                  }}
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-primary text-white text-xs font-bold uppercase px-4 py-2 cursor-pointer"
+            {/* Clean Pure Photo Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 items-stretch">
+              {CRAFTSMANSHIP_IMAGES.map((item, idx) => (
+                <article
+                  key={item.id}
+                  onClick={() => openLightbox(item, idx)}
+                  className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
                 >
-                  Reset Filters
-                </button>
-              </div>
-            )}
+                  {/* Clean High-Resolution Image */}
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                    loading={idx < 4 ? "eager" : "lazy"}
+                  />
+
+                  {/* Minimal Stage Pill (Top Left) */}
+                  <div className="absolute top-2.5 left-2.5 z-20">
+                    <span className="inline-flex items-center rounded-full bg-black/65 backdrop-blur-md text-white px-2 py-0.5 text-[10px] font-bold tracking-wide border border-white/20">
+                      {String(item.index).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  {/* Subtle Zoom Icon (Top Right on Hover) */}
+                  <div className="absolute top-2.5 right-2.5 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-black/65 backdrop-blur-md text-white border border-white/20 shadow-xs">
+                      <Maximize2 size={12} />
+                    </span>
+                  </div>
+
+                  {/* Subtle Hover Reveal Title at Bottom */}
+                  <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-white text-xs font-bold truncate drop-shadow-xs">
+                      {item.stageName}
+                    </p>
+                    <p className="text-[10px] text-brand-accent-soft truncate">
+                      {item.highlight}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* ========================================================================= */}
-        {/* BOTTOM FACTORY VISIT & BULK ENQUIRY CTA                                   */}
+        {/* 3. FACTORY VISIT & BULK ENQUIRY CTA BAR                                   */}
         {/* ========================================================================= */}
         <section className="bg-brand-primary text-white py-12 sm:py-16">
           <div className="page-container">
@@ -356,7 +232,9 @@ export default function CraftsmanshipClientPage() {
 
       </main>
 
-      {/* ─── FULL-SCREEN LIGHTBOX MODAL ─── */}
+      {/* ========================================================================= */}
+      {/* 4. FULL-SCREEN LIGHTBOX MODAL                                             */}
+      {/* ========================================================================= */}
       {selectedImage && (
         <div
           role="dialog"
@@ -381,10 +259,10 @@ export default function CraftsmanshipClientPage() {
               e.stopPropagation();
               showPrev();
             }}
-            aria-label="Previous milestone"
-            className="absolute left-2 sm:left-6 z-50 rounded-full bg-black/60 hover:bg-black/90 text-white p-2.5 sm:p-3 border border-white/20 transition active:scale-95 cursor-pointer"
+            aria-label="Previous photo"
+            className="absolute left-2 sm:left-6 z-50 rounded-full bg-black/60 hover:bg-black/90 text-white p-3 border border-white/20 transition active:scale-95 cursor-pointer"
           >
-            <ChevronLeft size={22} />
+            <ChevronLeft size={24} />
           </button>
 
           {/* Right Arrow */}
@@ -394,19 +272,19 @@ export default function CraftsmanshipClientPage() {
               e.stopPropagation();
               showNext();
             }}
-            aria-label="Next milestone"
-            className="absolute right-2 sm:right-6 z-50 rounded-full bg-black/60 hover:bg-black/90 text-white p-2.5 sm:p-3 border border-white/20 transition active:scale-95 cursor-pointer"
+            aria-label="Next photo"
+            className="absolute right-2 sm:right-6 z-50 rounded-full bg-black/60 hover:bg-black/90 text-white p-3 border border-white/20 transition active:scale-95 cursor-pointer"
           >
-            <ChevronRight size={22} />
+            <ChevronRight size={24} />
           </button>
 
           {/* Modal Container */}
           <div
-            className="relative flex flex-col max-w-4xl w-full max-h-[92vh] bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/20"
+            className="relative flex flex-col max-w-4xl w-full max-h-[92vh] bg-white rounded-2xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Image Preview Box */}
-            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[64vh] bg-neutral-950 flex items-center justify-center">
+            {/* Image Viewport */}
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[66vh] bg-neutral-950 flex items-center justify-center">
               <Image
                 src={selectedImage.src}
                 alt={selectedImage.alt}
@@ -415,47 +293,51 @@ export default function CraftsmanshipClientPage() {
                 className="object-contain"
                 priority
               />
+
+              <div className="absolute top-3 left-3 rounded-full bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1 border border-white/20">
+                Stage {selectedImage.index} of {totalImages} &middot; {selectedImage.stageName}
+              </div>
             </div>
 
-            {/* Bottom Caption and Actions */}
+            {/* Narrative Story Section */}
             <div className="p-4 sm:p-6 bg-white text-brand-ink flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-brand-border">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="rounded-full bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5">
-                    {selectedImage.step}
-                  </span>
-                  <span className="rounded-full bg-[#EAF5EC] text-[#1B4332] text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 border border-[#D1E7DD]">
-                    {selectedImage.categoryLabel}
-                  </span>
-                  <span className="text-[11px] font-mono text-brand-slate hidden sm:inline">
-                    Milestone {lightboxIndex + 1} of {filteredImages.length}
-                  </span>
-                </div>
-                <h3 className="font-brand text-base sm:text-xl font-bold text-brand-heading leading-snug">
+              <div className="min-w-0 flex-1 space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-primary block">
+                  {selectedImage.categoryLabel}
+                </span>
+                <h3 className="font-brand text-base sm:text-lg font-bold text-brand-heading leading-snug">
                   {selectedImage.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-brand-slate leading-relaxed mt-1">
+                <p className="text-xs text-brand-slate leading-relaxed">
                   {selectedImage.story}
                 </p>
-                <div className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-green">
-                  <CheckCircle2 size={13} />
+                <div className="pt-1 flex items-center gap-1.5 text-xs text-brand-green font-semibold">
+                  <CheckCircle2 size={14} className="shrink-0" />
                   <span>{selectedImage.highlight}</span>
                 </div>
               </div>
 
-              {/* Action Button */}
-              <div className="shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-brand-border">
+              <div className="flex sm:flex-col items-center gap-2 shrink-0">
                 <a
                   href={`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                    `Hello HM Brand, I was viewing ${selectedImage.step}: ${selectedImage.title} in your workshop gallery. I would like more information on your craftsmanship.`
+                    `Hello HM Brand, I was inspecting workshop photo #${selectedImage.index} ("${selectedImage.title}") and I would like to ask a question.`
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#14532D] hover:bg-[#0F3F22] text-white text-xs font-bold px-4 py-2.5 transition active:scale-95 shadow-xs whitespace-nowrap cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#14532D] hover:bg-[#0F3F22] text-white text-xs font-semibold px-4 py-2 transition shrink-0 whitespace-nowrap"
                 >
                   <MessageCircle size={14} />
-                  <span>Enquire on WhatsApp</span>
+                  <span>Ask on WhatsApp</span>
                 </a>
+
+                <Link
+                  href="/shop"
+                  onClick={closeLightbox}
+                  className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-brand-primary hover:text-brand-hover transition px-2 py-1"
+                >
+                  <span>Shop Collection</span>
+                  <ArrowRight size={12} />
+                </Link>
               </div>
             </div>
 
