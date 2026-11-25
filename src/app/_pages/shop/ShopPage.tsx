@@ -30,6 +30,7 @@ import { Footer } from "@/components/footer";
 import { hasProductRating, mapDbProductToProduct } from "@/lib/products";
 import { ShopPageSkeleton } from "@/components/loading-skeletons";
 import { SacredDiyaSvg } from "@/components/sacred-icons";
+import { ProductKeyFeatures } from "@/components/product-key-features";
 
 const CATEGORY_IMAGE_SEARCH_TERMS: Record<string, string[]> = {
   "incense-cones": ["guggal", "incense"],
@@ -1127,7 +1128,8 @@ function ShopContent() {
                             </Link>
 
                             {/* Subtitle / Note */}
-                            {(product.subCategory || product.note) && <p title={product.subCategory || product.note} className="mt-1 min-h-10 line-clamp-2 text-xs font-normal leading-relaxed text-brand-slate sm:min-h-[40px]">{product.subCategory || product.note}</p>}
+                            {product.subCategory && <p title={product.subCategory} className="mt-1 min-h-4 truncate text-xs font-normal leading-relaxed text-brand-slate">{product.subCategory}</p>}
+                            <ProductKeyFeatures features={product.keyFeatures} />
                             {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
                               <p className="mt-1 text-[11px] font-semibold text-brand-primary">
                                 {product.bundleQuantity}-Box Bundle · ₹{Math.round(product.price / (product.bundleQuantity || 1))}/box
@@ -1212,9 +1214,10 @@ function ShopContent() {
                               {product.name}
                             </h4>
                           </Link>
-                          <p className="mt-0.5 line-clamp-2 text-xs text-brand-slate font-medium leading-snug">
-                            {product.note || product.subCategory}
-                          </p>
+                          {(product.subCategory || product.category) && <p className="mt-0.5 truncate text-xs text-brand-slate font-medium leading-snug">
+                            {product.subCategory || product.category}
+                          </p>}
+                          <ProductKeyFeatures features={product.keyFeatures} />
                           {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
                             <p className="mt-0.5 text-[11px] font-semibold text-brand-primary">
                               {product.bundleQuantity}-Box Bundle · ₹{Math.round(product.price / (product.bundleQuantity || 1))}/box

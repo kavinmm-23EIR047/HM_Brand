@@ -86,7 +86,7 @@ export function SkeletonFooter() {
 
 /**
  * Authentic Original HM Brand Product Card Skeleton
- * Accurately mirrors ProductCard.tsx (1:1 square image, floating badge, wishlist circle, rating, name, note, price & Add button)
+ * Accurately mirrors ProductCard.tsx (1:1 square image, floating badge, wishlist circle, rating, name, feature badges, price & Add button)
  */
 export function SkeletonProductCard() {
   return (
@@ -120,9 +120,12 @@ export function SkeletonProductCard() {
           {/* Product Name Title */}
           <SkeletonBlock className="h-4.5 w-4/5 rounded-md" />
 
-          {/* Subtitle / Note */}
-          <SkeletonBlock className="mt-2 h-3 w-full rounded-md" />
-          <SkeletonBlock className="mt-1.5 h-3 w-2/3 rounded-md" />
+          {/* Backend subtitle and key feature badges */}
+          <SkeletonBlock className="mt-2 h-3 w-2/3 rounded-md" />
+          <div className="mt-2 flex gap-1.5">
+            <SkeletonBlock className="h-5 w-20 rounded-full" />
+            <SkeletonBlock className="h-5 w-24 rounded-full" />
+          </div>
         </div>
 
         {/* 3. Price & Add to Cart Action Row */}

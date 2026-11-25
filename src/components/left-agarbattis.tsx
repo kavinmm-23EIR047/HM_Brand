@@ -162,7 +162,7 @@ export function LeftAgarbattis() {
         ctx.fill();
 
         // ── 2. Spawn live smoke wisps ──
-        const spawnInterval = 0.42 / stick.rate;
+        const spawnInterval = 0.38 / stick.rate;
         if (t - lastSpawnRef.current[idx] > spawnInterval) {
           lastSpawnRef.current[idx] = t;
           particlesRef.current[idx].push({
@@ -197,7 +197,7 @@ export function LeftAgarbattis() {
 
           const fadeIn = Math.min(1, p.age / 0.18);
           const fadeOut = p.age > 0.35 ? Math.max(0, 1 - (p.age - 0.35) / 0.65) : 1;
-          const baseAlpha = isDark ? 0.22 : 0.14;
+          const baseAlpha = isDark ? 0.28 : 0.2;
           p.opacity = fadeIn * fadeOut * baseAlpha;
 
           const r = p.radius;
@@ -218,7 +218,8 @@ export function LeftAgarbattis() {
           }
 
           ctx.beginPath();
-          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+          const wispAngle = Math.atan2(p.vy, p.vx) + Math.PI / 2;
+          ctx.ellipse(p.x, p.y, r * 0.72, r, wispAngle, 0, Math.PI * 2);
           ctx.fillStyle = grad;
           ctx.fill();
 

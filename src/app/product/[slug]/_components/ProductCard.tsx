@@ -7,6 +7,7 @@ import { Heart, ShoppingBag, Star, Tag } from "lucide-react";
 import { useStore } from "@/components/store";
 import { hasProductRating, type Product } from "@/lib/products";
 import { SacredDiyaSvg } from "@/components/sacred-icons";
+import { ProductKeyFeatures } from "@/components/product-key-features";
 
 export function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
@@ -121,10 +122,12 @@ export function ProductCard({ product }: { product: Product }) {
             </h3>
           </Link>
 
-          {/* Note / Subtitle */}
-          <p className="mt-1 text-xs leading-relaxed text-brand-slate font-sans font-normal line-clamp-2">
-            {product.note}
-          </p>
+          {(product.subCategory || product.category) && (
+            <p className="mt-1 truncate text-xs leading-relaxed text-brand-slate font-sans font-normal">
+              {product.subCategory || product.category}
+            </p>
+          )}
+          <ProductKeyFeatures features={product.keyFeatures} />
           {Boolean(product.bundleQuantity && product.bundleQuantity > 1) && (
             <p className="mt-1 text-[11px] font-semibold text-brand-primary">
               {product.bundleQuantity}-Box Bundle · ₹{Math.round(effectivePrice / (product.bundleQuantity || 1))}/box

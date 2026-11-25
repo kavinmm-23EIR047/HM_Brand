@@ -7,6 +7,13 @@ export interface ProductImageItem {
   displayOrder?: number;
 }
 
+export type ProductFeatureKind = "quantity" | "duration" | "dimensions" | "fragrance" | "material" | "detail";
+
+export interface ProductKeyFeature {
+  kind: ProductFeatureKind;
+  value: string;
+}
+
 export interface ParsedProductDescription {
   tagline?: string;
   paragraphs: string[];
@@ -45,6 +52,7 @@ export interface Product {
   fragranceNotes?: string[];
   benefits: string[];
   howToUse: string[];
+  keyFeatures?: ProductKeyFeature[];
   image?: string;
   images?: ProductImageItem[];
   badge?: string;
@@ -454,10 +462,14 @@ export function mapDbProductToProduct(p: any): Product {
   // shortDescription doubles as "unit" label (e.g. "50 GMS · Camphor")
   const shortDesc = p.shortDescription || "";
   const parsed = parseProductDescription(p.description);
+  const shortDescriptionParts = shortDesc
+    .split(/[·|,;]/)
+    .map((part: string) => part.trim())
+    .filter(Boolean);
   const quantityPart =
     p.quantity != null
-      ? String(p.quantity)
-      : shortDesc.split("·")[0]?.trim() || parsed.countSpec || "";
+      ? String(p.quantity).trim()
+      : shortDescriptionParts[0] || parsed.countSpec || "";
 
   const notePart = shortDesc.includes("·")
     ? shortDesc.split("·").slice(1).join("·").trim()
@@ -492,6 +504,47 @@ export function mapDbProductToProduct(p: any): Product {
     category: categoryName,
   });
 
+  const keyFeatures: ProductKeyFeature[] = [];
+  const addFeature = (kind: ProductFeatureKind, value: unknown) => {
+    const cleanValue = typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+    if (cleanValue && !keyFeatures.some((feature) => feature.value.toLowerCase() === cleanValue.toLowerCase())) {
+      keyFeatures.push({ kind, value: cleanValue });
+    }
+  };
+  const shortCount = shortDescriptionParts.find((part: string) => /\b\d+\s*(sticks?|cups?|pieces?|boxes|packs?)\b/i.test(part));
+  const shortDuration = shortDescriptionParts.find((part: string) => /\b\d+\s*(mins?|minutes?|hours?|hrs?)\b/i.test(part));
+  const shortDimensions = shortDescriptionParts.filter((part: string) => /\b\d+(?:\.\d+)?\s*(?:inches?|inch|in\b|mm|cm|gms?|grams?)\b/i.test(part));
+  const fragranceValues = [
+    ...(Array.isArray(p.fragranceNotes) ? p.fragranceNotes : []),
+    p.fragrance,
+    p.aroma,
+    p.scent,
+  ].filter((value) => typeof value === "string");
+
+  addFeature("quantity", p.quantity || parsed.countSpec || shortCount);
+  addFeature("duration", p.burnTime || p.burningTime || parsed.burningTime || shortDuration);
+  fragranceValues.forEach((value: unknown) => addFeature("fragrance", value));
+  const repeatedProductLabels = [p.name, p.subcategory?.name, ...categoryLabels]
+    .filter((value) => typeof value === "string")
+    .map((value: string) => value.trim().toLowerCase());
+  shortDescriptionParts.forEach((part: string) => {
+    if (
+      part.length <= 48 &&
+      !repeatedProductLabels.includes(part.toLowerCase()) &&
+      part !== shortCount &&
+      part !== shortDuration &&
+      !shortDimensions.includes(part)
+    ) {
+      addFeature(/\b(bamboo|charcoal|natural|herbal|wood|resin)\b/i.test(part) ? "material" : "detail", part);
+    }
+  });
+  if (Array.isArray(p.keyFeatures)) {
+    p.keyFeatures.forEach((feature: unknown) => {
+      addFeature("detail", typeof feature === "string" ? feature : (feature as any)?.value || (feature as any)?.label);
+    });
+  }
+  addFeature("dimensions", p.dimensions || parsed.dimensions || shortDimensions.join(" · "));
+
   return {
     id: p.id,
     slug: p.slug,
@@ -522,6 +575,7 @@ export function mapDbProductToProduct(p: any): Product {
     fragranceNotes: override?.fragranceNotes || specConfig.fragranceNotes,
     benefits: specConfig.benefits,
     howToUse: specConfig.howToUse,
+    keyFeatures,
     image: primaryImg,
     images,
     badge: p.couponCode

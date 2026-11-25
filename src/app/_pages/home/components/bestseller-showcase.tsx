@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useStore } from "@/components/store";
 import { hasProductRating, type Product } from "@/lib/products";
+import { ProductKeyFeatures } from "@/components/product-key-features";
 import {
   AromaFlameSvg,
   EditorialStarSvg,
@@ -466,9 +467,12 @@ export function BestsellerShowcase() {
                       </Link>
 
                       {/* Subtitle / Series */}
-                      <p className="font-sans text-[11px] sm:text-xs text-brand-slate font-normal leading-relaxed mt-0.5 sm:mt-1 line-clamp-1">
-                        {product.subCategory || product.category || "Flora Series"}
-                      </p>
+                      {(product.subCategory || product.category) && (
+                        <p className="font-sans text-[11px] sm:text-xs text-brand-slate font-normal leading-relaxed mt-0.5 sm:mt-1 line-clamp-1">
+                          {product.subCategory || product.category}
+                        </p>
+                      )}
+                      <ProductKeyFeatures features={product.keyFeatures} />
 
                       {/* Rating (Backend data only) */}
                       {hasProductRating(product) && (
