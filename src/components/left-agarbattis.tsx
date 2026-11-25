@@ -118,6 +118,7 @@ export function LeftAgarbattis() {
 
     let startT = -1;
     let frame = 0;
+    const isMobile = window.innerWidth < 640;
 
     const draw = (timestamp: number) => {
       if (startT < 0) startT = timestamp;
@@ -162,7 +163,7 @@ export function LeftAgarbattis() {
         ctx.fill();
 
         // ── 2. Spawn live smoke wisps ──
-        const spawnInterval = 0.38 / stick.rate;
+        const spawnInterval = (isMobile ? 0.34 : 0.38) / stick.rate;
         if (t - lastSpawnRef.current[idx] > spawnInterval) {
           lastSpawnRef.current[idx] = t;
           particlesRef.current[idx].push({
@@ -197,7 +198,9 @@ export function LeftAgarbattis() {
 
           const fadeIn = Math.min(1, p.age / 0.18);
           const fadeOut = p.age > 0.35 ? Math.max(0, 1 - (p.age - 0.35) / 0.65) : 1;
-          const baseAlpha = isDark ? 0.28 : 0.2;
+          const baseAlpha = isMobile
+            ? (isDark ? 0.34 : 0.27)
+            : (isDark ? 0.28 : 0.2);
           p.opacity = fadeIn * fadeOut * baseAlpha;
 
           const r = p.radius;
@@ -250,12 +253,13 @@ export function LeftAgarbattis() {
           position: "absolute",
           bottom: 0,
           left: 0,
+          zIndex: 0,
         }}
       />
 
       {/* Photorealistic South Indian brass agarbatti chalice & sticks */}
       <div
-        className="relative pointer-events-none transition-all duration-300"
+        className="relative z-10 pointer-events-none transition-all duration-300"
         style={{
           width: standDims.width,
           height: standDims.height,
