@@ -93,61 +93,61 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
     if (typeof window === "undefined") return;
 
     try {
-      // 1. Center Grand Burst (spreads papers across the screen)
+      // 1. Center Grand Burst (spreads papers across the whole screen)
       confetti({
-        particleCount: 85,
-        spread: 95,
-        origin: { y: 0.45 },
+        particleCount: 110,
+        spread: 120,
+        origin: { y: 0.4 },
         colors: ["#C89B3C", "#9E1830", "#10B981", "#F59E0B", "#DFB75A", "#FFFFFF"],
-        ticks: 240,
-        gravity: 0.85,
-        scalar: 1.15,
+        ticks: 280,
+        gravity: 0.75,
+        scalar: 1.2,
         disableForReducedMotion: true,
       });
 
       // 2. Left Cannon Paper Blast
       setTimeout(() => {
         confetti({
-          particleCount: 50,
+          particleCount: 65,
           angle: 60,
-          spread: 55,
+          spread: 65,
           origin: { x: 0.05, y: 0.65 },
-          colors: ["#C89B3C", "#9E1830", "#10B981", "#DFB75A"],
-          ticks: 200,
-          gravity: 0.9,
-          scalar: 1.05,
+          colors: ["#C89B3C", "#9E1830", "#10B981", "#DFB75A", "#FFFFFF"],
+          ticks: 220,
+          gravity: 0.85,
+          scalar: 1.1,
           disableForReducedMotion: true,
         });
-      }, 200);
+      }, 180);
 
       // 3. Right Cannon Paper Blast
       setTimeout(() => {
         confetti({
-          particleCount: 50,
+          particleCount: 65,
           angle: 120,
-          spread: 55,
+          spread: 65,
           origin: { x: 0.95, y: 0.65 },
-          colors: ["#C89B3C", "#9E1830", "#10B981", "#DFB75A"],
-          ticks: 200,
-          gravity: 0.9,
-          scalar: 1.05,
+          colors: ["#C89B3C", "#9E1830", "#10B981", "#DFB75A", "#FFFFFF"],
+          ticks: 220,
+          gravity: 0.85,
+          scalar: 1.1,
           disableForReducedMotion: true,
         });
-      }, 400);
+      }, 360);
 
       // 4. Gentle Golden Paper Shower
       setTimeout(() => {
         confetti({
-          particleCount: 35,
-          spread: 120,
-          origin: { y: 0.15 },
+          particleCount: 45,
+          spread: 140,
+          origin: { y: 0.1 },
           colors: ["#DFB75A", "#C89B3C", "#10B981", "#FFFFFF"],
-          ticks: 240,
-          gravity: 0.7,
-          scalar: 0.95,
+          ticks: 260,
+          gravity: 0.65,
+          scalar: 1.0,
           disableForReducedMotion: true,
         });
-      }, 650);
+      }, 550);
     } catch {
       // Silently ignore if canvas-confetti is unavailable
     }
@@ -157,17 +157,17 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       triggerCelebration();
-    }, 320);
+    }, 280);
     return () => clearTimeout(timer);
   }, [triggerCelebration]);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="w-full max-w-6xl mx-auto space-y-6">
       {/* ── Top Hero Confirmation Banner ── */}
       <div className="surface-card p-6 sm:p-8 text-center relative overflow-hidden bg-gradient-to-b from-white to-[#FAF7F0] border border-[#302923]/15 shadow-sm">
         {/* Animated Green Checkmark Badge with Pop-in & Draw & Tap to Celebrate */}
         <div className="mb-3.5 flex flex-col items-center justify-center gap-1.5">
-          <SolidSuccessTick size={72} onClick={triggerCelebration} />
+          <SolidSuccessTick size={76} onClick={triggerCelebration} />
           <button
             type="button"
             onClick={triggerCelebration}
@@ -233,61 +233,63 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
         </div>
       </div>
 
-      {/* ── Main Responsive 2-Column Grid ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* ── Main Responsive 2-Column Grid with Equalized Height Gap Filling ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left Column (7 Columns): Live Dispatch Journey Tracker & Delivery Destination */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 flex flex-col gap-6">
           {/* Responsive Dispatch Tracker */}
           <SacredDispatchTracker onTickClick={triggerCelebration} />
 
-          {/* Delivery Destination Card */}
-          <div className="surface-card p-5 sm:p-6 space-y-4 border border-[#302923]/15">
-            <div className="flex items-center gap-2 border-b border-[#302923]/10 pb-3">
-              <div className="w-7 h-7 rounded-lg bg-[#F5EFE3] text-[#9E1830] flex items-center justify-center shrink-0">
-                <MapPin size={16} />
+          {/* Delivery Destination Card with Full Gap Filling */}
+          <div className="surface-card p-5 sm:p-6 space-y-4 border border-[#302923]/15 flex-1 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 border-b border-[#302923]/10 pb-3">
+                <div className="w-7 h-7 rounded-lg bg-[#F5EFE3] text-[#9E1830] flex items-center justify-center shrink-0">
+                  <MapPin size={16} />
+                </div>
+                <h4 className="font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#302923]">
+                  Delivery Destination
+                </h4>
               </div>
-              <h4 className="font-brand text-xs sm:text-sm font-bold uppercase tracking-wider text-[#302923]">
-                Delivery Destination
-              </h4>
+
+              {order.customer ? (
+                <div className="space-y-3 text-xs leading-relaxed text-[#302923]">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
+                      Recipient
+                    </span>
+                    <p className="text-sm font-bold text-[#302923]">{order.customer.fullName}</p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
+                      Shipping Address
+                    </span>
+                    <p className="font-medium text-[#302923]/90">
+                      {order.customer.address}
+                    </p>
+                    <p className="font-medium text-[#302923]/90">
+                      {order.customer.city}, {order.customer.state} - <strong>{order.customer.pincode}</strong>
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#302923]/10 flex flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium text-[#4A3F35]">
+                    <p className="flex items-center gap-1.5">
+                      <Phone size={12} className="text-[#9E1830] shrink-0" />
+                      <span>{order.customer.phone}</span>
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <Mail size={12} className="text-[#9E1830] shrink-0" />
+                      <span className="truncate">{order.customer.email}</span>
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-[#4A3F35]">Delivery address logged with order.</p>
+              )}
             </div>
 
-            {order.customer ? (
-              <div className="space-y-3 text-xs leading-relaxed text-[#302923]">
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
-                    Recipient
-                  </span>
-                  <p className="text-sm font-bold text-[#302923]">{order.customer.fullName}</p>
-                </div>
-
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
-                    Shipping Address
-                  </span>
-                  <p className="font-medium text-[#302923]/90">
-                    {order.customer.address}
-                  </p>
-                  <p className="font-medium text-[#302923]/90">
-                    {order.customer.city}, {order.customer.state} - <strong>{order.customer.pincode}</strong>
-                  </p>
-                </div>
-
-                <div className="pt-2 border-t border-[#302923]/10 flex flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium text-[#4A3F35]">
-                  <p className="flex items-center gap-1.5">
-                    <Phone size={12} className="text-[#9E1830] shrink-0" />
-                    <span>{order.customer.phone}</span>
-                  </p>
-                  <p className="flex items-center gap-1.5">
-                    <Mail size={12} className="text-[#9E1830] shrink-0" />
-                    <span className="truncate">{order.customer.email}</span>
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <p className="text-xs text-[#4A3F35]">Delivery address logged with order.</p>
-            )}
-
-            <div className="pt-2">
+            <div className="pt-4 border-t border-[#302923]/10">
               <div className="flex items-center gap-2.5 rounded-xl bg-[#F5EFE3]/80 p-3 text-xs text-[#302923]">
                 <Clock size={16} className="text-[#9E1830] shrink-0" />
                 <div>
@@ -299,8 +301,8 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
           </div>
         </div>
 
-        {/* Right Column (5 Columns): Items Summary, Totals & Action CTAs */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* Right Column (5 Columns): Items Summary, Totals & Action CTAs with Equalized Heights */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
           {/* Sacred Basket Summary */}
           <div className="surface-card p-5 sm:p-6 space-y-4 border border-[#302923]/15">
             <div className="flex items-center justify-between border-b border-[#302923]/10 pb-3">
@@ -384,38 +386,48 @@ export function OrderSuccessView({ order }: OrderSuccessViewProps) {
             </div>
           </div>
 
-          {/* Action CTAs Card */}
-          <div className="surface-card p-5 space-y-3 border border-[#302923]/15">
-            <Link
-              href="/account"
-              className="btn-primary w-full py-3 text-center text-xs font-bold uppercase tracking-wider rounded-md flex items-center justify-center gap-2 shadow-xs"
-            >
-              <span>View in Account &amp; Orders</span>
-              <ArrowRight size={14} />
-            </Link>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="btn-outline-earth py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-md inline-flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Printer size={13} />
-                <span>Print Receipt</span>
-              </button>
+          {/* Action CTAs Card with Height Equalization and Gap Filling */}
+          <div className="surface-card p-5 sm:p-6 space-y-4 border border-[#302923]/15 flex-1 flex flex-col justify-between">
+            <div className="space-y-3">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A3F35] block">
+                Manage Order &amp; Documents
+              </span>
 
               <Link
-                href="/shop"
-                className="btn-outline-earth py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-md inline-flex items-center justify-center gap-1.5"
+                href="/account"
+                className="btn-primary w-full py-3.5 text-center text-xs font-bold uppercase tracking-wider rounded-md flex items-center justify-center gap-2 shadow-xs transition hover:brightness-105"
               >
-                <Sparkles size={13} className="text-[#9E1830]" />
-                <span>Shop More</span>
+                <span>View in Account &amp; Orders</span>
+                <ArrowRight size={14} />
               </Link>
+
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="btn-outline-earth py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-md inline-flex items-center justify-center gap-1.5 cursor-pointer hover:bg-[#302923]/5"
+                >
+                  <Printer size={13} />
+                  <span>Print Receipt</span>
+                </button>
+
+                <Link
+                  href="/shop"
+                  className="btn-outline-earth py-2.5 px-3 text-xs font-bold uppercase tracking-wider rounded-md inline-flex items-center justify-center gap-1.5 hover:bg-[#302923]/5"
+                >
+                  <Sparkles size={13} className="text-[#9E1830]" />
+                  <span>Shop More</span>
+                </Link>
+              </div>
             </div>
 
-            <p className="text-[10px] text-center text-[#4A3F35] pt-1">
-              Order confirmation &amp; invoice dispatched to your email and phone.
-            </p>
+            <div className="pt-4 border-t border-[#302923]/10 flex items-center justify-between text-[11px] text-[#4A3F35]">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck size={14} className="text-emerald-700 shrink-0" />
+                <span>Invoice sent to your email &amp; phone</span>
+              </span>
+              <span className="font-semibold text-emerald-800">Verified</span>
+            </div>
           </div>
         </div>
       </div>
