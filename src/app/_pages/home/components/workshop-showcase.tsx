@@ -269,8 +269,8 @@ export function WorkshopShowcase() {
                       className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                       priority
                     />
-                    {/* Balanced dark scrim focused on bottom text */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+                    {/* Soft bottom vignette only behind text (leaves top 75% photo completely clean) */}
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10 pointer-events-none" />
 
                     <div className="absolute top-3.5 left-3.5 right-3.5 z-20 flex items-center justify-between gap-2">
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-primary/95 text-white text-[11px] sm:text-xs font-bold px-3 py-1 shadow-md border border-white/20 uppercase tracking-wide">
@@ -282,26 +282,13 @@ export function WorkshopShowcase() {
                       </span>
                     </div>
 
-                    <div className="relative z-20 p-5 sm:p-7 text-white space-y-1.5">
-                      <span className="font-brand text-[10px] sm:text-xs font-extrabold tracking-widest text-brand-accent uppercase block">
-                        {bentoHero.eyebrow}
-                      </span>
-                      <h3 className="font-brand text-lg sm:text-2xl font-bold leading-snug drop-shadow-xs text-white">
-                        {bentoHero.heading}
+                    <div className="relative z-20 p-4 sm:p-6 text-white space-y-1">
+                      <h3 className="font-brand text-base sm:text-xl lg:text-2xl font-bold leading-tight drop-shadow-xs text-white">
+                        Pure Bhimseni Camphor
                       </h3>
-                      <p className="text-xs sm:text-sm text-stone-200 font-normal leading-relaxed line-clamp-2 max-w-xl">
-                        {bentoHero.conversationalText}
+                      <p className="text-xs sm:text-sm text-stone-200 font-normal line-clamp-1 opacity-90">
+                        Sublimates completely with zero black residue · Clean cooling pine aroma
                       </p>
-                      <div className="pt-2 flex flex-wrap items-center gap-3">
-                        <div className="inline-flex items-center gap-1.5 text-xs text-brand-accent-soft font-semibold bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/15">
-                          <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
-                          <span className="truncate max-w-[280px]">{bentoHero.highlight}</span>
-                        </div>
-                        <span className="inline-flex items-center gap-1 text-xs font-bold text-white/90 group-hover:text-brand-accent transition">
-                          <span>Enlarge photo</span>
-                          <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-                        </span>
-                      </div>
                     </div>
                   </article>
 
@@ -320,7 +307,8 @@ export function WorkshopShowcase() {
                           sizes="(max-width: 1024px) 50vw, 34vw"
                           className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
+                        {/* Soft bottom vignette */}
+                        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10 pointer-events-none" />
 
                         <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between">
                           <span className="rounded-full bg-black/75 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 border border-white/20">
@@ -331,11 +319,11 @@ export function WorkshopShowcase() {
                           </span>
                         </div>
 
-                        <div className="relative z-20 p-4 sm:p-5 text-white">
-                          <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug line-clamp-2">
-                            {slide.heading}
+                        <div className="relative z-20 p-3 sm:p-4 text-white">
+                          <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug truncate drop-shadow-xs">
+                            {slide.stage}
                           </h4>
-                          <p className="text-[11px] text-stone-200 mt-1 line-clamp-1">
+                          <p className="text-[10px] sm:text-[11px] text-stone-300 truncate mt-0.5 opacity-90">
                             {slide.highlight}
                           </p>
                         </div>
@@ -359,7 +347,8 @@ export function WorkshopShowcase() {
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
+                      {/* Soft bottom vignette */}
+                      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10 pointer-events-none" />
 
                       <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between">
                         <span className="rounded-full bg-black/75 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 border border-white/20">
@@ -370,11 +359,11 @@ export function WorkshopShowcase() {
                         </span>
                       </div>
 
-                      <div className="relative z-20 p-4 sm:p-5 text-white">
-                        <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug line-clamp-2">
-                          {slide.heading}
+                      <div className="relative z-20 p-3 sm:p-4 text-white">
+                        <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug truncate drop-shadow-xs">
+                          {slide.stage}
                         </h4>
-                        <p className="text-[11px] text-stone-200 mt-1 line-clamp-1">
+                        <p className="text-[10px] sm:text-[11px] text-stone-300 truncate mt-0.5 opacity-90">
                           {slide.highlight}
                         </p>
                       </div>
@@ -460,7 +449,8 @@ export function WorkshopShowcase() {
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
+                          {/* Soft bottom vignette */}
+                          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10 pointer-events-none" />
 
                           <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between">
                             <span className="rounded-full bg-black/75 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 border border-white/20">
@@ -471,11 +461,11 @@ export function WorkshopShowcase() {
                             </span>
                           </div>
 
-                          <div className="relative z-20 p-4 sm:p-5 text-white">
-                            <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug line-clamp-2">
-                              {slide.heading}
+                          <div className="relative z-20 p-3 sm:p-4 text-white">
+                            <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug truncate drop-shadow-xs">
+                              {slide.stage}
                             </h4>
-                            <p className="text-[11px] text-stone-200 mt-1 line-clamp-1">
+                            <p className="text-[10px] sm:text-[11px] text-stone-300 truncate mt-0.5 opacity-90">
                               {slide.highlight}
                             </p>
                           </div>
@@ -497,7 +487,8 @@ export function WorkshopShowcase() {
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
+                          {/* Soft bottom vignette */}
+                          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10 pointer-events-none" />
 
                           <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between">
                             <span className="rounded-full bg-black/75 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 border border-white/20">
@@ -508,11 +499,11 @@ export function WorkshopShowcase() {
                             </span>
                           </div>
 
-                          <div className="relative z-20 p-4 sm:p-5 text-white">
-                            <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug line-clamp-2">
-                              {slide.heading}
+                          <div className="relative z-20 p-3 sm:p-4 text-white">
+                            <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug truncate drop-shadow-xs">
+                              {slide.stage}
                             </h4>
-                            <p className="text-[11px] text-stone-200 mt-1 line-clamp-1">
+                            <p className="text-[10px] sm:text-[11px] text-stone-300 truncate mt-0.5 opacity-90">
                               {slide.highlight}
                             </p>
                           </div>
@@ -538,7 +529,8 @@ export function WorkshopShowcase() {
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
+                    {/* Soft bottom vignette */}
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10 pointer-events-none" />
 
                     <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between">
                       <span className="rounded-full bg-black/75 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 border border-white/20">
@@ -549,12 +541,12 @@ export function WorkshopShowcase() {
                       </span>
                     </div>
 
-                    <div className="relative z-20 p-4 sm:p-5 text-white">
-                      <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug line-clamp-2">
-                        {slide.heading}
+                    <div className="relative z-20 p-3 sm:p-4 text-white">
+                      <h4 className="font-brand text-xs sm:text-sm font-bold leading-snug truncate drop-shadow-xs">
+                        {slide.stage}
                       </h4>
-                      <p className="text-[11px] text-stone-200 mt-1 line-clamp-2">
-                        {slide.conversationalText}
+                      <p className="text-[10px] sm:text-[11px] text-stone-300 truncate mt-0.5 opacity-90">
+                        {slide.highlight}
                       </p>
                     </div>
                   </article>
