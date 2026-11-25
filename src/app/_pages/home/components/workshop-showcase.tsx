@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { A11y, Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -89,20 +91,20 @@ export function WorkshopShowcase() {
           </p>
 
           {/* 3 Core Purity Pillars */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs font-semibold text-brand-ink">
-            <span className="inline-flex items-center gap-1.5 bg-white border border-brand-border px-3.5 py-1.5 rounded-full shadow-2xs">
+          <div className="pt-2 grid grid-cols-2 gap-2 text-[10px] font-semibold text-brand-ink sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 sm:text-xs">
+            <span className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white px-2 py-2 text-center leading-tight shadow-2xs sm:min-h-0 sm:px-3.5 sm:py-1.5">
               <Leaf size={14} className="text-brand-green" />
               <span>100% Tree Gums &amp; Resins</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 bg-white border border-brand-border px-3.5 py-1.5 rounded-full shadow-2xs">
+            <span className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white px-2 py-2 text-center leading-tight shadow-2xs sm:min-h-0 sm:px-3.5 sm:py-1.5">
               <ShieldCheck size={14} className="text-brand-primary" />
               <span>Hand-Rolled on Natural Bamboo</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 bg-white border border-brand-border px-3.5 py-1.5 rounded-full shadow-2xs">
+            <span className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white px-2 py-2 text-center leading-tight shadow-2xs sm:min-h-0 sm:px-3.5 sm:py-1.5">
               <Heart size={14} className="text-brand-orange" />
               <span>Gentle White Smoke for Pooja</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3.5 py-1.5 rounded-full">
+            <span className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/10 px-2 py-2 text-center leading-tight text-brand-primary sm:min-h-0 sm:px-3.5 sm:py-1.5">
               <MapPin size={13} />
               <span>Peelamedu, Coimbatore</span>
             </span>
@@ -112,19 +114,35 @@ export function WorkshopShowcase() {
         {/* ========================================================================= */}
         {/* 2. PURE CLEAN PHOTO GALLERY (NO TEXT OVERLAYS BLOCKING THE IMAGES)        */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 items-stretch">
+        <Swiper
+          modules={[A11y, Autoplay, Pagination]}
+          className="workshop-gallery-swiper"
+          slidesPerView={1.15}
+          slidesPerGroup={1}
+          spaceBetween={14}
+          loop
+          autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+          speed={700}
+          pagination={{ clickable: true, dynamicBullets: true, dynamicMainBullets: 4 }}
+          a11y={{ paginationBulletMessage: "Go to workshop gallery page {{index}}" }}
+          breakpoints={{
+            640: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 20 },
+            900: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 20 },
+            1200: { slidesPerView: 4, slidesPerGroup: 4, spaceBetween: 20 },
+          }}
+        >
           {FEATURED_WORKSHOP_SLIDES.map((slide, index) => (
-            <article
-              key={slide.id}
-              onClick={() => openLightbox(index)}
-              className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
-            >
+            <SwiperSlide key={slide.id}>
+              <article
+                onClick={() => openLightbox(index)}
+                className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
+              >
               {/* Pure Unobstructed High-Quality Image */}
               <Image
                 src={slide.image}
                 alt={slide.alt}
                 fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                sizes="(max-width: 640px) 86vw, (max-width: 900px) 50vw, (max-width: 1200px) 33vw, 25vw"
                 className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                 loading={index < 4 ? "eager" : "lazy"}
               />
@@ -144,17 +162,18 @@ export function WorkshopShowcase() {
               </div>
 
               {/* Clean Minimal Title Pill at Bottom on Hover */}
-              <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-xs font-bold truncate drop-shadow-xs">
+              <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-100">
+                <p className="font-brand text-white text-xs font-bold tracking-wide truncate drop-shadow-xs">
                   {slide.stage}
                 </p>
                 <p className="text-[10px] text-brand-accent-soft truncate">
                   {slide.highlight}
                 </p>
               </div>
-            </article>
+              </article>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
 
         {/* ========================================================================= */}
         {/* 3. CLEAN BOTTOM BAR: WHATSAPP ARTISAN HOTLINE & SHOP EXPLORE               */}
@@ -164,14 +183,14 @@ export function WorkshopShowcase() {
             Have questions about our handmade agarbattis, dhoop cups, or pure camphor? Chat directly with our Peelamedu workshop team.
           </p>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="grid w-full shrink-0 grid-cols-2 gap-2 sm:flex sm:w-auto sm:gap-3">
             <a
               href={`https://wa.me/${CONTACT_WHATSAPP_NUMBER}?text=${encodeURIComponent(
                 "Hello HM Brand, I was viewing your Peelamedu Workshop gallery and I'd like to ask a question about your handmade products."
               )}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#14532D] hover:bg-[#0F3F22] text-white text-xs font-semibold px-4 py-2 transition shadow-xs active:scale-95"
+              className="inline-flex min-h-10 w-full min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-[#14532D] px-2 py-2 text-[9px] font-semibold text-white shadow-xs transition active:scale-95 hover:bg-[#0F3F22] sm:w-auto sm:px-4 sm:text-xs"
             >
               <MessageCircle size={15} />
               <span>Ask on WhatsApp</span>
@@ -179,7 +198,7 @@ export function WorkshopShowcase() {
 
             <Link
               href="/shop"
-              className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold uppercase tracking-wider px-5 py-2 transition shadow-xs active:scale-95"
+              className="inline-flex min-h-10 w-full min-w-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-brand-primary px-2 py-2 text-[9px] font-bold uppercase tracking-wide text-white shadow-xs transition active:scale-95 hover:bg-brand-primary-hover sm:w-auto sm:gap-1.5 sm:px-5 sm:text-xs sm:tracking-wider"
             >
               <span>Explore Collection</span>
               <ArrowRight size={13} />

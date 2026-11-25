@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { A11y, Navigation as SwiperNavigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 import {
   X,
   Maximize2,
@@ -102,20 +100,20 @@ export default function CraftsmanshipClientPage() {
               </p>
 
               {/* 4 Core Craft Guarantees */}
-              <div className="pt-2 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs font-semibold text-brand-ink">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 shadow-2xs">
+              <div className="pt-2 grid grid-cols-2 gap-2 text-[10px] font-semibold text-brand-ink sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 sm:text-xs">
+                <div className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white px-2 py-2 text-center leading-tight shadow-2xs sm:min-h-0 sm:px-3.5 sm:py-1.5">
                   <Leaf className="h-4 w-4 text-brand-green" />
                   <span>100% Tree Gums &amp; Resins</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 shadow-2xs">
+                <div className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white px-2 py-2 text-center leading-tight shadow-2xs sm:min-h-0 sm:px-3.5 sm:py-1.5">
                   <ShieldCheck className="h-4 w-4 text-brand-primary" />
                   <span>Hand-Rolled on Natural Bamboo</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white border border-brand-border px-3.5 py-1.5 shadow-2xs">
+                <div className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-border bg-white px-2 py-2 text-center leading-tight shadow-2xs sm:min-h-0 sm:px-3.5 sm:py-1.5">
                   <Heart className="h-4 w-4 text-brand-orange" />
                   <span>Clean White Smoke for Pooja</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3.5 py-1.5">
+                <div className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/10 px-2 py-2 text-center leading-tight text-brand-primary sm:min-h-0 sm:px-3.5 sm:py-1.5">
                   <MapPin size={13} />
                   <span>Peelamedu, Coimbatore</span>
                 </div>
@@ -144,41 +142,18 @@ export default function CraftsmanshipClientPage() {
               </p>
             </div>
 
-            <Swiper
-              modules={[A11y, SwiperNavigation, Pagination]}
-              className="craftsmanship-swiper"
-              slidesPerView={1.15}
-              slidesPerGroup={1}
-              spaceBetween={14}
-              navigation
-              pagination={{ clickable: true }}
-              a11y={{ paginationBulletMessage: "Go to gallery page {{index}}" }}
-              breakpoints={{
-                640: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 20 },
-                900: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 20 },
-                1200: { slidesPerView: 4, slidesPerGroup: 4, spaceBetween: 20 },
-              }}
-            >
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 items-stretch">
               {CRAFTSMANSHIP_IMAGES.map((item, idx) => (
-                <SwiperSlide key={item.id}>
-                  <article
-                    onClick={() => openLightbox(item, idx)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        openLightbox(item, idx);
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`View photo ${item.index}: ${item.stageName}`}
-                    className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
-                  >
+                <article
+                  key={item.id}
+                  onClick={() => openLightbox(item, idx)}
+                  className="group relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-100 border border-[#E8DFD1] shadow-2xs cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-brand-primary/50"
+                >
                     <Image
                       src={item.src}
                       alt={item.alt}
                       fill
-                      sizes="(max-width: 640px) 86vw, (max-width: 900px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                       loading={idx < 4 ? "eager" : "lazy"}
                     />
@@ -195,18 +170,17 @@ export default function CraftsmanshipClientPage() {
                       </span>
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-                      <p className="text-white text-xs font-bold truncate drop-shadow-xs">
+                    <div className="absolute inset-x-0 bottom-0 p-2.5 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-100">
+                      <p className="font-brand text-white text-xs font-bold tracking-wide truncate drop-shadow-xs">
                         {item.stageName}
                       </p>
                       <p className="text-[10px] text-brand-accent-soft truncate">
                         {item.highlight}
                       </p>
                     </div>
-                  </article>
-                </SwiperSlide>
+                </article>
               ))}
-            </Swiper>
+            </div>
           </div>
         </section>
 
